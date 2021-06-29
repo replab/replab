@@ -9,7 +9,7 @@ function lines = longStr(obj, maxRows, maxColumns)
 %   maxColumns (integer): maximum number of columns
 %
 % Returns:
-%   cell{:,1} of charstring: A text description of the object
+%   cell(\*,1) of charstring: A text description of the object
     header = [];
     body = {};
     if isobject(obj) || (isscalar(obj) && isstruct(obj))

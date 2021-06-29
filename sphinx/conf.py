@@ -43,8 +43,8 @@ extensions = ['sphinx.ext.autodoc',   # for enumeration of objects stuff
               'sphinx.ext.autosummary',
               'sphinx.ext.githubpages',
               'nbsphinx',
-              'sphinx_collapse_admonitions',
-              'sphinxcontrib.fulltoc', # for sidebar TOC
+              'sphinx_togglebutton',
+#              'sphinxcontrib.fulltoc', # for sidebar TOC
               'sphinxcontrib.matlab', # support for Matlab
               'sphinx.ext.napoleon',  # support for shorthand syntax
               'sphinx.ext.mathjax',   # LaTeX support
@@ -113,6 +113,7 @@ html_static_path = ['_static']
 html_theme_options = {
     # Set the name of the project to appear in the sidebar
     "project_nav_name": "RepLAB",
+    "globaltoc_depth": 3,
 }
 
 html_css_files = [

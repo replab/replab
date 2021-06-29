@@ -8,7 +8,7 @@ function test_suite = EnumeratorTest()
 end
 
 function test_display
-    G = replab.Permutations(60);
+    G = replab.S(60);
     description = replab.shortStr(G.elements);
     assert(~isempty(description));
 end

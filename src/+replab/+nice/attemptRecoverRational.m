@@ -11,7 +11,7 @@ function [num den] = attemptRecoverRational(M)
 %   den: double scalar
 %     Denominator such that ``num/den`` approximates ``M``
 
-    tol = replab.Parameters.doubleEigTol; % magic epsilon to remove
+    tol = replab.globals.doubleEigTol; % magic epsilon to remove
     maxden = 1200; % maximum denominator
 
     v = M(:); % vectorize the input

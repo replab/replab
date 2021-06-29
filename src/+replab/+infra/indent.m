@@ -13,8 +13,6 @@ function indentedLines = indent(lines, nbSpaces, cellMode)
 %
 % Example:
 %      >>> replab.infra.indent({'Some text'}, 2)
-%        ans =
-%        1x1 cell array
 %        {'  Some text'}
 
     if nargin < 3

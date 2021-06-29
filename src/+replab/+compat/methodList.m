@@ -5,7 +5,7 @@ function methodList = methodList(mc)
 %   mc (metaclass): Metaclass whose methods to enumerate
 %
 % Returns:
-%   cell{1,:} of method descriptions: The metaclas methods
+%   cell(1,\*) of method descriptions: The metaclass methods
     methodList = mc.MethodList;
     methodList = methodList(:).';
     if ~isa(methodList, 'cell')

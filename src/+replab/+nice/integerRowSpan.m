@@ -27,7 +27,7 @@ function [intBasisOpt isOrtho] = integerRowSpan(basis)
     nRows = size(basis, 1);
     Q = basis*basis';
     % make the given basis orthonormal if that is not the case
-    if replab.isNonZeroMatrix(Q - eye(nRows), replab.Parameters.doubleEigTol)
+    if replab.numerical.isNonZeroMatrix(Q - eye(nRows), replab.globals.doubleEigTol)
         if isdiag(Q)
             % special case for diagonal correction, use square root
             T = diag(1./sqrt(diag(Q)));

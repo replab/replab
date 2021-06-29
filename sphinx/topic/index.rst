@@ -13,8 +13,8 @@ Scientific articles:
 - An introduction to representation theory: `Linear Representations of Finite Groups <https://link.springer.com/book/10.1007/978-1-4684-9458-7>`_ by Jean-Pierre Serre
 
 .. toctree::
-   :maxdepth: 1
+   :maxdepth: 2
 
-   error_thresholds
-   error_estimation
-   CHSH
+   nonlocality/index
+   membrane/index
+   SDP

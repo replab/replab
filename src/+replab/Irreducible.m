@@ -6,7 +6,7 @@ classdef Irreducible < replab.SubRep
 % The irreducible decomposition of ``parent`` contains isotypic components in the cell vector ``components``.
 % Each isotypic component corresponds to a set of equivalent irreducible representations.
 
-    properties
+    properties (SetAccess = protected)
         components % (cell(1,\*) of `+replab.Isotypic`): Isotypic components
     end
 
@@ -14,38 +14,30 @@ classdef Irreducible < replab.SubRep
 
         function self = Irreducible(parent, components)
             n = length(components);
-            Bs = cell(1, n);
-            Es = cell(n, 1);
-            for i = 1:n
-                c = components{i};
-                assert(isa(c, 'replab.Isotypic'));
-                Bs{1,i} = c.B_internal;
-                Es{i,1} = c.E_internal;
-            end
-            B_internal = [Bs{:}];
-            E_internal = vertcat(Es{:});
-            self = self@replab.SubRep(parent, B_internal, E_internal);
+            injections = cellfun(@(c) c.injection_internal, components, 'uniform', 0);
+            projections = cellfun(@(c) c.projection_internal, components, 'uniform', 0);
+            isUnitary = cellfun(@(c) c.isUnitary, components);
+            assert(all(cellfun(@(c) isa(c, 'replab.Isotypic'), components)), 'All components must be isotypic');
+            injection = horzcat(injections{:});
+            projection = vertcat(projections{:});
+            isIrreducible = length(components) == 1 && components{1}.multiplicity == 1;
+            self = self@replab.SubRep(parent, injection, projection, 'isUnitary', all(isUnitary), 'isIrreducible', isIrreducible);
             self.components = components;
-            if length(components) == 1 && components{1}.multiplicity == 1
-                self.isIrreducible = true;
-                if isequal(self.basis, eye(self.dimension))
-                    replab.rep.copyProperties(self.components{1}.irreps{1}, self);
-                end
-            end
         end
 
-        function r = asSimilarRep(self)
-        % Returns the block-diagonal representation corresponding to the decomposition
+        function r = toSubRep(self)
+        % Returns the block-diagonal similar representation corresponding to this decomposition
         %
-        % Up to the change of basis matrix `U`, it corresponds to the representation ``parent``.
-        % Indeed, we have ``self.image(g) = U * self.parent.image(g) * U'``.
+        % Both this `.Irreducible` object and the returned representation will be instances of `.SubRep`.
+        % This method helps us test the implementation of `.Irreducible` as the returned `.SubRep` loses
+        % its particular structure.
         %
         % The returned representation is the parent representation with an explicit change of basis, so it does
-        % not look as clean as ``self``. For efficiency and numerical stability, use ``self``.
+        % not look as clean as this `.Irreducible`.
         %
         % Returns:
-        %   `+replab.Rep`: The block-diagonal representation as a representation similar to this rep. parent
-            r = self.parent.similarRep(self.E_internal, self.B_internal);
+        %   `+replab.SubRep`: The block-diagonal representation as a representation similar to `.parent`
+            r = self.parent.similarRep(self.projection_internal, 'inverse', self.injection_internal);
         end
 
         function n = nComponents(self)
@@ -83,7 +75,72 @@ classdef Irreducible < replab.SubRep
             r = self.component(i).irrep(j);
         end
 
-        %% Str methods
+    end
+
+    methods % Equivariant spaces
+
+        function E = irreducibleEquivariantFrom(self, repC, varargin)
+        % Returns the space of equivariant linear maps from another irreducible decomposition to this irreducible decomposition
+        %
+        % The equivariant vector space contains the matrices X such that
+        %
+        % ``X * repC.image(g) = self.image(g) * X``
+        %
+        % Both irreducible decompositions must be harmonized.
+        %
+        % Args:
+        %   repC (`+replab.Irreducible`): Irreducible decomposition, representation on the source/column space
+        %
+        % Keyword Args:
+        %   special (charstring, optional): Special structure if applicable, see `.Equivariant`, default: ''
+        %   type ('exact', 'double' or 'double/sparse', optional): Whether to obtain an exact equivariant space, default 'double' ('double' and 'double/sparse' are equivalent)
+        %
+        % Returns:
+        %   `+replab.IrreducibleEquivariant` or ``[]``: The equivariant vector space, or ``[]`` if the space has dimension zero or contains only the zero matrix
+            E = replab.IrreducibleEquivariant.make(self, repC, varargin{:});
+        end
+
+        function E = irreducibleEquivariantTo(self, repR, varargin)
+        % Returns the space of equivariant linear maps from this irreducible decomposition to another irreducible decomposition
+        %
+        % The equivariant vector space contains the matrices X such that
+        %
+        % ``X * self.image(g) = repR.image(g) * X``
+        %
+        % Both irreducible decompositions must be harmonized.
+        %
+        % Args:
+        %   repR (`+replab.Irreducible`): Irreducible decomposition, representation on the target/row space
+        %
+        % Keyword Args:
+        %   special ('commutant', 'hermitian', 'trivialRows', 'trivialCols' or '', optional): Special structure if applicable, see `.Equivariant`, default: ''
+        %   type ('exact', 'double' or 'double/sparse', optional): Whether to obtain an exact equivariant space, default 'double' ('double' and 'double/sparse' are equivalent)
+        %
+        % Returns:
+        %   `+replab.IrreducibleEquivariant` or ``[]``: The equivariant vector space, or ``[]`` if the space has dimension zero or contains only the zero matrix
+            E = replab.IrreducibleEquivariant.make(repR, self, varargin{:});
+        end
+
+    end
+
+    methods (Access = protected) % Implementations
+
+
+        function rho = image_double_sparse(self, g)
+            blocks = cellfun(@(c) c.image(g, 'double/sparse'), self.components, 'uniform', 0);
+            rho = blkdiag(blocks{:});
+        end
+
+        function rho = image_exact(self, g)
+            blocks = cellfun(@(c) c.image(g, 'exact'), self.components, 'uniform', 0);
+            rho = blkdiag(blocks{:});
+        end
+
+    end
+
+    methods % Implementations
+
+        % Str
 
         function names = hiddenFields(self)
             names = hiddenFields@replab.SubRep(self);
@@ -98,22 +155,69 @@ classdef Irreducible < replab.SubRep
             end
         end
 
-        %% Rep methods
+        % Obj
 
-        function rho = image_internal(self, g)
-            blocks = cellfun(@(iso) iso.image_internal(g), self.components, 'uniform', 0);
-            % Construct the blocks in the block diagonal image
-            rho = blkdiag(blocks{:});
+        function l = laws(self)
+            l = replab.laws.IrreducibleLaws(self);
         end
 
-        function c = commutant(self)
-            if isempty(self.commutant_)
-                self.commutant_ = replab.IrreducibleCommutant(self);
+        % Rep
+
+        function rep = conj(self)
+            components = cellfun(@(iso) conj(iso), self.components, 'uniform', 0);
+            rep = replab.Irreducible(conj(self.parent), components);
+        end
+
+        function rep = dual(self)
+            components = cellfun(@(iso) dual(iso), self.components, 'uniform', 0);
+            rep = replab.Irreducible(dual(self.parent), components);
+        end
+
+        % Rep: Equivariant spaces
+
+        function a = antilinearInvariant(self, type)
+            if nargin < 2 || isempty(type) || strcmp(type, 'double/sparse')
+                type = 'double';
             end
-            c = self.commutant_;
+            a = self.cached(['antilinearInvariant_' type], @() self.irreducibleEquivariantFrom(conj(self),  'special', 'antilinear', 'type', type));
         end
 
-        %% SubRep methods
+        function b = bilinearInvariant(self, type)
+            if nargin < 2 || isempty(type) || strcmp(type, 'double/sparse')
+                type = 'double';
+            end
+            b = self.cached(['bilinearInvariant_' type], @() self.irreducibleEquivariantTo(dual(self),  'special', 'bilinear', 'type', type));
+        end
+
+        function c = commutant(self, type)
+            if nargin < 2 || isempty(type) || strcmp(type, 'double/sparse')
+                type = 'double';
+            end
+            c = self.cached(['commutant_' type], @() self.irreducibleEquivariantFrom(self,  'special', 'commutant', 'type', type));
+        end
+
+        function h = hermitianInvariant(self, type)
+            if nargin < 2 || isempty(type) || strcmp(type, 'double/sparse')
+                type = 'double';
+            end
+            h = self.cached(['hermitianInvariant_' type], @() self.irreducibleEquivariantTo(conj(dual(self)),  'special', 'hermitian', 'type', type));
+        end
+
+        function s = sesquilinearInvariant(self, type)
+            if nargin < 2 || isempty(type) || strcmp(type, 'double/sparse')
+                type = 'double';
+            end
+            s = self.cached(['sesquilinearInvariant_' type], @() self.irreducibleEquivariantTo(conj(dual(self)),  'special', 'sesquilinear', 'type', type));
+        end
+
+        function b = symmetricInvariant(self, type)
+            if nargin < 2 || isempty(type) || strcmp(type, 'double/sparse')
+                type = 'double';
+            end
+            b = self.cached(['symmetricInvariant_' type], @() self.irreducibleEquivariantTo(dual(self),  'special', 'symmetric', 'type', type));
+        end
+
+         % SubRep
 
         function irr = nice(self)
             components1 = cellfun(@(c) c.nice, self.components, 'uniform', 0);

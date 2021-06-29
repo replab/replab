@@ -40,7 +40,7 @@ function replab_generate(what)
     validStr = strjoin(cellfun(@(x) sprintf('''%s''', x), valid, 'uniform', 0), ', ');
     assert(ismember(what, valid), 'Argument must be one of: %s', validStr);
 
-    rp = replab.settings.replabPath;
+    rp = replab.globals.replabPath;
     srcRoot = fullfile(rp, 'src');
 
     disp('Crawling code base');
@@ -81,6 +81,9 @@ function replab_generate(what)
     end
 
     if isequal(what, 'sphinxbuild') || isequal(what, 'sphinx') || isequal(what, 'all')
+        if ~exist(fullfile(rp, 'docs'))
+            mkdir(rp, 'docs');
+        end
         replab.infra.cleanDir(fullfile(rp, 'docs'), {'.git'});
         if ~isequal(what, 'clear')
             disp('Running Sphinx');

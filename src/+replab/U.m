@@ -1,4 +1,4 @@
 function u = U(d)
-% Returns the unitary group of dimension d
-    u = replab.UnitaryGroup(d);
+% Returns the group of d x d unitary complex matrices
+    u = replab.ClassicalCompactGroup(d, 'C', false);
 end

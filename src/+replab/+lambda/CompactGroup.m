@@ -7,19 +7,17 @@ classdef CompactGroup < replab.Group
         sampleFun
         composeFun
         inverseFun
-        sampleUniformlyFun
     end
 
     methods
 
-        function self = Group(header, eqvFun, sampleFun, composeFun, identity, inverseFun, sampleUniformlyFun)
+        function self = Group(header, eqvFun, sampleFun, composeFun, identity, inverseFun)
             self.header = header;
             self.eqvFun = eqvFun;
-            self.sampleFun
+            self.sampleFun = sampleFun;
             self.composeFun = composeFun;
             self.identity = identity;
             self.inverseFun = inverseFun;
-            self.sampleUniformlyFun = sampleUniformlyFun;
         end
 
         function str = headerStr(self)
@@ -48,7 +46,6 @@ classdef CompactGroup < replab.Group
         % Monoid methods
 
         function z = compose(self, x, y)
-            error('Not implemented');
             f = self.composeFun;
             z = f(x, y);
         end
@@ -58,13 +55,6 @@ classdef CompactGroup < replab.Group
         function xInv = inverse(self, x)
             f = self.inverseFun;
             xInv = f(x);
-        end
-
-        % CompactGroup methods
-
-        function g = sampleUniformly(self)
-            f = self.sampleUniformlyFun;
-            g = f();
         end
 
     end

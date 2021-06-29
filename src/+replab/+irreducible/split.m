@@ -1,32 +1,66 @@
-function sub = split(rep, context)
-% Decomposes the given representation into subrepresentations
+function [trivial, nonTrivialIrreps] = split(rep, sample1, sample2, forceNonUnitaryAlgorithms)
+% Splits a representation into irreducible subrepresentations
 %
-% The returned list of subrepresentations contains instances of `+replab.SubRep`, whose
-% `~+replab.SubRep.parent` property must be equal to the given representation ``rep``.
+% First extracts the trivial subrepresentations before splitting the nontrivial invariant subspace.
 %
-% If the returned list contains a single subrepresentation, it needs to have a trivial
-% basis and embedding map equal to the identity matrix, and that subrepresentation needs
-% to be more informative than the given representation by either having `~+replab.Rep.isIrreducible`
-% or `~+replab.Rep.trivialDimension` filled up.
+% It uses the first sample to establish a basis, and the second sample to
 %
-% If the return list contains more than one subrepresentation, no such restriction applies.
+% 1) validate irreducibility, and
+% 2) find and fix the form of real representations.
 %
-% See the default implementations of that method in `+replab.dispatchDefaults`
+% The second sample can be reused later to find equivalent subrepresentations and harmonize their bases.
 %
 % Args:
-%   rep (`+replab.Rep`): Representation to decompose, must be not known to be irreducible
-%   context (`+replab.Context`): A context in which to cache samples
+%   rep (`+replab.Rep`): Representation to decompose
+%   sample1 (double(\*,\*)): First sample of ``rep.commutant``
+%   sample2 (double(\*,\*)): Second sample of ``rep.commutant``
+%   forceNonUnitaryAlgorithms (logical): Whether to force the use of algorithms for not necessarily unitary representations
 %
-% Returns:
-%   cell(1,\*) of `+replab.SubRep`: A cell array of subrepresentations
-    assert(isa(rep, 'replab.Rep'));
-    assert(isa(context, 'replab.Context'));
-    sub = replab.dispatch('call', 'replab.irreducible.split', rep, context);
-    if isa(sub, 'replab.DispatchNext')
-        return
+% Returns
+% -------
+%   trivial: `+replab.Isotypic`
+%     Trivial component
+%   nontrivialIrreps: cell(1,\*) of `+replab.SubRep`
+%     cell(1,\*) of `+replab.SubRep`: Irreducible subrepresentations of ``rep``
+    fnua = forceNonUnitaryAlgorithms;
+    partition = rep.invariantBlocks;
+    D = rep.dimension;
+    Itriv = zeros(D, 0);
+    Ptriv = zeros(0, D);
+    nontrivialIrreps = cell(1, 0);
+    candidates = cell(1, 0);
+    for i = 1:partition.nBlocks
+        block = partition.block(i);
+        d = length(block);
+        [trivial, nontrivial] = replab.irreducible.blockTrivialSplit(rep, block, forceNonUnitaryAlgorithms);
+        % concatenate the trivial subspaces
+        Itriv = horzcat(Itriv, trivial.injection('double/sparse'));
+        Ptriv = vertcat(Ptriv, trivial.projection('double/sparse'));
+        if nontrivial.dimension > 0
+            candidates = horzcat(candidates, replab.irreducible.absoluteSplitInParent(nontrivial, sample1, fnua));
+        end
     end
-    for i = 1:length(sub)
-        assert(isa(sub{i}, 'replab.SubRep'));
-        assert(sub{i}.parent == rep);
+    nonTrivialIrreps = cell(1, 0);
+    while ~isempty(candidates)
+        splitFurther = cell(1, 0);
+        for i = 1:length(candidates)
+            c = candidates{i};
+            irreps = replab.irreducible.identifyIrrepsInParent(c, sample2);
+            if isempty(irreps)
+                splitFurther{1,end+1} = c;
+            else
+                nonTrivialIrreps = horzcat(nonTrivialIrreps, irreps);
+            end
+        end
+        candidates = cell(1, 0);
+        if ~isempty(splitFurther)
+            % we need fresh samples
+            X = rep.commutant.sample;
+            for i = 1:length(splitFurther)
+                sub = splitFurther{i};
+                candidates = horzcat(candidates, replab.irreducible.absoluteSplitInParent(sub, X, fnua));
+            end
+        end
     end
+    trivial = rep.subRep(Itriv, 'projection', Ptriv, 'trivialDimension', size(Itriv, 2), 'isUnitary', true);
 end

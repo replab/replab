@@ -26,6 +26,7 @@ Further tools and guidelines useful for development can be found here:
    docker
    sphinx
    octave_bugs
+   project_ideas
 
 .. |Travis CI| image:: https://travis-ci.com/replab/replab.svg?branch=master
    :target: https://travis-ci.com/replab/replab

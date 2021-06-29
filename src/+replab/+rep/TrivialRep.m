@@ -1,47 +1,103 @@
 classdef TrivialRep < replab.Rep
-% Describes d copies of the real or complex trivial representation of a group
+% Describes copies of the real or complex trivial representation of a group
+
+    properties (SetAccess = protected)
+        isExactValue % (logical): What to return for `.isExact`
+    end
 
     methods
 
-        function self = TrivialRep(group, field, dimension)
+        function self = TrivialRep(group, field, dimension, isExactValue)
+            if nargin < 4 || isempty(isExactValue);
+                isExactValue = true;
+            end
             assert(isa(group, 'replab.CompactGroup'));
-            % replab.Rep, immutable
-            self.group = group;
-            self.field = field;
-            self.dimension = dimension;
-            % replab.Rep, mutable
-            self.isIrreducible = (self.dimension == 1);
-            self.isUnitary = true;
-            self.trivialDimension = dimension;
+            self@replab.Rep(group, field, dimension, 'isUnitary', true, 'isIrreducible', dimension == 1, 'trivialDimension', dimension, 'frobeniusSchurIndicator', dimension);
+            self.isExactValue = isExactValue;
         end
 
-        %% Str
+    end
+
+    methods (Access = protected) % Implementations
+
+        function rho = image_exact(self, g)
+            assert(self.isExact);
+            rho = replab.cyclotomic.eye(self.dimension);
+        end
+
+        function rho = image_double_sparse(self, g)
+            rho = speye(self.dimension);
+        end
+
+        function e = computeErrorBound(self)
+            e = 0;
+        end
+
+        function c = computeConditionNumberEstimate(self)
+            c = 1;
+        end
+
+        % Rep
+
+        function M = matrixRowAction_double_sparse(self, g, M)
+            ; % do nothing
+        end
+
+        function M = matrixColAction_double_sparse(self, g, M)
+            ; % do nothing
+        end
+
+        function M = matrixRowAction_exact(self, g, M)
+            ; % do nothing
+        end
+
+        function M = matrixColction_exact(self, g, M)
+            ; % do nothing
+        end
+
+    end
+
+    methods % Implementations
+
+        % Str
 
         function s = headerStr(self)
             s = headerStr@replab.Rep(self); % logic in parent class
         end
 
-        %% Rep methods
+        % Rep
 
-        function rho = image_internal(self, g)
-            rho = speye(self.dimension);
+        function b = isExact(self)
+            b = self.isExactValue;
         end
 
-        function rho = inverseImage_internal(self, g)
-            rho = speye(self.dimension);
-        end
-
-        function M = matrixRowAction(self, g, M)
-        % do nothing to M
-        end
-
-        function M = matrixColAction(self, g, M)
-        % do nothing to M
+        function p = invariantBlocks(self)
+            blocks = arrayfun(@(i) i, 1:self.dimension, 'uniform', 0);
+            % each coordinate in its own block
+            p = replab.Partition.fromBlocks(blocks);
         end
 
         function complexRep = complexification(self)
             assert(self.overR, 'Representation should be real to start with');
             complexRep = replab.rep.TrivialRep(self.group, 'C', self.dimension);
+        end
+
+        function M = matrixRowAction(self, g, M, type)
+            M = M;
+        end
+
+        function M = matrixColAction(self, g, M, type)
+            M = M;
+        end
+
+        function b = hasTorusImage(self)
+            b = self.group.hasReconstruction;
+        end
+
+        function [torusMap, torusInjection, torusProjection] = torusImage(self)
+            torusMap = zeros(self.dimension, self.group.maximalTorusDimension);
+            torusInjection = speye(self.dimension);
+            torusProjection = speye(self.dimension);
         end
 
     end

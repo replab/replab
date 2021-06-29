@@ -7,7 +7,6 @@ function [G rep] = clifford_qudit(d)
 % For now, only d=2 and d=3 are implemented
     switch d
         case 2
-          S48 = replab.Permutations(48);
           w = [2 5 1 6 11 12 3 4 13 14 20 21 22 23 7 8 9 10 24 15 30 ...
                31 32 33 16 17 18 19 34 25 41 42 43 39 26 27 28 29 44 38 ...
                35 36 48 47 37 40 46 45];
@@ -17,13 +16,14 @@ function [G rep] = clifford_qudit(d)
           s = [1 2 3 9 5 13 7 17 19 4 11 22 24 6 15 26 28 8 10 20 31 ...
                33 12 14 35 37 16 18 39 41 43 21 23 44 45 25 27 34 47 29 ...
                48 30 32 46 36 38 40 42];
-          G = S48.subgroup({w h s});
-          E8 = exp(sym(1i)*sym('pi')/4);
-          E4 = sym(1i);
-          W = [E8 0; 0 E8];
-          H = [1 1; 1 -1]/sqrt(sym(2));
-          S = [sym(1) 0; 0 E4];
-          rep = G.repByImages('C', 2, {W H S}, {W' H' S'});
+          G = replab.PermutationGroup.of(w, h, s);
+          E8 = replab.cyclotomic.E(8);
+          E4 = replab.cyclotomic.E(4);
+
+          W = replab.cyclotomic({'E(8)', '0'; '0', 'E(8)'});
+          H = replab.cyclotomic.sqrtRational(1,2)*[1 1; 1 -1];
+          S = replab.cyclotomic({'1', '0'; '0', 'E(4)'});
+          rep = G.repByImages('C', 2, {W H S});
       case 3
         % Generators computed using the following in GAP 4
         % omega := E(3);
@@ -46,13 +46,14 @@ function [G rep] = clifford_qudit(d)
              86 87 71 14 7 89 43 55 91 92 93 95 22 96 97 98 90 99 84 ...
              100 30 101 102 94 53 16 24 104 79 105 34 28 40 69 12 107 ...
              27 63 48 47 108 67 51 106 88 59 57 103];
-        S108 = replab.Permutations(108);
-        G = S108.subgroup({h s});
-        omega = exp(sym(2i)*sym('pi')/3);
-        zeta = exp(sym(2i)*sym('pi')/9);
-        H = -[sym(1) 1 1; 1 omega omega^2; 1 omega^2 omega]*sym(1i)/sqrt(sym(3));
-        S = zeta^8 * [sym(1) 0 0; sym(0) 1 0; 0 0 omega];
-        rep = G.repByImages('C', 3, {H S}, {H' S'});
+        G = replab.PermutationGroup.of(h, s);
+        omega = replab.cyclotomic.E(3);
+        zeta = replab.cyclotomic.E(9);
+        one = replab.cyclotomic.ones(1, 1);
+        zero = replab.cyclotomic.zeros(1, 1);
+        H = -[one one one; one omega omega^2; one omega^2 omega]*replab.cyclotomic.sqrtRational(-1, 3);
+        S = zeta^8 * [one zero zero; zero one zero; zero zero omega];
+        rep = G.repByImages('C', 3, {H S});
       otherwise
         error(sprintf('Dimension d=%d is not supported, only d=2,3', d));
     end

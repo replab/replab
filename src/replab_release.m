@@ -46,7 +46,8 @@ function replab_release
 % 1. We verify that all working trees do not have uncommited changes.
 %
 % 2. We verify that the branches ``develop``, ``master`` and ``gh-pages`` are in sync with
-%    the ``origin`` remote.
+%    the ``origin`` remote. We verify that the submodule commits are in sync with the data
+%    in the ``external/modules.ini`` file.
 %
 % 3. We ask the user to confirm the version number of the stable release (by default,
 %    the develop ``-SNAP`` version with the ``-SNAP`` suffix removed), and the number
@@ -79,7 +80,7 @@ function replab_release
 
     input('Step 0: Press ENTER to confirm that you ran "git fetch origin develop master gh-pages"');
 
-    path = replab.settings.replabPath;
+    path = replab.globals.replabPath;
     gitDir = fullfile(path, '.git');
     docsGitDir = fullfile(path, 'docs', '.git');
     mainWT = path;
@@ -121,6 +122,21 @@ function replab_release
     assert(isequal(replab.infra.Git.showExactRef(gitDir, 'refs/heads/gh-pages'), ...
                    replab.infra.Git.showExactRef(gitDir, 'refs/remotes/origin/gh-pages')), ...
            'Please synchronize gh-pages with origin/gh-pages');
+
+    % Verify submodules' commits
+    submodules = replab.infra.Git.executeAssertExitCodeZero('git submodule status', gitDir);
+    submodules = cellfun(@strtrim, strsplit(submodules, {'\r' '\n'}), 'uniform', 0);
+    mask = cellfun(@isempty, submodules);
+    submodules = submodules(~mask);
+    for i = 1:length(submodules)
+        parts = strsplit(submodules{i}, ' ');
+        commit = parts{1};
+        module = parts{2};
+        assert(isequal(module(1:9), 'external/'), 'There exists a Git submodule not in external/');
+        module = module(10:end);
+        data = replab.init.ExternalDependency.loadConfig(module);
+        assert(isequal(data.commit, commit), 'Git commit differs for %s', module);
+    end
 
     disp(' ');
     disp('Step 3: New version numbers');

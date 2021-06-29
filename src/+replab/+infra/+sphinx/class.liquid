@@ -1,17 +1,34 @@
 %\n
 % .. admonition:: Class members list\n
-%    :class: collapsed\n
+%    :class: dropdown\n
 %\n
-{% for el in cl.allElements %}
+{% if ~isempty(cl.allProperties) %}
+%    **Properties**\n
+%\n
+{% for el in cl.allProperties %}
 {% if el.isAccessible %}
 %    - `~{{ el.matlabDomainIdentifier }}` -- {{ el.declarations.bestEffortDocFirstLine }}\n
 {% end %}
 {% end %}
 %\n
+{% end %}
+
+{% for mg in cl.allMethodGroups %}
+{% if mg.hasAccessibleMethods %}
+%    **{{ mg.name }}**\n
+%\n
+{% for m in mg.methodsInGroup %}
+{% if m.isAccessible %}
+%    - `~{{ m.matlabDomainIdentifier }}` -- {{ m.declarations.bestEffortDocFirstLine }}\n
+{% end %}
+{% end %}
+%\n
+{% end %}
+{% end %}
 
 {% if ~isempty(cl.inheritedDocumentationElements) %}
 % .. admonition:: Inherited elements\n
-%    :class: collapsed\n
+%    :class: dropdown\n
 %\n
 %\n
 {% for el in cl.inheritedDocumentationElements %}

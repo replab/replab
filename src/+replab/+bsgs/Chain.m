@@ -7,36 +7,35 @@ classdef Chain < replab.Str
 % The BSGS chain is stored as follows.
 %
 % We write $B = [\beta_1, \beta_2 ... \beta_k]$ where $k$ is the length of the stabilizer chain.
-% We define the base order on $\{1, ..., n\}$`` as follows: the smallest elements in the order are given
-% by the base elements, such that $\beta_1 < \beta_2 < ... < \beta_k$, followed by the domain elements
-% not in the base, sorted in (the standard) increasing order.
 % We write $G^i = \{ g \in G : g(\beta_1) = \beta_1, ..., g(\beta_{i-1}) = \beta_{i-1} \}$, so that
 % $G^1 = G$.
 % The (currently known) strong generators are stored as column vectors in a matrix S.
 %
-% We write the set $S^i = S \cap G^i$, and the subgroups $H^i = <S^i>$.
+% We write the set $S^i = S \cap G^i$, and the subgroups $H^i = <S^i>$, with $H^{k+1} = <1>$.
 %
 % The order of strong generators as columns in the matrix is such that
-% $S^i =$ ``S(:, Sind(i):end)`` where ``Sind`` is a double row vector of starting indices in ``S``.
+% $S^i =$ ``S(:, Sind(i):end)`` where ``Sind`` is a row vector of starting indices in ``S``.
 %
-% We define $\Delta^i = H^i(\beta_i) = \{ h(\beta_i) : h \in H^i \}$, and those orbits are stored
-% as a cell array $\Delta = \{ \Delta^1, \Delta^2, ... \}$; each $\Delta^i$ is a double row vector
-% sorted according to the base order.
+% The properties ``Delta`` ($\Delta$), ``U``, ``Uinv`` are cell arrays indexed by ``i``, while ``iDelta``
+% is stored as an integer matrix.
+%
+% For each level $i$ in the BSGS chain, we have the following.
+%
+% $\Delta^i = H^i(\beta_i) = \{ h(\beta_i) : h \in H^i \}$ is the orbit of $\beta_i$ under the current
+% strong generators. $\Delta^i$ is stored in ``Delta{i}`` in the order of discovery with $\beta_i$ is sorted
+% in ``Delta{i}(1)``.
+%
+% To check quickly if a point $b$ is a member of an orbit $\Delta^i$, the matrix ``iDelta`` stores its index
+% in ``Delta{i}`` as follows: ``Delta{i}(iDelta(i,b)) == b``, and ``iDelta(i,b) == 0`` when $b$ is not part of
+% $\Delta^i$.
 %
 % We define the transversal elements $u^i_b$ such that $u^i_b(\beta_i) = b$, and the inverse transversal
 % elements $uInv^i_(\beta_i) = b$.
 %
-% The transversal elements for a particular node in the chain are stored as column vectors in a matrix,
-% with an order corresponding to the orbit $\Delta^i$; those matrices are stored in the row cell array ``U``.
+% The transversal elements for a particular level $i$ in the chain are stored as column vectors in the matrix ``U{i}``
+% with an order corresponding to the orbit $\Delta^i$.
 %
-% Transversal element inverses are stored as column vectors in a matrix, in a row cell array ``Uinv``.
-%
-% This class also stores the images of a group homomorphism. When no homomorphism computation is required,
-% we use the trivial group `+replab.+bsgs.TrivialGroup` as a placeholder.
-%
-% For that, images of the strong generators are stored in ``J``, and the images of transversal
-% elements are stored in row cell arrays (containing row cell arrays of group elements)
-% ``V`` and ``Vinv``, with conventions similar as ``U`` and ``Uinv``.
+% Accordingly, transversal element inverses are stored as column vectors in a matrix in the matrix ``Uinv{i}``.
 %
 % The following invariants are maintained by the code below.
 %
@@ -49,120 +48,581 @@ classdef Chain < replab.Str
 %
 % In both cases:
 %
-% * The base ``B``, base order ``bo``, ``boinv``, the data structures for orbits and transversals ``Delta``, ``U``, ``Uinv`` are consistent.
+% * The base ``B``, the data structures for orbits and transversals ``Delta``, ``U``, ``Uinv`` are consistent.
 %
 % * The strong generating set is ordered, so that the starting indices ``Sind`` describe the sequence $S^i$
-%
-% * The above is consistent with the image data structures ``T``, ``V``, ``Vinv``
 
     properties (SetAccess = protected)
         isMutable % (logical): Whether the chain can be modified
         n % (integer): Domain size
         B % (integer(1,\*)): Row vector of base points (all between 1..n without duplicates)
-        bo % (integer(1,\*)): Base order, i.e. for each domain element, gives its order
-        boinv % (integer(1,\*)): Inverse permutation of ``bo``, permutation that starts with ``B`` and then the remaining domain elements increasing
+
         S % (integer(n, nS)): Matrix of strong generators stored as columns vectors (nS = # of strong generators)
         Sind % (integer(1, k+1)): Starting index of strong generators for each stabilizer subgroup, where k = length(B)
              %
-             % $S^(k+1)$ corresponds to strong generators that are stabilized by all base points
-             % If no strong generators are present, use the default starting index 1
-        Delta % (cell(1,\*) of integer(1,\*)): Row cell array of orbits, each orbit is a row double vector with orbit elements sorted according to the base order
-        U % row cell array of transversal elements stored as n x orbitSize matrices
-        Uinv % row cell array of inverse transversal elements
-        J % image group
-        T % row cell array of images of strong generators
-        V % row cell array of row cell arrays of transversal images
-        Vinv % row cell array of row cell arrays of inverse transversal images
+             %                    We have ``Sind(k+1) == nS + 1``.
+
+        Delta % (cell(1,k) of integer(1,\*)): Each orbit is a row vector containing orbit elements
+        iDelta % (integer(n,k)): For each orbit, maps a domain element to its position in Delta{i} or 0 if not present
+
+        U % (cell(1,k) of integer(n,\*)): Transversal elements
+        Uinv % (cell(1,k) of integer(n,\*)): Inverse transversal elements
     end
 
     methods
 
-        function self = Chain(n, J)
-        % Constructs an empty mutable chain for a subgroup of the permutation group
-        %
-        % The subgroup acts on 1..n
+        function self = Chain(n, B, S, Sind, Delta, iDelta, U, Uinv)
+        % Constructs an empty mutable chain for a group of permutations acting on ``n`` elements
         %
         % Args:
-        %   n: Domain size
-        %   J (replab.Group, optional): Group structure for morphism images
-        %                               The default value is `+replab.+bsgs.TrivialGroup`
+        %   n (integer): Domain size
         %
         % Returns:
-        %   A constructed empty BSGS chain
-            if nargin < 2
-                J = replab.bsgs.TrivialGroup;
-            end
+        %   `+replab.bsgs.Chain`: A constructed BSGS chain
             self.isMutable = true;
             self.n = n;
-            self.B = [];
-            self.bo = 1:n;
-            self.boinv = 1:n;
-            self.S = [];
-            self.Sind = [1];
-            self.Delta = {};
-            self.U = {};
-            self.Uinv = {};
-            self.J = J;
-            self.T = {};
-            self.V = {};
-            self.Vinv = {};
+            if nargin == 8
+                self.B = B;
+                self.S = S;
+                self.Sind = Sind;
+                self.Delta = Delta;
+                self.iDelta = iDelta;
+                self.U = U;
+                self.Uinv = Uinv;
+            else
+                self.B = zeros(1, 0);
+                self.S = zeros(n, 0);
+                self.Sind = [1];
+                self.Delta = cell(1, 0);
+                self.iDelta = zeros(n,0);
+                self.U = cell(1, 0);
+                self.Uinv = cell(1, 0);
+            end
+        end
+
+        function l = isLex(self)
+        % Returns true if the points in this base are monotonically increasing, and stabilize the points before them
+        %
+        % Returns:
+        %   logical: True if ``base(l) < base(l+1)`` holds for all ``l`` and transversals ``U{l}`` all stabilize ``1:base(l)-1``
+            l = false;
+            prev = 0;
+            for i = 1:length(self.B)
+                beta = self.B(i);
+                if i > 1 && beta < prev
+                    return
+                end
+                U = self.U{i};
+                if ~all(all(bsxfun(@eq, U(1:beta-1,:), (1:beta-1)')))
+                    return
+                end
+                prev = beta;
+            end
+            l = true;
+        end
+
+        function b = base(self)
+        % Returns the base of this stabilizer chain
+        %
+        % Returns:
+        %   integer(1,\*): Base
+            b = self.B;
+        end
+
+        function s = strongGeneratorsForLevel(self, l)
+        % Returns the strong generators for H^l
+        %
+        % Returns:
+        %   integer(\*,\*): Generators as columns in a matrix
+            s = self.S(:,self.Sind(l):end);
+        end
+
+        function s = newStrongGeneratorsAtLevel(self, l)
+        % Returns the strong generators that are present in H^l but not H^l+1
+        %
+        % Returns:
+        %   integer(\*,\*): Generators as columns in a matrix
+            s = self.S(:,self.Sind(l):self.Sind(l+1)-1);
+        end
+
+        function replaceNewStrongGeneratorsAtLevel(self, l, snew)
+        % Replaces the strong generators at a given level
+        %
+        % Updates the strong generators data structure accordingly
+        %
+        % Args:
+        %   l (integer): Level
+        %   snew (integer(\*,\*)): New generators given as columns in a matrix
+            sold = self.newStrongGeneratorsAtLevel(l);
+            Sind = self.Sind;
+            self.S = [self.S(:,1:self.Sind(l)-1) snew self.S(:,self.Sind(l+1):end)];
+            Sind(l+1:end) = Sind(l+1:end) + size(snew, 2) - size(sold, 2);
+            self.Sind = Sind;
+        end
+
+        function gs = allElements(self)
+        % Computes a matrix with its columns containing all elements from the stabilizer chain
+        %
+        % Returns:
+        %   double(\*,\*): Matrix with each column an element
+            gs = [1:self.n]';
+            if self.length == 0 || max(self.orbitSizes) == 1 % tests if order == 1
+                return
+            else
+                i = self.length;
+                while i > 0 && self.orbitSize(i) == 1
+                    i = i - 1;
+                end
+                if i == 0
+                    return % gs is identity
+                end
+                gs = self.U{i};
+                i = i - 1;
+                while i > 0
+                    Ui = self.U{i};
+                    if size(Ui, 1) > 1
+                        newgs = gs;
+                        for j = 2:size(Ui,2)
+                            Uij = Ui(:,j);
+                            newgs = [newgs Uij(gs)];
+                        end
+                    end
+                    gs = newgs;
+                    i = i - 1;
+                end
+            end
+        end
+
+        function baseSwap(self, l)
+        % Swaps base points beta_l and beta_m, with m = l + 1
+        %
+        % Modifies the stabilizer chain in place, so it must be mutable
+            assert(self.isMutable);
+            n = self.n;
+            m = l + 1;
+            newBl = self.B(m);
+            newBm = self.B(l);
+            target = self.orbitSize(l)*self.orbitSize(m)/length(self.orbitUnderG(l, newBl));
+            oldSl = self.newStrongGeneratorsAtLevel(l);
+            oldSm = self.newStrongGeneratorsAtLevel(m);
+            if ~isempty(oldSl)
+                stab = oldSl(newBl, :) == newBl; % the strong generators that stabilize the new beta_l
+                newSl = [oldSm oldSl(:, ~stab)];
+                newSm = oldSl(:, stab);
+            else
+                newSl = oldSm;
+                newSm = zeros(n, 0);
+            end
+            oldUl = self.U{l};
+            oldUm = self.U{m};
+            self.U{l} = self.U{m};
+            self.Uinv{l} = self.Uinv{m};
+            self.U{m} = (1:n)';
+            self.Uinv{m} = (1:n)';
+            self.iDelta(:,l) = self.iDelta(:,m);
+            self.iDelta(:,m) = 0;
+            self.iDelta(newBm, m) = 1;
+            self.Delta{l} = self.Delta{m};
+            self.Delta{m} = newBm;
+            self.B(l) = newBl;
+            self.B(m) = newBm;
+            self.replaceNewStrongGeneratorsAtLevel(l, newSl);
+            self.replaceNewStrongGeneratorsAtLevel(m, newSm);
+            self.completeOrbit(l);
+            self.completeOrbit(m);
+            % generate random elements and sift them through the incomplete level
+            while self.orbitSize(m) < target
+                ul = oldUl(:,randi(size(oldUl, 2)));
+                um = oldUm(:,randi(size(oldUm, 2)));
+                g = ul(um);
+                for i = l+2:self.length
+                    gi = self.randomTransversal(i);
+                    g = g(gi); % compose(g, gi)
+                end
+                a = self.uinv(l, g(newBl));
+                if self.iDelta(a(g(newBm)), m) == 0
+                    h = a(g); % a * g
+                    self.addStrongGenerator(m, h);
+                    self.completeOrbit(m);
+                end
+            end
+        end
+
+
+        function orbit = orbitUnderG(self, l, b)
+        % Returns the orbit of the point b under G^l as a row integer vector
+            orbit = false(1, self.n);
+            orbit(b) = true;
+            toCheck = b;
+            range = self.Sind(l):self.Sind(end)-1;
+            S = self.S;
+            while ~isempty(toCheck)
+                h = toCheck(end);
+                toCheck = toCheck(1:end-1);
+                for i = range
+                    o = S(h,i);
+                    if ~orbit(o)
+                        orbit(o) = true;
+                        toCheck(end+1) = o;
+                    end
+                end
+            end
+            orbit = find(orbit);
+        end
+
+        function conjugate(self, g)
+        % Conjugates in place this mutable chain by the element g
+        %
+        % Changes base points from ``beta_l`` to ``g(beta_l)``
+            assert(self.isMutable);
+            l = 1;
+            B = self.B;
+            while g(B(l)) == B(l)
+                l = l + 1;
+            end
+            n = self.n;
+            gInv = zeros(1, n);
+            gInv(g) = 1:n;
+            S = self.S;
+            for i = self.Sind(l):self.Sind(end)-1
+                S(:,i) = g(S(gInv,i));
+            end
+            self.S = S;
+            iDelta = self.iDelta;
+            iDelta(:,l:end) = 0;
+            for i = l:self.length
+                U = self.U{i};
+                Uinv = self.Uinv{i};
+                Delta = g(self.Delta{i});
+                for j = 1:size(U, 2)
+                    U(:,j) = g(U(gInv,j));
+                    Uinv(:,j) = g(Uinv(gInv,j));
+                end
+                iDelta(Delta,i) = 1:length(Delta);
+                self.U{i} = U;
+                self.Uinv{i} = Uinv;
+                self.Delta{i} = Delta;
+            end
+            self.iDelta = iDelta;
+            self.B = g(B);
+        end
+
+        function res = stabilizes(self, l, beta)
+        % Tests whether H^l stabilizes beta
+        %
+        % Args:
+        %   l (integer): Level to test
+        %   beta (integer): Domain point to test
+            res = all(self.S(beta, self.Sind(l):end) == beta);
+        end
+
+        function ok = baseMatchesPrescribedBase(self, prescribedBase, removeRedundant)
+        % Tests whether the current base respect a prescribed base
+        %
+        % Args:
+        %   prescribedBase (integer(1,\*)): Prescribed base to test
+        %   removeRedundant (logical, optional): Whether to remove redundant base points, default value false
+        %
+        % Returns:
+        %   logical: Whether the base matches the prescription
+            ok = false; % by default, we return fail
+            i = 1; % i iterates over the prescribed base
+            l = 1; % l iterates over the current levels
+            while i <= length(prescribedBase)
+                if l > self.length
+                    if removeRedundant
+                        % ok, because the prescription is now for redundant points
+                        i = i + 1;
+                    else
+                        return % not ok, because we'd need those points
+                    end
+                elseif prescribedBase(i) == self.B(l)
+                    % good, we match
+                    i = i + 1;
+                    l = l + 1;
+                elseif self.stabilizes(l, prescribedBase(i)) && removeRedundant
+                    i = i + 1; % the point is redundant, ignore it
+                else
+                    return
+                end
+            end
+            ok = true;
+        end
+
+        function changeBasePointAt(self, l, newBeta)
+        % Changes a base point at a given position in the chain
+        %
+        % Preserves the base before the given level, modifies the chain in place.
+        % Does not remove redundant base points.
+        %
+        % Args:
+        %   l (integer): Level at which to set the base point
+        %   newBeta (integer): New base point to set
+        %   removeRedundant (logical): Whether to remove redundant base points
+            assert(all(self.B(1:l-1) ~= newBeta));
+            self.baseChange([self.B(1:l-1) newBeta]);
+        end
+
+        function baseChange(self, newBase, removeRedundant)
+        % Changes in-place the base of this BSGS chain
+        %
+        % Assumes that the chain is mutable.
+        %
+        % Can remove the base points that are redundant, i.e. have orbit size 1.
+        %
+        % Args:
+        %   newBase (integer(1,\*)): New base to use
+        %   removeRedundant (logical, optional): Whether to remove redundant base points, default value false
+            assert(self.isMutable);
+            if nargin < 3 || isempty(removeRedundant)
+                removeRedundant = false;
+            end
+            i = 1; % i iterates over newBase
+            imax = length(newBase);
+            l = 1; % l iterates over the levels
+                   % when removeRedundant = false, i == l
+            while i <= imax
+                newBeta = newBase(i);
+                if l == self.length + 1
+                    % we are at the end of the chain
+                    if ~removeRedundant
+                        % if we need redundant base points, insert it
+                        self.insertRedundantBasePoint(l, newBeta);
+                        l = l + 1;
+                    end % otherwise do nothing
+                    i = i + 1;
+                elseif self.B(l) == newBeta % we match!
+                    if removeRedundant && self.orbitSize(l) == 1
+                        % but we need to remove this redundant point
+                        self.removeRedundantBasePoint(l);
+                        % l stays in place, the chain has shifted
+                        i = i + 1; % and we go to the next newBase point
+                    else
+                        % we just move forwards
+                        i = i + 1;
+                        l = l + 1;
+                    end
+                elseif all(self.S(newBeta, self.Sind(l):end) == newBeta)
+                    % the new point is redundant
+                    ind = find(self.B == newBeta);
+                    if ~isempty(ind)
+                        assert(self.orbitSize(ind) == 1); % consistency check
+                        self.removeRedundantBasePoint(ind);
+                    end
+                    if removeRedundant
+                        % skip this point in newBase
+                        i = i + 1;
+                    else
+                        % insert a redundant base point and move forwards
+                        self.insertRedundantBasePoint(l, newBeta);
+                        i = i + 1;
+                        l = l + 1;
+                    end
+                    % vvv for the cases below, the new base point is not already there
+                elseif self.orbitSize(l) == 1
+                    % the "wrong" level is redundant, we can eliminate it quickly
+                    self.removeRedundantBasePoint(l);
+                    % no need to move l, the chain has shifted
+                else % ok we need to do some work
+                    m = l;
+                    while m <= self.length && self.iDelta(newBeta, m) == 0
+                        m = m + 1;
+                    end
+                    if m == self.length + 1
+                        self.insertEndBasePoint(newBeta);
+                    end
+                    g = self.u(m, newBeta);
+                    if ~isequal(g, 1:self.n)
+                        self.conjugate(g);
+                    end
+                    assert(self.B(m) == newBeta);
+                    for j = m-1:-1:l
+                        self.baseSwap(j);
+                    end
+                    i = i + 1;
+                    l = l + 1;
+                end
+            end
+            % remove the redundant base points after the specified base
+            while l <= self.length
+                if self.orbitSize(l) == 1
+                    self.removeRedundantBasePoint(l);
+                else
+                    l = l + 1;
+                end
+            end
+            %assert(self.baseMatchesPrescribedBase(newBase, removeRedundant));
+            %self.check;
+        end
+
+        function show(self, i)
+        % Pretty-prints this stabilizer chain
+        %
+        % Args:
+        %   i (integer, optional): If omitted, print general info about the chain.
+        %                          If present, pretty-prints the given level.
+            if nargin < 2
+                table = cell(2, self.length+1);
+                table{1,1} = 'base: ';
+                table{2,1} = 'orbit: ';
+                table{3,1} = 'sgens: ';
+                spec = ['r' repmat('l', 1, self.length)];
+                for i = 1:self.length
+                    table{1,i+1} = sprintf('%d', self.B(i));
+                    table{2,i+1} = strrep(replab.shortStr(sort(self.Delta{i})), ' ', '');
+                    for j = self.Sind(i):self.Sind(i+1)-1
+                        table{3+j-self.Sind(i),i+1} = strrep(replab.shortStr(self.S(:,j)'), ' ', '');
+                    end
+                end
+                disp(strjoin(replab.str.alignspace(table, spec), '\n'));
+            else
+                fprintf('Level %d Base point %d\n', i, self.B(i));
+                table = cell(length(self.Delta{i})+1, 3);
+                table{1,1} = 'Orbit pt ';
+                table{1,2} = 'Transversal ';
+                table{1,3} = 'Trans. inv. ';
+                for j = 1:length(self.Delta{i})
+                    table{j+1,1} = sprintf('%d', self.Delta{i}(j));
+                    table{j+1,2} = strrep(replab.shortStr(self.U{i}(:,j)'), ' ', '');
+                    table{j+1,3} = strrep(replab.shortStr(self.Uinv{i}(:,j)'), ' ', '');
+                end
+                disp(strjoin(replab.str.alignspace(table, 'cll'), '\n'));
+            end
+        end
+
+        function c = chainFromLevel(self, l, immutable)
+        % Returns the chain starting at the given level
+        %
+        % Always returns a fresh copy, even if ``l == 1``.
+        %
+        % Args:
+        %   l (integer): Level in this chain at which to start the returned chain
+        %
+        % Returns:
+        %   `.Chain`: The cut chain
+            newB = self.B(l:end);
+            newS = self.S(:, self.Sind(l):end);
+            newSind = self.Sind(l:end) - self.Sind(l) + 1;
+            newDelta = self.Delta(l:end);
+            newiDelta = self.iDelta(:, l:end);
+            newU = self.U(l:end);
+            newUinv = self.Uinv(l:end);
+            c = replab.bsgs.Chain(self.n, newB, newS, newSind, newDelta, newiDelta, newU, newUinv);
+            if immutable
+                c.makeImmutable;
+            end
+        end
+
+        function [c orbit iOrbit U Uinv] = stabilizer(self, b, removeRedundantIfChangingBase)
+        % Returns the stabilizer chain that represents the group stabilizing the given point
+        %
+        % Optionally returns the orbit, index of orbit points, transversal for the original group
+        % when the first base point is ``b``
+            if nargin < 3
+                removeRedundantIfChangingBase = false;
+            end
+            if self.length == 0
+                c = self.mutableCopy;
+                if ~self.isMutable
+                    c.makeImmutable;
+                end
+                n = self.n;
+                orbit = b;
+                iOrbit = zeros(1, n);
+                iOrbit(b) = 1;
+                U = (1:n)';
+                Uinv = (1:n)';
+            elseif self.B(1) == b
+                newB = self.B(2:end);
+                newS = self.S(:, self.Sind(2):end);
+                newSind = self.Sind(2:end) - self.Sind(2) + 1;
+                newDelta = self.Delta(2:end);
+                newiDelta = self.iDelta(:, 2:end);
+                newU = self.U(2:end);
+                newUinv = self.Uinv(2:end);
+                if nargout > 1
+                    orbit = self.Delta{1};
+                end
+                if nargout > 2
+                    iOrbit = self.iDelta(:,1);
+                end
+                if nargout > 3
+                    U = self.U{1};
+                end
+                if nargout > 4
+                    Uinv = self.Uinv{1};
+                end
+                c = replab.bsgs.Chain(self.n, newB, newS, newSind, newDelta, newiDelta, newU, newUinv);
+                if ~self.isMutable
+                    c.makeImmutable;
+                end
+            else
+                c = self.mutableCopy;
+                c.baseChange(b, removeRedundantIfChangingBase);
+                if ~self.isMutable
+                    c.makeImmutable;
+                end
+                if nargout == 1
+                    c = c.stabilizer(b);
+                else
+                    [c orbit iOrbit U Uinv] = c.stabilizer(b);
+                end
+            end
+        end
+
+        function checkLevel(self, i)
+        % Checks the ``i``-th level of this BSGS chain
+            n = self.n;
+            betai = self.B(i);
+            % check strong generators
+            for j = self.Sind(i):self.Sind(i+1)-1
+                % strong generators particular to this step move beta_i
+                assert(self.S(betai, j) ~= betai);
+            end
+            for j = self.Sind(i+1):self.Sind(end)-1
+                % strong generators of stabilizer subgroups are stabilized
+                assert(self.S(betai, j) == betai);
+            end
+            iD = self.iDelta(:,i)';
+            D = self.Delta{i};
+            assert(isequal(sort(find(iD ~= 0)), sort(D)));
+            assert(isequal(iD(D), 1:length(D)));
+            for j = 1:length(D)
+                b = D(j);
+                Ui = self.U{i};
+                ub1 = Ui(:,j)';
+                ub2 = self.u(i, b);
+                assert(isequal(ub1, ub2), 'inconsistent transversal retrieval');
+                assert(ub1(betai) == b, 'inconsistent transversal element');
+                Uinvi = self.Uinv{i};
+                ubinv1 = Uinvi(:,j)';
+                ubinv2 = self.uinv(i, b);
+                assert(isequal(ubinv1, ubinv2), 'inconsistent transversal retrieval');
+                assert(ubinv1(b) == betai, 'inconsistent transversal element');
+                for l = self.Sind(i):self.Sind(end)-1
+                    imgD = self.S(D, l);
+                    assert(all(ismember(imgD, D)) > 0, 'All images under strong generators should be present in the orbit');
+                end
+            end
         end
 
 
         function check(self)
-            self.checkTransversals;
-            self.checkStrongGenerators;
-        end
-
-        function checkTransversals(self)
-            n = self.n;
-            k = self.length;
-            for i = 1:k
-                members = false(1, n);
-                beta_i = self.B(i);
-                orbit = self.Delta{i};
-                members(orbit) = true;
-                for j = 1:length(orbit)
-                    b = orbit(j);
-                    Ui = self.U{i};
-                    ub1 = Ui(:,j);
-                    ub2 = self.u(i, b);
-                    assert(isequal(ub1, ub2), 'inconsistent transversal retrieval');
-                    assert(ub1(beta_i) == b, 'inconsistent transversal element');
-                    Uinvi = self.Uinv{i};
-                    ubinv1 = Uinvi(:,j);
-                    ubinv2 = self.uinv(i, b);
-                    assert(isequal(ubinv1, ubinv2), 'inconsistent transversal retrieval');
-                    assert(ubinv1(b) == beta_i, 'inconsistent transversal element');
-                    for l = self.Sind(i):self.nStrongGenerators
-                        imgb = self.S(b, l);
-                        assert(members(imgb));
-                    end
-                end
-            end
-        end
-
-        function checkStrongGenerators(self)
-        % Performs checks on the strong generators of the current chain
-            k = self.length;
-            nS = self.nStrongGenerators;
-            Sind = [self.Sind nS+1];
-            for i = 1:k
-                betai = self.B(i);
-                for j = Sind(i):Sind(i+1)-1
-                    % strong generators particular to this step move beta_i
-                    assert(S(betai, j) ~= betai);
-                end
-                for j = Sind(i+1):nS
-                    % strong generators of stabilizer subgroups are stabilized
-                    assert(S(betai, j) == betai);
-                end
+        % Checks that the BSGS chain is well-formed
+            for i = 1:self.length
+                self.checkLevel(i);
             end
         end
 
         %% Immutable functions
 
+        function s = orbitSize(self, l)
+        % Returns the size of the l-orbit orbit
+            s = length(self.Delta{l});
+        end
+
         function s = orbitSizes(self)
+        % Returns the size of orbits for each level
             s = cellfun(@(x) length(x), self.Delta);
         end
 
@@ -179,13 +639,14 @@ classdef Chain < replab.Str
         %
         % Returns:
         %   vpi: Size of the group stored in the chain
-            o = vpi(1);
-            for i = 1:self.length
-                o = o * vpi(length(self.Delta{i}));
+            if self.length == 0
+                o = vpi(1);
+            else
+                o = replab.util.multiplyIntegers(self.orbitSizes);
             end
         end
 
-        function g = sampleUniformly(self)
+        function g = sample(self)
         % Samples an element uniformly from the group
         %
         % Returns:
@@ -197,27 +658,14 @@ classdef Chain < replab.Str
             end
         end
 
-        function [g v] = sampleUniformlyWithImage(self)
-        % Samples an element uniformly from the group along with its image
-        %
-        % Returns
-        % -------
-        %  g: permutation
-        %    Random group element
-        %  v: element of `J`
-        %    Image of ``g``
-            g = 1:self.n;
-            v = self.J.identity;
-            for i = 1:self.length
-                [gi vi] = self.randomTransversalWithImage(i);
-                g = g(gi); % compose(g, gi)
-                v = self.J.compose(v, vi);
-            end
-        end
-
         function nS = nStrongGenerators(self)
         % Returns the number of strong generators in this BSGS chain
-            nS = size(self.S, 2);
+            nS = self.Sind(end) - 1;
+        end
+
+        function s = strongGenerators(self)
+        % Returns all the strong generators in a row cell array
+            s = arrayfun(@(i) self.strongGenerator(i), 1:self.nStrongGenerators, 'uniform', 0);
         end
 
         function p = strongGenerator(self, i)
@@ -229,16 +677,6 @@ classdef Chain < replab.Str
         % Returns:
         %   A permutation given as a row vector
             p = self.S(:, i)';
-        end
-
-        function img = strongGeneratorImage(self, i)
-        % Returns the image of the i-th strong generator under the stored homomorphism
-        %
-        % Args:
-        %  i (integer): Strong generator index
-        %
-        % Returns:
-        %   A group element of `J`
         end
 
         function u = randomTransversal(self, i)
@@ -254,25 +692,6 @@ classdef Chain < replab.Str
             u = Ui(:,j)';
         end
 
-        function [u v]  = randomTransversalWithImage(self, i)
-        % Returns a random transversal element from a specific transversal set along with its image
-        %
-        % Args:
-        %  i (integer): Index of the transversal set
-        %
-        % Returns
-        % -------
-        %  u: permutation
-        %    Random transversal element
-        %  v: element of `J`
-        %    Image of ``g``
-            j = randi(length(self.Delta{i}));
-            Ui = self.U{i};
-            u = Ui(:,j)';
-            Vi = self.V{i};
-            v = Vi{j};
-        end
-
         function j = orbitIndex(self, i, b)
         % Looks up an orbit element
         %
@@ -283,8 +702,7 @@ classdef Chain < replab.Str
         % Returns:
         %   integer: When ``b`` is part of the i-th orbit, returns an integer ``j`` such that ``self.Delta{i}(j) = b``,
         %            otherwise returns 0.
-        %   if
-            [~, j] = ismember(b, self.Delta{i});
+            j = self.iDelta(b, i);
         end
 
         function g = u(self, i, b)
@@ -296,7 +714,7 @@ classdef Chain < replab.Str
         %
         % Returns:
         %   The corresponding transversal element, or [] if b is not part of the orbit
-            [~, j] = ismember(b, self.Delta{i});
+            j = self.iDelta(b, i);
             if j == 0
                 g = [];
             else
@@ -313,109 +731,14 @@ classdef Chain < replab.Str
         %   b (integer): Orbit element
         %
         % Returns:
-        %   The corresponding inverse transversal element or [] if b is not part
-        %   of the orbit
-            [~, j] = ismember(b, self.Delta{i});
+        %   The corresponding inverse transversal element or [] if b is not part of the orbit
+            j = self.iDelta(b, i);
             if j == 0
                 g = [];
                 return
             end
             Uinvi = self.Uinv{i};
             g = Uinvi(:,j)';
-        end
-
-        function img = v(self, i, b)
-        % Looks up the image of the transversal element that maps beta_i to b
-        %
-        % Args:
-        %   i (integer): Index of transversal
-        %   b (integer): Orbit element
-        %
-        % Returns:
-        %   The corresponding transversal element image if it exists
-        %
-        % Raises:
-        %   An error if ``b`` is not part of the orbit Delta^i
-            [~, j] = ismember(b, self.Delta{i});
-            assert(j ~= 0, 'Element not part of orbit');
-            Vi = self.V{i};
-            img = Vi{j};
-        end
-
-        function img = vinv(self, i, b)
-        % Looks up the image of the inverse transversal element that maps b to beta_i
-        %
-        % Args:
-        %   i: Index of transversal
-        %   b: Orbit element
-        %
-        % Returns:
-        %   The corresponding image of the inverse transversal element
-        %
-        % Raises:
-        %   An error if ``b`` is not part of the orbit Delta^i
-            [~, j] = ismember(b, self.Delta{i});
-            assert(j ~= 0, 'Element not part of orbit');
-            Vinvi = self.Vinv{i};
-            img = Vinvi{j};
-        end
-
-        function img = image(self, g)
-        % Returns the image of a chain element
-        %
-        % Args:
-        %   g (permutation row vector): Permutation part of this chain
-        %
-        % Returns:
-        %   The image of the given element ``g``
-        %
-        % Raises:
-        %   An error if the element is not part of the chain
-            h = g;
-            img = self.J.identity;
-            for i = 1:self.length
-                beta_i = self.B(i);
-                b = h(beta_i);
-                [~, j] = ismember(b, self.Delta{i});
-                assert(j ~= 0, 'Element is not member of the chain');
-                Uinvi = self.Uinv{i};
-                uinv = Uinvi(:, j)';
-                Vi = self.V{i};
-                v = Vi{j};
-                h = uinv(h); % compose(uinv, h)
-                img = self.J.compose(img, v);
-            end
-        end
-
-        function img = inverseImage(self, g)
-        % Returns the inverse image of a chain element
-        %
-        % Satisfies
-        %
-        % self.J.compose(self.image(g), self.inverseImage(y)) == self.J.identity
-        %
-        % Args:
-        %   g (permutation row vector): Permutation part of this chain
-        %
-        % Returns:
-        %   The inverse image of the given element ``g``
-        %
-        % Raises:
-        %   An error if the element is not part of the chain
-            h = g;
-            img = self.J.identity;
-            for i = 1:self.length
-                beta_i = self.B(i);
-                b = h(beta_i);
-                [~, j] = ismember(b, self.Delta{i});
-                assert(j ~= 0, 'Element is not member of the chain');
-                Uinvi = self.Uinv{i};
-                uinv = Uinvi(:, j)';
-                Vinv = self.Vinv{i};
-                vinv = Vinv{j};
-                h = uinv(h); % compose(uinv, h)
-                img = self.J.compose(vinv, img);
-            end
         end
 
         function b = contains(self, g)
@@ -426,14 +749,6 @@ classdef Chain < replab.Str
             b = (i > k) && all(h == 1:n); % i > k and h is the identity
         end
 
-
-        function T = imagesDecomposition(self)
-        % Returns the homomorphism group images into a product of transversals
-        %
-        % Guarantees that the first element of each transversal is the identity
-            k = self.length;
-            T = self.V;
-        end
 
         function [h i] = strip(self, g)
         % Strips a permutation through the chain
@@ -446,14 +761,12 @@ classdef Chain < replab.Str
         %   h: row permutation vector
         %     The part of the group element that could not be sifted
         %   i: integer
-        %     Index i-th such that h(beta_i) was not part of the orbit Delta^i
-        %   w: element of `J`, optional
-        %     The part of the image that could not be sifted
+        %     Index ``i`` such that ``h(beta_i)`` was not part of the orbit ``Delta^i``
             k = self.length;
             h = g;
             for i = 1:k
                 b = h(self.B(i));
-                [~, j] = ismember(b, self.Delta{i});
+                j = self.iDelta(b, i);
                 if j == 0
                     return
                 end
@@ -468,288 +781,185 @@ classdef Chain < replab.Str
 
         %% Element indexing
 
-        function v = imageFromIndex(self, index)
-        % Return the image corresponding to an overall index
-        %
-        % Args:
-        %   index (vpi): Group element index
-        %
-        % Returns:
-        %   element of `J`: Image
-            v = self.imageFromIndices(self.indicesFromIndex(index));
-        end
-
-        function el = elementFromIndex(self, index)
-        % Return the element corresponding to an overall index
-        %
-        % Args:
-        %   index (vpi): Element index
-        %
-        % Returns:
-        %   permutation: Chain element
-            el = self.elementFromIndices(self.indicesFromIndex(index));
-        end
-
-        function index = indexFromElement(self, element)
-        % Returns the index corresponding to a group element
-        %
-        % Args:
-        %   element (row permutation vector): A permutation element of this chain
-        %
-        % Returns:
-        %   vpi: Index of the given group element
-            index = self.indexFromIndices(self.indicesFromElement(element));
-        end
-
         function g = elementFromIndices(self, indices)
         % Computes the group element from transversal indices
         %
-        % See ``self.toIndices``
+        % The order is base dependent; if the base elements are non-decreasing,
+        % then the elements are sorted lexicographically.
         %
         % Args:
-        %   indices (row integer vector): Transversal indices
+        %   indices (integer(1, \*)): Transversal indices
         %
         % Returns:
         %   permutation: Chain element
             g = 1:self.n;
             for i = 1:self.length
+                % sort the current orbit to maintain lexicographic ordering
+                orbit = self.Delta{i};
+                [~,I] = sort(g(orbit));
                 Ui = self.U{i};
-                gi = Ui(:,indices(i));
+                gi = Ui(:, I(indices(i)));
                 g = g(gi); % compose(g, gi)
-            end
-        end
-
-        function v = imageFromIndices(self, indices)
-        % Computes the image from transversal indices
-        %
-        % Args:
-        %   indices (row integer vector): Transversal indices
-        %
-        % Returns:
-        %   element of `J`: Image for the given indices
-            v = self.J.identity;
-            for i = 1:self.length
-                Vi = self.V{i};
-                vi = Vi{indices(i)};
-                v = self.J.compose(v, vi);
             end
         end
 
         function indices = indicesFromElement(self, g)
         % Computes the transversal indices decomposition for a group element
         %
-        % The indices are such that
-        % g = self.u(1, indices(1)) * ... * self.u(k, indices(k))
+        % The order is base dependent; if the base elements are non-decreasing,
+        % then the elements are sorted lexicographically.
         %
         % Args:
-        %   g (row permutation vector): A permutation group element
+        %   g (permutation): A permutation group element
         %
         % Returns:
-        %   (row integer vector): Transversal indices
+        %   integer(1,\*): Transversal indices
             k = self.length;
-            h = g;
             indices = zeros(1, k);
+            g0 = g;
+            h = 1:self.n;
             for i = 1:k
-                b = h(self.B(i));
-                [~, j] = ismember(b, self.Delta{i});
-                indices(i) = j;
+                b = g(self.B(i));
+                orbit = self.Delta{i};
+                [~,I] = sort(h(orbit));
+                j = self.iDelta(b, i);
                 if j == 0
                     indices = [];
                     return
                 end
+                indices(i) = find(I == j);
                 Uinvi = self.Uinv{i};
                 uinv = Uinvi(:, j)';
                 % note order is reversed compared to Holt, as
                 % we use a left action
-                h = uinv(h); % compose(uinv, h)
+                g = uinv(g); % compose(uinv, g)
+                Ui = self.U{i};
+                u = Ui(:, j)';
+                h = h(u);
             end
-        end
-
-        function indices = indicesFromIndex(self, index)
-        % Return the indices vector corresponding to an overall index
-        %
-        % Args:
-        %   index (vpi): Element index
-        %
-        % Returns:
-        %   row integer vector: Transversal indices
-            L = self.length;
-            indices = zeros(1, L);
-            f = self.orbitSizes;
-            ind = index - 1;
-            for i = L:-1:1
-                r = mod(ind, f(i));
-                ind = (ind - r)/f(i);
-                indices(i) = double(r) + 1;
-            end
-        end
-
-        function index = indexFromIndices(self, indices)
-        % Returns the overall index corresponding to the given indices vector
-        %
-        % Args:
-        %   indices (row integer vector): Transversal indices
-        %
-        % Returns:
-        %   vpi: Overall index
-            index = vpi(0);
-            L = self.length;
-            f = self.orbitSizes;
-            for i = 1:L
-                index = index * f(i);
-                index = index + vpi(indices(i) - 1);
-            end
-            index = index + vpi(1);
-        end
-
-        function [h i w] = stripWithImage(self, g, v)
-        % Strips a permutation through the chain along with its image
-        %
-        % Args:
-        %   g (row permutation vector): A permutation group element
-        %   v (element of `J`): The image of ``g`` under the encoded homomorphism
-        %
-        % Returns
-        % -------
-        %   h: row permutation vector
-        %     The part of the group element that could not be sifted
-        %   i: integer
-        %     Index i-th such that h(beta_i) was not part of the orbit Delta^i
-        %   w: element of `J`
-        %     The part of the image that could not be sifted
-            k = self.length;
-            h = g;
-            w = v;
-            for i = 1:k
-                b = h(self.B(i));
-                [~, j] = ismember(b, self.Delta{i});
-                if j == 0
-                    return
-                end
-                Uinvi = self.Uinv{i};
-                uinv = Uinvi(:, j)';
-                % note order is reversed compared to Holt, as
-                % we use a left action
-                h = uinv(h); % compose(uinv, h)
-                Vinvi = self.Vinv{i};
-                vinv = Vinvi{j};
-                w = self.J.compose(vinv, w);
-            end
-            i = k + 1; % marker that we striped through the chain
         end
 
         %% Mutable methods
 
-        function mutableMapImages(self, newJ, f)
-        % Maps in place the homomorphism images
-        %
-        % Args:
-        %   newJ: New image parent group
-        %   f: Group homomorphism from the current `J` to ``newJ``
-            k = self.length;
-            self.T = cellfun(f, self.T, 'uniform', 0);
-            for i = 1:k
-                Vi = self.V{i};
-                self.V{i} = cellfun(f, Vi, 'uniform', 0);
-                Vinvi = self.Vinv{i};
-                self.Vinv{i} = cellfun(f, Vinvi, 'uniform', 0);
-            end
-            self.J = newJ;
-        end
-
-        function recomputeBaseOrder(self)
-        % Recomputes the base order, and reorders all orbits according to the corrected base order
-            assert(self.isMutable);
-            n = self.n;
-            remaining = setdiff(1:n, self.B); % domain elements not part of base
-            boinv = [self.B remaining];
-            bo = zeros(1, n);
-            bo(self.boinv) = 1:n; % bo = inverse(boinv)
-            self.bo = bo;
-            self.boinv = boinv;
-            for i = 1:self.length
-                self.reorderOrbit(i);
-            end
-        end
-
-        function reorderOrbit(self, i)
-        % Reorders the i-th orbit elements according to the base order
-            assert(self.isMutable);
-            D = self.Delta{i};
-            Ui = self.U{i};
-            Uinvi = self.Uinv{i};
-            [~, I] = sort(self.bo(D));
-            % sort index vector in I
-            self.Delta{i} = D(I);
-            self.U{i} = Ui(:,I);
-            self.Uinv{i} = Uinvi(:,I);
-            % sort transversal images
-            Vi = self.V{i};
-            Vinvi = self.Vinv{i};
-            self.V{i} = Vi(I);
-            self.Vinv{i} = Vinvi(I);
-        end
-
-        function insertInOrbit(self, i, b, iS)
+        function insertInOrbit(self, i, b, u)
         % Inserts a new orbit element in an orbit
-        %
-        % The new orbit point is given by g(b), where g is the iS-th strong generator.
         %
         % Modifies the chain in place.
         %
         % Args:
-        %   i (double): Index of the orbit, 1 <= i <= self.length
-        %   b (double): Existing orbit point
-        %   iS (double): Index of strong generator
+        %   i (integer): Level of the orbit, 1 <= i <= self.length
+        %   b (integer): New orbit point
+        %   u (permutation): New transversal element
+            assert(self.isMutable);
+            assert(self.iDelta(b, i) == 0, 'Orbit point must be new');
+            self.Delta{i} = [self.Delta{i} b];
+            idx = length(self.Delta{i});
+            self.iDelta(b, i) = idx;
+            self.U{i} = [self.U{i} u(:)];
             n = self.n;
-            D = self.Delta{i};
-            pos = 1;
-            g = self.S(:,iS)';
-            newb = g(b);
-            newu = g(self.u(i, b)); % compose(g, self.u(i, b))
-            newuinv = zeros(1, n);
-            newuinv(newu) = 1:n; % newuinv = inverse(newu)
-            newv = self.J.compose(self.T{iS}, self.v(i, b));
-            newvinv = self.J.inverse(newv);
-            % Look for the position ``pos`` where to insert the new orbit point
-            while pos <= length(D) && self.bo(D(pos)) < self.bo(newb)
-                pos = pos + 1;
-            end
-            self.Delta{i} = [D(1:pos-1) newb D(pos:end)];
-            Ui = self.U{i};
-            self.U{i} = [Ui(:,1:pos-1) newu' Ui(:,pos:end)];
-            Uinvi = self.Uinv{i};
-            self.Uinv{i} = [Uinvi(:,1:pos-1) newuinv' Uinvi(:,pos:end)];
-            Vi = self.V{i};
-            self.V{i} = {Vi{1:pos-1} newv Vi{pos:end}};
-            Vinvi = self.Vinv{i};
-            self.Vinv{i} = {Vinvi{1:pos-1} newvinv Vinvi{pos:end}};
+            uinv = zeros(1, n);
+            uinv(u) = 1:n;
+            self.Uinv{i} = [self.Uinv{i} uinv(:)];
         end
 
         function completeOrbit(self, i)
         % Completes the i-th orbit
         %
-        % Iterates over current orbit elements and strong generators, and add new orbit
-        % points if necessary.
+        % Iterates over current orbit elements and strong generators, and add new orbit points if necessary
+        %
+        % Args:
+        %   i (integer): Level of the orbit, ``1 <= i <= self.length``
             assert(self.isMutable);
             n = self.n;
-            touched = false(1, n); % elements that were already considered
             toTest = self.Delta{i}; % we need to test all elements in the currently known orbit
-            touched(toTest) = true; % and note that they were already considered
-            nS = self.nStrongGenerators;
-            while length(toTest) > 0
-                b = toTest(end);
-                toTest = toTest(1:end-1);
-                for j = self.Sind(i):nS
-                    imgb = self.S(b, j);
-                    if ~touched(imgb)
-                        touched(imgb) = true;
-                        toTest = [toTest imgb];
+            Srange = self.Sind(i):self.Sind(end)-1;
+            while ~isempty(toTest)
+                imgs = self.S(toTest, Srange); % images of the tested point for all the strong generators
+                iDelta = self.iDelta(:, i);
+                mask = iDelta(imgs) == 0;
+                mask = reshape(mask, size(imgs)); % in case imgs is a vector, Matlab may change btw row/column vectors
+                [b_ind, S_ind] = find(mask);
+                for j = 1:length(b_ind)
+                    s = self.S(:, Srange(S_ind(j))); % strong generator
+                    b = toTest(b_ind(j)); % orbit element
+                    newb = s(b);
+                    if self.iDelta(newb, i) == 0
                         % new orbit point discovered, add it
-                        self.insertInOrbit(i, b, j);
+                        Ui = self.U{i};
+                        ind = self.iDelta(b, i);
+                        newu = s(Ui(:, ind)'); % new transversal compose(s, self.u(i, b))
+                        self.insertInOrbit(i, newb, newu);
                     end
                 end
+                toTest = imgs(mask);
+                toTest = toTest(:)';
+                if length(toTest) > 1
+                    toTest = sort(toTest);
+                    mask1 = [true, toTest(1:end-1) ~= toTest(2:end)];
+                    toTest = toTest(mask1);
+                end
             end
+        end
+
+        function removeRedundantBasePointsAtTheEnd(self)
+        % Removes the redundant base points at the end of the chain
+            range = find(self.Sind == self.Sind(end)); % find level at which there are no strong generators
+            range = fliplr(range(1:end-1));
+            for l = range
+                self.removeRedundantBasePoint(l);
+            end
+        end
+
+        function removeRedundantBasePoint(self, l)
+        % Removes the redundant base point at position ``l``
+        %
+        % Args:
+        %   l (integer): Level at which to remove the base point
+            assert(self.isMutable);
+            assert(self.orbitSize(l) == 1);
+            assert(self.Sind(l) == self.Sind(l+1));
+            self.U = horzcat(self.U(1:l-1), self.U(l+1:end));
+            self.Uinv = horzcat(self.Uinv(1:l-1), self.Uinv(l+1:end));
+            self.Sind = [self.Sind(1:l-1) self.Sind(l+1:end)];
+            self.B = [self.B(1:l-1) self.B(l+1:end)];
+            self.Delta = horzcat(self.Delta(1:l-1), self.Delta(l+1:end));
+            self.iDelta = [self.iDelta(:,1:l-1) self.iDelta(:,l+1:end)];
+        end
+
+        function removeRedundantBasePoints(self)
+        % Removes all redundant base points from this chain
+            red = fliplr(sort(find(self.orbitSizes == 1)));
+            for l = red
+                self.removeRedundantBasePoint(l);
+            end
+        end
+
+        function insertRedundantBasePoint(self, l, newBeta)
+        % Adds a new base point at the specified level
+        %
+        % We must have that $H^l$ stabilizes the new base point, and
+        % the range of $l$ can be $1, ..., k + 1$ where $k$ is the current base length.
+        %
+        % So to add a base point at the end of the chain, set $l = k + 1$.
+        %
+        % This modifies the chain in place.
+        %
+        % Args:
+        %   l (integer): Level at which to insert the new base point
+        %   newBeta (integer): New basis point not part of the current base
+            assert(self.isMutable, 'Chain needs to be mutable');
+            assert(all(self.B ~= newBeta), 'Base point already exists');
+            assert(all(self.S(newBeta, self.Sind(l):end) == newBeta), 'Base point is not redundant');
+            n = self.n;
+            k = self.length; % previous chain length
+            self.B = [self.B(1:l-1) newBeta self.B(l:end)];
+            % We add the data structures for the new orbit/transversal
+            self.Delta = horzcat(self.Delta(1:l-1), {newBeta}, self.Delta(l:end));
+            self.iDelta = [self.iDelta(:,1:l-1) zeros(n, 1) self.iDelta(:,l:end)];
+            self.iDelta(newBeta, l) = 1;
+            self.U = horzcat(self.U(1:l-1), {[1:n]'}, self.U(l:end));
+            self.Uinv = horzcat(self.Uinv(1:l-1), {[1:n]'}, self.Uinv(l:end));
+            self.Sind = [self.Sind(1:l) self.Sind(l:end)];
         end
 
         function insertEndBasePoint(self, newBeta)
@@ -757,75 +967,43 @@ classdef Chain < replab.Str
         %
         % Args:
         %   newBeta (integer): New basis point not part of the current basis
-            assert(self.isMutable, 'Chain needs to be mutable');
-            assert(~ismember(newBeta, self.B), 'Base point already exists');
-            n = self.n;
-            k = self.length; % previous chain length
-            self.B = [self.B newBeta];
-            nS = self.nStrongGenerators;
-            % We add the data structures for the new orbit/transversal
-            self.Delta = horzcat(self.Delta, newBeta);
-            self.U = horzcat(self.U, {[1:n]'});
-            self.Uinv = horzcat(self.Uinv, {[1:n]'});
-            % We check the strong generators that were stabilizing all previous base points
-            % They may move the new base point
-            I = self.Sind;
-            unchanged = self.S(:, 1:I(k+1)-1);
-            candidates = self.S(:, I(k+1):nS);
-            if size(candidates, 2) ~= 0
-                stabilized = [candidates(newBeta, :) == newBeta];
-                % Sort the strong generators
-                self.S = [unchanged candidates(:, ~stabilized) candidates(:, stabilized)];
-            else
-                stabilized = [];
-            end
-            % New starting indices
-            self.Sind = [self.Sind(1:k+1) self.Sind(k+1)+sum(~stabilized)];
-            % Take care of homomorphism images
-            self.V = horzcat(self.V, {{self.J.identity}});
-            self.Vinv = horzcat(self.Vinv, {{self.J.identity}});
-            if size(candidates, 2) ~= 0
-                Tunchanged = self.T(1:I(k+1)-1);
-                Tcandidates = self.T(I(k+1):nS);
-                self.T = horzcat(Tunchanged, Tcandidates(~stabilized), Tcandidates(stabilized));
-            end
-            self.recomputeBaseOrder;
-            self.completeOrbit(k+1);
+            self.insertRedundantBasePoint(self.length + 1, newBeta);
         end
 
-        function addStrongGenerator(self, i, newS, newT)
+        function addStrongGenerator(self, i, newS)
         % Adds a strong generator at a particular place in the BSGS chain
         %
         % Args:
         %   i (integer): Smallest i such that the strong generator ``newS`` is part of S^(i)
-        %   newS (row permutation vector): New strong generator
-        %   newT (element of `J`): Image of the new strong generator
-            I = self.Sind;
-            self.S = [self.S(:, 1:(I(i+1)-1)) newS' self.S(:, I(i+1):end)];
+        %   newS (permutation): New strong generator
+            self.S = [self.S(:, 1:(self.Sind(i+1)-1)) newS(:) self.S(:, self.Sind(i+1):end)];
             self.Sind((i+1):end) = self.Sind((i+1):end) + 1;
-            self.T = {self.T{1:(I(i+1)-1)} newT self.T{I(i+1):end}};
+        end
+
+        function addStrongGeneratorAndRecomputeOrbits(self, i, newS)
+        % Adds a strong generator at a particular place in the BSGS chain and recomputes orbits
+        %
+        % Args:
+        %   i (integer): Smallest i such that the strong generator ``newS`` is part of S^(i)
+        %   newS (permutation): New strong generator
+            self.addStrongGenerator(i, newS);
             for j = 1:i
-                % TODO: optimization opportunity by starting the orbit completion at 2 if all strong generators
-                % have already been added
-                %
-                % Also: need only to check completeness with respect to the newly added strong generator
                 self.completeOrbit(j);
             end
         end
 
-        function newSG = stripAndAddStrongGenerator(self, g, v)
+        function newSG = stripAndAddStrongGenerator(self, g)
         % Strips and, when relevant, adds a new strong generator to this BSGS chain
         %
         % Performs part of the RANDOMSCHREIER procedure in Holt et al., Handbook of CGT, page 98
         %
         % Args:
         %   g (row permutation vector): Element to strip
-        %   v (element of `J`, optional): Image of the element
         %
         % Returns:
-        %   true if a new strong generator has been found
+        %   logical: True if a new strong generator has been found
             n = self.n;
-            [h j w] = self.stripWithImage(g, v);
+            [h j] = self.strip(g);
             newSG = false;
             if j <= self.length
                 % New strong generator h at level j
@@ -833,7 +1011,7 @@ classdef Chain < replab.Str
             else
                 % Check if h is the identity
                 gamma = find(h ~= 1:n, 1);
-                if length(gamma) > 0
+                if ~isempty(gamma)
                     % New strong generator h fixes all base points
                     % We have a new base point gamma
                     % and insert it at the end of the chain
@@ -843,37 +1021,7 @@ classdef Chain < replab.Str
             end
             if newSG
                 % if we have a new strong generator, add it to the chain
-                self.addStrongGenerator(j, h, w);
-            end
-        end
-
-        function insertStrongGenerators(self, newS, newT)
-        % Inserts the given strong generators
-        %
-        % Args:
-        %   newS (integer matrix): Strong generators given in a n x nGens matrix
-        %   newT (row cell vector, optional): Images of those strong generators
-            nNew = size(newS, 2);
-            if nargin < 3
-                assert(isa(self.J, 'replab.bsgs.TrivialGroup'), ...
-                       'Strong generator images can be omitted only when image group is trivial');
-                newT = arrayfun(@(x) [], 1:nNew, 'uniform', 0);
-            end
-            n = self.n;
-            for i = 1:nNew
-                h = newS(:,i)'; % candidate
-                j = 1; % find the place j where to insert the current strong generator
-                while j <= self.length && h(self.B(j)) == self.B(j)
-                    j = j + 1;
-                end
-                if j > self.length
-                    % the new strong generator fixes all base points,
-                    % so we insert a new base point, see stripAndAddStrongGenerator
-                    gamma = find(h ~= 1:n, 1);
-                    assert(length(gamma) == 1, 'Cannot be identity');
-                    self.insertEndBasePoint(gamma);
-                end
-                self.addStrongGenerator(j, h, newT{i});
+                self.addStrongGeneratorAndRecomputeOrbits(j, h);
             end
         end
 
@@ -882,19 +1030,95 @@ classdef Chain < replab.Str
             self.isMutable = false;
         end
 
-        function randomizedSchreierSims(self)
+        function c = mutableCopy(self)
+        % Creates a mutable copy of this chain
+            c = replab.bsgs.Chain(self.n, self.B, self.S, self.Sind, self.Delta, self.iDelta, self.U, self.Uinv);
+        end
+
+        function inew = schreierSimsTest(self, i)
+        % Tests a level of the stabilizer chain for completeness of strong generators
+        %
+        % Adds the strong generators found to the chain
+        %
+        % Args:
+        %   i (integer): Level to test
+        %
+        % Returns:
+        %   integer: Either $i-1$ if the level is complete, or the new level to test
+            orbit = self.Delta{i};
+            iOrbit = self.iDelta;
+            U = self.U{i};
+            Uinv = self.Uinv{i};
+            Srange = self.Sind(i):self.Sind(end)-1;
+            n = self.n;
+            for o = 1:length(orbit)
+                betai = self.B(i);
+                b = orbit(o);
+                ub = U(:,o)';
+                for k = Srange
+                    x = self.S(:,k)';
+                    uxb_inv = Uinv(:,iOrbit(x(b),i))';
+                    toStrip = uxb_inv(x(ub));
+                    if any(toStrip ~= 1:n)
+                        y = true;
+                        [h j] = self.strip(toStrip);
+                        if j <= self.length
+                            % new strong generator h at level j
+                            y = false;
+                        else % j = self.length + 1
+                            gamma = find(h ~= 1:n, 1);
+                            if ~isempty(gamma)
+                                % h fixes
+                                y = false;
+                                self.insertEndBasePoint(gamma);
+                            end
+                        end
+                        if ~y
+                            self.addStrongGeneratorAndRecomputeOrbits(j, h);
+                            inew = j;
+                            return
+                        end
+                    end
+                end
+            end
+            inew = i - 1;
+        end
+
+        function deterministicSchreierSims(self, maxOrder)
+        % Runs the deterministic Schreier-Sims algorithm, with a bound on the maximum order
+        %
+        % If ``self.order > maxOrder`` after this function returns, the chain may be incomplete.
+        %
+        % Args:
+        %   maxOrder (integer or vpi or ``inf``): Order cutoff
+            if nargin < 2 || isinf(maxOrder)
+                maxOrder = [];
+            end
+            i = self.length;
+            while i >= 1 && (isempty(maxOrder) || self.order <= maxOrder)
+                i = self.schreierSimsTest(i);
+            end
+        end
+
+        function randomizedSchreierSims(self, order)
         % Runs the randomized Schreier-Sims algorithm
         %
-        % Failure probability can be tuned using replab.Parameters.randomizedSchreierSimsTries
-            nTries = replab.Parameters.randomizedSchreierSimsTries;
-            R = replab.bsgs.RandomBag(self.n, self.S, [], [], self.J, self.T);
+        % Failure probability can be tuned using replab.globals.randomizedSchreierSimsTries
+            nTries = replab.globals.randomizedSchreierSimsTries;
+            R = replab.bsgs.RandomBag(self.n, self.S, [], []);
             c = 0;
-            while c <= nTries
-                [g v] = R.sample;
-                if self.stripAndAddStrongGenerator(g, v)
-                    c = 0;
-                else
-                    c = c + 1;
+            if isempty(order)
+                while c <= nTries
+                    g = R.sample;
+                    if self.stripAndAddStrongGenerator(g)
+                        c = 0;
+                    else
+                        c = c + 1;
+                    end
+                end
+            else
+                while self.order < order
+                    self.stripAndAddStrongGenerator(R.sample);
                 end
             end
         end
@@ -903,20 +1127,59 @@ classdef Chain < replab.Str
 
     methods (Static)
 
-        function C = makeWithImages(n, S, J, T, finalizeImages)
-            C = replab.bsgs.Chain(n, J);
-            C.insertStrongGenerators(S, T);
-            C.randomizedSchreierSims;
-            if nargin > 4
-                C.mutableMapImages(J, finalizeImages);
+        function C = makeBoundedOrder(n, generators, maxOrder)
+        % Computes a BSGS chain up to some order
+        %
+        % If the group has order bigger than ``maxOrder``, returns a partial mutable chain. Otherwise,
+        % it returns an immutable chain.
+        %
+        % Args:
+        %   n (integer): Domain size
+        %   generators (cell(1,\*) of permutation): Group generators
+        %   maxOrder (integer): Order at which we exit
+        %
+        % Returns:
+        %   `.Chain`: Complete or partial stabilizer chain
+            C = replab.bsgs.Chain(n);
+            for i = 1:length(generators)
+                C.stripAndAddStrongGenerator(generators{i});
             end
-            C.makeImmutable;
+            C.deterministicSchreierSims(maxOrder);
+            if C.order <= maxOrder
+                C.makeImmutable;
+            end
         end
 
-        function C = make(n, S, order)
+        function C = make(n, generators, base, order)
+        % Computes a BSGS chain using the randomized Schreier-Sims algorithm
+        %
+        % Args:
+        %   n (integer): Domain size
+        %   generators (cell(1,\*) of permutation): Group generators
+        %
+        % Returns:
+        %   `.Chain`: A complete immutable BSGS chain
+            if nargin < 3
+                base = [];
+            end
+            if nargin < 4
+                order = [];
+            end
             C = replab.bsgs.Chain(n);
-            C.insertStrongGenerators(S);
-            C.randomizedSchreierSims;
+            for i = 1:length(base)
+                C.insertEndBasePoint(base(i));
+            end
+            for i = 1:length(generators)
+                C.stripAndAddStrongGenerator(generators{i});
+            end
+            if ~isempty(order)
+                C.deterministicSchreierSims(1000);
+                if order > 1000
+                    C.randomizedSchreierSims(order);
+                end
+            else
+                C.deterministicSchreierSims;
+            end
             C.makeImmutable;
         end
 

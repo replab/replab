@@ -22,18 +22,18 @@ classdef SedumiData
 % The representation must be unitary.
 
     properties
-        At % double: Data matrix of size n x m
+        At % (double): Data matrix of size n x m
            %
-           %         Where n is the number of primal scalar variables,
-           %         and m the nubmer of primal constraints (Sedumi data)
-        b % double: Constraint right hand side (Sedumi data)
-        c % double: Primal objective (Sedumi data)
-        K % struct: Cone specification (Sedumi data)
-        m % number of dual variables
-        s % size of single SDP block present
-        G % cell array of generators as permutations
-        rho % cell array of generator images defining the representation
-        rep % `.Rep`: group representation commuting with the SDP block
+           %           Where n is the number of primal scalar variables,
+           %           and m the nubmer of primal constraints (Sedumi data)
+        b % (double): Constraint right hand side (Sedumi data)
+        c % (double): Primal objective (Sedumi data)
+        K % (struct): Cone specification (Sedumi data)
+        m % (integer): Number of dual variables
+        s % (integer): Size of single SDP block present
+        G % (cell(1,\*) of permutation): cell array of generators as permutations
+        rho % (cell(1,\*) of double(\*,\*)): Cell array of generator images defining the representation
+        rep % (`.Rep`): group representation commuting with the SDP block
     end
 
     methods
@@ -57,15 +57,12 @@ classdef SedumiData
             % build permutation group
             assert(~isempty(G), 'Must be nontrivial permutation group');
             ds = length(G{1}); % group domain size
-            group = replab.Permutations(ds).subgroup(G);
+            Sds = replab.S(ds);
+            group = Sds.subgroup(G);
             % check for unitarity
             tol = 1e-12;
             rhoInv = cell(1, length(G));
-            for i = 1:length(rho)
-                rhoInv{i} = rho{i}';
-                assert(norm(rho{i}*rhoInv{i} - eye(self.s)) < tol);
-            end
-            self.rep = group.repByImages('R', self.s, rho, rhoInv);
+            self.rep = group.repByImages('R', self.s, 'images', rho);
         end
 
         function vec1 = project(self, vec)
@@ -74,15 +71,21 @@ classdef SedumiData
             s = self.s;
             nc = s*s;
             nb1 = I.nComponents; % number of blocks
-            s1 = cellfun(@(iso) iso.commutant.reducedBlockSize, I.components);
+            s1 = cellfun(@(iso) iso.multiplicity * iso.commutant.divisionAlgebraDimension, I.components);
             nc1 = sum(s1.^2);
             vec1 = zeros(nc1, 1);
             shift = 0;
-            M = reshape(vec, [s s]);
+            mat = reshape(vec, [s s]);
             for r = 1:nb1 % iterate over representations
                           % apply Reynolds
                 C = I.component(r).commutant;
-                block = C.projectAndReduceFromParent(M);
+                A = C.A;
+                M = C.projectAndFactorFromParent(mat);
+                block = kron(M(:,:,1), A(:,:,1));
+                for i = 2:size(M, 3)
+                    block = block + kron(M(:,:,i), A(:,:,i));
+                end
+                % TODO: force a symmetric matrix
                 % store block flattened
                 nels = prod(size(block));
                 vec1(shift+(1:nels)) = block(:);
@@ -95,7 +98,7 @@ classdef SedumiData
             rep = self.rep;
             I = rep.decomposition;
             m = self.m; % number of dual variables
-            s1 = cellfun(@(iso) iso.commutant.reducedBlockSize, I.components);
+            s1 = cellfun(@(iso) iso.multiplicity * iso.commutant.divisionAlgebraDimension, I.components);
             nc1 = sum(s1.^2);
             b1 = self.b;
             c1 = self.project(self.c);

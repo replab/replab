@@ -2,17 +2,17 @@ classdef IndexedFamily < replab.IndexedFamily
 % An implementation of an indexed family defined by image functions
 
     properties (SetAccess = protected)
-        atFun % Handle that implements IndexedFamily.at
-        findFun % Handle that implements IndexedFamily.find
+        atFun % (function_handle): Handle that implements `+replab.IndexedFamily.at`
+        findFun % (function_handle): Handle that implements `+replab.IndexedFamily.find`
     end
 
     methods
 
-        function self = IndexedFamily(size, atFun, findFun)
-            if isa(size, 'vpi')
-                self.size = size;
+        function self = IndexedFamily(nElements, atFun, findFun)
+            if isa(nElements, 'vpi')
+                self.nElements = nElements;
             else
-                self.size = vpi(size);
+                self.nElements = vpi(nElements);
             end
             self.atFun = atFun;
             self.findFun = findFun;

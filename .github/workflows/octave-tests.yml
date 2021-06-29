@@ -1,0 +1,31 @@
+# This is a basic workflow to help you get started with Actions
+
+name: Octave CI
+
+# Controls when the action will run. 
+on: [push, pull_request, workflow_dispatch]
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "test"
+  test:
+    name: Run tests on Octave
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - name: Check out repository
+        uses: actions/checkout@v2
+        with:
+          submodules: recursive
+      - name: Set variable
+        id: vars
+        run: echo "::set-output name=sha::$(git rev-parse HEAD)"
+      - name: Calling docker launch action
+        id: dock
+        uses: replab/replab/.github/actions/octave-tests@develop
+        with:
+          commit: ${{ steps.vars.outputs.sha }}
+
+

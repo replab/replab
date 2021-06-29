@@ -12,13 +12,13 @@ classdef Laws < replab.Str
 %   The ``{types}`` part contains zero or more type identifiers: a type identifier is a letter (``A-Z``, ``a-z``)
 %   followed by zero of more digits (``0-9``). This part does not contain any underscore.
 %   The number of type identifiers must correspond to the number of arguments of the method (excluding ``self``).
-%   Each type identifier must correspond to a property field of this class of type `+replab.Samplable`, and
+%   Each type identifier must correspond to a property field of this class of type `+replab.Domain`, and
 %   those samplable sets will be used to sample the random instances passed to the law check method.
 %   Note that a law that does not require any arguments corresponds to a method name ending with an underscore.
 %
 % - Methods that start with a ``laws_`` prefix must return another `.Laws` instance (see also `+replab.+laws.Collection`).
 %   It enables delegation of checks when a tested object has subparts (for example, a `.FiniteGroup` has a `~+replab.FiniteGroup.elements`
-%   method of type `.IndexedFamily` that is conveniently checked by `.IndexedFamilyLaws`, see `.FiniteGroupLaws`).
+%   method of type `.IndexedFamily` that is conveniently checked by `+replab.+laws.IndexedFamilyLaws`, see `+replab.+laws.FiniteGroupLaws`).
 %
 % Example:
 %    >>> % We build a group from scratch, using function handles,
@@ -30,19 +30,55 @@ classdef Laws < replab.Str
 %    >>> identity = 1:n;
 %    >>> inverseFun = @(x) arrayfun(@(i) find(x == i), 1:10);
 %    >>> S10 = replab.Group.lambda('Permutations of 1..10', eqvFun, sampleFun, composeFun, identity, inverseFun);
-%    >>> S10laws = replab.GroupLaws(S10);
-%    >>> S10laws.check
-%        Checking associativity...
-%        Checking composeAll...
-%        Checking composeN integers...
-%        Checking composeN positive...
-%        Checking composeN zero...
-%        Checking eqv...
-%        Checking identity...
-%        Checking inverse...
-%        Checking inverse compatible with compose...
+%    >>> S10laws = S10.laws;
+%    >>> S10laws.checkSilent
+%        1
+
+    properties
+        skipSlow = false % (logical): Whether to skip slow tests
+    end
 
     methods
+
+        function thisIsSlow(self)
+        % Throws a ``replab:skip`` if `.skipSlow` is true
+            if self.skipSlow
+                self.skip;
+            end
+        end
+
+        function self = skippingSlow(self)
+        % Sets the ``skipSlow`` property to true and returns the Laws instance
+            self.skipSlow = true;
+        end
+
+        function b = assertApproxEqual(self, X1, X2, tol, context)
+            if nargin < 5
+                context = '';
+            end
+            delta = norm(X1 - X2, 'fro');
+            if delta <= tol
+                return
+            end
+            e1 = norm(eps(X1), 'fro');
+            e2 = norm(eps(X2), 'fro');
+            if delta <= tol + e1 + e2
+                return
+            end
+            names = evalin('caller', 'who');
+            nV = length(names);
+            values = cell(1, nV);
+            for i = 1:nV
+                values{i} = evalin('caller', names{i});
+            end
+            errorId = 'assertTrue:falseCondition';
+            message = replab.laws.message('%s = norm(X1 - X2) > tol = %s', context, {delta, tol + e1 + e2}, names, values);
+            if replab.compat.isOctave
+                error(errorId, '%s', message);
+            else
+                throwAsCaller(MException(errorId, '%s', message));
+            end
+        end
 
         function assert(self, predicate, context)
         % Assert function with a verbose error message
@@ -115,24 +151,33 @@ classdef Laws < replab.Str
             end
         end
 
+        function res = checkSilent(self)
+        % Runs the randomized tests without using MOxUnit, and returns whether all tests passed
+        %
+        % Example:
+        %    >>> S10 = replab.S(10);
+        %    >>> S10laws = S10.laws;
+        %    >>> S10laws.checkSilent
+        %        1
+        %
+        % Returns:
+        %   logical: True if all tests successful
+            res = true;
+            [~, testFuns] = self.getTestCases;
+            for i = 1:length(testFuns)
+                f = testFuns{i};
+                try
+                    f();
+                catch
+                    res = false;
+                end
+            end
+        end
+
         function check(self)
         % Runs the randomized tests without using MOxUnit
         %
         % This method is useful from the REPL command line.
-        %
-        % Example:
-        %   >>> S5 = replab.S(5);
-        %   >>> L = replab.GroupLaws(S5);
-        %   >>> L.check
-        %       Checking associativity...
-        %       Checking composeAll...
-        %       Checking composeN integers...
-        %       Checking composeN positive...
-        %       Checking composeN zero...
-        %       Checking eqv...
-        %       Checking identity...
-        %       Checking inverse...
-        %       Checking inverse compatible with compose...
             [testNames testFuns] = self.getTestCases;
             for i = 1:length(testNames)
                 disp(sprintf('Checking %s...', testNames{i}));
@@ -165,6 +210,34 @@ classdef Laws < replab.Str
     end
 
     methods (Static)
+
+        function L = empty
+        % Returns an empty set of laws
+        %
+        % Returns:
+        %   `.Laws`: Empty set of laws
+            L = replab.laws.Collection(cell(1, 0));
+        end
+
+        function skip
+            errorId = 'replab:skip';
+            msg = 'Skipping slow test';
+            if replab.compat.isOctave
+                error(errorId, msg);
+            else
+                throwAsCaller(MException(errorId, '%s', msg));
+            end
+        end
+
+        function out = inexistent(msg)
+            errorId = 'replab:inexistent';
+            if replab.compat.isOctave
+                error(errorId, msg);
+            else
+                throwAsCaller(MException(errorId, '%s', msg));
+            end
+            out = [];
+        end
 
         function value = nRuns(newValue)
         % Sets/gets the default number of runs

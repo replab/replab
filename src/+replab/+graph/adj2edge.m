@@ -1,20 +1,24 @@
-function edges = adj2edge(adj)
+function [edges, n, weights] = adj2edge(adj)
 % List of graph edges
 %
-% Returns the list of (undirected) edges for a graph described by
-% a given adjacency matrix.
+% Returns the list of edges described in an adjacency matrix.
 %
 % Args:
-%     adj: adjacency matrix of the graph
+%     adj (integers (\*,\*)): adjacency matrix of the graph
 %
 % Returns:
-%     edges: nx2 array of vertices linked by an edge
+%     edges (integers (\*,2)): array of vertices linked by an edge
+%     n (integer): number of nodes
+%     weights (double (\*,1)): weight associates to each edge
 
-    if ~isequal(size(adj,1), size(adj,2)) || (length(size(adj)) > 2)
-        error('The adjacency matrix should be of size nxn');
+    assert(length(size(adj)) <= 2);
+
+    n = max(size(adj));
+
+    [a, b, weights] = find(adj);
+    edges = [a, b];
+
+    if (n > 0) && (length(weights) > 0) && (norm(weights - weights(1)) == 0)
+        weights = weights(1);
     end
-
-    [a, b] = find(adj);
-    edges = [a b];
-    edges = unique(sort(edges,2), 'rows');
 end

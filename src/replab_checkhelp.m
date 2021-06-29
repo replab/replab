@@ -6,7 +6,7 @@ function ok = replab_checkhelp
     ok = true;
     help('--clear');
 
-    rp = replab.settings.replabPath;
+    rp = replab.globals.replabPath;
     srcRoot = fullfile(rp, 'src');
 
 
@@ -44,10 +44,13 @@ function ok = replab_checkhelp
             disp(le.message);
             fprintf('\n\n');
             p.consoleLine.update(last);
-            % Uncomment below for stack display
+            % % Uncomment below for stack display
             % for i = 1:length(le.stack)
             %     disp(strjoin(replab.longStr(le.stack(i)), '\n'));
             % end
+            % % Uncomment below for interactive debugging
+            % edit(el.fullIdentifier)
+            % 1; % (Add breakpoint here)
         end
     end
     p.finish('Check done');
