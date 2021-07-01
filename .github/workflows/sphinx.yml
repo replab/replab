@@ -9,7 +9,7 @@ on: [workflow_dispatch]
 jobs:
   # This workflow contains a single job called "test"
   test:
-    name: Run tests on Octave
+    name: Build the Sphinx documentation
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
     # Steps represent a sequence of tasks that will be executed as part of the job
@@ -19,13 +19,33 @@ jobs:
         uses: actions/checkout@v2
         with:
           submodules: recursive
+      - name: Check out doc repository
+        uses: actions/checkout@v2
+        with:
+          repository: replab/replab
+          ref: gh-pages
+          path: docs
+          persist-credentials: false
+          fetch-depth: 0
       - name: Set variable
         id: vars
         run: echo "::set-output name=sha::$(git rev-parse HEAD)"
       - name: Calling docker launch action
         id: dock
-        uses: replab/replab/.github/actions/sphinx@develop
+        uses: replab/replab/.github/actions/sphinx@master
         with:
           commit: ${{ steps.vars.outputs.sha }}
-
+      - name: Commit files
+        run: |
+          cd docs
+          git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add .
+          git commit -m "Add changes" -a
+      - name: Push changes
+        uses: ad-m/github-push-action@master
+        with:
+          directory: docs
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: gh-pages
 
