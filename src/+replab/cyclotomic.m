@@ -441,9 +441,9 @@ classdef cyclotomic
             else
                 error('Incorrect constructor call');
             end
-            for i = 1:length(self.data_)
-                assert(isa(self.data_(i), 'cyclo.Cyclo'));
-            end
+            %for i = 1:length(self.data_)
+            %    assert(isa(self.data_(i), 'cyclo.Cyclo'));
+            %end
         end
 
         function c = cyclo(self, varargin)
