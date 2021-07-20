@@ -3,7 +3,7 @@ function subsets = burningAlgorithmFastSparse(edges)
 %
 % Performs the burning algorithm on the network described by the
 % edges given in pairs. This tries to call the fast C++ implementation and
-% returns `+replab.DispatchNext` if it didn't manage to do so.
+% returns `+replab.+util.Unsuccessful` if it didn't manage to do so.
 %
 % This implementation is optimized for extremely sparse graphs, i.e. graphs
 % with many vertices, but very few having connections. Therefore, this
@@ -15,7 +15,7 @@ function subsets = burningAlgorithmFastSparse(edges)
 % Returns
 % -------
 % subsets:
-%   Cell array with connex components, or `+replab.DispatchNext` if unsuccessful
+%   Cell array with connex components, or `+replab.+util.Unsuccessful` if unsuccessful
 %
 % Example:
 %     >>> % replab.graph.burningAlgorithmFast_sparse([1 2; 2 6; 3 4]); % a graph with 5 connected nodes labelled 1, 2, 3, 4, 6

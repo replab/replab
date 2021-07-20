@@ -3,7 +3,7 @@ function componentIndex = burningAlgorithmFastLessMemory(nbVertices, edges)
 %
 % Performs the burning algorithm on the network described by the
 % edges given in pairs. This tries to call the fast C++ implementation and
-% returns `+replab.DispatchNext` if it didn't manage to do so.
+% returns `+replab.+util.Unsuccessful` if it didn't manage to do so.
 %
 % This implementation is optimized for using less memory, it only returns
 % the list of orbits.
@@ -16,12 +16,12 @@ function componentIndex = burningAlgorithmFastLessMemory(nbVertices, edges)
 % -------
 %     componentIndex: integer (1,\n)
 %         the index of the component to which each vertex belongs, or
-%         `+replab.DispatchNext` if unsuccessful
+%         `+replab.+util.Unsuccessful` if unsuccessful
 %
 % Returns
 % -------
 % orbits:
-%   vector with orbit index for each vertex, or `+replab.DispatchNext` if unsuccessful
+%   vector with orbit index for each vertex, or `+replab.+util.Unsuccessful` if unsuccessful
 %
 % Example:
 %     >>> % replab.graph.burningAlgorithmFastLessMemory(6, [1 2; 2 6; 3 4]); % a graph with 6 nodes labelled 1, 2, 3, 4, 5, 6

@@ -3,7 +3,7 @@ function [componentIndex, subsets] = burningAlgorithmFast(nbVertices, edges)
 %
 % Performs the burning algorithm on the network described by the
 % edges given in pairs. This tries to call the fast C++ implementation and
-% returns `+replab.DispatchNext` if it didn't manage to do so.
+% returns `+replab.+util.Unsuccessful` if it didn't manage to do so.
 %
 % Args:
 %     nbVertices (integer): Number of vertices
@@ -13,7 +13,7 @@ function [componentIndex, subsets] = burningAlgorithmFast(nbVertices, edges)
 % -------
 %     componentIndex: integer (1,\n)
 %         the index of the component to which each vertex belongs, or
-%         `+replab.DispatchNext` if unsuccessful
+%         `+replab.+util.Unsuccessful` if unsuccessful
 %     subsets: cell array
 %         connex components
 %

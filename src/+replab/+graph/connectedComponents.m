@@ -44,12 +44,12 @@ function [componentIndex, subsets] = connectedComponents(nbVertices, edges)
     % simply
     if nargout == 1
         componentIndex = replab.graph.burningAlgorithmFast(nbVertices, edges);
-        if isa(componentIndex, 'replab.DispatchNext')
+        if isa(componentIndex, 'replab.util.Unsuccessful')
             componentIndex = replab.graph.burningAlgorithm(nbVertices, edges);
         end
     else
         [componentIndex, subsets] = replab.graph.burningAlgorithmFast(nbVertices, edges);
-        if isa(componentIndex, 'replab.DispatchNext')
+        if isa(componentIndex, 'replab.util.Unsuccessful')
             [componentIndex, subsets] = replab.graph.burningAlgorithm(nbVertices, edges);
         end
     end

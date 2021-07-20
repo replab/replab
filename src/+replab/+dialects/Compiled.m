@@ -69,7 +69,7 @@ classdef Compiled < handle
         % operational, trying to compile it if needed. It then calls the
         % function with the provided arguments and returns the (single) 
         % output of that function. If the call to the function fails, the
-        % returned value is `+replab.DispatchNext`.
+        % returned value is `+replab.+util.Unsuccessful`.
         %
         % Args:
         %   varargin : the number of expected outputs, followed by all the
@@ -145,7 +145,7 @@ classdef Compiled < handle
 
             if ~self.isWorking
                 % Inform that the method did not succeed
-                varargout{1} = replab.DispatchNext;
+                varargout{1} = replab.util.Unsuccessful;
             end
         end
         
