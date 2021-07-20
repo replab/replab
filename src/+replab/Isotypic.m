@@ -290,7 +290,7 @@ classdef Isotypic < replab.SubRep
             if self.overC
                 rt = 'C';
             else
-                fbsi = self.irrep(1).frobeniusSchurIndicator;
+                fbsi = self.modelIrrep.frobeniusSchurIndicator;
                 if isempty(fbsi)
                     rt = '?';
                 else
