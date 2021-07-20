@@ -25,7 +25,7 @@ end
 function test_complex_representations
     d = 10;
     S = replab.S(d);
-    C = replab.CyclicGroup(d);
+    C = replab.C(d);
     rep = C.naturalRep;
     rep1 = rep.decomposition;
     rep2 = rep1.toSubRep;
