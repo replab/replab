@@ -470,6 +470,11 @@ classdef cyclotomic
             c = self;
         end
 
+        function c = toCellOfStrings(self)
+        % Returns a multi-dimensional cell array of strings corresponding to this cyclotomic array
+            c = reshape(replab.compat.javaArrayToCell(javaMethod('print', 'cyclo.Lab', self.data_)), size(self));
+        end
+
     end
 
     methods % Display
