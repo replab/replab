@@ -22,13 +22,3 @@ Morphism
 ++++++++
 
 .. autoclass:: Morphism
-
-FiniteAutomorphismGroup
-+++++++++++++++++++++++
-
-.. autoclass:: FiniteAutomorphismGroup
-
-FiniteAutomorphism
-++++++++++++++++++
-
-.. autoclass:: FiniteAutomorphism

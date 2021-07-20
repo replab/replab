@@ -12,8 +12,3 @@ Atlas
 +++++
 
 .. autoclass:: Atlas
-
-AtlasResult
-+++++++++++
-
-.. autoclass:: AtlasResult

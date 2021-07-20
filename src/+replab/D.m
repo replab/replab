@@ -1,4 +1,4 @@
-function grp = DihedralGroup(n)
+function grp = D(n)
 % Constructs the dihedral group of order ``2*n``
 %
 % This corresponds to the group of symmetries of the polygon with ``n`` vertices
@@ -8,6 +8,5 @@ function grp = DihedralGroup(n)
 %
 % Returns:
 %   `+replab.PermutationGroup`: The dihedral group permuting the vertices of the ``n``-gon
-    warning('Deprecated. Use replab.PermutationGroup.dihedral(n) instead of replab.DihedralGroup(n)');
     grp = replab.PermutationGroup.dihedral(n);
 end

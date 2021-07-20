@@ -10,8 +10,6 @@ Representations
    (matrix) images of the group generators; the computation of images
    rests on the factorization of group elements.
 
--  `.SimilarRep` describes a representation with an associated change of basis matrix.
-
 Once a `.Rep` has been constructed, it can be decomposed into
 irreducible representations using the ``rep.decomposition`` method.
 
@@ -20,9 +18,7 @@ irreducible representations using the ``rep.decomposition`` method.
    splits (as a ``parent``) and the change of basis matrix (``basis``).
 
 -  `.Isotypic` are isotypic components, which group equivalent
-   irreducible representations present in a representation. If the irreducible
-   representations are all in the same basis, this will be an instance of
-   `.HarmonizedIsotypic`.
+   irreducible representations present in a representation.
 
 -  `.Irreducible` regroups isotypic components, with associated
    `.IrreducibleLaws`.
@@ -30,9 +26,7 @@ irreducible representations using the ``rep.decomposition`` method.
 Representations induce vector spaces.
 
 -  `.Equivariant` describes the vector space of equivariant linear maps
-   between two representations of the same group, with specialization
-   for commutant maps of isotypic and irreducible decompositions:
-   `.IsotypicCommutant` and `.IrreducibleCommutant`.
+   between two representations of the same group.
 
 Rep
 +++
@@ -44,11 +38,6 @@ RepByImages
 
 .. autoclass:: RepByImages
 
-SimilarRep
-++++++++++
-
-.. autoclass:: SimilarRep
-
 SubRep
 ++++++
 
@@ -59,11 +48,6 @@ Isotypic
 
 .. autoclass:: Isotypic
 
-HarmonizedIsotypic
-++++++++++++++++++
-
-.. autoclass:: HarmonizedIsotypic
-
 Irreducible
 +++++++++++
 
@@ -73,16 +57,6 @@ Equivariant
 +++++++++++
 
 .. autoclass:: Equivariant
-
-IsotypicCommutant
-+++++++++++++++++
-
-.. autoclass:: IsotypicCommutant
-
-IrreducibleCommutant
-++++++++++++++++++++
-
-.. autoclass:: IrreducibleCommutant
 
 CharacterTable
 ++++++++++++++

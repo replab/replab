@@ -34,11 +34,6 @@ FiniteGroup
 
 .. autoclass:: FiniteGroup
 
-FiniteGroupDecomposition
-++++++++++++++++++++++++
-
-.. autoclass:: FiniteGroupDecomposition
-
 NiceFiniteGroup
 +++++++++++++++
 
