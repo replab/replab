@@ -465,6 +465,11 @@ classdef cyclotomic
             c = javaMethod('cloneArray', 'cyclo.Lab', self.data_);
         end
 
+        function c = full(self)
+        % Placeholder as cyclotomic arrays are always dense
+            c = self;
+        end
+
     end
 
     methods % Display
