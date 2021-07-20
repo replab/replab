@@ -23,12 +23,12 @@ classdef Dihedral
             % Irreps are generated first in 1D and then in 2D
             irreps = cell(1, nClasses);
             w = replab.cyclotomic.E(n);
-            irreps{1} = G.repByImages('C', 1, 'images', {1, 1});
-            irreps{2} = G.repByImages('C', 1, 'images', {1, -1});
+            irreps{1} = G.repByImages(field, 1, 'images', {1, 1});
+            irreps{2} = G.repByImages(field, 1, 'images', {1, -1});
             n1D = 2;
             if even(n)
-                irreps{3} = G.repByImages('C', 1, 'images', {-1, 1});
-                irreps{4} = G.repByImages('C', 1, 'images', {-1, -1});
+                irreps{3} = G.repByImages(field, 1, 'images', {-1, 1});
+                irreps{4} = G.repByImages(field, 1, 'images', {-1, -1});
                 stop = stop - 1;
                 n1D = 4;
             end
@@ -45,7 +45,7 @@ classdef Dihedral
                     g1(2, 2) = w^(-j);
                     g2 = replab.cyclotomic([0 1; 1 0]);
                 end
-                irreps{n1D + j} = G.repByImages('C', 2, 'images', {g1, g2});
+                irreps{n1D + j} = G.repByImages(field, 2, 'images', {g1, g2});
             end
             % Characters can be assigned to rotations then reflections
             chars = replab.cyclotomic.zeros(nClasses, nClasses);
