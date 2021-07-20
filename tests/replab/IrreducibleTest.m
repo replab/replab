@@ -22,3 +22,16 @@ function test_irreducible_commutant
     X1 = C.project(X);
     % TODO: add test
 end
+
+function test_import_export
+    G = replab.S(3);
+    parent = G.naturalRep;
+    dec = parent.decomposition('exact').squeeze;
+    data = dec.export;
+    dec1 = replab.Irreducible.import(parent, data);
+    dec1.check;
+    dec = parent.decomposition;
+    data = dec.export;
+    dec1 = replab.Irreducible.import(parent, data);
+    dec1.check;
+end
