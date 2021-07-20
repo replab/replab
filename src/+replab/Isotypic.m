@@ -1,15 +1,16 @@
 classdef Isotypic < replab.SubRep
 % Describes an isotypic component in the decomposition of a representation
 %
-% It is expressed as a subrepresentation of the representation being decomposed, however key methods are implemented
-% more efficiently as more structure is available. In particular the computation of images is done in a way that
-% minimizes numerical error and returns true block diagonal matrices.
-%
-% An isotypic component regroups equivalent irreducible representations expressed in the same basis
+% An isotypic component regroups equivalent irreducible representations expressed in the same basis.
 % Note that if the multiplicity is not one, there is a degeneracy in the picking of a basis of of the multiplicity
-% space, and the basis is not necessarily chosen in a deterministic way.
+% space, and the basis is not necessarily chosen in a deterministic way by RepLAB.
 %
 % However the subspace spanned by an isotypic component as a whole is unique.
+%
+% The isotypic component is expressed as a subrepresentation of the representation being decomposed.
+% However key methods are implemented more efficiently as more structure is available.
+% In particular the computation of images is done in a way that minimizes numerical error and returns
+% truly block diagonal matrices.
 %
 % To cater for empty isotypic components, the isotypic component stores a "model" of the irreducible representation.
 %
