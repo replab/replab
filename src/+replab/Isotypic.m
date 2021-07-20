@@ -146,12 +146,12 @@ classdef Isotypic < replab.SubRep
 
     methods
 
-        function m = multiplicity(self)
-        % Number of equivalent irreducible representations in this isotypic component
+        function c = irrep(self, i)
+        % Returns the i-th copy of the irreducible representation
         %
         % Returns:
-        %   integer: Multiplicity
-            m = length(self.irreps);
+        %   `.SubRep`: Irreducible subrepresentation of `.parent`
+            c = self.irreps{i};
         end
 
         function d = irrepDimension(self)
@@ -174,20 +174,20 @@ classdef Isotypic < replab.SubRep
             r = (1:id)+id*(i-1);
         end
 
+        function m = multiplicity(self)
+        % Number of equivalent irreducible representations in this isotypic component
+        %
+        % Returns:
+        %   integer: Multiplicity
+            m = length(self.irreps);
+        end
+
         function n = nIrreps(self)
         % Returns the number of irreps in this isotypic component, which is their multiplicity
         %
         % Returns:
         %   integer: Number of irreducible representations
             n = length(self.irreps);
-        end
-
-        function c = irrep(self, i)
-        % Returns the i-th copy of the irreducible representation
-        %
-        % Returns:
-        %   `.SubRep`: Irreducible subrepresentation of `.parent`
-            c = self.irreps{i};
         end
 
     end
