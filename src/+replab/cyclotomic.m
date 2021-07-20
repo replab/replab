@@ -937,7 +937,11 @@ classdef cyclotomic
                 varargout{2} = J;
                 varargout{3} = V;
             else
-                [varargout{:}] = find(mask, varargin{:});
+                res = cell(1, nargout);
+                [res{:}] = find(mask, varargin{:});
+                for i = 1:nargout
+                    varargout{i} = res{i};
+                end
             end
         end
 
