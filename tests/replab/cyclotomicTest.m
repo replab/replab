@@ -13,3 +13,11 @@ function test_parse_print
     c1 = replab.cyclotomic({s});
     assert(c == c1);
 end
+
+function test_parse_print_rand
+    for i = 1:10
+        a = replab.cyclotomic.rand;
+        b = replab.cyclotomic(num2str(a));
+        assert(a == b);
+    end
+end
