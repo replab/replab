@@ -1,14 +1,20 @@
 classdef FiniteSet < replab.Domain
-% Describes a finite set of elements
+% Describes a subset of a finite group
 %
-% This is the base class for distinguished subsets of a `.FiniteGroup`, such as cosets or conjugacy classes.
+% Examples of finite subsets include:
 %
-% When non-empty, such sets have a distinguished `.representative` element, which is the element of the set
-% which is minimal under lexicographic ordering. For some finite sets, this element is used to explore the
-% entire structure on demand.
+% - left cosets (`.LeftCoset`),
+% - right cosets (`.RightCoset`),
+% - normal cosets (`.NormalCoset`),
+% - double cosets (`.DoubleCoset`),
+% - conjugacy classes (`.ConjugacyClass`),
+% - finite groups (`.FiniteGroup`).
+%
+% If the finite set is not empty (`.nElements` is nonzero), the set has a distinguished `.representative` element.
+% For permutation groups, this representative element is the minimal element under lexicographic ordering.
 
     properties (SetAccess = protected)
-        type % (`.FiniteGroup`): Set of all elements of the same type as this set; satisfies ``type.type == type``
+        type % (`.FiniteGroupType`): Type of the contained elements
         representative % (element of `.type`): Minimal member of this set under lexicographic ordering. If the set is empty, value is undefined.
     end
 
