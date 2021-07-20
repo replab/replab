@@ -75,6 +75,31 @@ classdef Irreducible < replab.SubRep
             r = self.component(i).irrep(j);
         end
 
+        function I = squeeze(self)
+        % Returns an irreducible decomposition where empty isotypic components have been removed
+        %
+        % Useful to clean up the result of the exact decomposition, as the exact decomposition contains
+        % isotypic components for all irreducible representations, even if they are not present in the
+        % decomposed representation.
+        %
+        % Example:
+        %   >>> S3 = replab.S(3);
+        %   >>> rep = S3.naturalRep;
+        %   >>> dec = rep.decomposition('exact');
+        %   >>> dec.nComponents
+        %       3
+        %   >>> dec.squeeze.nComponents
+        %       2
+        % Returns:
+        %   `.Irreducible`: Irreducible decomposition with empty isotypic components removed
+            mask = cellfun(@(iso) iso.dimension > 0, self.components);
+            if all(mask)
+                I = self;
+            else
+                I = replab.Irreducible(self.parent, self.components(mask));
+            end
+        end
+
     end
 
     methods % Equivariant spaces
