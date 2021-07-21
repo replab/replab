@@ -3,13 +3,13 @@ classdef IrreducibleEquivariant < replab.SubEquivariant
 %
 % Matrices in this equivariant space are composed of blocks with the following form:
 %
-% $ X_ij = \sum_k M_ijk \otimes R_ijk \otimes A_ijk $ (or, most often, $X_ij$ is identically zero)
+% $X_{ij} = \sum_k M_{ijk} \otimes R_{ijk} \otimes A_{ijk$} (or, most often, $X_{ij}$ is identically zero)
 %
 % where
 %
-% - $M_ijk$ represents the multiplicity space,
-% - $R_ijk$ is a constant matrix representing the representation space,
-% - $A_ijk$ is a constant matrix encoding the division algebra.
+% - $M_{ijk}$ represents the multiplicity space,
+% - $R_{ijk}$ is a constant matrix representing the representation space,
+% - $A_{ijk}$ is a constant matrix encoding the division algebra.
 
     properties (SetAccess = protected)
         blocks % (cell(\*,\*) of `.IsotypicEquivariant`): Isotypic equivariant spaces

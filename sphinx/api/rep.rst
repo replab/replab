@@ -3,35 +3,36 @@ Representations
 
 .. module:: +replab
 
--  `.Rep` is a real or complex representation of a finitely generated
-   group with associated `.RepLaws`.
+Representation in RepLAB, whether they are exact or inexact, reducible or irreducible, are described by the `.Rep` base class.
 
--  `.RepByImages` is a real or complex representation described by the
-   (matrix) images of the group generators; the computation of images
-   rests on the factorization of group elements.
+* `.Rep` is a real or complex representation of a compact group.
 
-Once a `.Rep` has been constructed, it can be decomposed into
-irreducible representations using the ``rep.decomposition`` method.
+Some representations encode a division algebra using real or complex coefficients.
 
--  `.SubRep` describes a subrepresentation of an existing
-   representation. The instance can remember which representation it
-   splits (as a ``parent``) and the change of basis matrix (``basis``).
+* `.DivisionAlgebra` provides information about the division algebra encoding handled by RepLAB.
 
--  `.Isotypic` are isotypic components, which group equivalent
-   irreducible representations present in a representation.
+A particular type of representation is a representation of a finite group given by generator images.
 
--  `.Irreducible` regroups isotypic components, with associated
-   `.IrreducibleLaws`.
+*  `.RepByImages` is a real or complex representation described by the (matrix) images of the group generators.
 
-Representations induce vector spaces.
+Once a `.Rep` has been constructed, it can be decomposed into irreducible representations using the ``rep.decomposition`` method.
 
--  `.Equivariant` describes the vector space of equivariant linear maps
-   between two representations of the same group.
+*  `.SubRep` describes a subrepresentation of an existing representation. The instance can remember which
+   representation it splits (`.SubRep.parent`) and the change of basis maps (`.SubRep.injection`, `.SubRep.projection`).
+
+*  `.Isotypic` are isotypic components, which group equivalent irreps present in a representation.
+
+*  `.Irreducible` represents the decomposition of a representation into isotypic components.
 
 Rep
 +++
 
 .. autoclass:: Rep
+
+DivisionAlgebra
++++++++++++++++
+
+.. autoclass:: DivisionAlgebra
 
 RepByImages
 +++++++++++
@@ -52,13 +53,3 @@ Irreducible
 +++++++++++
 
 .. autoclass:: Irreducible
-
-Equivariant
-+++++++++++
-
-.. autoclass:: Equivariant
-
-CharacterTable
-++++++++++++++
-
-.. autoclass:: CharacterTable

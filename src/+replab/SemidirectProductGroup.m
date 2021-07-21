@@ -26,7 +26,7 @@ classdef SemidirectProductGroup < replab.Group
 % Note that compared to other references such as Wikipedia ( `<https://en.wikipedia.org/wiki/Semidirect_product>_` ),
 % we write the element of the acting group $H$ first.
 %
-% The multiplication rule of the group is $(h_1, n_1) \cdot (h_2, n_2) = (h_1 h_2, \phi(h_2^{-1}, n_1) n)2)$.
+% The multiplication rule of the group is $(h_1, n_1) \cdot (h_2, n_2) = (h_1 h_2, \phi(h_2^{-1}, n_1) n_2)$.
 % The inverse of $(h, n)$ is given by $(h^{-1}, \phi(h, n))$.
 %
 % How do we interpret this multiplication rule? First, we want to interpret the elements of $H$ and $N$ as "being part of $G$.
@@ -46,7 +46,7 @@ classdef SemidirectProductGroup < replab.Group
 % $H$ and $N$ respectively. Now, we write $h_1 n_1 h_2 n_2 = h_1 h_2 h_2^{-1} n_1 h_2 n_2$, and we define
 % $h_2^{-1} n_1 h_2 = \phi(h_2^{-1}, n_1)$.
 %
-% Thus, $h_1 n_1 h_2 n_2 = (h_1 h_2) (\phi(h_2^{-1}, n_1) n_2) = (h_1, h_2, \phi(h_2^{-1}, n_1) n_2)$.
+% Thus, $h_1 n_1 h_2 n_2 = (h_1 h_2) (\phi(h_2^{-1}, n_1) n_2) = (h_1 h_2, \phi(h_2^{-1}, n_1) n_2)$.
 %
 % Thus, we interpret that group action $\phi$ as defining the conjugation of elements of $N$ by elements of $H$.
 %

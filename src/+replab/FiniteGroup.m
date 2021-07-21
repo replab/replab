@@ -379,7 +379,7 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
         % Attempts to recognize this group in the standard atlas
         %
         % Returns:
-        %   `+replab.AtlasResult` or []: A result in case the group is identified; or ``[]`` if unrecognized.
+        %   `.FiniteIsomorphism` or ``[]``: A result in case the group is identified; or ``[]`` if unrecognized.
             R = self.cached('fastRecognize', @() self.computeFastRecognize);
         end
 
@@ -408,7 +408,7 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
         % Attempts to recognize this group in the standard atlas
         %
         % Returns:
-        %   `+replab.AtlasResult` or []: A result in case the group is identified; or ``[]`` if unrecognized.
+        %   `.FiniteIsomorphism` or ``[]``: A result in case the group is identified; or ``[]`` if unrecognized.
             R = self.cached('recognize', @() self.computeRecognize);
         end
 

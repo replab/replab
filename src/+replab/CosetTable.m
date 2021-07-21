@@ -1,5 +1,5 @@
 classdef CosetTable < replab.Str
-% Describes a coset table
+% Describes a coset table (experimental)
 %
 % Example:
 %   >>> ct = replab.CosetTable.fromPresentation({'x' 'y'}, {'x^2','y^3','(x*y)^3'}, {'x*y'});

@@ -5,13 +5,19 @@ Named discrete groups
 
 RepLAB provides constructions of standard discrete groups.
 
-* `.SymmetricGroup`: Describes the symmetric group on a given domain (shorthand `.S`).
+General (signed) permutation groups are the two groups below.
+
+* `.SymmetricGroup`: Describes the symmetric group on a given domain.
+* `.S`: Shorthand for the construction of a symmetric group.
 * `.SignedSymmetricGroup`: Describes the signed symmetric group.
+
+Then we distinguish particular groups.
+
 * `.A`: Describes the alternating group on a given domain.
 * `.C`: Describes the cyclic group on a given domain.
 * `.D`: Describes the dihedral group on a given domain.
-* `.QuaternionGroup`: Describes the quaternion group of order 8.
 * `.KleinFourGroup`: Describes the Klein four-group
+* `.QuaternionGroup`: Describes the quaternion group of order 8.
 
 SymmetricGroup
 ++++++++++++++
@@ -33,23 +39,23 @@ A
 
 .. autofunction:: A
 
-D
-+
-
-.. autofunction:: D
-
 C
 +
 
 .. autofunction:: C
 
-QuaternionGroup
-+++++++++++++++
+D
++
 
-.. autofunction:: QuaternionGroup
+.. autofunction:: D
+
 
 KleinFourGroup
 ++++++++++++++
 
 .. autofunction:: KleinFourGroup
 
+QuaternionGroup
++++++++++++++++
+
+.. autofunction:: QuaternionGroup

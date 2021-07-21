@@ -3,12 +3,12 @@ classdef H
 %
 % A quaternion matrix can be expressed using four real matrices A, B, C and D:
 %
-% $ Q = A + B i + C j + D k $ where $i^2 = j^2 = k^2 = i j k = -1$ and $i j = k$, $j k = i$ and $k i = j$.
+% $Q = A + B i + C j + D k$ where $i^2 = j^2 = k^2 = i j k = -1$ and $i j = k$, $j k = i$ and $k i = j$.
 %
 % We choose to encode our quaternions using two matrices $X = A + B i$ and $Y = C + D i$, where
 % we now identify $i$ with the complex imaginary unit.
 %
-% Thus $ Q = X + Y j $.
+% Thus $Q = X + Y j$.
 %
 % The class supports sparse components for efficiency.
 

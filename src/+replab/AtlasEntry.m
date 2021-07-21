@@ -1,9 +1,8 @@
 classdef AtlasEntry < replab.Obj
 % Describes an Atlas entry available in the replab/atlas directory
 %
-% Stores
-% Note: the JSON file must contain only ASCII characters; check if our parser `+replab.+util.parseJSON` for support
-% of escape sequences.
+% Note: the JSON file must contain only ASCII characters; check if our parser `+replab.+util.parseJSON` supports
+% escape sequences.
 
     properties (SetAccess = protected)
         filename % (charstring): Filename, excluding path, including ``.json`` extension
