@@ -1,14 +1,66 @@
 classdef SemidirectProductGroup < replab.Group
-% Describes an external semidirect product of compact groups
+% Semidirect product of compact groups through the external/outer construction
 %
-% This is an abstract base class.
-% Call `.CompactGroup.semidirectProduct` or `.make` to construct an instance.
+% This is an abstract base class. Call `.CompactGroup.semidirectProduct` or `.make` to construct an instance.
 %
-% As semidirect product groups are used as a base for wreath product groups,
-% the constructors are duplicated in subclasses as to keep a simple hierarchy of
-% constructor calls.
+% Construction and multiplication rule
+% ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 %
-% TODO: add details about the semidirect product construction
+% An outer semidirect product constructs a group from two given groups, with its set of elements being the Cartesian
+% product of those two groups, and the multiplication operation given by the action of one group on the other.
+%
+% Formally, we have two groups, $H$ and $N$, with $H$ acting on $N$ in the following way. We have a group
+% action $\phi: H \times N \rightarrow N$, obeying the following:
+%
+% - $\phi(h_1, \phi(h_2, n)) = \phi(h_1 h_2, n)$
+% - $\phi(h, n_1) \phi(h, n_2) = \phi(h, n_1 n_2)$
+%
+% for $h,h_1,h_2 \in H$ and $n,n_1,n_2 \in N$.
+%
+% Equivalently, this action corresponds to a group morphism $\phi: H \rightarrow (N \rightarrow N)$ or
+% $\phi: H \rightarrow \operatorname{Aut}(N)$ from $H$ into the automorphism group of $N$.
+%
+% We now construct the semidirect product $G = H \ltimes N$. An element of the product is written $G = (h, n)$,
+% where $h \in H$ and $n \in N$.
+%
+% Note that compared to other references such as Wikipedia ( `<https://en.wikipedia.org/wiki/Semidirect_product>_` ),
+% we write the element of the acting group $H$ first.
+%
+% The multiplication rule of the group is $(h_1, n_1) \cdot (h_2, n_2) = (h_1 h_2, \phi(h_2^{-1}, n_1) n)2)$.
+% The inverse of $(h, n)$ is given by $(h^{-1}, \phi(h, n))$.
+%
+% How do we interpret this multiplication rule? First, we want to interpret the elements of $H$ and $N$ as "being part of $G$.
+%
+% We can embed elements of $H$ into $G$ by writing the injection $f(h) = (h, 1_N)$ where $1_N$ is the identity of $N$.
+% We can embed elements of $N$ into $G$ by writing the injection $g(n) = (1_H, n)$ where $1_H$ is the identity of $H$.
+%
+% Both $f$ and $g$ are morphisms: $f(h_1) f(h_2) = f(h_1 h_2)$ and $g(n_1) g(n_2) = g(n_1 n_2)$.
+%
+% Those those injections are available using the methods `.Hinjection` and `.Ninjection`.
+%
+% Noting that $(h,n) = f(h) g(n)$, we write:
+%
+% $(h_1,n_1) (h_2,n_2) = f(h_1) g(n_1) f(h_2) g(n_2) = h_1 n_1 h_2 n_2$, with the $f()$ and $g()$ injections implicit.
+%
+% If we could swap $n_1$ and $h_2$, as is the case with a direct product, we could rewrite the product as a pair of elements of
+% $H$ and $N$ respectively. Now, we write $h_1 n_1 h_2 n_2 = h_1 h_2 h_2^{-1} n_1 h_2 n_2$, and we define
+% $h_2^{-1} n_1 h_2 = \phi(h_2^{-1}, n_1)$.
+%
+% Thus, $h_1 n_1 h_2 n_2 = (h_1 h_2) (\phi(h_2^{-1}, n_1) n_2) = (h_1, h_2, \phi(h_2^{-1}, n_1) n_2)$.
+%
+% Thus, we interpret that group action $\phi$ as defining the conjugation of elements of $N$ by elements of $H$.
+%
+% Representations
+% ~~~~~~~~~~~~~~~
+%
+% Representations of semidirect products can be constructed using the `.semidirectProductRep` method, given compatible
+% representations of the groups $H$ and $N$.
+%
+% Implementation note
+% ~~~~~~~~~~~~~~~~~~~
+%
+% As semidirect product groups are used as a base for wreath product groups,  the constructors are duplicated in subclasses
+% as to keep a simple hierarchy of constructor calls.
 %
 % Example:
 %   >>> N = replab.S(3);
