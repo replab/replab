@@ -1,13 +1,13 @@
 classdef GeneralLinearGroup < replab.Group & replab.domain.VectorSpace
 % Describes the group of square invertible real or complex matrices
 
-    properties
-        n % integer: size
+    properties (SetAccess = protected)
+        n % (integer): Matrix size
         sparse % (logical): Whether to preserve sparse matrices
      end
 
     properties (Access = protected)
-        parent % replab.domain.Matrices: General, not necessarily invertible matrices
+        parent % (`.Matrices`): General, not necessarily invertible matrices
     end
 
     methods

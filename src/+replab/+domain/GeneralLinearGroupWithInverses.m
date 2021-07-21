@@ -1,13 +1,13 @@
 classdef GeneralLinearGroupWithInverses < replab.Group & replab.domain.VectorSpace
 % Describes the group of n x n invertible real or complex matrices, elements store inverses
 
-    properties
+    properties (SetAccess = protected)
         n % (integer): Size of the square matrices
         sparse % (logical): Whether to preserve sparse matrices
     end
 
     properties (Access = protected)
-        parent_ % (+replab.+domain.Matrices): General, not necessarily invertible matrices
+        parent_ % (.Matrices): General, not necessarily invertible matrices
     end
 
     methods

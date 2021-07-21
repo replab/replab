@@ -81,8 +81,8 @@ classdef RepByImages_exact < replab.RepByImages
             else
                 % for nonunitary/nonorthogonal representations, we store the inverses alongside the matrix, and use a special
                 % group structure to perform computations
-                target1 = replab.GeneralLinearGroupWithInverses(self.field, self.dimension, true);
-                target2 = replab.GeneralLinearGroup(self.field, self.dimension, true);
+                target1 = replab.domain.GeneralLinearGroupWithInverses(self.field, self.dimension, true);
+                target2 = replab.domain.GeneralLinearGroup(self.field, self.dimension, true);
                 cut = replab.Morphism.lambda(target1, target2, @(X) X(:, 1:self.dimension));
                 images = arrayfun(@(i) [images{i} inverseImages{i}], 1:m, 'uniform', 0);
                 res = replab.bsgs.ChainWithImages.make(n, target1, nicePreimages, images, base, order);
