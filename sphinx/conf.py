@@ -112,8 +112,7 @@ html_static_path = ['_static']
 # Guzzle theme options (see theme.conf for more information)
 html_theme_options = {
     # Set the name of the project to appear in the sidebar
-    "project_nav_name": "RepLAB",
-    "globaltoc_depth": 3,
+    "project_nav_name": "RepLAB"
 }
 
 html_css_files = [
