@@ -2,9 +2,7 @@ Blog
 ====
 
 .. postlist:: 5
-   :author: Denis Rosset
    :category: Manual
-   :location: Waterloo
    :language: en
    :date: %A, %B %d, %Y
    :format: {title} by {author} on {date}
