@@ -1,4 +1,5 @@
 classdef FiniteGroupType < replab.Group
+% Describes a type of finite groups
 
     methods
 
