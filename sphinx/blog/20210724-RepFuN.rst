@@ -12,7 +12,8 @@ A fun application of RepLAB : solving combination puzzles
 
 Even though RepLAB's primary focus is on group representations, the library also includes a number of group theory primitives and algorithms. These can be used by themselves to study fun problems and even solve some puzzles!
 
-.. figure:: olympicRings_small.gif
+.. figure:: https://live.staticflickr.com/65535/51332099153_57f76c750f_o_d.gif
+   :alt: olympicRings
    :align: center
    :figclass: align-center responsive
 
