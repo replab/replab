@@ -325,11 +325,21 @@ classdef Irreducible < replab.SubRep
             b = self.cached(['symmetricInvariant_' type], @() self.irreducibleEquivariantTo(dual(self),  'special', 'symmetric', 'type', type));
         end
 
-         % SubRep
+        % SubRep
 
-        function irr = nice(self)
-            components1 = cellfun(@(c) c.nice, self.components, 'uniform', 0);
-            irr = replab.Irreducible(self.parent, components1);
+        function [res, anyBetter] = nice(self)
+            components1 = cell(1, self.nComponents);
+            anyBetter = false;
+            for i = 1:self.nComponents
+                [res, better] = self.components{i}.nice;
+                components1{i} = res;
+                anyBetter = anyBetter || better;
+            end
+            if anyBetter
+                res = replab.Irreducible(self.parent, components1);
+            else
+                res = self;
+            end
         end
 
         function irr = refine(self)
