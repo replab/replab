@@ -12,9 +12,11 @@
 %     name: octave
 % ---
 
+% .. module:: +replab
+%
 % # How to load/save information to MAT files
 %
-% RepLAB implements methods to store and retrieve information to/from ``.mat`` files, as Octave does not support loading/saving objects.
+% As Octave does not support loading/saving of objects, RepLAB implements some methods to store and retrieve information to/from ``.mat`` files.
 %
 % For now, the following objects implement a pair of ``import``/``export`` methods:
 %
@@ -28,9 +30,9 @@
 %
 % RepLAB provides an export mechanism that exposes the information of an irreducible decomposition in plain struct/primitive arrays, so that this information can be saved even when using Octave.
 %
-% However, the representation being decomposed is not saved by this mechanism, and needs to be recreated using a script when importing the data.
+% However, the representation being decomposed is not saved by this mechanism, and needs to be recreated using a script when importing the data, as demonstrated below.
 %
-% # First script
+% ### Save script
 
 addpath([pwd, '/../..']);
 replab_init('verbose', 0);
@@ -41,7 +43,7 @@ decToExport = dec.squeeze % remove empty isotypic components (important when usi
 data = decToExport.export;
 save decomposition_export_example.mat data
 
-# Second script
+% ### Load script
 
 clear all % pretend we start all over again
 replab_init('verbose', 0);
@@ -50,5 +52,4 @@ G = replab.S(3);
 rep = G.naturalRep; % representation to decompose
 data = load('decomposition_export_example.mat');
 importedDec = replab.Irreducible.import(rep, data.data)
-
 

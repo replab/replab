@@ -14,6 +14,9 @@ the following resources will help you go further and start using **RepLAB** crea
 - :doc:`Higher-level explanations </topic/index>` of the main concepts, and of the
   inner working of the library organized around a list of topics
 
+
+.. rubric:: Getting started
+
 .. toctree::
    :maxdepth: 1
 
