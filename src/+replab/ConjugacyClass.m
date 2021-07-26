@@ -56,11 +56,7 @@ classdef ConjugacyClass < replab.FiniteSet
             if self.group.order < f.source.order
                 f = f.restrictedSource(self.group);
             end
-            if isa(f, 'replab.mrp.NiceIsomorphism') % preserves lexicographic order
-                c1 = replab.ConjugacyClass(f.target, f.imageElement(self.representative), f.imageGroup(self.representativeCentralizer));
-            else
-                c1 = replab.ConjugacyClass.make(f.target, f.imageElement(self.representative), f.imageGroup(self.representativeCentralizer));
-            end
+            c1 = replab.ConjugacyClass.make(f.target, f.imageElement(self.representative), f.imageGroup(self.representativeCentralizer));
         end
 
     end
@@ -71,11 +67,11 @@ classdef ConjugacyClass < replab.FiniteSet
             if nargin < 3
                 elementCentralizer = group.centralizer(element);
             end
-            prmGroup = group.niceMorphism.image;
-            prmElement = group.niceMorphism.imageElement(element);
+            prmGroup = group.permutationGroup;
+            prmElement = group.permutationIsomorphism.imageElement(element);
             [h1 g] = replab.bsgs.ConjugacyClasses.representative(prmGroup, prmElement);
-            representative = group.niceMorphism.preimageElement(h1);
-            representativeCentralizer = elementCentralizer.leftConjugateGroup(group.niceMorphism.preimageElement(g));
+            representative = group.permutationIsomorphism.preimageElement(h1);
+            representativeCentralizer = elementCentralizer.leftConjugateGroup(group.permutationIsomorphism.preimageElement(g));
             c = replab.ConjugacyClass(group, representative, representativeCentralizer);
         end
 

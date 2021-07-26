@@ -6,7 +6,6 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
 % Groups can be compared for equality using the ``==`` operator.
 %
 % RepLAB implements group algorithms optimized for permutation groups using the BSGS (base and strong generating set) construction.
-% For many finite group constructions, RepLAB constructs an isomorphic permutation group using a `.niceMorphism`.
 %
 % Generator names
 % ~~~~~~~~~~~~~~~
@@ -32,6 +31,20 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
 % Finite group methods such as `.contains` can be called with arguments from the group type.
 %
 % Types can be compared with the `==` operator.
+%
+% Implementations of finite groups
+% ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+%
+% `.FiniteGroup` has two main subclasses:
+%
+% - `.PermutationGroup`, where all the methods are implemented directly using algorithms based on the BSGS construction,
+% - `.GenericFiniteGroup`, which delegate the computations to another group type using an isomorphism.
+%
+% As of July 2021, generic group implementations delegate computations to permutation groups, but this could evolve in the
+% future.
+%
+% Currently, some delegations of computations assume that the destination group is a permutation group, which is why
+% we have `.permutationGroup` and `.permutationIsomorphism` methods on finite groups.
 
     properties (SetAccess = protected)
         generatorNames % (cell(1,\*) of charstring): Generator names
@@ -55,7 +68,7 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
 
     methods
 
-        function self = FiniteGroup(identity, generators, type, varargin)
+        function self = FiniteGroup(type, generators, varargin)
         % Constructs a finite group
         %
         % Args:
@@ -67,14 +80,10 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
         %   generatorNames (cell(1,\*) of charstring): Names of the generators
         %   order (vpi or integer): Group order
         %   relators (cell(1,\*) of charstring): Relators
-            self.identity = identity;
-            self.representative = identity;
-            if strcmp(type, 'self')
-                self.type = self;
-            else
-                self.type = type;
-            end
+            self.type = type;
             self.generators = generators;
+            self.identity = type.identity;
+            self.representative = type.identity;
             args = struct('generatorNames', {cell(1, 0)}, 'order', {0}, 'relators', {'none'}, 'abelianInvariants', {'none'}, ...
                           'realCharacterTable', {'none'}, 'complexCharacterTable', {'none'});
             args = replab.util.populateStruct(args, varargin);
@@ -198,11 +207,6 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
 
     methods (Access = protected)
 
-        function o = computeOrder(self)
-        % See `.order`
-            error('Abstract');
-        end
-
         function a = computeAbelianInvariants(self)
         % See `.abelianInvariants`
         %
@@ -241,16 +245,6 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
             a = sort(a);
         end
 
-        function e = computeExponent(self)
-        % See `.exponent`
-            eo = self.conjugacyClasses.classElementOrders;
-            eo = unique(eo);
-            e = eo(1);
-            for i = 2:length(eo)
-                e = lcm(e, eo(i));
-            end
-        end
-
         function c = computeCharacterTable(self, field)
         % See `.characterTable`
             r = self.recognize;
@@ -265,20 +259,31 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
             error('Abstract');
         end
 
+        function sub = computeDerivedSubgroup(self)
+        % See `.derivedSubgroup`
+            error('Abstract');
+        end
+
+        function e = computeExponent(self)
+        % See `.exponent`
+            eo = self.conjugacyClasses.classElementOrders;
+            eo = unique(eo);
+            e = eo(1);
+            for i = 2:length(eo)
+                e = lcm(e, eo(i));
+            end
+        end
+
         function R = computeFastRecognize(self)
             R = [];
-            if self.niceMorphism.image.domainSize < replab.globals.fastChainDomainSize
-                c = self.niceMorphism.image.partialChain;
+            if self.permutationGroup.image.domainSize < replab.globals.fastChainDomainSize
+                c = self.permutationIsomorphism.image.partialChain;
                 if ~c.isMutable
                     if c.order <= replab.globals.atlasMaximalOrder
                         R = replab.Atlas.recognize(self);
                     end
                 end
             end
-        end
-
-        function R = computeRecognize(self)
-            R = replab.Atlas.recognize(self);
         end
 
         function res = computeIsCyclic(self)
@@ -291,14 +296,18 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
             error('Abstract');
         end
 
-        function sub = computeDerivedSubgroup(self)
-        % See `.derivedSubgroup`
+        function o = computeOrder(self)
+        % See `.order`
             error('Abstract');
+        end
+
+        function R = computeRecognize(self)
+            R = replab.Atlas.recognize(self);
         end
 
         function R = computeRelatorsInLetterForm(self)
         % See `.relators`
-            R = replab.fp.relatorsForPermutationGroup(self.niceGroup);
+            R = replab.fp.relatorsForPermutationGroup(self.permutationGroup);
         end
 
         function s = computeSetProduct(self)
@@ -399,6 +408,8 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
         %
         % Returns:
         %   `.FiniteIsomorphism` or ``[]``: A result in case the group is identified; or ``[]`` if unrecognized.
+            R = [];
+            return % TODO
             R = self.cached('fastRecognize', @() self.computeFastRecognize);
         end
 
@@ -801,6 +812,8 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
         function sub = subgroup(self, elements, order)
         % Constructs a subgroup of the current group from elements
         %
+        % The generators of the result are the given elements with the identity filtered out.
+        %
         % Example:
         %   >>> S5 = replab.S(5);
         %   >>> G = S5.subgroup({[1 2 3 4 5]});
@@ -1174,13 +1187,13 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
 
     methods (Access = protected)
 
-        function G = computeNiceGroup(self)
-        % See `.niceGroup`
+        function G = computePermutationGroup(self)
+        % See `.permutationGroup`
             error('Abstract');
         end
 
-        function m = computeNiceMorphism(self)
-        % See `.niceMorphism`
+        function m = computePermutationIsomorphism(self)
+        % See `.permutationIsomorphism`
             error('Abstract');
         end
 
@@ -1188,16 +1201,16 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
 
     methods % Isomorphic groups
 
-        function G = niceGroup(self)
+        function G = permutationGroup(self)
         % Returns the permutation group isomorphic to this finite group
         %
-        % The generators of the nice group must be in one-to-one correspondance with the generators of this group.
+        % The generators of the permutation group must be in one-to-one correspondance with the generators of this group.
         %
-        % This is the image of `.niceMorphism`.
+        % This is the image of `.permutationIsomorphism`.
         %
         % Returns:
         %   `+replab.PermutationGroup`: A permutation group isomorphic to this group
-            G = self.cached('niceGroup', @() self.computeNiceGroup);
+            G = self.cached('permutationGroup', @() self.computePermutationGroup);
         end
 
         function G = abstractGroup(self, generatorNames)
@@ -1205,8 +1218,8 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
         %
         % The generators of the abstract group must be in one-to-one correspondance with the generators of this group.
         %
-        % This is the image of `.abstractMorphism`; and the `+replab.AbstractGroup.niceGroup` will be the same as this group
-        % `.niceGroup`.
+        % This is the image of `.abstractMorphism`; and the `+replab.AbstractGroup.permutationGroup` will be the same as this group
+        % `.permutationGroup`. TODO: check relevance
         %
         % Args:
         %   generatorNames (cell(1,\*) of charstring, optional): Generator names to use in place of the names given at construction
@@ -1348,9 +1361,9 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
             m = self.morphismByImages(self, 'preimages', self.generators, 'images', generatorImages, 'nChecks', 0);
         end
 
-        function f = niceMorphism(self)
+        function f = permutationMorphism(self)
         % Returns the isomorphism from this group to a permutation group
-            f = self.cached('niceMorphism', @() self.computeNiceMorphism);
+            f = self.cached('permutationMorphism', @() self.computePermutationMorphism);
         end
 
         function m = abstractMorphism(self, names)

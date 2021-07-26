@@ -5,8 +5,8 @@ classdef FiniteMorphism < replab.Morphism
 
         % Str
 
-        function [names values] = additionalFields(self)
-            [names values] = additionalFields@replab.Morphism(self);
+        function [names, values] = additionalFields(self)
+            [names, values] = additionalFields@replab.Morphism(self);
             for i = 1:self.source.nGenerators
                 names{1, end+1} = sprintf('imageElement(%s)', replab.shortStr(self.source.generator(i)));
                 values{1, end+1} = self.imageElement(self.source.generator(i));

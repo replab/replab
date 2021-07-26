@@ -19,6 +19,23 @@ classdef FiniteGroupType < replab.Group
             error('Abstract');
         end
 
+        function G = subgroupWithGenerators(self, group, generators, varargin)
+        % Constructs a subgroup of a given group with the given parameters
+        %
+        % Args:
+        %   group (`.GenericFiniteGroup`): Finite group whose subgroup we are constructing
+        %   generators (cell(1,\*) of group elements): Subgroup generators
+        %
+        % Keyword Args:
+        %   generatorNames (cell(1,\*) of charstring): Names of the generators
+        %   order (vpi or integer): Group order
+        %   relators (cell(1,\*) of charstring): Relators
+        %
+        % Returns:
+        %   `.FiniteGroup`: Constructed group
+            G = self.groupWithGenerators(generators, varargin{:});
+        end
+
     end
 
 end

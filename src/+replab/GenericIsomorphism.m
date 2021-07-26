@@ -1,14 +1,15 @@
-classdef TypeToPermIsomorphism < replab.FiniteIsomorphism
-% A morphism from a subgroup of a finite group type to a permutation group
+classdef GenericIsomorphism < replab.FiniteIsomorphism
+% An isomorphism from a subgroup of a finite group type to a finite group
 
     methods
 
         function t = sourceType(self)
-        % Returns the type of the finite group which is the source of this isomorphism
+        % Returns the type of the finite group which is the source of this morphism
             t = self.source.type;
         end
+
         function l = sourceContains(self, s)
-        % Returns whether the source of this isomorphism contains the given type element
+        % Returns whether the source of this morphism contains the given type element
         %
         % Args:
         %   s (element of `.sourceType`): Element to check
