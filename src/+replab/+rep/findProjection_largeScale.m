@@ -1,4 +1,4 @@
-function [P, exitFlag] = findProjection_largeScale(rep, I, nSamples, tolerances, Ip, Pp)
+function [P, exitFlag] = findProjection_largeScale(rep, I, nSamples, tolerances, Ip, Pp, forceReal)
 % Finds a projection map for a subrepresentation defined by an injection map
 %
 % Args:
@@ -8,6 +8,7 @@ function [P, exitFlag] = findProjection_largeScale(rep, I, nSamples, tolerances,
 %   tolerances (`.Tolerances`): Termination criteria
 %   Ip (double(D,e)): Injection map matrix prescribing biorthogonality
 %   Pp (double(e,D)): Projection map matrix prescribing biorthogonality
+%   forceReal (logical): Whether to force the projection map to be real
 %
 % Returns:
 %   double(\*,\*): Projection map
@@ -19,7 +20,11 @@ function [P, exitFlag] = findProjection_largeScale(rep, I, nSamples, tolerances,
     replab.msg(1, '');
     replab.msg(2, ' #iter   ortho    delta');
     replab.msg(2, '-----------------------');
-    P = replab.numerical.randomUnitaryOver(d, rep.field) * I'; % as good as a guess as anything else
+    if forceReal
+        P = replab.numerical.randomUnitaryOver(d, 'R') * I'; % as good as a guess as anything else
+    else
+        P = replab.numerical.randomUnitaryOver(d, rep.field) * I'; % as good as a guess as anything else
+    end
     [P, ~] = replab.rep.biorthoStepP(I, P);
     delta = zeros(1, tolerances.maxIterations);
     omega = zeros(1, tolerances.maxIterations);
@@ -34,6 +39,9 @@ function [P, exitFlag] = findProjection_largeScale(rep, I, nSamples, tolerances,
             rhoI = rep.matrixRowAction(g, I);
             Prho = rep.matrixColAction(g, P);
             P1 = P1 + (P * rhoI) * Prho;
+        end
+        if forceReal
+            P1 = real(P1);
         end
         if e > 0
             P1 = P1 - (P1 * Ip) * Pp;

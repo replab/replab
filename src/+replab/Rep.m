@@ -1604,10 +1604,11 @@ classdef Rep < replab.Obj
         %   largeScale (logical, optional): Whether to use the large-scale version of the algorithm, default automatic selection
         %   tolerances (`+replab.+rep.Tolerances`): Termination criteria
         %   nSamples (integer, optional): Number of samples to use in the large-scale version of the algorithm, default ``5``
+        %   forceReal (logical, optional): Whether to force the computed projection map to be real, default ``false``
         %
         % Returns:
         %   `+replab.SubRep`: Subrepresentation
-            args = struct('projection', [], 'largeScale', self.dimension > 1000, 'tolerances', replab.rep.Tolerances, 'nSamples', 5);
+            args = struct('projection', [], 'largeScale', self.dimension > 1000, 'tolerances', replab.rep.Tolerances, 'nSamples', 5, 'forceReal', false);
             [args, restArgs] = replab.util.populateStruct(args, varargin);
             projection = args.projection;
             % convert cell-encoded cyclotomic matrices, when relevant
@@ -1638,10 +1639,13 @@ classdef Rep < replab.Obj
                         projection = (injection'*injection)\injection';
                     else
                         if args.largeScale
-                            projection = replab.rep.findProjection_largeScale(self, injection, args.nSamples, args.tolerances, [], []);
+                            projection = replab.rep.findProjection_largeScale(self, injection, args.nSamples, args.tolerances, [], [], args.forceReal);
                         else
                             P1 = injection*inv(injection'*injection)*injection';
                             P2 = self.commutant.project(P1);
+                            if args.forceReal
+                                P2 = real(P2);
+                            end
                             projection = injection \ P2;
                         end
                     end
