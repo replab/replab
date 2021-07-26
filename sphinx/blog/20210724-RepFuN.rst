@@ -6,7 +6,7 @@ A fun application of RepLAB : solving combination puzzles
    :category: Application
    :author: Jean-Daniel Bancal
    :location: Geneva, Switzerland
-   :excerpt: 2
+   :excerpt: 1
    :image: 1
    :nocomments:
 
