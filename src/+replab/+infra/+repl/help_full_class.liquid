@@ -1,5 +1,8 @@
  Class `{{ el.fullIdentifier }}`:
 \n
+{% call strjoin(replab.infra.indent(el.doc.lines, 3), char(10)) %}
+\n
+\n
    In package:\n
      `{{el.package.fullIdentifier}}`\n
 \n
