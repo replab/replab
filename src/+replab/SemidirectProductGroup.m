@@ -23,13 +23,13 @@ classdef SemidirectProductGroup < replab.Group
 % We now construct the semidirect product $G = H \ltimes N$. An element of the product is written $G = (h, n)$,
 % where $h \in H$ and $n \in N$.
 %
-% Note that compared to other references such as Wikipedia ( `<https://en.wikipedia.org/wiki/Semidirect_product>_` ),
-% we write the element of the acting group $H$ first.
+% Note that compared to other references such as Wikipedia ( `<https://en.wikipedia.org/wiki/Semidirect_product>`_ ),
+% we write the element of the acting group $H$ first, and this changes the rule for multiplying group elements.
 %
 % The multiplication rule of the group is $(h_1, n_1) \cdot (h_2, n_2) = (h_1 h_2, \phi(h_2^{-1}, n_1) n_2)$.
 % The inverse of $(h, n)$ is given by $(h^{-1}, \phi(h, n))$.
 %
-% How do we interpret this multiplication rule? First, we want to interpret the elements of $H$ and $N$ as "being part of $G$.
+% How do we interpret this multiplication rule? First, we want to interpret the elements of $H$ and $N$ as "being part" of $G$.
 %
 % We can embed elements of $H$ into $G$ by writing the injection $f(h) = (h, 1_N)$ where $1_N$ is the identity of $N$.
 % We can embed elements of $N$ into $G$ by writing the injection $g(n) = (1_H, n)$ where $1_H$ is the identity of $H$.
@@ -144,14 +144,29 @@ classdef SemidirectProductGroup < replab.Group
     methods % Morphisms
 
         function m = Hinjection(self)
+        % Returns the morphism that expresses elements of `.H` in the semidirect product
+        %
+        % Returns:
+        %   `.Morphism`: The morphism from `.H` to this semidirect product group
             m = self.H.morphismByFunction(self, @(g) {g, self.N.identity});
         end
 
         function m = Hprojection(self)
+        % Returns the morphism that projects elements of the semidirect product into `.H`
+        %
+        % Note that for a semidirect product ``G``, the morphism ``G.Hinjection.andThen(G.Hprojection``
+        % is the identity.
+        %
+        % Returns:
+        %   `.Morphism`: The morphism from the semidirect product to `.H`
             m = self.morphismByFunction(self.H, @(g) g{1});
         end
 
         function m = Ninjection(self)
+        % Returns the morphism that expresses elements of `.N` in the semidirect product
+        %
+        % Returns:
+        %   `.Morphism`: The morphism from `.N` to this semidirect product group
             if self.hasReconstruction
                 r = self.N.maximalTorusDimension;
                 tm = eye(r);
@@ -159,16 +174,6 @@ classdef SemidirectProductGroup < replab.Group
                 tm = [];
             end
             m = self.N.morphismByFunction(self, @(g) {self.H.identity, g}, tm);
-        end
-
-        function m = Nprojection(self)
-            if self.hasReconstruction
-                r = self.N.maximalTorusDimension;
-                tm = eye(r);
-            else
-                tm = [];
-            end
-            m = self.morphismByFunction(self.N, @(g) g{2}, tm);
         end
 
     end
