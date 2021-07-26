@@ -328,8 +328,8 @@ classdef SubRep < replab.Rep
             mat = self.injection(type) * self.projection(type);
         end
 
-        function [s better] = nice(self)
-        % Returns a representation similar to the current subrepresentation, with a nicer basis
+        function [res, better] = nice(self)
+        % Returns a representation similar to the current subrepresentation, with a nicer basis (EXPERIMENTAL)
         %
         % The "niceness" of the basis is implementation dependent. As of the first implementation
         % of this feature, RepLAB tries to make the basis real, and then with small integer
@@ -341,13 +341,15 @@ classdef SubRep < replab.Rep
         %
         % Returns
         % -------
-        %   s: `.SubRep`
+        %   res: `.SubRep`
         %      A subrepresentation of ``self.parent``
         %   better: logical
         %      Whether a nicer subrepresentation has been found
-            s = self;
-            better = false;
-            % s = replab.nice.niceSubRep(self); TODO
+            res = replab.nice.niceSubRep(self);
+            better = ~isempty(res);
+            if ~better
+                res = self;
+            end
         end
 
         function sub1 = refine(self, varargin)

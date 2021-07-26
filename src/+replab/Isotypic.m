@@ -94,9 +94,9 @@ classdef Isotypic < replab.SubRep
                 end
             end
             if ~args.irrepsAreBiorthogonal || ~args.irrepsAreHarmonized
-                injections = cellfun(@(irrep) irrep.injection_internal, irreps, 'uniform', 0);
+                injections = cellfun(@(irrep) irrep.injection, irreps, 'uniform', 0);
                 I = horzcat(injections{:});
-                P = replab.rep.findProjection_largeScale(parent, I, 5, replab.rep.Tolerances, [], []);
+                P = replab.rep.findProjection_largeScale(parent, I, 5, replab.rep.Tolerances, [], [], false);
             else
                 projections = cellfun(@(irrep) irrep.projection_internal, irreps, 'uniform', 0);
                 P = vertcat(projections{:});
@@ -386,6 +386,14 @@ classdef Isotypic < replab.SubRep
         end
 
         % SubRep
+
+        function [res, better] = nice(self)
+            res = replab.nice.niceIsotypic(self);
+            better = ~isempty(res);
+            if ~better
+                res = self;
+            end
+        end
 
         function iso = refine(self, varargin)
         % Refines this isotypic component

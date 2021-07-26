@@ -267,7 +267,7 @@ classdef GenSubRep < replab.Obj
             args = replab.util.populateStruct(args, varargin);
             biorthoAreAdjoint = all(all(args.injectionBiortho == args.projectionBiortho'));
             if model.isUnitary && self.parent.isUnitary && biorthoAreAdjoint
-                gen1 = replab.rep.harmonize_unitary_largeScale(self, model, args.nSamples, arg.tolerances, args.injectionBiortho);
+                gen1 = replab.rep.harmonize_unitary_largeScale(self, model, args.nSamples, args.tolerances, args.injectionBiortho);
             else
                 gen1 = replab.rep.harmonize_nonUnitary_largeScale(self, model, args.nSamples, args.tolerances, args.injectionBiortho, args.projectionBiortho);
             end
