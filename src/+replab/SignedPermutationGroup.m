@@ -1,4 +1,4 @@
-classdef SignedPermutationGroup < replab.NiceFiniteGroup
+classdef SignedPermutationGroup < replab.GenericFiniteGroup
 % A base class for all signed permutation groups
 
     properties (SetAccess = protected)
@@ -7,25 +7,15 @@ classdef SignedPermutationGroup < replab.NiceFiniteGroup
 
     methods
 
-        function self = SignedPermutationGroup(domainSize, generators, varargin)
+        function self = SignedPermutationGroup(type, generators, varargin)
         % Constructs a signed permutation group
         %
-        % Additional keyword args (such as order) are passed to the `.FiniteGroup` constructor.
+        % Keyword args (such as order) are passed to the `.FiniteGroup` constructor.
         %
         % Args:
         %   domainSize (integer): Size of the domain
         %   generators (cell(1,\*) of permutation): Group generators
-        %
-        % Keyword Args:
-        %   type (`+replab.SignedPermutationGroup`): Type of this group if known, or ``'self'`` if this group is its own type
-            args = struct('type', {[]});
-            [args, restArgs] = replab.util.populateStruct(args, varargin);
-            type = args.type;
-            if isempty(type)
-                type = replab.SignedSymmetricGroup(domainSize);
-            end
-            identity = 1:domainSize;
-            self@replab.NiceFiniteGroup(identity, generators, type, restArgs{:});
+            self@replab.GenericFiniteGroup(type, generators, type.genericIsomorphism, varargin{:});
             self.domainSize = domainSize;
         end
 

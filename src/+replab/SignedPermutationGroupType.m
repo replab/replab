@@ -1,8 +1,9 @@
-classdef SignedPermutationGroupType < replab.FiniteGroupType
+classdef SignedPermutationGroupType < replab.GenericFiniteGroupType
 % A type for signed permutation groups
 
     properties (SetAccess = protected)
-        domainSize % Domain size $d$ where elements act on $\{-d..-1, 1..d\}$
+        domainSize % (integer): Domain size $d$ where elements act on $\{-d .. -1, 1 .. d\}$
+        genericIsomorphism % (`.GenericIsomorphism`): Isomorphism for all groups of this type
     end
 
     methods
@@ -26,6 +27,11 @@ classdef SignedPermutationGroupType < replab.FiniteGroupType
             b = all(x == y);
         end
 
+        function s = sample(self)
+            n = self.domainSize;
+            s = randperm(n) .* (randi([0 1], 1, n)*2-1);
+        end
+
         % Monoid
 
         function z = compose(self, x, y)
@@ -41,6 +47,12 @@ classdef SignedPermutationGroupType < replab.FiniteGroupType
             y(xAbs) = 1:n;
             invFlip = xAbs(x < 0);
             y(invFlip) = -y(invFlip);
+        end
+
+        % GenericFiniteGroupType
+
+        function iso = genericIsomorphism(self, varargin)
+
         end
 
     end

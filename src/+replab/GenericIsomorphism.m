@@ -3,6 +3,12 @@ classdef GenericIsomorphism < replab.FiniteIsomorphism
 
     methods
 
+        function self = GenericIsomorphism(source, target)
+            self.source = source;
+            self.target = target;
+            self.torusMap = [];
+        end
+
         function t = sourceType(self)
         % Returns the type of the finite group which is the source of this morphism
             t = self.source.type;
