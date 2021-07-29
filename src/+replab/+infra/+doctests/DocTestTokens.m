@@ -78,7 +78,7 @@ classdef DocTestTokens < replab.Str
         %   lines (row cell array of charstring): Doctest block lines
         %
         % Returns:
-        %   `.ParseState`: A fresh ParseState instance
+        %   `.DocTestTokens`: List of tokens
             lines = {};
             comments = {};
             tags = '';

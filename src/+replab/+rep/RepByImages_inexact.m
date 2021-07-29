@@ -20,7 +20,7 @@ classdef RepByImages_inexact < replab.RepByImages
         %   dimension (integer): Representation dimension
         %   preimages (cell(1,n) of ``group`` elements): Preimages
         %   images (cell(1,n) of double/sparse double/cyclotomic(\*,\*)): Images of the preimages
-        %   imagesErrorBound (double or double(1,n) or ``[]`): Error bound on the given images
+        %   imagesErrorBound (double or double(1,n) or ``[]``): Error bound on the given images
             n = length(preimages);
             % if no error bound provided
             if isempty(imagesErrorBound)

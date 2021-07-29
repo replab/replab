@@ -4,7 +4,7 @@ classdef Irreducible < replab.SubRep
 % The mathematical background is based on Section 2.6 of Jean-Pierre Serre, "Linear representations of finite groups".
 %
 % An irreducible decomposition contains a sequence of isotypic components. When the irreducible decomposition is obtained
-% through `.Rep.decomposition` with an ``exact`` argument, the order of isotypic components matches the real or complex
+% through `+replab.Rep.decomposition` with an ``exact`` argument, the order of isotypic components matches the real or complex
 % character table of the represented group, and thus the irreducible decomposition can contain empty isotypic components.
 % Those empty components can be stripped using the `.squeeze` method.
 %

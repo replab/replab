@@ -174,7 +174,7 @@ classdef SubRep < replab.Rep
         % ``injection1 = injection + Delta``, where ``Delta`` is a matrix with normally distributed
         % entries of standard deviation ``sigma``. ``Delta`` is real (resp. complex) if the representation
         % is real (resp. complex). Then the original `.projection` map is ignored and ``projection1`` is recovered
-        % as in `.Rep.subRep`.
+        % as in `+replab.Rep.subRep`.
         %
         % If ``sub.withNoise(sigmaI, sigmaP)`` is called, then noise of magnitude ``sigmaI`` is added to the injection map
         % and noise of magnitude ``sigmaP`` is added to the projection map. Then the new noisy maps are corrected

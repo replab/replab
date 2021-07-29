@@ -3,7 +3,7 @@ function filename = writeAtlasForPermutationGroupUsingGAP(G, irreps)
 %
 % Args:
 %   filename (charstring): Path to JSON file to write
-%   G (`.PermutationGroup`): Group to compute the information of
+%   G (`+replab.PermutationGroup`): Group to compute the information of
 %   name (charstring): Group name
 %   irreps (logical): Whether to compute irreducible representations
 %

@@ -2,22 +2,17 @@ classdef UndirectedGraph < replab.graph.Graph
 % Describes an immutable undirected graph
 
     methods (Access = public)
-        
+
         function self = UndirectedGraph(nVertices, edges, colors, weights)
         % Construct an undirected graph
         %
         % Do not use this function direclty, rather use another
-        % constructor such as ``.fromBlocks``.
-        %
-        % See also:
-        %   `.fromBlocks`
-        %   `.check`
-
+        % constructor such as `.fromAdjacencyMatrix` .
             self@replab.graph.Graph(nVertices, edges, colors, weights);
         end
 
     end
-    
+
     methods (Static) % Constructors
 
         function self = fromAdjacencyMatrix(adj, colors)
@@ -38,24 +33,24 @@ classdef UndirectedGraph < replab.graph.Graph
         %   >>> replab.UndirectedGraph.fromAdjacencyMatrix([0 1 1; 1 0 1; 1 1 0])
         %     Undirected graph with 3 vertices and 3 edges
         %     edges: [1, 2; 1, 3; 2, 3]
-            
+
             assert(size(adj,1) == size(adj,2), 'Adjacency matrix should be square');
-            
+
             % We symmetrize the adjacency matrix
             adj = max(adj, adj.');
-            
+
             % But keep only a short description
             adj = triu(adj);
-            
+
             [edges, nVertices, weights] = replab.graph.adj2edge(adj);
 
             if nargin < 2
                 colors = 0;
             end
-            
+
             self = replab.UndirectedGraph(nVertices, edges, colors, weights);
         end
-        
+
         function self = fromEdges(edges, nVertices, colors, weights)
         % Constructs a undirected graph from a liste of edges
         %
@@ -83,18 +78,18 @@ classdef UndirectedGraph < replab.graph.Graph
                     nVertices = max(max(edges));
                 end
             end
-            
+
             if (nargin < 3)
                 colors = [];
             end
-            
+
             if (nargin < 4)
                 weights = [];
             end
-            
+
             % Symmetrize the connections
             edges = sort(edges, 2);
-            
+
             % Remove duplicated edges
             if (numel(weights) > 1) && (numel(weights) == size(edges,1))
                 % We add up the weights associated to identical edges
@@ -104,7 +99,7 @@ classdef UndirectedGraph < replab.graph.Graph
                 % The edge weight remains uniform
                 edges = unique(edges, 'rows');
             end
-            
+
             self = replab.UndirectedGraph(nVertices, edges, colors, weights);
         end
 
@@ -119,7 +114,7 @@ classdef UndirectedGraph < replab.graph.Graph
         % undirected bipartite graph iff vertex i of the first set of
         % vertices is linked with vertex j in the second set of vertices.
         % Alternatively, the value of the matrix element is the weight
-        % associated to this edge. 
+        % associated to this edge.
         %
         % Args:
         %   biadj(double (\*,\*)): array of vertices linked by an edge
@@ -137,15 +132,15 @@ classdef UndirectedGraph < replab.graph.Graph
             if nargin < 2
                 colorsRows = zeros(1, size(biadj,1));
             end
-            
+
             if nargin < 3
                 colorsCols = zeros(1, size(biadj,2));
             end
-                        
+
             % Construct the associated full adjacency matrix
             adj = [zeros(size(biadj,1)*[1 1]), biadj;
                    zeros(size(biadj,2), sum(size(biadj)))];
-            
+
             % Carry over the coloring if it was provided
             colors = [colorsRows(:); colorsCols(:)].';
             if isequal(colors, zeros(1, sum(size(biadj))))
@@ -184,16 +179,16 @@ classdef UndirectedGraph < replab.graph.Graph
         %
         % Returns:
         %   graph (`.UndirectedGraph`)
-            
+
             [nVertices, edges, colors] = replab.graph.parseBlissFile(fileName);
-            
+
             self = replab.UndirectedGraph.fromEdges(edges, nVertices, colors);
         end
-        
+
     end
 
     methods
-        
+
         function s = headerStr(self)
         % Header string representing the object
         %
@@ -202,9 +197,9 @@ classdef UndirectedGraph < replab.graph.Graph
 
             s = sprintf('Undirected graph with %d vertices and %d edges', self.nVertices, size(self.edges,1));
         end
-        
+
     end
-    
+
     methods % Methods
 
         function graph = toDirectedGraph(self)
@@ -215,10 +210,10 @@ classdef UndirectedGraph < replab.graph.Graph
         %
         % Returns:
         %   graph (`.DirectedGraph`)
-            
+
             graph = replab.DirectedGraph.fromUndirectedGraph(self);
         end
-        
+
         function adj = computeAdjacencyMatrix(self)
         % Computes the adjacency matrix
 
@@ -226,7 +221,7 @@ classdef UndirectedGraph < replab.graph.Graph
             adj = adj + adj.' - diag(diag(adj));
             adj = full(adj);
         end
-        
+
         function deg = degrees(self)
         % Returns the degrees of all vertices
         %
@@ -236,10 +231,10 @@ classdef UndirectedGraph < replab.graph.Graph
         % Example:
         %   >>> replab.UndirectedGraph.fromEdges([1 3]).degrees
         %     1     0     1
-        
+
             deg = sum(self.adjacencyMatrix());
         end
-        
+
         function deg = degree(self, v)
         % Returns the degrees of vertex v
         %
@@ -253,14 +248,14 @@ classdef UndirectedGraph < replab.graph.Graph
         %   >>> graph = replab.UndirectedGraph.fromEdges([1 3; 1 4]);
         %   >>> graph.degree(1)
         %     2
-            
+
             assert(all(v >= 0) && all(v <= self.nVertices) && isequal(v, round(v)), ...
                 ['No vertex number ', num2str(v)]);
-            
+
             adj = self.adjacencyMatrix();
             deg = sum(adj(v,:));
         end
-                
+
         function deg2 = secondOrderDegree(self, v)
         % Returns the number of vertices at a distance 2 of all vertices
         %
@@ -282,21 +277,21 @@ classdef UndirectedGraph < replab.graph.Graph
             sel = (adj(v,:) ~= 0);
             deg2 = sum(sum(adj(sel,:))~=0);
         end
-        
+
         function L = computeLaplacian(self)
         % Computes the graph Laplacian
-        
+
             M = self.adjacencyMatrix();
             D = diag(sum(M));
-            
+
             colors = abs(self.colors);
             if numel(colors) == 1
                 colors = colors*ones(1,self.nVertices);
             end
-            
+
             L = D - M + diag(colors);
         end
-        
+
     end
-    
+
 end

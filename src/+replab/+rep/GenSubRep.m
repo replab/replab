@@ -21,8 +21,8 @@ classdef GenSubRep < replab.Obj
         dimension % (integer): Representation dimension
         divisionRing % ('R', 'C', 'H'): Division ring over which the subrepresentation is defined
         isUnitary % (logical): Whether this subrepresentation is unitary
-        injection % (double(D,d) or `.H`(D,d), may be sparse): Injection map
-        projection % (double(d,D) or `.H`(d,D), may be sparse): Projection map
+        injection % (double(D,d) or `+replab.H`(D,d), may be sparse): Injection map
+        projection % (double(d,D) or `+replab.H`(d,D), may be sparse): Projection map
         mapsAreAdjoint % (logical): True if `.parent` is unitary and `.injection` is the conjugate transpose of `.projection`
     end
 
@@ -164,8 +164,8 @@ classdef GenSubRep < replab.Obj
         %   parent (`+replab.Rep`): Parent representation of dimension $D$
         %   divisionRing ('R', 'C', 'H'): Division ring over which the subrepresentation is defined
         %   isUnitary (logical): Whether this subrepresentation is unitary
-        %   injection (double(D,d) or `.H`(D,d), may be sparse): Injection map
-        %   projection (double(d,D) or `.H`(d,D), may be sparse): Projection map
+        %   injection (double(D,d) or `+replab.H`(D,d), may be sparse): Injection map
+        %   projection (double(d,D) or `+replab.H`(d,D), may be sparse): Projection map
             D = size(injection, 1);
             d = size(injection, 2);
             self.parent = parent;

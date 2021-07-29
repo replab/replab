@@ -6,7 +6,7 @@ classdef DirectProductGroup_compact < replab.DirectProductGroup & replab.Compact
         % Constructs a direct product of groups
         %
         % Args:
-        %   factors (cell(1,\*) of `.CompactGroup`): Factor groups
+        %   factors (cell(1,\*) of `+replab.CompactGroup`): Factor groups
             assert(all(cellfun(@(x) isa(x, 'replab.CompactGroup'), factors)));
             self.factors = factors;
             self.identity = cellfun(@(f) f.identity, factors, 'uniform', 0);

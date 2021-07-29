@@ -14,7 +14,7 @@ classdef SemidirectProductRep < replab.Rep
         % Constructs a representation of a semidirect product from a representation of the factors
         %
         % Args:
-        %   group (`+replab.SemidirectProductGroup): Semidirect product group
+        %   group (`+replab.SemidirectProductGroup`): Semidirect product group
         %   Hrep (`+replab.Rep`): Representation of ``group.H``
         %   Nrep (`+replab.Rep`): Representation of ``group.N``
             assert(isa(group, 'replab.SemidirectProductGroup'));

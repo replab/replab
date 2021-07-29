@@ -6,13 +6,8 @@ classdef DirectedGraph < replab.graph.Graph
         function self = DirectedGraph(nVertices, edges, colors, weights)
         % Construct a directed graph
         %
-        % Do not use this function direclty, rather use another
-        % constructor such as ``.fromBlocks``.
-        %
-        % See also:
-        %   `.fromBlocks`
-        %   `.check`
-
+        % Do not use this function directly, rather use another
+        % constructor such as `.fromAdjacencyMatrix` .
             self@replab.graph.Graph(nVertices, edges, colors, weights);
         end
 

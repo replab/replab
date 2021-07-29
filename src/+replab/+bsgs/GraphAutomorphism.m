@@ -17,17 +17,17 @@ classdef GraphAutomorphism < replab.bsgs.Backtrack
             if nargin < 2 || isempty(knownSubgroup)
                 knownSubgroup = [];
             end
-            
-            % We compute a group 
+
+            % We compute a group
             group = replab.S(graph.nVertices);
-            
+
             % Try to make the group smaller by taking into account some
             % vertices invariants
             invariants = [];
             if numel(graph.colors) > 1
                 invariants = graph.colors(:);
             end
-            
+
             % Additional invariants
             if graph.nVertices > 10
                 invariant2 = graph.degrees;
@@ -39,13 +39,13 @@ classdef GraphAutomorphism < replab.bsgs.Backtrack
                     invariants = [invariants, graph.degreesSequences];
                 end
             end
-            
+
             if ~isempty(invariants)
                 [~, ~, invariants] = unique(invariants, 'rows');
                 group = group.vectorStabilizer(invariants.');
             end
-            
-            
+
+
             base = 1:graph.nVertices;
             self@replab.bsgs.Backtrack(group, base, knownSubgroup, knownSubgroup, debug);
             self.graph = graph;
@@ -57,7 +57,7 @@ classdef GraphAutomorphism < replab.bsgs.Backtrack
                 self.matchesU{1,i} = 1:graph.nVertices;
                 self.matchesV{1,i} = 1:graph.nVertices;
             end
-            
+
             % Initialize the known permutation at level 1
             self.Phi = cell(1,graph.nVertices);
             self.Phi{1} = zeros(1,graph.nVertices);
@@ -70,30 +70,30 @@ classdef GraphAutomorphism < replab.bsgs.Backtrack
         % Isomorphisms and Automorphisms via Spectral Signatures" by Dan
         % Raviv, Ron Kimmel and Alfred M. Bruckstein, doi:10.1109/TPAMI.2012.260
         %
-        % This function is an overload of `.Backtrack.test`
-            
+        % This function is an overload of `+replab.+bsgs.Backtrack.test`
+
             % Here is the candidate permutation
             candidate = prev(ul);
 
             % We quickly check whether the we can answer directly
             Phi = self.Phi{l};
-            
+
             % Quickly check if we already excluded this case
             if (Phi(l) ~= 0) && (Phi(l) ~= candidate(l))
                 ok = false;
                 return;
             end
-            
+
             % Check if anything still needs to be computed
             if min(Phi) > 0
                 self.Phi{l+1} = Phi;
                 ok = true;
                 return;
-            end            
+            end
 
-            
+
             %% Ok, we need to compute seomthing to answer the question
-            
+
             % Initialize variables
             ok = false;
             tolerance = 1e-10; % Since we allow false positives, it's ok if this number is significantly bigger than eps
@@ -102,15 +102,15 @@ classdef GraphAutomorphism < replab.bsgs.Backtrack
             nbT = size(Kt,1); % number of considered timings
             p = 1:l;
             pTilde = candidate(1:l);
-            
+
             % Loads the previous coarse grained matches
             matchesU = self.matchesU(l,:);
             matchesV = self.matchesV(l,:);
-            
+
             % We compute the vectors corresponding to p and pTilde for all vertices
             Sku = reshape(Kt(:,p(end),:), nbT, nVertices);
             Skv = reshape(Kt(:,pTilde(end),:), nbT, nVertices);
-            
+
             % We check whether previous matches are valid with the current
             % state of affair
             for u = 1:nVertices
@@ -126,7 +126,7 @@ classdef GraphAutomorphism < replab.bsgs.Backtrack
             candidatesV(Phi(Phi~=0)) = 0;
             candidatesV = candidatesV(candidatesV~=0);
             candidatesU = find(Phi == 0);
-            
+
             nMatchesU = zeros(1,nVertices);
             for u = candidatesU
                 differenceU = repmat(Sku(:,u), [1, length(matchesU{u})]) - Skv(:,matchesU{u});
@@ -139,7 +139,7 @@ classdef GraphAutomorphism < replab.bsgs.Backtrack
                     return;
                 end
             end
-            
+
             nMatchesV = zeros(1,nVertices);
             for v = candidatesV
                 differenceV = Sku(:,matchesV{v}) - repmat(Skv(:,v), [1, length(matchesV{v})]);
@@ -152,7 +152,7 @@ classdef GraphAutomorphism < replab.bsgs.Backtrack
                     return;
                 end
             end
-            
+
             % We make all possible inferences.
             % Matches should be unique in both directions
             for u = candidatesU
@@ -160,12 +160,12 @@ classdef GraphAutomorphism < replab.bsgs.Backtrack
                     Phi(u) = matchesU{u};
                 end
             end
-            
+
             % We save the result obtained for the next step
             self.matchesU(l+1,:) = matchesU;
             self.matchesV(l+1,:) = matchesV;
             self.Phi{l+1} = Phi;
-            
+
             % If everything is assigned, we exit successfully
             if min(Phi) > 0
                 ok = true;
@@ -177,7 +177,7 @@ classdef GraphAutomorphism < replab.bsgs.Backtrack
                 ok = false;
                 return;
             end
-            
+
             % If we reached here, we cannot exclude this partial assignment
             ok = true;
         end

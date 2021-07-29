@@ -2,13 +2,13 @@ function irreps = parseIrreps(group, field, generators, data)
 % Reads the irreducible representations from JSON data
 %
 % Args:
-%   group (`.FiniteGroup`): Finite group for which we parse the irreps
+%   group (`+replab.FiniteGroup`): Finite group for which we parse the irreps
 %   field ('R' or 'C'): Field over which the irreps are defined
 %   generators (cell(1,\*) of ``group`` elements): Generators
 %   data (cell(1,nIrreps) of cell(1,nGenerators) of images): Irrep images
 %
 % Returns:
-%   cell(1,\*) of `.Rep`: Irreducible representations
+%   cell(1,\*) of `+replab.Rep`: Irreducible representations
     n = length(data);
     for i = 1:n
         images = data{i};

@@ -2,7 +2,7 @@ function json = JSONforPermutationGroupUsingGAP(G, irreps)
 % Runs GAP System to compute the character table/representation information about a permutation group
 %
 % Args:
-%   G (`.PermutationGroup`): Group to compute the information of
+%   G (`+replab.PermutationGroup`): Group to compute the information of
 %   irreps (logical): Whether to compute irreducible representations
 %
 % Returns:

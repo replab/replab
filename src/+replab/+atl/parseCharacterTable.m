@@ -2,7 +2,7 @@ function C = parseCharacterTable(group, field, data)
 % Reads a character table from parsed JSON data
 %
 % Args:
-%   group (`.FiniteGroup`): Group for which to construct the character table, with conjugacy classes in proper order
+%   group (`+replab.FiniteGroup`): Group for which to construct the character table, with conjugacy classes in proper order
 %   field ('R' or 'C'): Real or complex field
 %   data (struct): JSON data of the ``realCharacterTable`` or ``complexCharacterTable`` JSON field
     characters = cellfun(@(m) m.', data.characters, 'uniform', 0); % characters is a 1D cell of 1D cell

@@ -38,7 +38,7 @@ function group = parseGroup(data)
 %   data (struct): Struct read from a JSON file
 %
 % Returns:
-%   `.AbstractGroup`: Abstract group data
+%   `+replab.AbstractGroup`: Abstract group data
     generatorNames = data.generatorNames;
     relators = data.relators;
     for i = 1:length(relators)

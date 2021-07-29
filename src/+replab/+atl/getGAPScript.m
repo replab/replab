@@ -2,7 +2,7 @@ function S = getGAPScript(G, irreps)
 % Returns the GAP script that outputs the JSON data corresponding to the given group
 %
 % Args:
-%   G (`.PermutationGroup`): Group to compute the information of
+%   G (`+replab.PermutationGroup`): Group to compute the information of
 %   irreps (logical): Whether to compute irreducible representations
 %
 % Returns:
