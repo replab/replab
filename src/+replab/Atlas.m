@@ -23,7 +23,7 @@ classdef Atlas
             replab.globals.atlasEntries(entries);
         end
 
-        function read
+        function read()
             folderPath = fullfile(replab.globals.replabPath, 'atlas');
             files = dir(folderPath);
             entries = cell(1, 0);
