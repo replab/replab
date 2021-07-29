@@ -1,0 +1,1596 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  
+  <!-- Licensed under the Apache 2.0 License -->
+  <link rel="stylesheet" type="text/css" href="../_static/fonts/open-sans/stylesheet.css" />
+  <!-- Licensed under the SIL Open Font License -->
+  <link rel="stylesheet" type="text/css" href="../_static/fonts/source-serif-pro/source-serif-pro.css" />
+  <link rel="stylesheet" type="text/css" href="../_static/css/bootstrap.min.css" />
+  <link rel="stylesheet" type="text/css" href="../_static/css/bootstrap-theme.min.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+    <title>Continuous groups &#8212; RepLAB 0.9.2-SNAP documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/guzzle.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/custom.css" />
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../_static/js/collapse_helper.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Permutation groups" href="permutation_groups.html" />
+    <link rel="prev" title="Base group structures" href="groups.html" /> 
+  
+   
+  
+<style type="text/css">
+  ul.ablog-archive {
+    list-style: none;
+    overflow: auto;
+    margin-left: 0px;
+  }
+  ul.ablog-archive li {
+    float: left;
+    margin-right: 5px;
+    font-size: 80%;
+  }
+  ul.postlist a {
+    font-style: italic;
+  }
+  ul.postlist-style-disc {
+    list-style-type: disc;
+  }
+  ul.postlist-style-none {
+    list-style-type: none;
+  }
+  ul.postlist-style-circle {
+    list-style-type: circle;
+  }
+</style>
+
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../mat-modindex.html" title="MATLAB Module Index"
+             >matlab index</a> |</li>
+        <li class="right" >
+          <a href="permutation_groups.html" title="Permutation groups"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="groups.html" title="Base group structures"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.9.2-SNAP documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">Technical Reference</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Continuous groups</a></li> 
+      </ul>
+    </div>
+    <div class="container-wrapper">
+
+      <div id="mobile-toggle">
+        <a href="#"><span class="glyphicon glyphicon-align-justify" aria-hidden="true"></span></a>
+      </div>
+  <div id="left-column">
+    <div class="sphinxsidebar"><div class="text-logo">
+  <a href="
+    ../index.html">RepLAB</a>&nbsp;&nbsp;
+  <a href="https://github.com/replab/replab"><i class="fab fa-github"></i></a>&nbsp;
+  <a href="https://github.com/replab/replab/archive/v0.9.2-SNAP.zip"><i class="fa fa-download"></i></a>&nbsp;
+  <a href="https://gitter.im/replab/replab"><i class="fab fa-gitter"></i></a>&nbsp;
+  <a href="https://travis-ci.com/replab/replab"><i class="fas fa-sync-alt"></i></a>&nbsp;
+  <a href="https://codecov.io/gh/replab/replab"><i class="fas fa-umbrella"></i></a>
+</div><div class="sidebar-block">
+  <div class="sidebar-toc">
+    
+    
+      <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/index.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../howto/index.html">How to</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../topic/index.html">Topic guides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../publications/index.html">Publications</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Technical Reference</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="commands.html">Commands</a></li>
+<li class="toctree-l2"><a class="reference internal" href="base.html">Base object types and functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="numerics.html">Numerics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="groups.html">Base group structures</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Continuous groups</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#torusgroup">TorusGroup</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#t">T</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#classicalcompactgroup">ClassicalCompactGroup</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#o">O</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#so">SO</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#u">U</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#su">SU</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#sp">Sp</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="permutation_groups.html">Permutation groups</a></li>
+<li class="toctree-l2"><a class="reference internal" href="named_discrete_groups.html">Named discrete groups</a></li>
+<li class="toctree-l2"><a class="reference internal" href="abstract_groups.html">Abstract groups and atlas</a></li>
+<li class="toctree-l2"><a class="reference internal" href="group_products.html">Group product constructions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="group_subsets.html">Group subsets</a></li>
+<li class="toctree-l2"><a class="reference internal" href="group_morphisms.html">Group morphisms</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rep.html">Representations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="equivariant.html">Equivariant spaces</a></li>
+<li class="toctree-l2"><a class="reference internal" href="characters.html">Characters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="convex_programming.html">Convex programming</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chemistry.html">Chemistry</a></li>
+<li class="toctree-l2"><a class="reference internal" href="globals.html">Global settings</a></li>
+<li class="toctree-l2"><a class="reference internal" href="graph.html">Graphs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="misc.html">Miscellaneous functions/classes</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../development/index.html">Development/Community</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../blog/index.html">Blog</a></li>
+</ul>
+
+    
+  </div>
+</div>
+<div class="sidebar-block">
+  <div class="sidebar-wrapper">
+    <h2><a href="../blog.html">Recent Blog Posts</a></h2>
+  </div>
+  <div class="sidebar-toc">
+    <ul>
+      
+      
+      <li class="toctree-l1"><a href="../blog/20210724-RepFuN.html">24 July - A fun application of RepLAB : solving combination puzzles</a></li>
+      
+      <li class="toctree-l1"><a href="../blog/20200123-RepLAB-website-live.html">26 January - The RepLAB documentation and the infrastructure behind it</a></li>
+      
+    </ul>
+  </div>
+</div>
+
+      
+    </div>
+  </div>
+        <div id="right-column">
+          
+          <div role="navigation" aria-label="breadcrumbs navigation">
+            <ol class="breadcrumb">
+              <li><a href="../index.html">Docs</a></li>
+              
+                <li><a href="index.html">Technical Reference</a></li>
+              
+              <li>Continuous groups</li>
+            </ol>
+          </div>
+          
+          <div class="document clearer body">
+             <section id="module-+replab">
+<span id="continuous-groups"></span><h1>Continuous groups<a class="headerlink" href="#module-+replab" title="Permalink to this headline">¶</a></h1>
+<p>RepLAB provides constructions of standard continuous groups.</p>
+<p>First, we consider torus-like groups.</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#+replab.TorusGroup" title="+replab.TorusGroup"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">TorusGroup</span></code></a>: Describes a compact, connected, abelian Lie group (i.e. a torus group).</p></li>
+<li><p><a class="reference internal" href="#+replab.T" title="+replab.T"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">T</span></code></a>: Describes the standard torus group of given rank.</p></li>
+</ul>
+<p>Then, we have the classical compact groups.</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#+replab.ClassicalCompactGroup" title="+replab.ClassicalCompactGroup"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">ClassicalCompactGroup</span></code></a>: Class implementing all the groups below.</p></li>
+<li><p><a class="reference internal" href="#+replab.O" title="+replab.O"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">O</span></code></a>: Constructs the group of (real) orthogonal matrices of a given size.</p></li>
+<li><p><a class="reference internal" href="#+replab.SO" title="+replab.SO"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">SO</span></code></a>: Constructs the group of (real) special orthogonal matrices of a given size.</p></li>
+<li><p><a class="reference internal" href="#+replab.U" title="+replab.U"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">U</span></code></a>: Constructs the group of (complex) unitary matrices of a given size.</p></li>
+<li><p><a class="reference internal" href="#+replab.SU" title="+replab.SU"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">SU</span></code></a>: Constructs the group of (complex) special unitary matrices of a given size.</p></li>
+<li><p><a class="reference internal" href="#+replab.Sp" title="+replab.Sp"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">Sp</span></code></a>: Constructs the compact symplectic group of a given size, which encodes using complex numbers the generalization of the unitary group to quaternions.</p></li>
+</ul>
+<section id="torusgroup">
+<h2>TorusGroup<a class="headerlink" href="#torusgroup" title="Permalink to this headline">¶</a></h2>
+<dl class="mat class">
+<dt class="sig sig-object mat" id="+replab.TorusGroup">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">replab.</span></span><span class="sig-name descname"><span class="pre">TorusGroup</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">E</span></em>, <em class="sig-param"><span class="pre">names</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.TorusGroup" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="groups.html#+replab.CompactGroup" title="+replab.CompactGroup"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">replab.CompactGroup</span></code></a></p>
+<p>Describes a compact, connected, abelian Lie group</p>
+<p>Its elements are column vectors of angles expressed in turns (see <a class="reference external" href="https://en.wikipedia.org/wiki/Turn_(angle)">https://en.wikipedia.org/wiki/Turn_(angle)</a>),
+i.e. real numbers between 0 and 1, 1 not included. The group binary operation is addition modulo 1, the identity
+is the turn <code class="docutils literal notranslate"><span class="pre">0</span></code>, and the inverse operation maps any non-zero turn <code class="docutils literal notranslate"><span class="pre">x</span></code> to <code class="docutils literal notranslate"><span class="pre">1-x</span></code>.</p>
+<p>When there are no additional restrictions on the elements of a given torus group, it is the standard torus group,
+and it can be constructed with the function <a class="reference internal" href="#+replab.T" title="+replab.T"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">replab.T</span></code></a>.</p>
+<p>Torus morphisms from integer matrices: <a class="reference external" href="https://math.stackexchange.com/questions/2229088/automorphisms-of-a-torus">https://math.stackexchange.com/questions/2229088/automorphisms-of-a-torus</a>.
+Let <code class="docutils literal notranslate"><span class="pre">s</span> <span class="pre">=</span> <span class="pre">[s1;...;sn]</span></code> be the element of a (standard) torus of dimension <code class="docutils literal notranslate"><span class="pre">n</span></code> and <code class="docutils literal notranslate"><span class="pre">t</span> <span class="pre">=</span> <span class="pre">[t1;...;tm]</span></code> the element of
+a (standard) torus of dimension <code class="docutils literal notranslate"><span class="pre">m</span></code>. A torus morphism <code class="docutils literal notranslate"><span class="pre">f</span></code> is given by a <code class="docutils literal notranslate"><span class="pre">m</span> <span class="pre">x</span> <span class="pre">n</span></code> integer matrix <code class="docutils literal notranslate"><span class="pre">M</span></code>, with the
+image of <code class="docutils literal notranslate"><span class="pre">s</span></code> being written <code class="docutils literal notranslate"><span class="pre">t</span> <span class="pre">=</span> <span class="pre">f(s)</span> <span class="pre">=</span> <span class="pre">mod(M</span> <span class="pre">*</span> <span class="pre">s,</span> <span class="pre">1)</span></code>.</p>
+<p>Let the coefficients <code class="docutils literal notranslate"><span class="pre">[t1;</span> <span class="pre">t2;</span> <span class="pre">...;</span> <span class="pre">tn]</span></code> be the coefficients of this column vector, where <code class="docutils literal notranslate"><span class="pre">n</span></code> is the torus group
+dimension. The coefficients may or may not obey equations of the form <code class="docutils literal notranslate"><span class="pre">mod(a1*t1</span> <span class="pre">+</span> <span class="pre">a2*t2</span> <span class="pre">+</span> <span class="pre">...</span> <span class="pre">+</span> <span class="pre">an*tn,</span> <span class="pre">1)</span> <span class="pre">==</span> <span class="pre">0</span></code>,
+where the coefficients <code class="docutils literal notranslate"><span class="pre">a1</span> <span class="pre">...</span> <span class="pre">an</span></code> are integers. Those equations are collected as rows in the <a class="reference internal" href="#+replab.TorusGroup.E" title="+replab.TorusGroup.E"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">E</span></code></a> integer matrix.
+Equivalently, the torus group obeying those relations is the kernel of the torus morphism encoded in <a class="reference internal" href="#+replab.TorusGroup.E" title="+replab.TorusGroup.E"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">E</span></code></a>.</p>
+<p>How do we deal with those equations? We use the Hermite normal form of the matrix <code class="docutils literal notranslate"><span class="pre">E</span></code> to extract a pair of morphisms
+from <code class="docutils literal notranslate"><span class="pre">T</span></code> (whose elements obey the equations) to a standard torus <code class="docutils literal notranslate"><span class="pre">S</span></code> (whose dimension is then the rank of <code class="docutils literal notranslate"><span class="pre">T</span></code>).
+The morphism <a class="reference internal" href="#+replab.TorusGroup.projection" title="+replab.TorusGroup.projection"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">projection</span></code></a> from <code class="docutils literal notranslate"><span class="pre">T</span></code> to <code class="docutils literal notranslate"><span class="pre">S</span></code> is surjective, and the morphism <a class="reference internal" href="#+replab.TorusGroup.injection" title="+replab.TorusGroup.injection"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">injection</span></code></a> from <code class="docutils literal notranslate"><span class="pre">S</span></code> to <code class="docutils literal notranslate"><span class="pre">T</span></code> is injective,
+and while <code class="docutils literal notranslate"><span class="pre">projection(injection(s))</span> <span class="pre">=</span> <span class="pre">s</span></code>. Both morphisms are given by integer matrices.</p>
+<p>The defining representation of this group (<a class="reference internal" href="#+replab.TorusGroup.definingRep" title="+replab.TorusGroup.definingRep"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">definingRep</span></code></a>) is the <code class="docutils literal notranslate"><span class="pre">n</span> <span class="pre">x</span> <span class="pre">n</span></code> matrix with diagonal elements <code class="docutils literal notranslate"><span class="pre">u1</span></code> … <code class="docutils literal notranslate"><span class="pre">un</span></code>.</p>
+<p>Automorphisms of a torus group are given by invertible square integer matrices <code class="docutils literal notranslate"><span class="pre">M</span></code> such that <code class="docutils literal notranslate"><span class="pre">E*M*injection</span> <span class="pre">=</span> <span class="pre">0</span></code>.</p>
+<p>The explicit group elements (for example, the value returned by <a class="reference internal" href="#+replab.TorusGroup.sample" title="+replab.TorusGroup.sample"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">sample</span></code></a>) are written using the additive convention;
+while the equations are written multiplicatively in symbolic form.</p>
+<div class="dropdown admonition">
+<p class="admonition-title">Class members list</p>
+<p><strong>Properties</strong></p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#+replab.TorusGroup.E" title="+replab.TorusGroup.E"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">E</span></code></a> – Equations obeyed by the elements of this torus</p></li>
+<li><p><a class="reference internal" href="#+replab.TorusGroup.identity" title="+replab.TorusGroup.identity"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">identity</span></code></a> – Monoid identity element</p></li>
+<li><p><a class="reference internal" href="#+replab.TorusGroup.injection" title="+replab.TorusGroup.injection"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">injection</span></code></a> – Injection map from maximal torus to this torus</p></li>
+<li><p><a class="reference internal" href="#+replab.TorusGroup.n" title="+replab.TorusGroup.n"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">n</span></code></a> – Torus dimension</p></li>
+<li><p><a class="reference internal" href="#+replab.TorusGroup.names" title="+replab.TorusGroup.names"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">names</span></code></a> – Names of coefficients in the multiplicative convention</p></li>
+<li><p><a class="reference internal" href="#+replab.TorusGroup.projection" title="+replab.TorusGroup.projection"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">projection</span></code></a> – Projection map from this torus to a maximal torus</p></li>
+<li><p><a class="reference internal" href="#+replab.TorusGroup.r" title="+replab.TorusGroup.r"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">r</span></code></a> – Torus rank</p></li>
+</ul>
+<p><strong>Prettyprinting</strong></p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#+replab.TorusGroup.additionalFields" title="+replab.TorusGroup.additionalFields"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">additionalFields</span></code></a> – Returns the name/value pairs corresponding to additional fields to be printed</p></li>
+<li><p><a class="reference internal" href="#+replab.TorusGroup.disp" title="+replab.TorusGroup.disp"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">disp</span></code></a> – Standard MATLAB/Octave display method</p></li>
+<li><p><a class="reference internal" href="#+replab.TorusGroup.headerStr" title="+replab.TorusGroup.headerStr"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">headerStr</span></code></a> – Tiny single line description of the current object type</p></li>
+<li><p><a class="reference internal" href="#+replab.TorusGroup.hiddenFields" title="+replab.TorusGroup.hiddenFields"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">hiddenFields</span></code></a> – Returns the names of the fields that are not printed as a row vector</p></li>
+<li><p><a class="reference internal" href="#+replab.TorusGroup.longStr" title="+replab.TorusGroup.longStr"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">longStr</span></code></a> – Multi-line description of the current object</p></li>
+<li><p><a class="reference internal" href="#+replab.TorusGroup.shortStr" title="+replab.TorusGroup.shortStr"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">shortStr</span></code></a> – Single line text description of the current object</p></li>
+</ul>
+<p><strong>Property cache</strong></p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#+replab.TorusGroup.cache" title="+replab.TorusGroup.cache"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">cache</span></code></a> – Sets the value of the designated property in the cache</p></li>
+<li><p><a class="reference internal" href="#+replab.TorusGroup.cached" title="+replab.TorusGroup.cached"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">cached</span></code></a> – Returns the cached property if it exists, computing it if necessary</p></li>
+<li><p><a class="reference internal" href="#+replab.TorusGroup.cachedOrDefault" title="+replab.TorusGroup.cachedOrDefault"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">cachedOrDefault</span></code></a> – Returns the cached property if it exists, or the provided default value if it is unknown yet</p></li>
+<li><p><a class="reference internal" href="#+replab.TorusGroup.cachedOrEmpty" title="+replab.TorusGroup.cachedOrEmpty"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">cachedOrEmpty</span></code></a> – Returns the cached property if it exists, or <code class="docutils literal notranslate"><span class="pre">[]</span></code> if it is unknown yet</p></li>
+<li><p><a class="reference internal" href="#+replab.TorusGroup.inCache" title="+replab.TorusGroup.inCache"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">inCache</span></code></a> – Returns whether the value of the given property has already been computed</p></li>
+</ul>
+<p><strong>Laws</strong></p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#+replab.TorusGroup.check" title="+replab.TorusGroup.check"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">check</span></code></a> – Checks the consistency of this object</p></li>
+<li><p><a class="reference internal" href="#+replab.TorusGroup.laws" title="+replab.TorusGroup.laws"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">laws</span></code></a> – Returns the laws that this object obeys</p></li>
+</ul>
+<p><strong>Unique ID</strong></p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#+replab.TorusGroup.eq" title="+replab.TorusGroup.eq"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">eq</span></code></a> – Equality test (deprecated)</p></li>
+<li><p><a class="reference internal" href="#+replab.TorusGroup.id" title="+replab.TorusGroup.id"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">id</span></code></a> – Returns the unique ID of this object (deprecated)</p></li>
+<li><p><a class="reference internal" href="#+replab.TorusGroup.ne" title="+replab.TorusGroup.ne"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">ne</span></code></a> – Non-equality test (deprecated)</p></li>
+</ul>
+<p><strong>Test helpers</strong></p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#+replab.TorusGroup.assertEqv" title="+replab.TorusGroup.assertEqv"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">assertEqv</span></code></a> – Compares two elements for equality</p></li>
+<li><p><a class="reference internal" href="#+replab.TorusGroup.assertNotEqv" title="+replab.TorusGroup.assertNotEqv"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">assertNotEqv</span></code></a> – Compares two elements for inequality</p></li>
+</ul>
+<p><strong>Sampling and equality test</strong></p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#+replab.TorusGroup.eqv" title="+replab.TorusGroup.eqv"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">eqv</span></code></a> – Tests domain elements for equality/equivalence</p></li>
+<li><p><a class="reference internal" href="#+replab.TorusGroup.sample" title="+replab.TorusGroup.sample"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">sample</span></code></a> – Samples an element from this set</p></li>
+</ul>
+<p><strong>Domain construction</strong></p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#+replab.TorusGroup.lambda" title="+replab.TorusGroup.lambda"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">lambda</span></code></a> – Constructs a compact group from function handles</p></li>
+</ul>
+<p><strong>Monoid operations</strong></p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#+replab.TorusGroup.areCommuting" title="+replab.TorusGroup.areCommuting"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">areCommuting</span></code></a> – Returns whether the two given elements commute</p></li>
+<li><p><a class="reference internal" href="#+replab.TorusGroup.compose" title="+replab.TorusGroup.compose"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">compose</span></code></a> – Composes two monoid/group elements</p></li>
+<li><p><a class="reference internal" href="#+replab.TorusGroup.composeAll" title="+replab.TorusGroup.composeAll"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">composeAll</span></code></a> – Composes a sequence of monoid elements</p></li>
+<li><p><a class="reference internal" href="#+replab.TorusGroup.composeN" title="+replab.TorusGroup.composeN"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">composeN</span></code></a> – Computes the power of a given element by repeated squaring</p></li>
+<li><p><a class="reference internal" href="#+replab.TorusGroup.isIdentity" title="+replab.TorusGroup.isIdentity"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">isIdentity</span></code></a> – Tests if the given element is the identity</p></li>
+</ul>
+<p><strong>Morphisms</strong></p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#+replab.TorusGroup.automorphism" title="+replab.TorusGroup.automorphism"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">automorphism</span></code></a> – Constructs an automorphism of this torus from an integer matrix describing a torus map</p></li>
+<li><p><a class="reference internal" href="#+replab.TorusGroup.automorphismGroup" title="+replab.TorusGroup.automorphismGroup"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">automorphismGroup</span></code></a> – Returns the automorphism group of this group</p></li>
+<li><p><a class="reference internal" href="#+replab.TorusGroup.commutingMorphismsMorphism" title="+replab.TorusGroup.commutingMorphismsMorphism"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">commutingMorphismsMorphism</span></code></a> – Constructs a morphism from morphisms with commuting images</p></li>
+<li><p><a class="reference internal" href="#+replab.TorusGroup.endomorphism" title="+replab.TorusGroup.endomorphism"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">endomorphism</span></code></a> – Constructs an endomorphism of this torus from an integer matrix describing a torus map</p></li>
+<li><p><a class="reference internal" href="#+replab.TorusGroup.innerAutomorphism" title="+replab.TorusGroup.innerAutomorphism"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">innerAutomorphism</span></code></a> – Returns the inner automorphism given using conjugation by the given element</p></li>
+<li><p><a class="reference internal" href="#+replab.TorusGroup.isomorphismByFunctions" title="+replab.TorusGroup.isomorphismByFunctions"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">isomorphismByFunctions</span></code></a> – Constructs a group isomorphism using preimage/image functions</p></li>
+<li><p><a class="reference internal" href="#+replab.TorusGroup.morphismByFunction" title="+replab.TorusGroup.morphismByFunction"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">morphismByFunction</span></code></a> – Constructs a group morphism using an image function</p></li>
+<li><p><a class="reference internal" href="#+replab.TorusGroup.torusMorphism" title="+replab.TorusGroup.torusMorphism"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">torusMorphism</span></code></a> – Constructs a morphism from this torus group to another torus group from an integer matrix</p></li>
+</ul>
+<p><strong>Group methods</strong></p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#+replab.TorusGroup.commutator" title="+replab.TorusGroup.commutator"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">commutator</span></code></a> – Returns the commutator of two group elements</p></li>
+<li><p><a class="reference internal" href="#+replab.TorusGroup.composeLetters" title="+replab.TorusGroup.composeLetters"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">composeLetters</span></code></a> – Returns the composition of elements from an array picked according to the given indices/letters</p></li>
+<li><p><a class="reference internal" href="#+replab.TorusGroup.composeWithInverse" title="+replab.TorusGroup.composeWithInverse"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">composeWithInverse</span></code></a> – Returns the composition of an element with the inverse of another element</p></li>
+<li><p><a class="reference internal" href="#+replab.TorusGroup.inverse" title="+replab.TorusGroup.inverse"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">inverse</span></code></a> – Computes the inverse of an element</p></li>
+<li><p><a class="reference internal" href="#+replab.TorusGroup.leftConjugate" title="+replab.TorusGroup.leftConjugate"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">leftConjugate</span></code></a> – Returns the left conjugate of a group element</p></li>
+</ul>
+<p><strong>Representations</strong></p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#+replab.TorusGroup.commutingRepsRep" title="+replab.TorusGroup.commutingRepsRep"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">commutingRepsRep</span></code></a> – Constructs a representation from commuting representations</p></li>
+<li><p><a class="reference internal" href="#+replab.TorusGroup.definingRep" title="+replab.TorusGroup.definingRep"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">definingRep</span></code></a> – Returns the defining representation of this torus group</p></li>
+<li><p><a class="reference internal" href="#+replab.TorusGroup.diagonalRep" title="+replab.TorusGroup.diagonalRep"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">diagonalRep</span></code></a> – Returns a diagonal representation of this torus group</p></li>
+<li><p><a class="reference internal" href="#+replab.TorusGroup.diagonalRepWith" title="+replab.TorusGroup.diagonalRepWith"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">diagonalRepWith</span></code></a> – Returns a diagonal rep of this torus group</p></li>
+<li><p><a class="reference internal" href="#+replab.TorusGroup.directSumRep" title="+replab.TorusGroup.directSumRep"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">directSumRep</span></code></a> – Computes the direct sum of representations on this group</p></li>
+<li><p><a class="reference internal" href="#+replab.TorusGroup.tensorRep" title="+replab.TorusGroup.tensorRep"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">tensorRep</span></code></a> – Computes the tensor product of representations</p></li>
+<li><p><a class="reference internal" href="#+replab.TorusGroup.trivialRep" title="+replab.TorusGroup.trivialRep"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">trivialRep</span></code></a> – Returns the trivial representation of this group on a finite dimensional vector space</p></li>
+</ul>
+<p><strong>Group construction</strong></p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#+replab.TorusGroup.directPower" title="+replab.TorusGroup.directPower"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">directPower</span></code></a> – Returns the direct product of this group with itself a number of times</p></li>
+<li><p><a class="reference internal" href="#+replab.TorusGroup.directProduct" title="+replab.TorusGroup.directProduct"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">directProduct</span></code></a> – Returns the direct product of groups</p></li>
+<li><p><a class="reference internal" href="#+replab.TorusGroup.semidirectProduct" title="+replab.TorusGroup.semidirectProduct"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">semidirectProduct</span></code></a> – Describes an external semidirect product of groups</p></li>
+</ul>
+<p><strong>Group properties</strong></p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#+replab.TorusGroup.hasReconstruction" title="+replab.TorusGroup.hasReconstruction"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">hasReconstruction</span></code></a> – Returns whether the group has a “reconstruction”</p></li>
+<li><p><a class="reference internal" href="#+replab.TorusGroup.maximalTorusDimension" title="+replab.TorusGroup.maximalTorusDimension"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">maximalTorusDimension</span></code></a> – Returns, if available, the dimension of the maximal torus contained in the connected component of this group</p></li>
+<li><p><a class="reference internal" href="#+replab.TorusGroup.reconstruction" title="+replab.TorusGroup.reconstruction"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">reconstruction</span></code></a> – Returns a reconstruction of the group used to speed up group averaging</p></li>
+</ul>
+<p><strong>General</strong></p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#+replab.TorusGroup.TorusGroup" title="+replab.TorusGroup.TorusGroup"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">TorusGroup</span></code></a> – Constructs a torus group obeying the given equations, with optional element names</p></li>
+<li><p><a class="reference internal" href="#+replab.TorusGroup.equation" title="+replab.TorusGroup.equation"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">equation</span></code></a> – Returns the i-th equation defining this torus group in monomial form</p></li>
+<li><p><a class="reference internal" href="#+replab.TorusGroup.equations" title="+replab.TorusGroup.equations"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">equations</span></code></a> – Returns all equations that this torus group obeys in monomial form</p></li>
+<li><p><a class="reference internal" href="#+replab.TorusGroup.nEquations" title="+replab.TorusGroup.nEquations"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">nEquations</span></code></a> – Returns the number of equations defining this torus group</p></li>
+<li><p><a class="reference internal" href="#+replab.TorusGroup.subgroup" title="+replab.TorusGroup.subgroup"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">subgroup</span></code></a> – Returns a subgroup of this torus that obeys the equations given in integer matrix form</p></li>
+<li><p><a class="reference internal" href="#+replab.TorusGroup.subgroupWith" title="+replab.TorusGroup.subgroupWith"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">subgroupWith</span></code></a> – Returns a subgroup of this torus that obeys the equations given in monomial form</p></li>
+<li><p><a class="reference internal" href="#+replab.TorusGroup.torusRepImage" title="+replab.TorusGroup.torusRepImage"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">torusRepImage</span></code></a> – Returns the sparse diagonal matrix corresponding to the given torus element</p></li>
+<li><p><a class="reference internal" href="#+replab.TorusGroup.torusRepRealImage" title="+replab.TorusGroup.torusRepRealImage"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">torusRepRealImage</span></code></a> – Returns the sparse block-diagonal matrix corresponding to the given torus element</p></li>
+<li><p><a class="reference internal" href="#+replab.TorusGroup.withNames" title="+replab.TorusGroup.withNames"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">withNames</span></code></a> – Returns a copy of this torus group with the names of the unit complex coefficients replaced</p></li>
+</ul>
+<p><strong>Group constructions</strong></p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#+replab.TorusGroup.semidirectProductByFiniteGroup" title="+replab.TorusGroup.semidirectProductByFiniteGroup"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">semidirectProductByFiniteGroup</span></code></a> – Returns the semidirect product of a finite group and this torus, with the finite group action defined by images</p></li>
+<li><p><a class="reference internal" href="#+replab.TorusGroup.semidirectProductFromRep" title="+replab.TorusGroup.semidirectProductFromRep"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">semidirectProductFromRep</span></code></a> – Returns the semidirect product of a finite group on the torus elements using one of its integer representations</p></li>
+</ul>
+</div>
+<div class="dropdown admonition">
+<p class="admonition-title">Inherited elements</p>
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.TorusGroup.additionalFields">
+<span class="sig-name descname"><span class="pre">additionalFields</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.TorusGroup.additionalFields" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="base.html#+replab.Str.additionalFields" title="+replab.Str.additionalFields"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Str.additionalFields()</span></code></a></p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.TorusGroup.areCommuting">
+<span class="sig-name descname"><span class="pre">areCommuting</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">x</span></em>, <em class="sig-param"><span class="pre">y</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.TorusGroup.areCommuting" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.Monoid.areCommuting" title="+replab.Monoid.areCommuting"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Monoid.areCommuting()</span></code></a></p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.TorusGroup.assertEqv">
+<span class="sig-name descname"><span class="pre">assertEqv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">x</span></em>, <em class="sig-param"><span class="pre">y</span></em>, <em class="sig-param"><span class="pre">context</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.TorusGroup.assertEqv" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="base.html#+replab.Domain.assertEqv" title="+replab.Domain.assertEqv"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Domain.assertEqv()</span></code></a></p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.TorusGroup.assertNotEqv">
+<span class="sig-name descname"><span class="pre">assertNotEqv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">x</span></em>, <em class="sig-param"><span class="pre">y</span></em>, <em class="sig-param"><span class="pre">context</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.TorusGroup.assertNotEqv" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="base.html#+replab.Domain.assertNotEqv" title="+replab.Domain.assertNotEqv"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Domain.assertNotEqv()</span></code></a></p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.TorusGroup.automorphismGroup">
+<span class="sig-name descname"><span class="pre">automorphismGroup</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.TorusGroup.automorphismGroup" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.Group.automorphismGroup" title="+replab.Group.automorphismGroup"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Group.automorphismGroup()</span></code></a></p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.TorusGroup.cache">
+<span class="sig-name descname"><span class="pre">cache</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">name</span></em>, <em class="sig-param"><span class="pre">value</span></em>, <em class="sig-param"><span class="pre">handleExisting</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.TorusGroup.cache" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="base.html#+replab.Obj.cache" title="+replab.Obj.cache"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Obj.cache()</span></code></a></p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.TorusGroup.cached">
+<span class="sig-name descname"><span class="pre">cached</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">name</span></em>, <em class="sig-param"><span class="pre">fun</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.TorusGroup.cached" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="base.html#+replab.Obj.cached" title="+replab.Obj.cached"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Obj.cached()</span></code></a></p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.TorusGroup.cachedOrDefault">
+<span class="sig-name descname"><span class="pre">cachedOrDefault</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">name</span></em>, <em class="sig-param"><span class="pre">defaultValue</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.TorusGroup.cachedOrDefault" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="base.html#+replab.Obj.cachedOrDefault" title="+replab.Obj.cachedOrDefault"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Obj.cachedOrDefault()</span></code></a></p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.TorusGroup.cachedOrEmpty">
+<span class="sig-name descname"><span class="pre">cachedOrEmpty</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">name</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.TorusGroup.cachedOrEmpty" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="base.html#+replab.Obj.cachedOrEmpty" title="+replab.Obj.cachedOrEmpty"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Obj.cachedOrEmpty()</span></code></a></p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.TorusGroup.check">
+<span class="sig-name descname"><span class="pre">check</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.TorusGroup.check" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="base.html#+replab.Obj.check" title="+replab.Obj.check"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Obj.check()</span></code></a></p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.TorusGroup.commutator">
+<span class="sig-name descname"><span class="pre">commutator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">x</span></em>, <em class="sig-param"><span class="pre">y</span></em>, <em class="sig-param"><span class="pre">startWithInverse</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.TorusGroup.commutator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.Group.commutator" title="+replab.Group.commutator"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Group.commutator()</span></code></a></p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.TorusGroup.commutingMorphismsMorphism">
+<span class="sig-name descname"><span class="pre">commutingMorphismsMorphism</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">target</span></em>, <em class="sig-param"><span class="pre">morphisms</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.TorusGroup.commutingMorphismsMorphism" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.Group.commutingMorphismsMorphism" title="+replab.Group.commutingMorphismsMorphism"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Group.commutingMorphismsMorphism()</span></code></a></p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.TorusGroup.commutingRepsRep">
+<span class="sig-name descname"><span class="pre">commutingRepsRep</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">field</span></em>, <em class="sig-param"><span class="pre">dimension</span></em>, <em class="sig-param"><span class="pre">reps</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.TorusGroup.commutingRepsRep" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.CompactGroup.commutingRepsRep" title="+replab.CompactGroup.commutingRepsRep"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.CompactGroup.commutingRepsRep()</span></code></a></p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.TorusGroup.compose">
+<span class="sig-name descname"><span class="pre">compose</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">x</span></em>, <em class="sig-param"><span class="pre">y</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.TorusGroup.compose" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.Monoid.compose" title="+replab.Monoid.compose"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Monoid.compose()</span></code></a></p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.TorusGroup.composeAll">
+<span class="sig-name descname"><span class="pre">composeAll</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">elements</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.TorusGroup.composeAll" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.Monoid.composeAll" title="+replab.Monoid.composeAll"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Monoid.composeAll()</span></code></a></p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.TorusGroup.composeLetters">
+<span class="sig-name descname"><span class="pre">composeLetters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">array</span></em>, <em class="sig-param"><span class="pre">letters</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.TorusGroup.composeLetters" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.Group.composeLetters" title="+replab.Group.composeLetters"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Group.composeLetters()</span></code></a></p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.TorusGroup.composeN">
+<span class="sig-name descname"><span class="pre">composeN</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">x</span></em>, <em class="sig-param"><span class="pre">n</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.TorusGroup.composeN" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.Monoid.composeN" title="+replab.Monoid.composeN"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Monoid.composeN()</span></code></a></p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.TorusGroup.composeWithInverse">
+<span class="sig-name descname"><span class="pre">composeWithInverse</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">x</span></em>, <em class="sig-param"><span class="pre">y</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.TorusGroup.composeWithInverse" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.Group.composeWithInverse" title="+replab.Group.composeWithInverse"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Group.composeWithInverse()</span></code></a></p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.TorusGroup.directPower">
+<span class="sig-name descname"><span class="pre">directPower</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">n</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.TorusGroup.directPower" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.CompactGroup.directPower" title="+replab.CompactGroup.directPower"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.CompactGroup.directPower()</span></code></a></p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.TorusGroup.directProduct">
+<span class="sig-name descname"><span class="pre">directProduct</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">varargin</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.TorusGroup.directProduct" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.CompactGroup.directProduct" title="+replab.CompactGroup.directProduct"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.CompactGroup.directProduct()</span></code></a></p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.TorusGroup.directSumRep">
+<span class="sig-name descname"><span class="pre">directSumRep</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">field</span></em>, <em class="sig-param"><span class="pre">reps</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.TorusGroup.directSumRep" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.CompactGroup.directSumRep" title="+replab.CompactGroup.directSumRep"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.CompactGroup.directSumRep()</span></code></a></p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.TorusGroup.disp">
+<span class="sig-name descname"><span class="pre">disp</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.TorusGroup.disp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="base.html#+replab.Str.disp" title="+replab.Str.disp"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Str.disp()</span></code></a></p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.TorusGroup.eq">
+<span class="sig-name descname"><span class="pre">eq</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">rhs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.TorusGroup.eq" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="base.html#+replab.Obj.eq" title="+replab.Obj.eq"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Obj.eq()</span></code></a></p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.TorusGroup.eqv">
+<span class="sig-name descname"><span class="pre">eqv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">t</span></em>, <em class="sig-param"><span class="pre">u</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.TorusGroup.eqv" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="base.html#+replab.Domain.eqv" title="+replab.Domain.eqv"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Domain.eqv()</span></code></a></p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.TorusGroup.hasReconstruction">
+<span class="sig-name descname"><span class="pre">hasReconstruction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.TorusGroup.hasReconstruction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.CompactGroup.hasReconstruction" title="+replab.CompactGroup.hasReconstruction"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.CompactGroup.hasReconstruction()</span></code></a></p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.TorusGroup.headerStr">
+<span class="sig-name descname"><span class="pre">headerStr</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.TorusGroup.headerStr" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="base.html#+replab.Str.headerStr" title="+replab.Str.headerStr"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Str.headerStr()</span></code></a></p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.TorusGroup.hiddenFields">
+<span class="sig-name descname"><span class="pre">hiddenFields</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.TorusGroup.hiddenFields" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="base.html#+replab.Str.hiddenFields" title="+replab.Str.hiddenFields"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Str.hiddenFields()</span></code></a></p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.TorusGroup.id">
+<span class="sig-name descname"><span class="pre">id</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.TorusGroup.id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="base.html#+replab.Obj.id" title="+replab.Obj.id"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Obj.id()</span></code></a></p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="+replab.TorusGroup.identity">
+<span class="sig-name descname"><span class="pre">identity</span></span><a class="headerlink" href="#+replab.TorusGroup.identity" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.Monoid.identity" title="+replab.Monoid.identity"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">replab.Monoid.identity</span></code></a></p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.TorusGroup.inCache">
+<span class="sig-name descname"><span class="pre">inCache</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">name</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.TorusGroup.inCache" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="base.html#+replab.Obj.inCache" title="+replab.Obj.inCache"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Obj.inCache()</span></code></a></p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.TorusGroup.innerAutomorphism">
+<span class="sig-name descname"><span class="pre">innerAutomorphism</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">by</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.TorusGroup.innerAutomorphism" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.Group.innerAutomorphism" title="+replab.Group.innerAutomorphism"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Group.innerAutomorphism()</span></code></a></p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.TorusGroup.inverse">
+<span class="sig-name descname"><span class="pre">inverse</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">x</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.TorusGroup.inverse" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.Group.inverse" title="+replab.Group.inverse"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Group.inverse()</span></code></a></p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.TorusGroup.isIdentity">
+<span class="sig-name descname"><span class="pre">isIdentity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">x</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.TorusGroup.isIdentity" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.Monoid.isIdentity" title="+replab.Monoid.isIdentity"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Monoid.isIdentity()</span></code></a></p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.TorusGroup.isomorphismByFunctions">
+<span class="sig-name descname"><span class="pre">isomorphismByFunctions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">target</span></em>, <em class="sig-param"><span class="pre">preimageElementFun</span></em>, <em class="sig-param"><span class="pre">imageElementFun</span></em>, <em class="sig-param"><span class="pre">torusMap</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.TorusGroup.isomorphismByFunctions" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.Group.isomorphismByFunctions" title="+replab.Group.isomorphismByFunctions"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Group.isomorphismByFunctions()</span></code></a></p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.TorusGroup.lambda">
+<span class="sig-name descname"><span class="pre">lambda</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">header</span></em>, <em class="sig-param"><span class="pre">eqvFun</span></em>, <em class="sig-param"><span class="pre">sampleFun</span></em>, <em class="sig-param"><span class="pre">composeFun</span></em>, <em class="sig-param"><span class="pre">identity</span></em>, <em class="sig-param"><span class="pre">inverseFun</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.TorusGroup.lambda" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.CompactGroup.lambda" title="+replab.CompactGroup.lambda"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.CompactGroup.lambda()</span></code></a></p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.TorusGroup.laws">
+<span class="sig-name descname"><span class="pre">laws</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.TorusGroup.laws" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="base.html#+replab.Obj.laws" title="+replab.Obj.laws"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Obj.laws()</span></code></a></p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.TorusGroup.leftConjugate">
+<span class="sig-name descname"><span class="pre">leftConjugate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">by</span></em>, <em class="sig-param"><span class="pre">on</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.TorusGroup.leftConjugate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.Group.leftConjugate" title="+replab.Group.leftConjugate"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Group.leftConjugate()</span></code></a></p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.TorusGroup.longStr">
+<span class="sig-name descname"><span class="pre">longStr</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">maxRows</span></em>, <em class="sig-param"><span class="pre">maxColumns</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.TorusGroup.longStr" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="base.html#+replab.Str.longStr" title="+replab.Str.longStr"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Str.longStr()</span></code></a></p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.TorusGroup.maximalTorusDimension">
+<span class="sig-name descname"><span class="pre">maximalTorusDimension</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.TorusGroup.maximalTorusDimension" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.CompactGroup.maximalTorusDimension" title="+replab.CompactGroup.maximalTorusDimension"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.CompactGroup.maximalTorusDimension()</span></code></a></p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.TorusGroup.morphismByFunction">
+<span class="sig-name descname"><span class="pre">morphismByFunction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">target</span></em>, <em class="sig-param"><span class="pre">imageElementFun</span></em>, <em class="sig-param"><span class="pre">torusMap</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.TorusGroup.morphismByFunction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.Group.morphismByFunction" title="+replab.Group.morphismByFunction"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Group.morphismByFunction()</span></code></a></p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.TorusGroup.ne">
+<span class="sig-name descname"><span class="pre">ne</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">rhs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.TorusGroup.ne" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="base.html#+replab.Obj.ne" title="+replab.Obj.ne"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Obj.ne()</span></code></a></p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.TorusGroup.reconstruction">
+<span class="sig-name descname"><span class="pre">reconstruction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.TorusGroup.reconstruction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.CompactGroup.reconstruction" title="+replab.CompactGroup.reconstruction"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.CompactGroup.reconstruction()</span></code></a></p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.TorusGroup.sample">
+<span class="sig-name descname"><span class="pre">sample</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.TorusGroup.sample" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="base.html#+replab.Domain.sample" title="+replab.Domain.sample"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Domain.sample()</span></code></a></p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.TorusGroup.semidirectProduct">
+<span class="sig-name descname"><span class="pre">semidirectProduct</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">N</span></em>, <em class="sig-param"><span class="pre">phi</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.TorusGroup.semidirectProduct" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.CompactGroup.semidirectProduct" title="+replab.CompactGroup.semidirectProduct"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.CompactGroup.semidirectProduct()</span></code></a></p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.TorusGroup.shortStr">
+<span class="sig-name descname"><span class="pre">shortStr</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">maxColumns</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.TorusGroup.shortStr" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="base.html#+replab.Str.shortStr" title="+replab.Str.shortStr"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Str.shortStr()</span></code></a></p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.TorusGroup.tensorRep">
+<span class="sig-name descname"><span class="pre">tensorRep</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">field</span></em>, <em class="sig-param"><span class="pre">reps</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.TorusGroup.tensorRep" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.CompactGroup.tensorRep" title="+replab.CompactGroup.tensorRep"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.CompactGroup.tensorRep()</span></code></a></p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.TorusGroup.trivialRep">
+<span class="sig-name descname"><span class="pre">trivialRep</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">field</span></em>, <em class="sig-param"><span class="pre">dimension</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.TorusGroup.trivialRep" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.CompactGroup.trivialRep" title="+replab.CompactGroup.trivialRep"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.CompactGroup.trivialRep()</span></code></a></p>
+</dd></dl>
+
+</div>
+<h3>Own members</h3><dl class="mat attribute">
+<dt class="sig sig-object mat" id="+replab.TorusGroup.E">
+<span class="sig-name descname"><span class="pre">E</span></span><a class="headerlink" href="#+replab.TorusGroup.E" title="Permalink to this definition">¶</a></dt>
+<dd><p>Equations obeyed by the elements of this torus</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>integer(*,n)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="+replab.TorusGroup.injection">
+<span class="sig-name descname"><span class="pre">injection</span></span><a class="headerlink" href="#+replab.TorusGroup.injection" title="Permalink to this definition">¶</a></dt>
+<dd><p>Injection map from maximal torus to this torus</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>integer(n,r)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="+replab.TorusGroup.n">
+<span class="sig-name descname"><span class="pre">n</span></span><a class="headerlink" href="#+replab.TorusGroup.n" title="Permalink to this definition">¶</a></dt>
+<dd><p>Torus dimension</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>integer</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="+replab.TorusGroup.names">
+<span class="sig-name descname"><span class="pre">names</span></span><a class="headerlink" href="#+replab.TorusGroup.names" title="Permalink to this definition">¶</a></dt>
+<dd><p>Names of coefficients in the multiplicative convention</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>cell(1,*) of charstring</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="+replab.TorusGroup.projection">
+<span class="sig-name descname"><span class="pre">projection</span></span><a class="headerlink" href="#+replab.TorusGroup.projection" title="Permalink to this definition">¶</a></dt>
+<dd><p>Projection map from this torus to a maximal torus</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>integer(r,n)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="+replab.TorusGroup.r">
+<span class="sig-name descname"><span class="pre">r</span></span><a class="headerlink" href="#+replab.TorusGroup.r" title="Permalink to this definition">¶</a></dt>
+<dd><p>Torus rank</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>integer</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.TorusGroup.TorusGroup">
+<span class="sig-name descname"><span class="pre">TorusGroup</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">E</span></em>, <em class="sig-param"><span class="pre">names</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.TorusGroup.TorusGroup" title="Permalink to this definition">¶</a></dt>
+<dd><p>Constructs a torus group obeying the given equations, with optional element names</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>E</strong> (<span><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">integer(*,n)</span></code></span>) – Integer matrix describing the equations; its number of columns provide the torus dimension</p></li>
+<li><p><strong>names</strong> (<span><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">cell(1,n)</span> <span class="pre">of</span> <span class="pre">charstring,</span> <span class="pre">optional</span></code></span>) – Names of the group element coefficients in their unit complex form</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.TorusGroup.automorphism">
+<span class="sig-name descname"><span class="pre">automorphism</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">varargin</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.TorusGroup.automorphism" title="Permalink to this definition">¶</a></dt>
+<dd><p>Constructs an automorphism of this torus from an integer matrix describing a torus map</p>
+<p>This function accepts a variable number of arguments. Each argument must be of the form:</p>
+<ul class="simple">
+<li><p>An integer matrix with <a class="reference internal" href="#+replab.TorusGroup.n" title="+replab.TorusGroup.n"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">n</span></code></a> columns, defining equations as in the call to <a class="reference internal" href="#+replab.TorusGroup.subgroup" title="+replab.TorusGroup.subgroup"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">subgroup</span></code></a>,</p></li>
+<li><p>A charstring containing an equation in monomial form.</p></li>
+</ul>
+<p>Those arguments will be parsed and concatenated vertically to form an integer matrix
+describing the torus map. That matrix must be invertible.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The constructed automorphism</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="group_morphisms.html#+replab.Isomorphism" title="+replab.Isomorphism"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">Isomorphism</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.TorusGroup.definingRep">
+<span class="sig-name descname"><span class="pre">definingRep</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.TorusGroup.definingRep" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the defining representation of this torus group</p>
+<p>The defining representation of a torus group of dimension <code class="docutils literal notranslate"><span class="pre">n</span></code> is a n-dimensional representation,
+whose images are diagonal in the standard Euclidean basis.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Representation</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="rep.html#+replab.Rep" title="+replab.Rep"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">Rep</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.TorusGroup.diagonalRep">
+<span class="sig-name descname"><span class="pre">diagonalRep</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">torusMap</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.TorusGroup.diagonalRep" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a diagonal representation of this torus group</p>
+<p>Constructs a representation using a <code class="docutils literal notranslate"><span class="pre">torusMap</span></code>, whose images are diagonal matrices. The diagonal
+elements are monomials of the phases of the torus group. Each row of <code class="docutils literal notranslate"><span class="pre">torusMap</span></code> corresponds to
+a diagonal element, and the columns give the integer exponents corresponding to every phase.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>torusMap</strong> (<span><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">integer(d,</span> <span class="pre">n)</span></code></span>) – Phase exponents</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Representation</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="rep.html#+replab.Rep" title="+replab.Rep"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">Rep</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.TorusGroup.diagonalRepWith">
+<span class="sig-name descname"><span class="pre">diagonalRepWith</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">varargin</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.TorusGroup.diagonalRepWith" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a diagonal rep of this torus group</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.TorusGroup.endomorphism">
+<span class="sig-name descname"><span class="pre">endomorphism</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">varargin</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.TorusGroup.endomorphism" title="Permalink to this definition">¶</a></dt>
+<dd><p>Constructs an endomorphism of this torus from an integer matrix describing a torus map</p>
+<p>This function accepts a variable number of arguments. Each argument must be of the form:</p>
+<ul class="simple">
+<li><p>An integer matrix with <a class="reference internal" href="#+replab.TorusGroup.n" title="+replab.TorusGroup.n"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">n</span></code></a> columns, defining equations as in the call to <a class="reference internal" href="#+replab.TorusGroup.subgroup" title="+replab.TorusGroup.subgroup"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">subgroup</span></code></a>,</p></li>
+<li><p>A charstring containing an equation in monomial form.</p></li>
+</ul>
+<p>Those arguments will be parsed and concatenated vertically to form an integer matrix
+describing the torus map.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The constructed endomorphism</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="group_morphisms.html#+replab.Morphism" title="+replab.Morphism"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">Morphism</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.TorusGroup.equation">
+<span class="sig-name descname"><span class="pre">equation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">i</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.TorusGroup.equation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the i-th equation defining this torus group in monomial form</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>i</strong> (<span><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">integer</span></code></span>) – Equation index</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Equation in monomial form (whose value must be equal to one)</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>charstring</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.TorusGroup.equations">
+<span class="sig-name descname"><span class="pre">equations</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.TorusGroup.equations" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns all equations that this torus group obeys in monomial form</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Equations defining this torus group in monomial form</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>cell(1,*) of charstring</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.TorusGroup.nEquations">
+<span class="sig-name descname"><span class="pre">nEquations</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.TorusGroup.nEquations" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the number of equations defining this torus group</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Number of equations</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>integer</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.TorusGroup.semidirectProductByFiniteGroup">
+<span class="sig-name descname"><span class="pre">semidirectProductByFiniteGroup</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">group</span></em>, <em class="sig-param"><span class="pre">varargin</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.TorusGroup.semidirectProductByFiniteGroup" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the semidirect product of a finite group and this torus, with the finite group action defined by images</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>group</strong> (<a class="reference internal" href="groups.html#+replab.FiniteGroup" title="+replab.FiniteGroup"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">FiniteGroup</span></code></a>) – Finite group acting on this torus group</p></li>
+<li><p><strong>preimages</strong> – Preimages of the morphism which generate <code class="docutils literal notranslate"><span class="pre">group</span></code>, defaults to <code class="docutils literal notranslate"><span class="pre">group.generators</span></code></p></li>
+<li><p><strong>images</strong> – Action on the torus for the given preimages, defaults to a permutation action if <code class="docutils literal notranslate"><span class="pre">group</span></code> is a permutation group</p></li>
+</ul>
+</dd>
+<dt class="field-even">Kwtype preimages</dt>
+<dd class="field-even"><p>cell(1, *) of <code class="docutils literal notranslate"><span class="pre">group</span></code> elements</p>
+</dd>
+<dt class="field-odd">Kwtype images</dt>
+<dd class="field-odd"><p>cell(1, *) of <code class="docutils literal notranslate"><span class="pre">target</span></code> elements</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Semidirect product of <code class="docutils literal notranslate"><span class="pre">group</span></code> and this torus group</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="group_products.html#+replab.SemidirectProductGroup" title="+replab.SemidirectProductGroup"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">SemidirectProductGroup</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.TorusGroup.semidirectProductFromRep">
+<span class="sig-name descname"><span class="pre">semidirectProductFromRep</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">rep</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.TorusGroup.semidirectProductFromRep" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the semidirect product of a finite group on the torus elements using one of its integer representations</p>
+<p>Invertible integer matrices represent automorphisms of a torus group of the same dimension; thus, given a
+group <code class="docutils literal notranslate"><span class="pre">G</span></code>, a representation of <code class="docutils literal notranslate"><span class="pre">G</span></code> with integer images defines a morphism from <code class="docutils literal notranslate"><span class="pre">G</span></code> to the automorphism
+group of a torus <code class="docutils literal notranslate"><span class="pre">T</span></code>.</p>
+<p>One can then use this morphism to construct an outer semidirect product of <code class="docutils literal notranslate"><span class="pre">G</span></code> acting on <code class="docutils literal notranslate"><span class="pre">T</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>rep</strong> (<a class="reference internal" href="rep.html#+replab.Rep" title="+replab.Rep"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">Rep</span></code></a>) – Group representation with integer coefficients</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Semidirect product of <code class="docutils literal notranslate"><span class="pre">rep.group</span></code> and this torus group</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="group_products.html#+replab.SemidirectProductGroup" title="+replab.SemidirectProductGroup"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">SemidirectProductGroup</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.TorusGroup.subgroup">
+<span class="sig-name descname"><span class="pre">subgroup</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">newE</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.TorusGroup.subgroup" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a subgroup of this torus that obeys the equations given in integer matrix form</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>E</strong> (<span><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">integer(*,</span> <span class="pre">n)</span></code></span>) – New equations</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Torus group satisfying the equations of this group and the additional ones given</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#+replab.TorusGroup.TorusGroup" title="+replab.TorusGroup.TorusGroup"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">TorusGroup</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.TorusGroup.subgroupWith">
+<span class="sig-name descname"><span class="pre">subgroupWith</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">varargin</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.TorusGroup.subgroupWith" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a subgroup of this torus that obeys the equations given in monomial form</p>
+<p>This function accepts a variable number of arguments. Each argument must be of the form:</p>
+<ul class="simple">
+<li><p>An integer matrix with <a class="reference internal" href="#+replab.TorusGroup.n" title="+replab.TorusGroup.n"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">n</span></code></a> columns, defining equations as in the call to <a class="reference internal" href="#+replab.TorusGroup.subgroup" title="+replab.TorusGroup.subgroup"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">subgroup</span></code></a>,</p></li>
+<li><p>A charstring containing an equation in monomial form. If the equation has no right-hand side, the
+right-hand side is assumed to be the identity.</p></li>
+</ul>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Torus group satisfying the equations of this group and the additional ones given</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="#+replab.TorusGroup.TorusGroup" title="+replab.TorusGroup.TorusGroup"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">TorusGroup</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.TorusGroup.torusMorphism">
+<span class="sig-name descname"><span class="pre">torusMorphism</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">target</span></em>, <em class="sig-param"><span class="pre">varargin</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.TorusGroup.torusMorphism" title="Permalink to this definition">¶</a></dt>
+<dd><p>Constructs a morphism from this torus group to another torus group from an integer matrix</p>
+<p>After the <code class="docutils literal notranslate"><span class="pre">target</span></code> argument, this function accepts a variable number of arguments.
+Each of these arguments must be of the form:</p>
+<ul class="simple">
+<li><p>An integer matrix with <a class="reference internal" href="#+replab.TorusGroup.n" title="+replab.TorusGroup.n"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">n</span></code></a> columns, defining equations as in the call to <a class="reference internal" href="#+replab.TorusGroup.subgroup" title="+replab.TorusGroup.subgroup"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">subgroup</span></code></a>,</p></li>
+<li><p>A charstring containing an equation in monomial form.</p></li>
+</ul>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>target</strong> (<a class="reference internal" href="#+replab.TorusGroup.TorusGroup" title="+replab.TorusGroup.TorusGroup"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">TorusGroup</span></code></a>) – Torus group target of the morphism</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A morphism from this torus group to a torus group of dimension <code class="docutils literal notranslate"><span class="pre">n1</span></code></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="group_morphisms.html#+replab.Morphism" title="+replab.Morphism"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">Morphism</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="mat staticmethod">
+<dt class="sig sig-object mat" id="+replab.TorusGroup.torusRepImage">
+<em class="property"><span class="pre">static</span> </em><span class="sig-name descname"><span class="pre">torusRepImage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">t</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.TorusGroup.torusRepImage" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the sparse diagonal matrix corresponding to the given torus element</p>
+<p>Equivalent to <code class="docutils literal notranslate"><span class="pre">torusGroup.definingRep.image(t)</span></code>, without constructing additional objects.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>t</strong> (<span><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">double(n,1)</span></code></span>) – Torus group element</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Diagonal matrix corresponding to the torus element</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>double(n,n), sparse</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="mat staticmethod">
+<dt class="sig sig-object mat" id="+replab.TorusGroup.torusRepRealImage">
+<em class="property"><span class="pre">static</span> </em><span class="sig-name descname"><span class="pre">torusRepRealImage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">t</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.TorusGroup.torusRepRealImage" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the sparse block-diagonal matrix corresponding to the given torus element</p>
+<p>The element <code class="docutils literal notranslate"><span class="pre">t(i)</span></code> will correspond to a 2x2 block: <code class="docutils literal notranslate"><span class="pre">[c</span> <span class="pre">s;</span> <span class="pre">-s</span> <span class="pre">c]</span></code> where
+<code class="docutils literal notranslate"><span class="pre">c</span> <span class="pre">=</span> <span class="pre">cos(2*pi*t(i))</span></code> and <code class="docutils literal notranslate"><span class="pre">s</span> <span class="pre">=</span> <span class="pre">sin(2*pi*t(i))</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>t</strong> (<span><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">double(n,1)</span></code></span>) – Torus group element</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Block diagonal matrix of 2x2 real matrices</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>double(2*n,2*n)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.TorusGroup.withNames">
+<span class="sig-name descname"><span class="pre">withNames</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">newNames</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.TorusGroup.withNames" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a copy of this torus group with the names of the unit complex coefficients replaced</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>newNames</strong> (<span><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">cell(1,n)</span> <span class="pre">of</span> <span class="pre">charstring</span></code></span>) – New names of the complex coefficients</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Updated group</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#+replab.TorusGroup.TorusGroup" title="+replab.TorusGroup.TorusGroup"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">TorusGroup</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="t">
+<h2>T<a class="headerlink" href="#t" title="Permalink to this headline">¶</a></h2>
+<dl class="mat function">
+<dt class="sig sig-object mat" id="+replab.T">
+<span class="sig-prename descclassname"><span class="pre">replab.</span></span><span class="sig-name descname"><span class="pre">T</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">n</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.T" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the standard torus group of given rank</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>n</strong> (<span><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">integer</span></code></span>) – Torus group rank</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Standard torus group</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#+replab.TorusGroup" title="+replab.TorusGroup"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">replab.TorusGroup</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="classicalcompactgroup">
+<h2>ClassicalCompactGroup<a class="headerlink" href="#classicalcompactgroup" title="Permalink to this headline">¶</a></h2>
+<dl class="mat class">
+<dt class="sig sig-object mat" id="+replab.ClassicalCompactGroup">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">replab.</span></span><span class="sig-name descname"><span class="pre">ClassicalCompactGroup</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">n</span></em>, <em class="sig-param"><span class="pre">algebra</span></em>, <em class="sig-param"><span class="pre">isSpecial</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.ClassicalCompactGroup" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="groups.html#+replab.CompactGroup" title="+replab.CompactGroup"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">replab.CompactGroup</span></code></a></p>
+<p>Describes a classical compact group of square real/complex/quaternionic matrices</p>
+<p>Group elements are matrices whose coefficients are encoded using double floating-point arithmetic. Of course, they will only be
+approximately orthogonal and thus do not represent directly a group element.</p>
+<p>Instead, we postulate that the matrix encodes the nearest group element in Frobenius norm. For non-special groups, this element
+can be found as <code class="docutils literal notranslate"><span class="pre">U</span> <span class="pre">=</span> <span class="pre">X*sqrtm(X'*X)</span></code> where <code class="docutils literal notranslate"><span class="pre">X</span></code> is the approximate element.</p>
+<p>While inverses should be exact (we take the conjugate transpose), the composition is only approximate. Thus, to be able to check
+the usual group laws, we compare group elements up to a certain tolerance, defined in <a class="reference internal" href="globals.html#+replab.+globals.matrixGroupTol" title="+replab.+globals.matrixGroupTol"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">replab.globals.matrixGroupTol</span></code></a>.</p>
+<div class="dropdown admonition">
+<p class="admonition-title">Class members list</p>
+<p><strong>Properties</strong></p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#+replab.ClassicalCompactGroup.algebra" title="+replab.ClassicalCompactGroup.algebra"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">algebra</span></code></a> – Unital associative algebra over which the group is defined</p></li>
+<li><p><a class="reference internal" href="#+replab.ClassicalCompactGroup.identity" title="+replab.ClassicalCompactGroup.identity"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">identity</span></code></a> – Monoid identity element</p></li>
+<li><p><a class="reference internal" href="#+replab.ClassicalCompactGroup.isSpecial" title="+replab.ClassicalCompactGroup.isSpecial"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">isSpecial</span></code></a> – Whether the matrices should have determinant one; must be false when algebra = ‘H’</p></li>
+<li><p><a class="reference internal" href="#+replab.ClassicalCompactGroup.n" title="+replab.ClassicalCompactGroup.n"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">n</span></code></a> – Dimension of the matrices</p></li>
+</ul>
+<p><strong>Prettyprinting</strong></p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#+replab.ClassicalCompactGroup.additionalFields" title="+replab.ClassicalCompactGroup.additionalFields"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">additionalFields</span></code></a> – Returns the name/value pairs corresponding to additional fields to be printed</p></li>
+<li><p><a class="reference internal" href="#+replab.ClassicalCompactGroup.disp" title="+replab.ClassicalCompactGroup.disp"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">disp</span></code></a> – Standard MATLAB/Octave display method</p></li>
+<li><p><a class="reference internal" href="#+replab.ClassicalCompactGroup.headerStr" title="+replab.ClassicalCompactGroup.headerStr"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">headerStr</span></code></a> – Tiny single line description of the current object type</p></li>
+<li><p><a class="reference internal" href="#+replab.ClassicalCompactGroup.hiddenFields" title="+replab.ClassicalCompactGroup.hiddenFields"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">hiddenFields</span></code></a> – Returns the names of the fields that are not printed as a row vector</p></li>
+<li><p><a class="reference internal" href="#+replab.ClassicalCompactGroup.longStr" title="+replab.ClassicalCompactGroup.longStr"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">longStr</span></code></a> – Multi-line description of the current object</p></li>
+<li><p><a class="reference internal" href="#+replab.ClassicalCompactGroup.shortStr" title="+replab.ClassicalCompactGroup.shortStr"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">shortStr</span></code></a> – Single line text description of the current object</p></li>
+</ul>
+<p><strong>Property cache</strong></p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#+replab.ClassicalCompactGroup.cache" title="+replab.ClassicalCompactGroup.cache"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">cache</span></code></a> – Sets the value of the designated property in the cache</p></li>
+<li><p><a class="reference internal" href="#+replab.ClassicalCompactGroup.cached" title="+replab.ClassicalCompactGroup.cached"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">cached</span></code></a> – Returns the cached property if it exists, computing it if necessary</p></li>
+<li><p><a class="reference internal" href="#+replab.ClassicalCompactGroup.cachedOrDefault" title="+replab.ClassicalCompactGroup.cachedOrDefault"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">cachedOrDefault</span></code></a> – Returns the cached property if it exists, or the provided default value if it is unknown yet</p></li>
+<li><p><a class="reference internal" href="#+replab.ClassicalCompactGroup.cachedOrEmpty" title="+replab.ClassicalCompactGroup.cachedOrEmpty"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">cachedOrEmpty</span></code></a> – Returns the cached property if it exists, or <code class="docutils literal notranslate"><span class="pre">[]</span></code> if it is unknown yet</p></li>
+<li><p><a class="reference internal" href="#+replab.ClassicalCompactGroup.inCache" title="+replab.ClassicalCompactGroup.inCache"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">inCache</span></code></a> – Returns whether the value of the given property has already been computed</p></li>
+</ul>
+<p><strong>Laws</strong></p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#+replab.ClassicalCompactGroup.check" title="+replab.ClassicalCompactGroup.check"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">check</span></code></a> – Checks the consistency of this object</p></li>
+<li><p><a class="reference internal" href="#+replab.ClassicalCompactGroup.laws" title="+replab.ClassicalCompactGroup.laws"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">laws</span></code></a> – Returns the laws that this object obeys</p></li>
+</ul>
+<p><strong>Unique ID</strong></p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#+replab.ClassicalCompactGroup.eq" title="+replab.ClassicalCompactGroup.eq"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">eq</span></code></a> – Equality test (deprecated)</p></li>
+<li><p><a class="reference internal" href="#+replab.ClassicalCompactGroup.id" title="+replab.ClassicalCompactGroup.id"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">id</span></code></a> – Returns the unique ID of this object (deprecated)</p></li>
+<li><p><a class="reference internal" href="#+replab.ClassicalCompactGroup.ne" title="+replab.ClassicalCompactGroup.ne"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">ne</span></code></a> – Non-equality test (deprecated)</p></li>
+</ul>
+<p><strong>Test helpers</strong></p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#+replab.ClassicalCompactGroup.assertEqv" title="+replab.ClassicalCompactGroup.assertEqv"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">assertEqv</span></code></a> – Compares two elements for equality</p></li>
+<li><p><a class="reference internal" href="#+replab.ClassicalCompactGroup.assertNotEqv" title="+replab.ClassicalCompactGroup.assertNotEqv"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">assertNotEqv</span></code></a> – Compares two elements for inequality</p></li>
+</ul>
+<p><strong>Sampling and equality test</strong></p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#+replab.ClassicalCompactGroup.eqv" title="+replab.ClassicalCompactGroup.eqv"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">eqv</span></code></a> – Tests domain elements for equality/equivalence</p></li>
+<li><p><a class="reference internal" href="#+replab.ClassicalCompactGroup.sample" title="+replab.ClassicalCompactGroup.sample"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">sample</span></code></a> – Samples an element from this set</p></li>
+</ul>
+<p><strong>Domain construction</strong></p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#+replab.ClassicalCompactGroup.lambda" title="+replab.ClassicalCompactGroup.lambda"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">lambda</span></code></a> – Constructs a compact group from function handles</p></li>
+</ul>
+<p><strong>Monoid operations</strong></p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#+replab.ClassicalCompactGroup.areCommuting" title="+replab.ClassicalCompactGroup.areCommuting"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">areCommuting</span></code></a> – Returns whether the two given elements commute</p></li>
+<li><p><a class="reference internal" href="#+replab.ClassicalCompactGroup.compose" title="+replab.ClassicalCompactGroup.compose"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">compose</span></code></a> – Composes two monoid/group elements</p></li>
+<li><p><a class="reference internal" href="#+replab.ClassicalCompactGroup.composeAll" title="+replab.ClassicalCompactGroup.composeAll"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">composeAll</span></code></a> – Composes a sequence of monoid elements</p></li>
+<li><p><a class="reference internal" href="#+replab.ClassicalCompactGroup.composeN" title="+replab.ClassicalCompactGroup.composeN"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">composeN</span></code></a> – Computes the power of a given element by repeated squaring</p></li>
+<li><p><a class="reference internal" href="#+replab.ClassicalCompactGroup.isIdentity" title="+replab.ClassicalCompactGroup.isIdentity"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">isIdentity</span></code></a> – Tests if the given element is the identity</p></li>
+</ul>
+<p><strong>Morphisms</strong></p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#+replab.ClassicalCompactGroup.automorphismGroup" title="+replab.ClassicalCompactGroup.automorphismGroup"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">automorphismGroup</span></code></a> – Returns the automorphism group of this group</p></li>
+<li><p><a class="reference internal" href="#+replab.ClassicalCompactGroup.commutingMorphismsMorphism" title="+replab.ClassicalCompactGroup.commutingMorphismsMorphism"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">commutingMorphismsMorphism</span></code></a> – Constructs a morphism from morphisms with commuting images</p></li>
+<li><p><a class="reference internal" href="#+replab.ClassicalCompactGroup.innerAutomorphism" title="+replab.ClassicalCompactGroup.innerAutomorphism"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">innerAutomorphism</span></code></a> – Returns the inner automorphism given using conjugation by the given element</p></li>
+<li><p><a class="reference internal" href="#+replab.ClassicalCompactGroup.isomorphismByFunctions" title="+replab.ClassicalCompactGroup.isomorphismByFunctions"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">isomorphismByFunctions</span></code></a> – Constructs a group isomorphism using preimage/image functions</p></li>
+<li><p><a class="reference internal" href="#+replab.ClassicalCompactGroup.morphismByFunction" title="+replab.ClassicalCompactGroup.morphismByFunction"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">morphismByFunction</span></code></a> – Constructs a group morphism using an image function</p></li>
+</ul>
+<p><strong>Group methods</strong></p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#+replab.ClassicalCompactGroup.commutator" title="+replab.ClassicalCompactGroup.commutator"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">commutator</span></code></a> – Returns the commutator of two group elements</p></li>
+<li><p><a class="reference internal" href="#+replab.ClassicalCompactGroup.composeLetters" title="+replab.ClassicalCompactGroup.composeLetters"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">composeLetters</span></code></a> – Returns the composition of elements from an array picked according to the given indices/letters</p></li>
+<li><p><a class="reference internal" href="#+replab.ClassicalCompactGroup.composeWithInverse" title="+replab.ClassicalCompactGroup.composeWithInverse"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">composeWithInverse</span></code></a> – Returns the composition of an element with the inverse of another element</p></li>
+<li><p><a class="reference internal" href="#+replab.ClassicalCompactGroup.inverse" title="+replab.ClassicalCompactGroup.inverse"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">inverse</span></code></a> – Computes the inverse of an element</p></li>
+<li><p><a class="reference internal" href="#+replab.ClassicalCompactGroup.leftConjugate" title="+replab.ClassicalCompactGroup.leftConjugate"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">leftConjugate</span></code></a> – Returns the left conjugate of a group element</p></li>
+</ul>
+<p><strong>Representations</strong></p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#+replab.ClassicalCompactGroup.commutingRepsRep" title="+replab.ClassicalCompactGroup.commutingRepsRep"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">commutingRepsRep</span></code></a> – Constructs a representation from commuting representations</p></li>
+<li><p><a class="reference internal" href="#+replab.ClassicalCompactGroup.definingRep" title="+replab.ClassicalCompactGroup.definingRep"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">definingRep</span></code></a> – Returns the defining representation of this unitary group</p></li>
+<li><p><a class="reference internal" href="#+replab.ClassicalCompactGroup.directSumRep" title="+replab.ClassicalCompactGroup.directSumRep"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">directSumRep</span></code></a> – Computes the direct sum of representations on this group</p></li>
+<li><p><a class="reference internal" href="#+replab.ClassicalCompactGroup.tensorRep" title="+replab.ClassicalCompactGroup.tensorRep"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">tensorRep</span></code></a> – Computes the tensor product of representations</p></li>
+<li><p><a class="reference internal" href="#+replab.ClassicalCompactGroup.trivialRep" title="+replab.ClassicalCompactGroup.trivialRep"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">trivialRep</span></code></a> – Returns the trivial representation of this group on a finite dimensional vector space</p></li>
+</ul>
+<p><strong>Group construction</strong></p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#+replab.ClassicalCompactGroup.directPower" title="+replab.ClassicalCompactGroup.directPower"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">directPower</span></code></a> – Returns the direct product of this group with itself a number of times</p></li>
+<li><p><a class="reference internal" href="#+replab.ClassicalCompactGroup.directProduct" title="+replab.ClassicalCompactGroup.directProduct"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">directProduct</span></code></a> – Returns the direct product of groups</p></li>
+<li><p><a class="reference internal" href="#+replab.ClassicalCompactGroup.semidirectProduct" title="+replab.ClassicalCompactGroup.semidirectProduct"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">semidirectProduct</span></code></a> – Describes an external semidirect product of groups</p></li>
+</ul>
+<p><strong>Group properties</strong></p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#+replab.ClassicalCompactGroup.hasReconstruction" title="+replab.ClassicalCompactGroup.hasReconstruction"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">hasReconstruction</span></code></a> – Returns whether the group has a “reconstruction”</p></li>
+<li><p><a class="reference internal" href="#+replab.ClassicalCompactGroup.maximalTorusDimension" title="+replab.ClassicalCompactGroup.maximalTorusDimension"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">maximalTorusDimension</span></code></a> – Returns, if available, the dimension of the maximal torus contained in the connected component of this group</p></li>
+<li><p><a class="reference internal" href="#+replab.ClassicalCompactGroup.reconstruction" title="+replab.ClassicalCompactGroup.reconstruction"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">reconstruction</span></code></a> – Returns a reconstruction of the group used to speed up group averaging</p></li>
+</ul>
+<p><strong>General</strong></p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#+replab.ClassicalCompactGroup.ClassicalCompactGroup" title="+replab.ClassicalCompactGroup.ClassicalCompactGroup"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">ClassicalCompactGroup</span></code></a> – Constructs a classical compact group</p></li>
+</ul>
+</div>
+<div class="dropdown admonition">
+<p class="admonition-title">Inherited elements</p>
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.ClassicalCompactGroup.additionalFields">
+<span class="sig-name descname"><span class="pre">additionalFields</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.ClassicalCompactGroup.additionalFields" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="base.html#+replab.Str.additionalFields" title="+replab.Str.additionalFields"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Str.additionalFields()</span></code></a></p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.ClassicalCompactGroup.areCommuting">
+<span class="sig-name descname"><span class="pre">areCommuting</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">x</span></em>, <em class="sig-param"><span class="pre">y</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.ClassicalCompactGroup.areCommuting" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.Monoid.areCommuting" title="+replab.Monoid.areCommuting"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Monoid.areCommuting()</span></code></a></p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.ClassicalCompactGroup.assertEqv">
+<span class="sig-name descname"><span class="pre">assertEqv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">x</span></em>, <em class="sig-param"><span class="pre">y</span></em>, <em class="sig-param"><span class="pre">context</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.ClassicalCompactGroup.assertEqv" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="base.html#+replab.Domain.assertEqv" title="+replab.Domain.assertEqv"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Domain.assertEqv()</span></code></a></p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.ClassicalCompactGroup.assertNotEqv">
+<span class="sig-name descname"><span class="pre">assertNotEqv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">x</span></em>, <em class="sig-param"><span class="pre">y</span></em>, <em class="sig-param"><span class="pre">context</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.ClassicalCompactGroup.assertNotEqv" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="base.html#+replab.Domain.assertNotEqv" title="+replab.Domain.assertNotEqv"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Domain.assertNotEqv()</span></code></a></p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.ClassicalCompactGroup.automorphismGroup">
+<span class="sig-name descname"><span class="pre">automorphismGroup</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.ClassicalCompactGroup.automorphismGroup" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.Group.automorphismGroup" title="+replab.Group.automorphismGroup"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Group.automorphismGroup()</span></code></a></p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.ClassicalCompactGroup.cache">
+<span class="sig-name descname"><span class="pre">cache</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">name</span></em>, <em class="sig-param"><span class="pre">value</span></em>, <em class="sig-param"><span class="pre">handleExisting</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.ClassicalCompactGroup.cache" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="base.html#+replab.Obj.cache" title="+replab.Obj.cache"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Obj.cache()</span></code></a></p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.ClassicalCompactGroup.cached">
+<span class="sig-name descname"><span class="pre">cached</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">name</span></em>, <em class="sig-param"><span class="pre">fun</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.ClassicalCompactGroup.cached" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="base.html#+replab.Obj.cached" title="+replab.Obj.cached"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Obj.cached()</span></code></a></p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.ClassicalCompactGroup.cachedOrDefault">
+<span class="sig-name descname"><span class="pre">cachedOrDefault</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">name</span></em>, <em class="sig-param"><span class="pre">defaultValue</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.ClassicalCompactGroup.cachedOrDefault" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="base.html#+replab.Obj.cachedOrDefault" title="+replab.Obj.cachedOrDefault"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Obj.cachedOrDefault()</span></code></a></p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.ClassicalCompactGroup.cachedOrEmpty">
+<span class="sig-name descname"><span class="pre">cachedOrEmpty</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">name</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.ClassicalCompactGroup.cachedOrEmpty" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="base.html#+replab.Obj.cachedOrEmpty" title="+replab.Obj.cachedOrEmpty"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Obj.cachedOrEmpty()</span></code></a></p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.ClassicalCompactGroup.check">
+<span class="sig-name descname"><span class="pre">check</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.ClassicalCompactGroup.check" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="base.html#+replab.Obj.check" title="+replab.Obj.check"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Obj.check()</span></code></a></p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.ClassicalCompactGroup.commutator">
+<span class="sig-name descname"><span class="pre">commutator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">x</span></em>, <em class="sig-param"><span class="pre">y</span></em>, <em class="sig-param"><span class="pre">startWithInverse</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.ClassicalCompactGroup.commutator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.Group.commutator" title="+replab.Group.commutator"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Group.commutator()</span></code></a></p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.ClassicalCompactGroup.commutingMorphismsMorphism">
+<span class="sig-name descname"><span class="pre">commutingMorphismsMorphism</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">target</span></em>, <em class="sig-param"><span class="pre">morphisms</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.ClassicalCompactGroup.commutingMorphismsMorphism" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.Group.commutingMorphismsMorphism" title="+replab.Group.commutingMorphismsMorphism"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Group.commutingMorphismsMorphism()</span></code></a></p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.ClassicalCompactGroup.commutingRepsRep">
+<span class="sig-name descname"><span class="pre">commutingRepsRep</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">field</span></em>, <em class="sig-param"><span class="pre">dimension</span></em>, <em class="sig-param"><span class="pre">reps</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.ClassicalCompactGroup.commutingRepsRep" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.CompactGroup.commutingRepsRep" title="+replab.CompactGroup.commutingRepsRep"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.CompactGroup.commutingRepsRep()</span></code></a></p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.ClassicalCompactGroup.compose">
+<span class="sig-name descname"><span class="pre">compose</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">x</span></em>, <em class="sig-param"><span class="pre">y</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.ClassicalCompactGroup.compose" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.Monoid.compose" title="+replab.Monoid.compose"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Monoid.compose()</span></code></a></p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.ClassicalCompactGroup.composeAll">
+<span class="sig-name descname"><span class="pre">composeAll</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">elements</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.ClassicalCompactGroup.composeAll" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.Monoid.composeAll" title="+replab.Monoid.composeAll"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Monoid.composeAll()</span></code></a></p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.ClassicalCompactGroup.composeLetters">
+<span class="sig-name descname"><span class="pre">composeLetters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">array</span></em>, <em class="sig-param"><span class="pre">letters</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.ClassicalCompactGroup.composeLetters" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.Group.composeLetters" title="+replab.Group.composeLetters"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Group.composeLetters()</span></code></a></p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.ClassicalCompactGroup.composeN">
+<span class="sig-name descname"><span class="pre">composeN</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">x</span></em>, <em class="sig-param"><span class="pre">n</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.ClassicalCompactGroup.composeN" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.Monoid.composeN" title="+replab.Monoid.composeN"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Monoid.composeN()</span></code></a></p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.ClassicalCompactGroup.composeWithInverse">
+<span class="sig-name descname"><span class="pre">composeWithInverse</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">x</span></em>, <em class="sig-param"><span class="pre">y</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.ClassicalCompactGroup.composeWithInverse" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.Group.composeWithInverse" title="+replab.Group.composeWithInverse"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Group.composeWithInverse()</span></code></a></p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.ClassicalCompactGroup.directPower">
+<span class="sig-name descname"><span class="pre">directPower</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">n</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.ClassicalCompactGroup.directPower" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.CompactGroup.directPower" title="+replab.CompactGroup.directPower"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.CompactGroup.directPower()</span></code></a></p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.ClassicalCompactGroup.directProduct">
+<span class="sig-name descname"><span class="pre">directProduct</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">varargin</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.ClassicalCompactGroup.directProduct" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.CompactGroup.directProduct" title="+replab.CompactGroup.directProduct"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.CompactGroup.directProduct()</span></code></a></p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.ClassicalCompactGroup.directSumRep">
+<span class="sig-name descname"><span class="pre">directSumRep</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">field</span></em>, <em class="sig-param"><span class="pre">reps</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.ClassicalCompactGroup.directSumRep" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.CompactGroup.directSumRep" title="+replab.CompactGroup.directSumRep"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.CompactGroup.directSumRep()</span></code></a></p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.ClassicalCompactGroup.disp">
+<span class="sig-name descname"><span class="pre">disp</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.ClassicalCompactGroup.disp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="base.html#+replab.Str.disp" title="+replab.Str.disp"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Str.disp()</span></code></a></p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.ClassicalCompactGroup.eq">
+<span class="sig-name descname"><span class="pre">eq</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">rhs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.ClassicalCompactGroup.eq" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="base.html#+replab.Obj.eq" title="+replab.Obj.eq"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Obj.eq()</span></code></a></p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.ClassicalCompactGroup.eqv">
+<span class="sig-name descname"><span class="pre">eqv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">t</span></em>, <em class="sig-param"><span class="pre">u</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.ClassicalCompactGroup.eqv" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="base.html#+replab.Domain.eqv" title="+replab.Domain.eqv"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Domain.eqv()</span></code></a></p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.ClassicalCompactGroup.hasReconstruction">
+<span class="sig-name descname"><span class="pre">hasReconstruction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.ClassicalCompactGroup.hasReconstruction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.CompactGroup.hasReconstruction" title="+replab.CompactGroup.hasReconstruction"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.CompactGroup.hasReconstruction()</span></code></a></p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.ClassicalCompactGroup.headerStr">
+<span class="sig-name descname"><span class="pre">headerStr</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.ClassicalCompactGroup.headerStr" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="base.html#+replab.Str.headerStr" title="+replab.Str.headerStr"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Str.headerStr()</span></code></a></p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.ClassicalCompactGroup.hiddenFields">
+<span class="sig-name descname"><span class="pre">hiddenFields</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.ClassicalCompactGroup.hiddenFields" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="base.html#+replab.Str.hiddenFields" title="+replab.Str.hiddenFields"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Str.hiddenFields()</span></code></a></p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.ClassicalCompactGroup.id">
+<span class="sig-name descname"><span class="pre">id</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.ClassicalCompactGroup.id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="base.html#+replab.Obj.id" title="+replab.Obj.id"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Obj.id()</span></code></a></p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="+replab.ClassicalCompactGroup.identity">
+<span class="sig-name descname"><span class="pre">identity</span></span><a class="headerlink" href="#+replab.ClassicalCompactGroup.identity" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.Monoid.identity" title="+replab.Monoid.identity"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">replab.Monoid.identity</span></code></a></p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.ClassicalCompactGroup.inCache">
+<span class="sig-name descname"><span class="pre">inCache</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">name</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.ClassicalCompactGroup.inCache" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="base.html#+replab.Obj.inCache" title="+replab.Obj.inCache"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Obj.inCache()</span></code></a></p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.ClassicalCompactGroup.innerAutomorphism">
+<span class="sig-name descname"><span class="pre">innerAutomorphism</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">by</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.ClassicalCompactGroup.innerAutomorphism" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.Group.innerAutomorphism" title="+replab.Group.innerAutomorphism"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Group.innerAutomorphism()</span></code></a></p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.ClassicalCompactGroup.inverse">
+<span class="sig-name descname"><span class="pre">inverse</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">x</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.ClassicalCompactGroup.inverse" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.Group.inverse" title="+replab.Group.inverse"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Group.inverse()</span></code></a></p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.ClassicalCompactGroup.isIdentity">
+<span class="sig-name descname"><span class="pre">isIdentity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">x</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.ClassicalCompactGroup.isIdentity" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.Monoid.isIdentity" title="+replab.Monoid.isIdentity"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Monoid.isIdentity()</span></code></a></p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.ClassicalCompactGroup.isomorphismByFunctions">
+<span class="sig-name descname"><span class="pre">isomorphismByFunctions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">target</span></em>, <em class="sig-param"><span class="pre">preimageElementFun</span></em>, <em class="sig-param"><span class="pre">imageElementFun</span></em>, <em class="sig-param"><span class="pre">torusMap</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.ClassicalCompactGroup.isomorphismByFunctions" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.Group.isomorphismByFunctions" title="+replab.Group.isomorphismByFunctions"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Group.isomorphismByFunctions()</span></code></a></p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.ClassicalCompactGroup.lambda">
+<span class="sig-name descname"><span class="pre">lambda</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">header</span></em>, <em class="sig-param"><span class="pre">eqvFun</span></em>, <em class="sig-param"><span class="pre">sampleFun</span></em>, <em class="sig-param"><span class="pre">composeFun</span></em>, <em class="sig-param"><span class="pre">identity</span></em>, <em class="sig-param"><span class="pre">inverseFun</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.ClassicalCompactGroup.lambda" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.CompactGroup.lambda" title="+replab.CompactGroup.lambda"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.CompactGroup.lambda()</span></code></a></p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.ClassicalCompactGroup.laws">
+<span class="sig-name descname"><span class="pre">laws</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.ClassicalCompactGroup.laws" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="base.html#+replab.Obj.laws" title="+replab.Obj.laws"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Obj.laws()</span></code></a></p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.ClassicalCompactGroup.leftConjugate">
+<span class="sig-name descname"><span class="pre">leftConjugate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">by</span></em>, <em class="sig-param"><span class="pre">on</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.ClassicalCompactGroup.leftConjugate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.Group.leftConjugate" title="+replab.Group.leftConjugate"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Group.leftConjugate()</span></code></a></p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.ClassicalCompactGroup.longStr">
+<span class="sig-name descname"><span class="pre">longStr</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">maxRows</span></em>, <em class="sig-param"><span class="pre">maxColumns</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.ClassicalCompactGroup.longStr" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="base.html#+replab.Str.longStr" title="+replab.Str.longStr"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Str.longStr()</span></code></a></p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.ClassicalCompactGroup.maximalTorusDimension">
+<span class="sig-name descname"><span class="pre">maximalTorusDimension</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.ClassicalCompactGroup.maximalTorusDimension" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.CompactGroup.maximalTorusDimension" title="+replab.CompactGroup.maximalTorusDimension"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.CompactGroup.maximalTorusDimension()</span></code></a></p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.ClassicalCompactGroup.morphismByFunction">
+<span class="sig-name descname"><span class="pre">morphismByFunction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">target</span></em>, <em class="sig-param"><span class="pre">imageElementFun</span></em>, <em class="sig-param"><span class="pre">torusMap</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.ClassicalCompactGroup.morphismByFunction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.Group.morphismByFunction" title="+replab.Group.morphismByFunction"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Group.morphismByFunction()</span></code></a></p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.ClassicalCompactGroup.ne">
+<span class="sig-name descname"><span class="pre">ne</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">rhs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.ClassicalCompactGroup.ne" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="base.html#+replab.Obj.ne" title="+replab.Obj.ne"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Obj.ne()</span></code></a></p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.ClassicalCompactGroup.reconstruction">
+<span class="sig-name descname"><span class="pre">reconstruction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.ClassicalCompactGroup.reconstruction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.CompactGroup.reconstruction" title="+replab.CompactGroup.reconstruction"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.CompactGroup.reconstruction()</span></code></a></p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.ClassicalCompactGroup.sample">
+<span class="sig-name descname"><span class="pre">sample</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.ClassicalCompactGroup.sample" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="base.html#+replab.Domain.sample" title="+replab.Domain.sample"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Domain.sample()</span></code></a></p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.ClassicalCompactGroup.semidirectProduct">
+<span class="sig-name descname"><span class="pre">semidirectProduct</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">N</span></em>, <em class="sig-param"><span class="pre">phi</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.ClassicalCompactGroup.semidirectProduct" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.CompactGroup.semidirectProduct" title="+replab.CompactGroup.semidirectProduct"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.CompactGroup.semidirectProduct()</span></code></a></p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.ClassicalCompactGroup.shortStr">
+<span class="sig-name descname"><span class="pre">shortStr</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">maxColumns</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.ClassicalCompactGroup.shortStr" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="base.html#+replab.Str.shortStr" title="+replab.Str.shortStr"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Str.shortStr()</span></code></a></p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.ClassicalCompactGroup.tensorRep">
+<span class="sig-name descname"><span class="pre">tensorRep</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">field</span></em>, <em class="sig-param"><span class="pre">reps</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.ClassicalCompactGroup.tensorRep" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.CompactGroup.tensorRep" title="+replab.CompactGroup.tensorRep"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.CompactGroup.tensorRep()</span></code></a></p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.ClassicalCompactGroup.trivialRep">
+<span class="sig-name descname"><span class="pre">trivialRep</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">field</span></em>, <em class="sig-param"><span class="pre">dimension</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.ClassicalCompactGroup.trivialRep" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.CompactGroup.trivialRep" title="+replab.CompactGroup.trivialRep"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.CompactGroup.trivialRep()</span></code></a></p>
+</dd></dl>
+
+</div>
+<h3>Own members</h3><dl class="mat attribute">
+<dt class="sig sig-object mat" id="+replab.ClassicalCompactGroup.algebra">
+<span class="sig-name descname"><span class="pre">algebra</span></span><a class="headerlink" href="#+replab.ClassicalCompactGroup.algebra" title="Permalink to this definition">¶</a></dt>
+<dd><p>Unital associative algebra over which the group is defined</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>‘R’, ‘C’ or ‘H’</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="+replab.ClassicalCompactGroup.isSpecial">
+<span class="sig-name descname"><span class="pre">isSpecial</span></span><a class="headerlink" href="#+replab.ClassicalCompactGroup.isSpecial" title="Permalink to this definition">¶</a></dt>
+<dd><p>Whether the matrices should have determinant one; must be false when algebra = ‘H’</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>logical</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="+replab.ClassicalCompactGroup.n">
+<span class="sig-name descname"><span class="pre">n</span></span><a class="headerlink" href="#+replab.ClassicalCompactGroup.n" title="Permalink to this definition">¶</a></dt>
+<dd><p>Dimension of the matrices</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>integer</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.ClassicalCompactGroup.ClassicalCompactGroup">
+<span class="sig-name descname"><span class="pre">ClassicalCompactGroup</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">n</span></em>, <em class="sig-param"><span class="pre">algebra</span></em>, <em class="sig-param"><span class="pre">isSpecial</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.ClassicalCompactGroup.ClassicalCompactGroup" title="Permalink to this definition">¶</a></dt>
+<dd><p>Constructs a classical compact group</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>n</strong> (<span><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">integer</span></code></span>) – Size of the <code class="docutils literal notranslate"><span class="pre">n</span> <span class="pre">x</span> <span class="pre">n</span></code> matrices</p></li>
+<li><p><strong>algebra</strong> (<span><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">'R',</span> <span class="pre">'C'</span> <span class="pre">or</span> <span class="pre">'H'</span></code></span>) – Unital associatvie algebra over which the group is defined</p></li>
+<li><p><strong>isSpecial</strong> (<span><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">logical</span></code></span>) – Whether the matrices should have <code class="docutils literal notranslate"><span class="pre">det(X)</span> <span class="pre">==</span> <span class="pre">1</span></code></p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.ClassicalCompactGroup.definingRep">
+<span class="sig-name descname"><span class="pre">definingRep</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">field</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.ClassicalCompactGroup.definingRep" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the defining representation of this unitary group</p>
+<p>“Defining representation” is a loosely defined term designing the smallest faithful representation of a
+group. In our case, the defining representation of <code class="docutils literal notranslate"><span class="pre">O(n)</span></code> or <code class="docutils literal notranslate"><span class="pre">SO(n)</span></code> is a n-dimensional real representation,
+the defining representation of <code class="docutils literal notranslate"><span class="pre">U(n)</span></code> or <code class="docutils literal notranslate"><span class="pre">SU(n)</span></code> is a n-dimension complex representation, while
+the defining representation of <code class="docutils literal notranslate"><span class="pre">Sp(n)</span></code> is a 2n-dimension complex representation.</p>
+<p>All these representations are unitary. By specifying the field, one can encode the representation in a
+different field: if the natural field is real (<code class="docutils literal notranslate"><span class="pre">O(n)</span></code>, <code class="docutils literal notranslate"><span class="pre">SO(n)</span></code>), the representation can be complexified
+into a representation of the same dimension. If the natural field is complex (<code class="docutils literal notranslate"><span class="pre">U(n)</span></code>, <code class="docutils literal notranslate"><span class="pre">SU(n)</span></code>, <code class="docutils literal notranslate"><span class="pre">Sp(n)</span></code>),
+the complex representation can be encoded into a real representation, doubling its dimension.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>field</strong> (<span><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">'R',</span> <span class="pre">'C',</span> <span class="pre">optional</span></code></span>) – Field over which to define the matrices, default: group dependent, see above</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Defining representation</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="rep.html#+replab.Rep" title="+replab.Rep"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">Rep</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="o">
+<h2>O<a class="headerlink" href="#o" title="Permalink to this headline">¶</a></h2>
+<dl class="mat function">
+<dt class="sig sig-object mat" id="+replab.O">
+<span class="sig-prename descclassname"><span class="pre">replab.</span></span><span class="sig-name descname"><span class="pre">O</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">d</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.O" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the group of d x d orthonormal matrices</p>
+</dd></dl>
+
+</section>
+<section id="so">
+<h2>SO<a class="headerlink" href="#so" title="Permalink to this headline">¶</a></h2>
+<dl class="mat function">
+<dt class="sig sig-object mat" id="+replab.SO">
+<span class="sig-prename descclassname"><span class="pre">replab.</span></span><span class="sig-name descname"><span class="pre">SO</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">d</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.SO" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the group of d x d orthonormal matrices with determinant one</p>
+</dd></dl>
+
+</section>
+<section id="u">
+<h2>U<a class="headerlink" href="#u" title="Permalink to this headline">¶</a></h2>
+<dl class="mat function">
+<dt class="sig sig-object mat" id="+replab.U">
+<span class="sig-prename descclassname"><span class="pre">replab.</span></span><span class="sig-name descname"><span class="pre">U</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">d</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.U" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the group of d x d unitary complex matrices</p>
+</dd></dl>
+
+</section>
+<section id="su">
+<h2>SU<a class="headerlink" href="#su" title="Permalink to this headline">¶</a></h2>
+<dl class="mat function">
+<dt class="sig sig-object mat" id="+replab.SU">
+<span class="sig-prename descclassname"><span class="pre">replab.</span></span><span class="sig-name descname"><span class="pre">SU</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">d</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.SU" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the group of d x d unitary complex matrices with determinant one</p>
+</dd></dl>
+
+</section>
+<section id="sp">
+<h2>Sp<a class="headerlink" href="#sp" title="Permalink to this headline">¶</a></h2>
+<dl class="mat function">
+<dt class="sig sig-object mat" id="+replab.Sp">
+<span class="sig-prename descclassname"><span class="pre">replab.</span></span><span class="sig-name descname"><span class="pre">Sp</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">d</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.Sp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the compact symplectic group whose elements are unitary quaternion matrices</p>
+</dd></dl>
+
+</section>
+</section>
+
+<div class="section">
+   
+</div>
+
+          </div>
+            
+  <div class="footer-relations">
+    
+      <div class="pull-left">
+        <a class="btn btn-default" href="groups.html" title="previous chapter (use the left arrow)">Base group structures</a>
+      </div>
+    
+      <div class="pull-right">
+        <a class="btn btn-default" href="permutation_groups.html" title="next chapter (use the right arrow)">Permutation groups</a>
+      </div>
+    </div>
+    <div class="clearer"></div>
+  
+        </div>
+        <div class="clearfix"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../mat-modindex.html" title="MATLAB Module Index"
+             >matlab index</a> |</li>
+        <li class="right" >
+          <a href="permutation_groups.html" title="Permutation groups"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="groups.html" title="Base group structures"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.9.2-SNAP documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" >Technical Reference</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Continuous groups</a></li> 
+      </ul>
+    </div>
+<script type="text/javascript">
+  $("#mobile-toggle a").click(function () {
+    $("#left-column").toggle();
+  });
+</script>
+<script type="text/javascript" src="../_static/js/bootstrap.js"></script>
+  <div class="footer">
+    &copy; Copyright 2018-2020, Denis Rosset, Jean-Daniel Bancal and collaborators. Created using <a href="http://sphinx.pocoo.org/">Sphinx</a>.
+  </div>
+  </body>
+</html>

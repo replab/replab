@@ -1,0 +1,1103 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  
+  <!-- Licensed under the Apache 2.0 License -->
+  <link rel="stylesheet" type="text/css" href="../_static/fonts/open-sans/stylesheet.css" />
+  <!-- Licensed under the SIL Open Font License -->
+  <link rel="stylesheet" type="text/css" href="../_static/fonts/source-serif-pro/source-serif-pro.css" />
+  <link rel="stylesheet" type="text/css" href="../_static/css/bootstrap.min.css" />
+  <link rel="stylesheet" type="text/css" href="../_static/css/bootstrap-theme.min.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+    <title>Chemistry &#8212; RepLAB 0.9.2-SNAP documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/guzzle.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/custom.css" />
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../_static/js/collapse_helper.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Global settings" href="globals.html" />
+    <link rel="prev" title="Convex programming" href="convex_programming.html" /> 
+  
+   
+  
+<style type="text/css">
+  ul.ablog-archive {
+    list-style: none;
+    overflow: auto;
+    margin-left: 0px;
+  }
+  ul.ablog-archive li {
+    float: left;
+    margin-right: 5px;
+    font-size: 80%;
+  }
+  ul.postlist a {
+    font-style: italic;
+  }
+  ul.postlist-style-disc {
+    list-style-type: disc;
+  }
+  ul.postlist-style-none {
+    list-style-type: none;
+  }
+  ul.postlist-style-circle {
+    list-style-type: circle;
+  }
+</style>
+
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../mat-modindex.html" title="MATLAB Module Index"
+             >matlab index</a> |</li>
+        <li class="right" >
+          <a href="globals.html" title="Global settings"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="convex_programming.html" title="Convex programming"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.9.2-SNAP documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">Technical Reference</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Chemistry</a></li> 
+      </ul>
+    </div>
+    <div class="container-wrapper">
+
+      <div id="mobile-toggle">
+        <a href="#"><span class="glyphicon glyphicon-align-justify" aria-hidden="true"></span></a>
+      </div>
+  <div id="left-column">
+    <div class="sphinxsidebar"><div class="text-logo">
+  <a href="
+    ../index.html">RepLAB</a>&nbsp;&nbsp;
+  <a href="https://github.com/replab/replab"><i class="fab fa-github"></i></a>&nbsp;
+  <a href="https://github.com/replab/replab/archive/v0.9.2-SNAP.zip"><i class="fa fa-download"></i></a>&nbsp;
+  <a href="https://gitter.im/replab/replab"><i class="fab fa-gitter"></i></a>&nbsp;
+  <a href="https://travis-ci.com/replab/replab"><i class="fas fa-sync-alt"></i></a>&nbsp;
+  <a href="https://codecov.io/gh/replab/replab"><i class="fas fa-umbrella"></i></a>
+</div><div class="sidebar-block">
+  <div class="sidebar-toc">
+    
+    
+      <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/index.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../howto/index.html">How to</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../topic/index.html">Topic guides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../publications/index.html">Publications</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Technical Reference</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="commands.html">Commands</a></li>
+<li class="toctree-l2"><a class="reference internal" href="base.html">Base object types and functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="numerics.html">Numerics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="groups.html">Base group structures</a></li>
+<li class="toctree-l2"><a class="reference internal" href="continuous_groups.html">Continuous groups</a></li>
+<li class="toctree-l2"><a class="reference internal" href="permutation_groups.html">Permutation groups</a></li>
+<li class="toctree-l2"><a class="reference internal" href="named_discrete_groups.html">Named discrete groups</a></li>
+<li class="toctree-l2"><a class="reference internal" href="abstract_groups.html">Abstract groups and atlas</a></li>
+<li class="toctree-l2"><a class="reference internal" href="group_products.html">Group product constructions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="group_subsets.html">Group subsets</a></li>
+<li class="toctree-l2"><a class="reference internal" href="group_morphisms.html">Group morphisms</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rep.html">Representations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="equivariant.html">Equivariant spaces</a></li>
+<li class="toctree-l2"><a class="reference internal" href="characters.html">Characters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="convex_programming.html">Convex programming</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Chemistry</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#molecule">Molecule</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#identifypointgroup">IdentifyPointGroup</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="globals.html">Global settings</a></li>
+<li class="toctree-l2"><a class="reference internal" href="graph.html">Graphs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="misc.html">Miscellaneous functions/classes</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../development/index.html">Development/Community</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../blog/index.html">Blog</a></li>
+</ul>
+
+    
+  </div>
+</div>
+<div class="sidebar-block">
+  <div class="sidebar-wrapper">
+    <h2><a href="../blog.html">Recent Blog Posts</a></h2>
+  </div>
+  <div class="sidebar-toc">
+    <ul>
+      
+      
+      <li class="toctree-l1"><a href="../blog/20210724-RepFuN.html">24 July - A fun application of RepLAB : solving combination puzzles</a></li>
+      
+      <li class="toctree-l1"><a href="../blog/20200123-RepLAB-website-live.html">26 January - The RepLAB documentation and the infrastructure behind it</a></li>
+      
+    </ul>
+  </div>
+</div>
+
+      
+    </div>
+  </div>
+        <div id="right-column">
+          
+          <div role="navigation" aria-label="breadcrumbs navigation">
+            <ol class="breadcrumb">
+              <li><a href="../index.html">Docs</a></li>
+              
+                <li><a href="index.html">Technical Reference</a></li>
+              
+              <li>Chemistry</li>
+            </ol>
+          </div>
+          
+          <div class="document clearer body">
+             <section id="module-+replab">
+<span id="chemistry"></span><h1>Chemistry<a class="headerlink" href="#module-+replab" title="Permalink to this headline">¶</a></h1>
+<p>This module is the outcome of a student summer project and provides ways to identify symmetry groups of molecules.</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#+replab.Molecule" title="+replab.Molecule"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">Molecule</span></code></a> describes a molecule</p></li>
+<li><p><a class="reference internal" href="#+replab.IdentifyPointGroup" title="+replab.IdentifyPointGroup"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">IdentifyPointGroup</span></code></a> identifies a point group</p></li>
+</ul>
+<section id="molecule">
+<h2>Molecule<a class="headerlink" href="#molecule" title="Permalink to this headline">¶</a></h2>
+<dl class="mat class">
+<dt class="sig sig-object mat" id="+replab.Molecule">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">replab.</span></span><span class="sig-name descname"><span class="pre">Molecule</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">name</span></em>, <em class="sig-param"><span class="pre">coords</span></em>, <em class="sig-param"><span class="pre">symbols</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.Molecule" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="base.html#+replab.Str" title="+replab.Str"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">replab.Str</span></code></a></p>
+<p>Gives information about a molecule</p>
+<p class="rubric">References</p>
+<p>Beruski, O., Vidal, L. N. (2013). Algorithms for computer detection of symmetry elements
+in molecular systems. Journal of Computational Chemistry, Volume 35, Issue 4.
+<a class="reference external" href="https://doi-org/10.1002/jcc.23493">https://doi-org/10.1002/jcc.23493</a></p>
+<p>Vallance, C. (2020). Symmetry Classification of Molecules: Point Groups.
+Chemistry LibreTexts. <a class="reference external" href="https://chem.libretexts.org">https://chem.libretexts.org</a></p>
+<div class="dropdown admonition">
+<p class="admonition-title">Class members list</p>
+<p><strong>Properties</strong></p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#+replab.Molecule.coords" title="+replab.Molecule.coords"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">coords</span></code></a> – the coordinates of atoms in the molecule (coords are sorted by increasing values)</p></li>
+<li><p><a class="reference internal" href="#+replab.Molecule.id" title="+replab.Molecule.id"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">id</span></code></a> – identification of molecular point group                                                                        through an axis on coordinates</p></li>
+<li><p><a class="reference internal" href="#+replab.Molecule.masses" title="+replab.Molecule.masses"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">masses</span></code></a> – masses of atoms corresponding to coordinates</p></li>
+<li><p><a class="reference internal" href="#+replab.Molecule.name" title="+replab.Molecule.name"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">name</span></code></a> – name of <a class="reference internal" href="#+replab.Molecule" title="+replab.Molecule"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">replab.Molecule</span></code></a> object</p></li>
+<li><p><a class="reference internal" href="#+replab.Molecule.natoms" title="+replab.Molecule.natoms"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">natoms</span></code></a> – total number of atoms</p></li>
+<li><p><a class="reference internal" href="#+replab.Molecule.symbols" title="+replab.Molecule.symbols"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">symbols</span></code></a> – symbols of atoms corresponding to coordinates</p></li>
+</ul>
+<p><strong>Prettyprinting</strong></p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#+replab.Molecule.additionalFields" title="+replab.Molecule.additionalFields"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">additionalFields</span></code></a> – Returns the name/value pairs corresponding to additional fields to be printed</p></li>
+<li><p><a class="reference internal" href="#+replab.Molecule.disp" title="+replab.Molecule.disp"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">disp</span></code></a> – Standard MATLAB/Octave display method</p></li>
+<li><p><a class="reference internal" href="#+replab.Molecule.headerStr" title="+replab.Molecule.headerStr"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">headerStr</span></code></a> – Tiny single line description of the current object type</p></li>
+<li><p><a class="reference internal" href="#+replab.Molecule.hiddenFields" title="+replab.Molecule.hiddenFields"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">hiddenFields</span></code></a> – Returns the names of the fields that are not printed as a row vector</p></li>
+<li><p><a class="reference internal" href="#+replab.Molecule.longStr" title="+replab.Molecule.longStr"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">longStr</span></code></a> – Multi-line description of the current object</p></li>
+<li><p><a class="reference internal" href="#+replab.Molecule.shortStr" title="+replab.Molecule.shortStr"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">shortStr</span></code></a> – Single line text description of the current object</p></li>
+</ul>
+<p><strong>General</strong></p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#+replab.Molecule.ImproperRotationAction" title="+replab.Molecule.ImproperRotationAction"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">ImproperRotationAction</span></code></a> – Finds action of a rotation by 2pi/k then a reflection on the molecule</p></li>
+<li><p><a class="reference internal" href="#+replab.Molecule.Molecule" title="+replab.Molecule.Molecule"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">Molecule</span></code></a> – Creates a molecule object</p></li>
+<li><p><a class="reference internal" href="#+replab.Molecule.ReflectionAction" title="+replab.Molecule.ReflectionAction"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">ReflectionAction</span></code></a> – Finds action of a reflection by 2pi/k on the molecule</p></li>
+<li><p><a class="reference internal" href="#+replab.Molecule.RotationAction" title="+replab.Molecule.RotationAction"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">RotationAction</span></code></a> – Finds action of a rotation by 2pi/k on the molecule</p></li>
+<li><p><a class="reference internal" href="#+replab.Molecule.fromAtoms" title="+replab.Molecule.fromAtoms"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">fromAtoms</span></code></a> – Creates a molecule object atomic information</p></li>
+<li><p><a class="reference internal" href="#+replab.Molecule.fromFile" title="+replab.Molecule.fromFile"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">fromFile</span></code></a> – Creates a molecule object from a file</p></li>
+<li><p><a class="reference internal" href="#+replab.Molecule.getMasses" title="+replab.Molecule.getMasses"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">getMasses</span></code></a> – Get the atomic masses for the atom represented by each symbol</p></li>
+<li><p><a class="reference internal" href="#+replab.Molecule.readXYZ" title="+replab.Molecule.readXYZ"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">readXYZ</span></code></a> – Reads the coordinates and atomic symbols from an xyz file</p></li>
+</ul>
+</div>
+<div class="dropdown admonition">
+<p class="admonition-title">Inherited elements</p>
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.Molecule.additionalFields">
+<span class="sig-name descname"><span class="pre">additionalFields</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.Molecule.additionalFields" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="base.html#+replab.Str.additionalFields" title="+replab.Str.additionalFields"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Str.additionalFields()</span></code></a></p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.Molecule.disp">
+<span class="sig-name descname"><span class="pre">disp</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.Molecule.disp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="base.html#+replab.Str.disp" title="+replab.Str.disp"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Str.disp()</span></code></a></p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.Molecule.headerStr">
+<span class="sig-name descname"><span class="pre">headerStr</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.Molecule.headerStr" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="base.html#+replab.Str.headerStr" title="+replab.Str.headerStr"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Str.headerStr()</span></code></a></p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.Molecule.hiddenFields">
+<span class="sig-name descname"><span class="pre">hiddenFields</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.Molecule.hiddenFields" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="base.html#+replab.Str.hiddenFields" title="+replab.Str.hiddenFields"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Str.hiddenFields()</span></code></a></p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.Molecule.longStr">
+<span class="sig-name descname"><span class="pre">longStr</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">maxRows</span></em>, <em class="sig-param"><span class="pre">maxColumns</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.Molecule.longStr" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="base.html#+replab.Str.longStr" title="+replab.Str.longStr"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Str.longStr()</span></code></a></p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.Molecule.shortStr">
+<span class="sig-name descname"><span class="pre">shortStr</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">maxColumns</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.Molecule.shortStr" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="base.html#+replab.Str.shortStr" title="+replab.Str.shortStr"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Str.shortStr()</span></code></a></p>
+</dd></dl>
+
+</div>
+<h3>Own members</h3><dl class="mat attribute">
+<dt class="sig sig-object mat" id="+replab.Molecule.coords">
+<span class="sig-name descname"><span class="pre">coords</span></span><a class="headerlink" href="#+replab.Molecule.coords" title="Permalink to this definition">¶</a></dt>
+<dd><p>the coordinates of atoms in the molecule (coords are sorted by increasing values)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>double(3, natoms)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="+replab.Molecule.id">
+<span class="sig-name descname"><span class="pre">id</span></span><a class="headerlink" href="#+replab.Molecule.id" title="Permalink to this definition">¶</a></dt>
+<dd><p>identification of molecular point group                                                                        through an axis on coordinates</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#+replab.IdentifyPointGroup" title="+replab.IdentifyPointGroup"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">replab.IdentifyPointGroup</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="+replab.Molecule.masses">
+<span class="sig-name descname"><span class="pre">masses</span></span><a class="headerlink" href="#+replab.Molecule.masses" title="Permalink to this definition">¶</a></dt>
+<dd><p>masses of atoms corresponding to coordinates</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>double(1, natoms)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="+replab.Molecule.name">
+<span class="sig-name descname"><span class="pre">name</span></span><a class="headerlink" href="#+replab.Molecule.name" title="Permalink to this definition">¶</a></dt>
+<dd><p>name of <a class="reference internal" href="#+replab.Molecule" title="+replab.Molecule"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">replab.Molecule</span></code></a> object</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>charstring</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="+replab.Molecule.natoms">
+<span class="sig-name descname"><span class="pre">natoms</span></span><a class="headerlink" href="#+replab.Molecule.natoms" title="Permalink to this definition">¶</a></dt>
+<dd><p>total number of atoms</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>integer</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="+replab.Molecule.symbols">
+<span class="sig-name descname"><span class="pre">symbols</span></span><a class="headerlink" href="#+replab.Molecule.symbols" title="Permalink to this definition">¶</a></dt>
+<dd><p>symbols of atoms corresponding to coordinates</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>cell(1, natoms) of charstring</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.Molecule.ImproperRotationAction">
+<span class="sig-name descname"><span class="pre">ImproperRotationAction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">k</span></em>, <em class="sig-param"><span class="pre">axis</span></em>, <em class="sig-param"><span class="pre">ndec</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.Molecule.ImproperRotationAction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Finds action of a rotation by 2pi/k then a reflection on the molecule</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>k</strong> (<span><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">integer</span></code></span>) – rotation by angle 2*pi/k</p></li>
+<li><p><strong>axis</strong> (<span><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">double(1,</span> <span class="pre">3)</span></code></span>) – rotation axis and normal of reflection plane</p></li>
+<li><p><strong>ndec</strong> (<span><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">integer)</span> <span class="pre">(optional</span></code></span>) – the number of decimals to round for equality</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.Molecule.Molecule">
+<span class="sig-name descname"><span class="pre">Molecule</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">name</span></em>, <em class="sig-param"><span class="pre">coords</span></em>, <em class="sig-param"><span class="pre">symbols</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.Molecule.Molecule" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a molecule object</p>
+<p>Convention: automatically sort coordinates in ascending order
+rounding to 2 decimal places for equality</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>coords</strong> (<span><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">double(3,</span> <span class="pre">natoms)</span></code></span>) – a set of coordinates</p></li>
+<li><p><strong>symbols</strong> (<span><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">cell(1,</span> <span class="pre">natoms)</span> <span class="pre">of</span> <span class="pre">charstring</span></code></span>) – atomic symbols of coordinates</p></li>
+<li><p><strong>ndec</strong> (<span><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">integer</span></code></span>) – number of decimal places to round when checking for equality</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.Molecule.ReflectionAction">
+<span class="sig-name descname"><span class="pre">ReflectionAction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">normal</span></em>, <em class="sig-param"><span class="pre">ndec</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.Molecule.ReflectionAction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Finds action of a reflection by 2pi/k on the molecule</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>normal</strong> (<span><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">double(1,</span> <span class="pre">3)</span></code></span>) – normal of reflection plane</p></li>
+<li><p><strong>ndec</strong> (<span><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">integer)</span> <span class="pre">(optional</span></code></span>) – the number of decimals to round for equality</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.Molecule.RotationAction">
+<span class="sig-name descname"><span class="pre">RotationAction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">k</span></em>, <em class="sig-param"><span class="pre">axis</span></em>, <em class="sig-param"><span class="pre">ndec</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.Molecule.RotationAction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Finds action of a rotation by 2pi/k on the molecule</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>k</strong> (<span><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">integer</span></code></span>) – rotation by angle 2*pi/k</p></li>
+<li><p><strong>axis</strong> (<span><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">double(1,</span> <span class="pre">3)</span></code></span>) – axis about which we rotate molecule</p></li>
+<li><p><strong>ndec</strong> (<span><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">integer)</span> <span class="pre">(optional</span></code></span>) – the number of decimals to round for equality</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="mat staticmethod">
+<dt class="sig sig-object mat" id="+replab.Molecule.fromAtoms">
+<em class="property"><span class="pre">static</span> </em><span class="sig-name descname"><span class="pre">fromAtoms</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">coords</span></em>, <em class="sig-param"><span class="pre">symbols</span></em>, <em class="sig-param"><span class="pre">atomicSymbols</span></em>, <em class="sig-param"><span class="pre">atomicMasses</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.Molecule.fromAtoms" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a molecule object atomic information</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>coords</strong> (<span><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">double(3,</span> <span class="pre">natoms)</span></code></span>) – atomic coordinates (can be unsorted)</p></li>
+<li><p><strong>symbols</strong> (<span><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">cell(1,</span> <span class="pre">natoms)</span> <span class="pre">of</span> <span class="pre">charstring</span></code></span>) – atomic symbols</p></li>
+<li><p><strong>atomicSymbols</strong> (<span><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">optional</span> <span class="pre">cell(1,</span> <span class="pre">*)</span> <span class="pre">of</span> <span class="pre">charstring</span></code></span>) – atomic symbols of masses to
+replace or add to stored masses</p></li>
+<li><p><strong>atomicMasses</strong> (<span><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">optional</span> <span class="pre">cell(1,</span> <span class="pre">*)</span> <span class="pre">of</span> <span class="pre">double</span></code></span>) – atomic masses corresponding to atomicSymbols</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>molecule object</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>mol (<a class="reference internal" href="#+replab.Molecule" title="+replab.Molecule"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">replab.Molecule</span></code></a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="mat staticmethod">
+<dt class="sig sig-object mat" id="+replab.Molecule.fromFile">
+<em class="property"><span class="pre">static</span> </em><span class="sig-name descname"><span class="pre">fromFile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">filename</span></em>, <em class="sig-param"><span class="pre">atomicSymbols</span></em>, <em class="sig-param"><span class="pre">atomicMasses</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.Molecule.fromFile" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a molecule object from a file</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>filename</strong> (<span><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">charstring</span></code></span>) – name of file with molecular information</p></li>
+<li><p><strong>atomicSymbols</strong> (<span><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">optional</span> <span class="pre">cell(1,</span> <span class="pre">*)</span> <span class="pre">of</span> <span class="pre">charstring</span></code></span>) – atomic symbols of masses to
+replace or add to stored masses</p></li>
+<li><p><strong>atomicMasses</strong> (<span><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">optional</span> <span class="pre">cell(1,</span> <span class="pre">*)</span> <span class="pre">of</span> <span class="pre">double</span></code></span>) – atomic masses corresponding to atomicSymbols</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>molecule object</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>mol (<a class="reference internal" href="#+replab.Molecule" title="+replab.Molecule"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">replab.Molecule</span></code></a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="mat staticmethod">
+<dt class="sig sig-object mat" id="+replab.Molecule.getMasses">
+<em class="property"><span class="pre">static</span> </em><span class="sig-name descname"><span class="pre">getMasses</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">symbols</span></em>, <em class="sig-param"><span class="pre">atomicSymbols</span></em>, <em class="sig-param"><span class="pre">atomicMasses</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.Molecule.getMasses" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the atomic masses for the atom represented by each symbol</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>symbols</strong> (<span><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">cell(1,</span> <span class="pre">natoms)</span> <span class="pre">of</span> <span class="pre">charstring</span></code></span>) – symbols of atoms</p></li>
+<li><p><strong>atomicSymbols</strong> (<span><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">optional</span> <span class="pre">cell(1,</span> <span class="pre">*)</span> <span class="pre">of</span> <span class="pre">charstring</span></code></span>) – atomic symbols of masses to
+replace or add to stored masses</p></li>
+<li><p><strong>atomicMasses</strong> (<span><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">optional</span> <span class="pre">cell(1,</span> <span class="pre">*)</span> <span class="pre">of</span> <span class="pre">double</span></code></span>) – atomic masses corresponding to atomicSymbols</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="simple">
+<dt>Returns</dt><dd><p>masses (cell(1, natoms) of double): masses of atoms</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="mat staticmethod">
+<dt class="sig sig-object mat" id="+replab.Molecule.readXYZ">
+<em class="property"><span class="pre">static</span> </em><span class="sig-name descname"><span class="pre">readXYZ</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">filename</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.Molecule.readXYZ" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reads the coordinates and atomic symbols from an xyz file</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>filename</strong> (<span><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">charstring</span></code></span>) – name and location of xyz file</p>
+</dd>
+</dl>
+<dl class="simple">
+<dt>Returns</dt><dd><p>coords (double(3, natoms)): coordinates from xyz file
+symbols (cell(1, natoms) of charstring): symbols of atoms from xyz file</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="identifypointgroup">
+<h2>IdentifyPointGroup<a class="headerlink" href="#identifypointgroup" title="Permalink to this headline">¶</a></h2>
+<dl class="mat class">
+<dt class="sig sig-object mat" id="+replab.IdentifyPointGroup">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">replab.</span></span><span class="sig-name descname"><span class="pre">IdentifyPointGroup</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">coords</span></em>, <em class="sig-param"><span class="pre">symbols</span></em>, <em class="sig-param"><span class="pre">masses</span></em>, <em class="sig-param"><span class="pre">ndec</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.IdentifyPointGroup" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="base.html#+replab.Str" title="+replab.Str"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">replab.Str</span></code></a></p>
+<p>Gives information about a molecule</p>
+<p class="rubric">References</p>
+<p>Beruski, O., Vidal, L. N. (2013). Algorithms for computer detection of symmetry elements
+in molecular systems. Journal of Computational Chemistry, Volume 35, Issue 4.
+<a class="reference external" href="https://doi-org/10.1002/jcc.23493">https://doi-org/10.1002/jcc.23493</a></p>
+<p>Vallance, C. (2020). Symmetry Classification of Molecules: Point Groups.
+Chemistry LibreTexts. <a class="reference external" href="https://chem.libretexts.org">https://chem.libretexts.org</a></p>
+<div class="dropdown admonition">
+<p class="admonition-title">Class members list</p>
+<p><strong>Properties</strong></p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#+replab.IdentifyPointGroup.ndec" title="+replab.IdentifyPointGroup.ndec"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">ndec</span></code></a> – number of decimal places to check for equality</p></li>
+<li><p><a class="reference internal" href="#+replab.IdentifyPointGroup.ord" title="+replab.IdentifyPointGroup.ord"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">ord</span></code></a> – highest order rotation of the molecule that preserves symmetry</p></li>
+<li><p><a class="reference internal" href="#+replab.IdentifyPointGroup.pointGroup" title="+replab.IdentifyPointGroup.pointGroup"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">pointGroup</span></code></a> – characters representing the point group</p></li>
+<li><p><a class="reference internal" href="#+replab.IdentifyPointGroup.principalAxis" title="+replab.IdentifyPointGroup.principalAxis"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">principalAxis</span></code></a> – principal axis of rotation of the molecule</p></li>
+<li><p><a class="reference internal" href="#+replab.IdentifyPointGroup.table" title="+replab.IdentifyPointGroup.table"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">table</span></code></a> – the character table for the molecule’s point group</p></li>
+</ul>
+<p><strong>Prettyprinting</strong></p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#+replab.IdentifyPointGroup.additionalFields" title="+replab.IdentifyPointGroup.additionalFields"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">additionalFields</span></code></a> – Returns the name/value pairs corresponding to additional fields to be printed</p></li>
+<li><p><a class="reference internal" href="#+replab.IdentifyPointGroup.disp" title="+replab.IdentifyPointGroup.disp"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">disp</span></code></a> – Standard MATLAB/Octave display method</p></li>
+<li><p><a class="reference internal" href="#+replab.IdentifyPointGroup.headerStr" title="+replab.IdentifyPointGroup.headerStr"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">headerStr</span></code></a> – Tiny single line description of the current object type</p></li>
+<li><p><a class="reference internal" href="#+replab.IdentifyPointGroup.hiddenFields" title="+replab.IdentifyPointGroup.hiddenFields"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">hiddenFields</span></code></a> – Returns the names of the fields that are not printed as a row vector</p></li>
+<li><p><a class="reference internal" href="#+replab.IdentifyPointGroup.longStr" title="+replab.IdentifyPointGroup.longStr"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">longStr</span></code></a> – Multi-line description of the current object</p></li>
+<li><p><a class="reference internal" href="#+replab.IdentifyPointGroup.shortStr" title="+replab.IdentifyPointGroup.shortStr"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">shortStr</span></code></a> – Single line text description of the current object</p></li>
+</ul>
+<p><strong>General</strong></p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#+replab.IdentifyPointGroup.IdentifyPointGroup" title="+replab.IdentifyPointGroup.IdentifyPointGroup"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">IdentifyPointGroup</span></code></a> – Creates a molecule object</p></li>
+<li><p><a class="reference internal" href="#+replab.IdentifyPointGroup.ImproperRotation" title="+replab.IdentifyPointGroup.ImproperRotation"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">ImproperRotation</span></code></a> – Apply rotation of 2*pi/k and then reflection through rotation plane</p></li>
+<li><p><a class="reference internal" href="#+replab.IdentifyPointGroup.InertiaTensor" title="+replab.IdentifyPointGroup.InertiaTensor"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">InertiaTensor</span></code></a> – calculates the inertia tensor for a group of atoms</p></li>
+<li><p><a class="reference internal" href="#+replab.IdentifyPointGroup.Reflection" title="+replab.IdentifyPointGroup.Reflection"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">Reflection</span></code></a> – Reflect coords through a plane with a given normal</p></li>
+<li><p><a class="reference internal" href="#+replab.IdentifyPointGroup.Rotation" title="+replab.IdentifyPointGroup.Rotation"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">Rotation</span></code></a> – Apply rotation of 2*pi/k to coords about an axis</p></li>
+<li><p><a class="reference internal" href="#+replab.IdentifyPointGroup.checkPlanar" title="+replab.IdentifyPointGroup.checkPlanar"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">checkPlanar</span></code></a> – Determines if molecule is planar</p></li>
+<li><p><a class="reference internal" href="#+replab.IdentifyPointGroup.coordsEqual" title="+replab.IdentifyPointGroup.coordsEqual"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">coordsEqual</span></code></a> – Checks whether a new set of coordinates is equivalent to original ones</p></li>
+<li><p><a class="reference internal" href="#+replab.IdentifyPointGroup.determineLowSymmetry" title="+replab.IdentifyPointGroup.determineLowSymmetry"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">determineLowSymmetry</span></code></a> – Determines point group on molecules without Cn axis</p></li>
+<li><p><a class="reference internal" href="#+replab.IdentifyPointGroup.determineSphericalGroup" title="+replab.IdentifyPointGroup.determineSphericalGroup"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">determineSphericalGroup</span></code></a> – Determine spherical group of the molecule</p></li>
+<li><p><a class="reference internal" href="#+replab.IdentifyPointGroup.distanceMatrix" title="+replab.IdentifyPointGroup.distanceMatrix"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">distanceMatrix</span></code></a> – Determine the distance matrix of the molecules</p></li>
+<li><p><a class="reference internal" href="#+replab.IdentifyPointGroup.findC2Axes" title="+replab.IdentifyPointGroup.findC2Axes"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">findC2Axes</span></code></a> – Determines whether molecule has a C2 axis and returns first one found</p></li>
+<li><p><a class="reference internal" href="#+replab.IdentifyPointGroup.findCharacterTable" title="+replab.IdentifyPointGroup.findCharacterTable"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">findCharacterTable</span></code></a> – Determines the character table of a molecule with a certain point group</p></li>
+<li><p><a class="reference internal" href="#+replab.IdentifyPointGroup.findCnAxes" title="+replab.IdentifyPointGroup.findCnAxes"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">findCnAxes</span></code></a> – Find whether there are multiple higher order rotation axes</p></li>
+<li><p><a class="reference internal" href="#+replab.IdentifyPointGroup.findDihedralMirrorPlanes" title="+replab.IdentifyPointGroup.findDihedralMirrorPlanes"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">findDihedralMirrorPlanes</span></code></a> – Determines number of dihedral mirror planes in the molecule</p></li>
+<li><p><a class="reference internal" href="#+replab.IdentifyPointGroup.findPerpendicularAxes" title="+replab.IdentifyPointGroup.findPerpendicularAxes"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">findPerpendicularAxes</span></code></a> – Finds all C2 axes perpendicular to the principal axis</p></li>
+<li><p><a class="reference internal" href="#+replab.IdentifyPointGroup.findPointGroup" title="+replab.IdentifyPointGroup.findPointGroup"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">findPointGroup</span></code></a> – Determine the point group of molecule by symmetry operation flowchart</p></li>
+<li><p><a class="reference internal" href="#+replab.IdentifyPointGroup.findReflections" title="+replab.IdentifyPointGroup.findReflections"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">findReflections</span></code></a> – Finds reflection planes in the molecule</p></li>
+<li><p><a class="reference internal" href="#+replab.IdentifyPointGroup.findRotations" title="+replab.IdentifyPointGroup.findRotations"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">findRotations</span></code></a> – Determine the rotation order and axis for a group of atoms</p></li>
+<li><p><a class="reference internal" href="#+replab.IdentifyPointGroup.groupAtoms" title="+replab.IdentifyPointGroup.groupAtoms"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">groupAtoms</span></code></a> – Finds atoms of same type with same distances</p></li>
+<li><p><a class="reference internal" href="#+replab.IdentifyPointGroup.sortCoords" title="+replab.IdentifyPointGroup.sortCoords"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">sortCoords</span></code></a> – Sorts coordinates in ascending order</p></li>
+</ul>
+</div>
+<div class="dropdown admonition">
+<p class="admonition-title">Inherited elements</p>
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.IdentifyPointGroup.additionalFields">
+<span class="sig-name descname"><span class="pre">additionalFields</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.IdentifyPointGroup.additionalFields" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="base.html#+replab.Str.additionalFields" title="+replab.Str.additionalFields"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Str.additionalFields()</span></code></a></p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.IdentifyPointGroup.disp">
+<span class="sig-name descname"><span class="pre">disp</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.IdentifyPointGroup.disp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="base.html#+replab.Str.disp" title="+replab.Str.disp"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Str.disp()</span></code></a></p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.IdentifyPointGroup.headerStr">
+<span class="sig-name descname"><span class="pre">headerStr</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.IdentifyPointGroup.headerStr" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="base.html#+replab.Str.headerStr" title="+replab.Str.headerStr"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Str.headerStr()</span></code></a></p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.IdentifyPointGroup.hiddenFields">
+<span class="sig-name descname"><span class="pre">hiddenFields</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.IdentifyPointGroup.hiddenFields" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="base.html#+replab.Str.hiddenFields" title="+replab.Str.hiddenFields"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Str.hiddenFields()</span></code></a></p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.IdentifyPointGroup.longStr">
+<span class="sig-name descname"><span class="pre">longStr</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">maxRows</span></em>, <em class="sig-param"><span class="pre">maxColumns</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.IdentifyPointGroup.longStr" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="base.html#+replab.Str.longStr" title="+replab.Str.longStr"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Str.longStr()</span></code></a></p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.IdentifyPointGroup.shortStr">
+<span class="sig-name descname"><span class="pre">shortStr</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">maxColumns</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.IdentifyPointGroup.shortStr" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="base.html#+replab.Str.shortStr" title="+replab.Str.shortStr"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Str.shortStr()</span></code></a></p>
+</dd></dl>
+
+</div>
+<h3>Own members</h3><dl class="mat attribute">
+<dt class="sig sig-object mat" id="+replab.IdentifyPointGroup.ndec">
+<span class="sig-name descname"><span class="pre">ndec</span></span><a class="headerlink" href="#+replab.IdentifyPointGroup.ndec" title="Permalink to this definition">¶</a></dt>
+<dd><p>number of decimal places to check for equality</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>integer</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="+replab.IdentifyPointGroup.ord">
+<span class="sig-name descname"><span class="pre">ord</span></span><a class="headerlink" href="#+replab.IdentifyPointGroup.ord" title="Permalink to this definition">¶</a></dt>
+<dd><p>highest order rotation of the molecule that preserves symmetry</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>integer</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="+replab.IdentifyPointGroup.pointGroup">
+<span class="sig-name descname"><span class="pre">pointGroup</span></span><a class="headerlink" href="#+replab.IdentifyPointGroup.pointGroup" title="Permalink to this definition">¶</a></dt>
+<dd><p>characters representing the point group</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>charstring</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="+replab.IdentifyPointGroup.principalAxis">
+<span class="sig-name descname"><span class="pre">principalAxis</span></span><a class="headerlink" href="#+replab.IdentifyPointGroup.principalAxis" title="Permalink to this definition">¶</a></dt>
+<dd><p>principal axis of rotation of the molecule</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>double(3, 1)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="+replab.IdentifyPointGroup.table">
+<span class="sig-name descname"><span class="pre">table</span></span><a class="headerlink" href="#+replab.IdentifyPointGroup.table" title="Permalink to this definition">¶</a></dt>
+<dd><p>the character table for the molecule’s point group</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="characters.html#+replab.ComplexCharacterTable" title="+replab.ComplexCharacterTable"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">replab.ComplexCharacterTable</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.IdentifyPointGroup.IdentifyPointGroup">
+<span class="sig-name descname"><span class="pre">IdentifyPointGroup</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">coords</span></em>, <em class="sig-param"><span class="pre">symbols</span></em>, <em class="sig-param"><span class="pre">masses</span></em>, <em class="sig-param"><span class="pre">ndec</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.IdentifyPointGroup.IdentifyPointGroup" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a molecule object</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>coords</strong> (<span><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">double(3,</span> <span class="pre">natoms)</span></code></span>) – a set of coordinates</p></li>
+<li><p><strong>symbols</strong> (<span><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">cell(1,</span> <span class="pre">natoms)</span> <span class="pre">of</span> <span class="pre">charstring</span></code></span>) – atomic symbols of coordinates</p></li>
+<li><p><strong>masses</strong> (<span><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">cell(1,</span> <span class="pre">natoms)</span> <span class="pre">of</span> <span class="pre">charstring</span></code></span>) – atomic masses of coordinates</p></li>
+<li><p><strong>ndec</strong> (<span><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">integer</span></code></span>) – number of decimal places to round when checking for equality</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="mat staticmethod">
+<dt class="sig sig-object mat" id="+replab.IdentifyPointGroup.ImproperRotation">
+<em class="property"><span class="pre">static</span> </em><span class="sig-name descname"><span class="pre">ImproperRotation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">k</span></em>, <em class="sig-param"><span class="pre">axis</span></em>, <em class="sig-param"><span class="pre">coords</span></em>, <em class="sig-param"><span class="pre">symbols</span></em>, <em class="sig-param"><span class="pre">ndec</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.IdentifyPointGroup.ImproperRotation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply rotation of 2*pi/k and then reflection through rotation plane</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>k</strong> (<span><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">integer</span></code></span>) – number of rotations then reflection which should keep coordinates the same</p></li>
+<li><p><strong>axis</strong> (<span><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">double(1,</span> <span class="pre">3)</span></code></span>) – axis about which to rotate coordinates and normal for reflection plane</p></li>
+<li><p><strong>coords</strong> (<span><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">double(3,</span> <span class="pre">natoms)</span></code></span>) – atomic coordinates</p></li>
+<li><p><strong>symbols</strong> (<span><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">cell(1,</span> <span class="pre">natoms)</span> <span class="pre">of</span> <span class="pre">charstring</span></code></span>) – atomic symbols of coords</p></li>
+<li><p><strong>ndec</strong> (<span><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">integer</span></code></span>) – number of decimals to round</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>whether reflection keeps coordinates the same
+inds (integer(1, natoms)): action of improper rotation on coordinates</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>ok (logical)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="mat staticmethod">
+<dt class="sig sig-object mat" id="+replab.IdentifyPointGroup.InertiaTensor">
+<em class="property"><span class="pre">static</span> </em><span class="sig-name descname"><span class="pre">InertiaTensor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">coords</span></em>, <em class="sig-param"><span class="pre">masses</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.IdentifyPointGroup.InertiaTensor" title="Permalink to this definition">¶</a></dt>
+<dd><p>calculates the inertia tensor for a group of atoms</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>coords</strong> (<span><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">double(3,</span> <span class="pre">*)</span></code></span>) – coordinates of atoms</p></li>
+<li><p><strong>masses</strong> (<span><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">double(1,</span> <span class="pre">*)</span></code></span>) – masses of atoms</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>inertia tensor of given coordinates
+rcm (double(1, 3)): center of mass vector</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>I (double(3, 3))</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="mat staticmethod">
+<dt class="sig sig-object mat" id="+replab.IdentifyPointGroup.Reflection">
+<em class="property"><span class="pre">static</span> </em><span class="sig-name descname"><span class="pre">Reflection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">normal</span></em>, <em class="sig-param"><span class="pre">coords</span></em>, <em class="sig-param"><span class="pre">symbols</span></em>, <em class="sig-param"><span class="pre">ndec</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.IdentifyPointGroup.Reflection" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reflect coords through a plane with a given normal</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>normal</strong> (<span><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">double(1,</span> <span class="pre">3)</span></code></span>) – normal of plane through which to reflect</p></li>
+<li><p><strong>coords</strong> (<span><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">double(3,</span> <span class="pre">natoms)</span></code></span>) – atomic coordinates</p></li>
+<li><p><strong>symbols</strong> (<span><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">cell(1,</span> <span class="pre">natoms)</span> <span class="pre">of</span> <span class="pre">charstring</span></code></span>) – atomic symbols of coords</p></li>
+<li><p><strong>ndec</strong> (<span><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">integer</span></code></span>) – number of decimals to round</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>whether reflection keeps coordinates the same
+inds (integer(1, natoms)): action of reflection on coordinates</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>ok (logical)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="mat staticmethod">
+<dt class="sig sig-object mat" id="+replab.IdentifyPointGroup.Rotation">
+<em class="property"><span class="pre">static</span> </em><span class="sig-name descname"><span class="pre">Rotation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">k</span></em>, <em class="sig-param"><span class="pre">axis</span></em>, <em class="sig-param"><span class="pre">coords</span></em>, <em class="sig-param"><span class="pre">symbols</span></em>, <em class="sig-param"><span class="pre">ndec</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.IdentifyPointGroup.Rotation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply rotation of 2*pi/k to coords about an axis</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>k</strong> (<span><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">integer</span></code></span>) – number of rotations which should keep coordinates the same</p></li>
+<li><p><strong>axis</strong> (<span><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">double(1,</span> <span class="pre">3)</span></code></span>) – axis about which to rotate coordinates</p></li>
+<li><p><strong>coords</strong> (<span><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">double(3,</span> <span class="pre">natoms)</span></code></span>) – atomic coordinates</p></li>
+<li><p><strong>symbols</strong> (<span><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">cell(1,</span> <span class="pre">natoms)</span> <span class="pre">of</span> <span class="pre">charstring</span></code></span>) – atomic symbols of coords</p></li>
+<li><p><strong>ndec</strong> (<span><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">integer</span></code></span>) – number of decimals to round</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>whether reflection keeps coordinates the same
+inds (integer(1, natoms)): action of rotation on coordinates</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>ok (logical)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.IdentifyPointGroup.checkPlanar">
+<span class="sig-name descname"><span class="pre">checkPlanar</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">coords</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.IdentifyPointGroup.checkPlanar" title="Permalink to this definition">¶</a></dt>
+<dd><p>Determines if molecule is planar</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>coords</strong> (<span><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">double(3,</span> <span class="pre">natoms)</span></code></span>) – atomic coordinates</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>whether molecule is planar
+normal (double(3, 1)): normal of plane formed by first three atoms</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>planar (logical)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="mat staticmethod">
+<dt class="sig sig-object mat" id="+replab.IdentifyPointGroup.coordsEqual">
+<em class="property"><span class="pre">static</span> </em><span class="sig-name descname"><span class="pre">coordsEqual</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">old_coords</span></em>, <em class="sig-param"><span class="pre">new_coords</span></em>, <em class="sig-param"><span class="pre">symbols</span></em>, <em class="sig-param"><span class="pre">ndec</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.IdentifyPointGroup.coordsEqual" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks whether a new set of coordinates is equivalent to original ones</p>
+<p>Convention: assumes self.coords is already sorted</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>old_coords</strong> (<span><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">double(3,</span> <span class="pre">natoms)</span></code></span>) – reference coordinates</p></li>
+<li><p><strong>new_coords</strong> (<span><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">double(3,</span> <span class="pre">natoms)</span></code></span>) – new set of coordinates to check for equality</p></li>
+<li><p><strong>symbols</strong> (<span><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">cell(1,</span> <span class="pre">natoms)</span> <span class="pre">of</span> <span class="pre">charstring</span></code></span>) – molecular symbols of coordinates</p></li>
+<li><p><strong>ndec</strong> (<span><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">integer</span></code></span>) – number of decimal places to round for equality testing</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>whether new coordinates are equal to self.coords
+inds (integer(1, natoms)): vector that will sort old_coords to new_coords</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>ok (logical)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.IdentifyPointGroup.determineLowSymmetry">
+<span class="sig-name descname"><span class="pre">determineLowSymmetry</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">coords</span></em>, <em class="sig-param"><span class="pre">symbols</span></em>, <em class="sig-param"><span class="pre">SEAs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.IdentifyPointGroup.determineLowSymmetry" title="Permalink to this definition">¶</a></dt>
+<dd><p>Determines point group on molecules without Cn axis</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>coords</strong> (<span><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">double(3,</span> <span class="pre">natoms)</span></code></span>) – atomic coordinates</p></li>
+<li><p><strong>symbols</strong> (<span><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">cell(1,</span> <span class="pre">natoms)</span> <span class="pre">of</span> <span class="pre">charstring</span></code></span>) – atomic symbols</p></li>
+<li><p><strong>SEAs</strong> (<span><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">cell(1,</span> <span class="pre">*)</span> <span class="pre">of</span> <span class="pre">double(*,</span> <span class="pre">1)</span></code></span>) – cell array of vectors of the indices of similar atoms</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.IdentifyPointGroup.determineSphericalGroup">
+<span class="sig-name descname"><span class="pre">determineSphericalGroup</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">coords</span></em>, <em class="sig-param"><span class="pre">symbols</span></em>, <em class="sig-param"><span class="pre">SEAs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.IdentifyPointGroup.determineSphericalGroup" title="Permalink to this definition">¶</a></dt>
+<dd><p>Determine spherical group of the molecule</p>
+<p>Determines whether molecule has tetrahedral, octahedral, or icosahedral symmetry
+and assigns point group</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>coords</strong> (<span><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">double(3,</span> <span class="pre">natoms)</span></code></span>) – atomic coordinates</p></li>
+<li><p><strong>symbols</strong> (<span><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">cell(1,</span> <span class="pre">natoms)</span> <span class="pre">of</span> <span class="pre">charstring</span></code></span>) – atomic symbols</p></li>
+<li><p><strong>SEAs</strong> (<span><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">cell(1,</span> <span class="pre">*)</span> <span class="pre">of</span> <span class="pre">double(*,</span> <span class="pre">1)</span></code></span>) – cell array of vectors of the indices of similar atoms</p></li>
+</ul>
+</dd>
+</dl>
+<p>Check number of C5 axes greater than 2</p>
+</dd></dl>
+
+<dl class="mat staticmethod">
+<dt class="sig sig-object mat" id="+replab.IdentifyPointGroup.distanceMatrix">
+<em class="property"><span class="pre">static</span> </em><span class="sig-name descname"><span class="pre">distanceMatrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">coords</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.IdentifyPointGroup.distanceMatrix" title="Permalink to this definition">¶</a></dt>
+<dd><p>Determine the distance matrix of the molecules</p>
+<dl class="simple">
+<dt>Convention: entries of row i are the distances of atom i from</dt><dd><p>atoms 1, 2, …, natoms so D(i, i) = 0</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>coords</strong> (<span><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">double(3,</span> <span class="pre">natoms)</span></code></span>) – molecular coordinates</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>distance matrix</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>D (double(natoms, natoms))</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.IdentifyPointGroup.findC2Axes">
+<span class="sig-name descname"><span class="pre">findC2Axes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">coords</span></em>, <em class="sig-param"><span class="pre">symbols</span></em>, <em class="sig-param"><span class="pre">SEAs</span></em>, <em class="sig-param"><span class="pre">rcm</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.IdentifyPointGroup.findC2Axes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Determines whether molecule has a C2 axis and returns first one found</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>coords</strong> (<span><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">double(3,</span> <span class="pre">natoms)</span></code></span>) – atomic coordinates</p></li>
+<li><p><strong>symbols</strong> (<span><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">cell(1,</span> <span class="pre">natoms)</span> <span class="pre">of</span> <span class="pre">charstring</span></code></span>) – atomic symbols</p></li>
+<li><p><strong>SEAs</strong> (<span><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">cell(1,</span> <span class="pre">*)</span> <span class="pre">of</span> <span class="pre">double(*,</span> <span class="pre">1)</span></code></span>) – cell array of vectors of the indices of similar atoms</p></li>
+<li><p><strong>rcm</strong> (<span><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">double(1,</span> <span class="pre">3)</span></code></span>) – centre of mass vector</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>whether molecule contains C2 axis
+axis (double(1, 3)): axis of C2 rotation</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>ok (logical)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="mat staticmethod">
+<dt class="sig sig-object mat" id="+replab.IdentifyPointGroup.findCharacterTable">
+<em class="property"><span class="pre">static</span> </em><span class="sig-name descname"><span class="pre">findCharacterTable</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">pointGroup</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.IdentifyPointGroup.findCharacterTable" title="Permalink to this definition">¶</a></dt>
+<dd><p>Determines the character table of a molecule with a certain point group</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>pointGroup</strong> (<span><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">charstring</span></code></span>) – name of point group (i.e. C3v or D4d)</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>character table of point group</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>ct (<a class="reference internal" href="characters.html#+replab.CharacterTable" title="+replab.CharacterTable"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">replab.CharacterTable</span></code></a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.IdentifyPointGroup.findCnAxes">
+<span class="sig-name descname"><span class="pre">findCnAxes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">n</span></em>, <em class="sig-param"><span class="pre">max_rotations</span></em>, <em class="sig-param"><span class="pre">coords</span></em>, <em class="sig-param"><span class="pre">symbols</span></em>, <em class="sig-param"><span class="pre">SEAs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.IdentifyPointGroup.findCnAxes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Find whether there are multiple higher order rotation axes</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><p>order of rotation
+max_rotations (integer): check whether there are at least this many</p>
+<blockquote>
+<div><p>rotation axes of order n</p>
+</div></blockquote>
+<p>coords (double(3, natoms)): atomic coordinates
+symbols (cell(1, natoms) of charstring): atomic symbols
+SEAs (cell(1, *) of double(*, 1)): cell array of vectors of the indices of similar atoms</p>
+</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>n (integer)</p>
+</dd>
+</dl>
+<dl class="simple">
+<dt>Returns</dt><dd><p>ok (logical): whether there are at least max_rotations rotation axes of order n</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.IdentifyPointGroup.findDihedralMirrorPlanes">
+<span class="sig-name descname"><span class="pre">findDihedralMirrorPlanes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">coords</span></em>, <em class="sig-param"><span class="pre">symbols</span></em>, <em class="sig-param"><span class="pre">perpAxes</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.IdentifyPointGroup.findDihedralMirrorPlanes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Determines number of dihedral mirror planes in the molecule</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>coords</strong> (<span><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">double(3,</span> <span class="pre">natoms)</span></code></span>) – atomic coordinates</p></li>
+<li><p><strong>symbols</strong> (<span><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">cell(1,</span> <span class="pre">natoms)</span> <span class="pre">of</span> <span class="pre">charstring</span></code></span>) – atomic symbols</p></li>
+<li><p><strong>perpAxes</strong> (<span><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">double(3,</span> <span class="pre">*)</span></code></span>) – axes of rotation perpendicular to principal axis</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>number of dihedral mirror planes</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>nsigmad (integer)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.IdentifyPointGroup.findPerpendicularAxes">
+<span class="sig-name descname"><span class="pre">findPerpendicularAxes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">axes</span></em>, <em class="sig-param"><span class="pre">ords</span></em>, <em class="sig-param"><span class="pre">rcm</span></em>, <em class="sig-param"><span class="pre">SEAs</span></em>, <em class="sig-param"><span class="pre">coords</span></em>, <em class="sig-param"><span class="pre">symbols</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.IdentifyPointGroup.findPerpendicularAxes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Finds all C2 axes perpendicular to the principal axis</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>axes</strong> (<span><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">double(3,</span> <span class="pre">*)</span></code></span>) – any already known axes</p></li>
+<li><p><strong>ords</strong> (<span><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">integer(1,</span> <span class="pre">*)</span></code></span>) – orders of known axes of rotation</p></li>
+<li><p><strong>rcm</strong> (<span><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">double(1,</span> <span class="pre">3)</span></code></span>) – centre of mass vector</p></li>
+<li><p><strong>SEAs</strong> (<span><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">cell(1,</span> <span class="pre">*)</span> <span class="pre">of</span> <span class="pre">double(*,</span> <span class="pre">1)</span></code></span>) – cell array of vectors of the indices of similar atoms</p></li>
+<li><p><strong>coords</strong> (<span><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">double(3,</span> <span class="pre">natoms)</span></code></span>) – atomic coordinates</p></li>
+<li><p><strong>symbols</strong> (<span><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">cell(1,</span> <span class="pre">natoms)</span> <span class="pre">of</span> <span class="pre">charstring</span></code></span>) – atomic symbols</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>number of perpendicular axes
+perpAxes (double(3, *)): axes of rotation perpendicular to principal axis</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>ind (integer)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.IdentifyPointGroup.findPointGroup">
+<span class="sig-name descname"><span class="pre">findPointGroup</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">coords</span></em>, <em class="sig-param"><span class="pre">symbols</span></em>, <em class="sig-param"><span class="pre">masses</span></em>, <em class="sig-param"><span class="pre">SEAs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.IdentifyPointGroup.findPointGroup" title="Permalink to this definition">¶</a></dt>
+<dd><p>Determine the point group of molecule by symmetry operation flowchart</p>
+<p>Algorithm from Beruski and flowchart from Vallance</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>coords</strong> (<span><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">double(3,</span> <span class="pre">natoms)</span></code></span>) – atomic coordinates</p></li>
+<li><p><strong>symbols</strong> (<span><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">cell(1,</span> <span class="pre">natoms)</span> <span class="pre">of</span> <span class="pre">charstring</span></code></span>) – atomic symbols</p></li>
+<li><p><strong>masses</strong> (<span><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">double(1,</span> <span class="pre">natoms)</span></code></span>) – atomic masses</p></li>
+<li><p><strong>SEAs</strong> (<span><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">cell(1,</span> <span class="pre">*)</span> <span class="pre">of</span> <span class="pre">double(*,</span> <span class="pre">1)</span></code></span>) – cell array of vectors of the indices of similar atoms</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.IdentifyPointGroup.findReflections">
+<span class="sig-name descname"><span class="pre">findReflections</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">coords</span></em>, <em class="sig-param"><span class="pre">symbols</span></em>, <em class="sig-param"><span class="pre">SEAs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.IdentifyPointGroup.findReflections" title="Permalink to this definition">¶</a></dt>
+<dd><p>Finds reflection planes in the molecule</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>coords</strong> (<span><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">double(3,</span> <span class="pre">natoms)</span></code></span>) – atomic coordinates</p></li>
+<li><p><strong>symbols</strong> (<span><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">cell(1,</span> <span class="pre">natoms)</span> <span class="pre">of</span> <span class="pre">charstring</span></code></span>) – atomic symbols</p></li>
+<li><p><strong>SEAs</strong> (<span><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">cell(1,</span> <span class="pre">*)</span> <span class="pre">of</span> <span class="pre">double(*,</span> <span class="pre">1)</span></code></span>) – cell array of vectors of the indices of similar atoms</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>whether there is a horizontal reflection plane
+nv (integer): number of vertical reflection planes</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>horizontal (logical)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.IdentifyPointGroup.findRotations">
+<span class="sig-name descname"><span class="pre">findRotations</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">coords</span></em>, <em class="sig-param"><span class="pre">symbols</span></em>, <em class="sig-param"><span class="pre">masses</span></em>, <em class="sig-param"><span class="pre">inds</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.IdentifyPointGroup.findRotations" title="Permalink to this definition">¶</a></dt>
+<dd><p>Determine the rotation order and axis for a group of atoms</p>
+<p>From Beruski</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>coords</strong> (<span><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">double(3,</span> <span class="pre">natoms)</span></code></span>) – coordinates of atoms</p></li>
+<li><p><strong>symbols</strong> (<span><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">cell(1,</span> <span class="pre">natoms)</span> <span class="pre">of</span> <span class="pre">charstring</span></code></span>) – atomic symbols of coordinates</p></li>
+<li><p><strong>masses</strong> (<span><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">cell(1,</span> <span class="pre">natoms)</span> <span class="pre">of</span> <span class="pre">charstring</span></code></span>) – atomic masses of coordinates</p></li>
+<li><p><strong>inds</strong> (<span><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">integer(1,</span> <span class="pre">*)</span></code></span>) – indices of group of atoms whose rotations we find</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>highest order rotation possible
+axis (double(1, 3)): axis of rotation</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>order (integer)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="mat staticmethod">
+<dt class="sig sig-object mat" id="+replab.IdentifyPointGroup.groupAtoms">
+<em class="property"><span class="pre">static</span> </em><span class="sig-name descname"><span class="pre">groupAtoms</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">D</span></em>, <em class="sig-param"><span class="pre">ndec</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.IdentifyPointGroup.groupAtoms" title="Permalink to this definition">¶</a></dt>
+<dd><p>Finds atoms of same type with same distances</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>D</strong> (<span><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">double(natoms,</span> <span class="pre">natoms)</span></code></span>) – distance matrix</p></li>
+<li><p><strong>ndec</strong> (<span><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">integer</span></code></span>) – number of decimal places to test equality</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="simple">
+<dt>Returns</dt><dd><p>SEAs (cell(1, *) of integer(1, *)): array of lists of same atoms with same distances</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="mat staticmethod">
+<dt class="sig sig-object mat" id="+replab.IdentifyPointGroup.sortCoords">
+<em class="property"><span class="pre">static</span> </em><span class="sig-name descname"><span class="pre">sortCoords</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">coords</span></em>, <em class="sig-param"><span class="pre">ndec</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.IdentifyPointGroup.sortCoords" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sorts coordinates in ascending order</p>
+<dl class="simple">
+<dt>Convention: atoms are sorted by increasing x-coordinate, then</dt><dd><p>y-coordinate, and then z-coordinate</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>coords</strong> (<span><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">double(3,</span> <span class="pre">natoms)</span></code></span>) – set of coordinates</p></li>
+<li><p><strong>ndec</strong> (<span><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">integer</span></code></span>) – number of decimals to check equality</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>sorted coordinates
+i1 (integer(1, natoms)): indices that revert coords to original order</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>coords (double(3, natoms))</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+</section>
+
+<div class="section">
+   
+</div>
+
+          </div>
+            
+  <div class="footer-relations">
+    
+      <div class="pull-left">
+        <a class="btn btn-default" href="convex_programming.html" title="previous chapter (use the left arrow)">Convex programming</a>
+      </div>
+    
+      <div class="pull-right">
+        <a class="btn btn-default" href="globals.html" title="next chapter (use the right arrow)">Global settings</a>
+      </div>
+    </div>
+    <div class="clearer"></div>
+  
+        </div>
+        <div class="clearfix"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../mat-modindex.html" title="MATLAB Module Index"
+             >matlab index</a> |</li>
+        <li class="right" >
+          <a href="globals.html" title="Global settings"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="convex_programming.html" title="Convex programming"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.9.2-SNAP documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" >Technical Reference</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Chemistry</a></li> 
+      </ul>
+    </div>
+<script type="text/javascript">
+  $("#mobile-toggle a").click(function () {
+    $("#left-column").toggle();
+  });
+</script>
+<script type="text/javascript" src="../_static/js/bootstrap.js"></script>
+  <div class="footer">
+    &copy; Copyright 2018-2020, Denis Rosset, Jean-Daniel Bancal and collaborators. Created using <a href="http://sphinx.pocoo.org/">Sphinx</a>.
+  </div>
+  </body>
+</html>

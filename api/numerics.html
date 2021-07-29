@@ -1,0 +1,1627 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  
+  <!-- Licensed under the Apache 2.0 License -->
+  <link rel="stylesheet" type="text/css" href="../_static/fonts/open-sans/stylesheet.css" />
+  <!-- Licensed under the SIL Open Font License -->
+  <link rel="stylesheet" type="text/css" href="../_static/fonts/source-serif-pro/source-serif-pro.css" />
+  <link rel="stylesheet" type="text/css" href="../_static/css/bootstrap.min.css" />
+  <link rel="stylesheet" type="text/css" href="../_static/css/bootstrap-theme.min.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+    <title>Numerics &#8212; RepLAB 0.9.2-SNAP documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/guzzle.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/custom.css" />
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "document", "processHtmlClass": "math|output_area"}}</script>
+    <script src="../_static/js/collapse_helper.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Base group structures" href="groups.html" />
+    <link rel="prev" title="Base object types and functions" href="base.html" /> 
+  
+   
+  
+<style type="text/css">
+  ul.ablog-archive {
+    list-style: none;
+    overflow: auto;
+    margin-left: 0px;
+  }
+  ul.ablog-archive li {
+    float: left;
+    margin-right: 5px;
+    font-size: 80%;
+  }
+  ul.postlist a {
+    font-style: italic;
+  }
+  ul.postlist-style-disc {
+    list-style-type: disc;
+  }
+  ul.postlist-style-none {
+    list-style-type: none;
+  }
+  ul.postlist-style-circle {
+    list-style-type: circle;
+  }
+</style>
+
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../mat-modindex.html" title="MATLAB Module Index"
+             >matlab index</a> |</li>
+        <li class="right" >
+          <a href="groups.html" title="Base group structures"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="base.html" title="Base object types and functions"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.9.2-SNAP documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">Technical Reference</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Numerics</a></li> 
+      </ul>
+    </div>
+    <div class="container-wrapper">
+
+      <div id="mobile-toggle">
+        <a href="#"><span class="glyphicon glyphicon-align-justify" aria-hidden="true"></span></a>
+      </div>
+  <div id="left-column">
+    <div class="sphinxsidebar"><div class="text-logo">
+  <a href="
+    ../index.html">RepLAB</a>&nbsp;&nbsp;
+  <a href="https://github.com/replab/replab"><i class="fab fa-github"></i></a>&nbsp;
+  <a href="https://github.com/replab/replab/archive/v0.9.2-SNAP.zip"><i class="fa fa-download"></i></a>&nbsp;
+  <a href="https://gitter.im/replab/replab"><i class="fab fa-gitter"></i></a>&nbsp;
+  <a href="https://travis-ci.com/replab/replab"><i class="fas fa-sync-alt"></i></a>&nbsp;
+  <a href="https://codecov.io/gh/replab/replab"><i class="fas fa-umbrella"></i></a>
+</div><div class="sidebar-block">
+  <div class="sidebar-toc">
+    
+    
+      <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/index.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../howto/index.html">How to</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../topic/index.html">Topic guides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../publications/index.html">Publications</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Technical Reference</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="commands.html">Commands</a></li>
+<li class="toctree-l2"><a class="reference internal" href="base.html">Base object types and functions</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Numerics</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#cyclotomic">cyclotomic</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#h">H</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="groups.html">Base group structures</a></li>
+<li class="toctree-l2"><a class="reference internal" href="continuous_groups.html">Continuous groups</a></li>
+<li class="toctree-l2"><a class="reference internal" href="permutation_groups.html">Permutation groups</a></li>
+<li class="toctree-l2"><a class="reference internal" href="named_discrete_groups.html">Named discrete groups</a></li>
+<li class="toctree-l2"><a class="reference internal" href="abstract_groups.html">Abstract groups and atlas</a></li>
+<li class="toctree-l2"><a class="reference internal" href="group_products.html">Group product constructions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="group_subsets.html">Group subsets</a></li>
+<li class="toctree-l2"><a class="reference internal" href="group_morphisms.html">Group morphisms</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rep.html">Representations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="equivariant.html">Equivariant spaces</a></li>
+<li class="toctree-l2"><a class="reference internal" href="characters.html">Characters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="convex_programming.html">Convex programming</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chemistry.html">Chemistry</a></li>
+<li class="toctree-l2"><a class="reference internal" href="globals.html">Global settings</a></li>
+<li class="toctree-l2"><a class="reference internal" href="graph.html">Graphs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="misc.html">Miscellaneous functions/classes</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../development/index.html">Development/Community</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../blog/index.html">Blog</a></li>
+</ul>
+
+    
+  </div>
+</div>
+<div class="sidebar-block">
+  <div class="sidebar-wrapper">
+    <h2><a href="../blog.html">Recent Blog Posts</a></h2>
+  </div>
+  <div class="sidebar-toc">
+    <ul>
+      
+      
+      <li class="toctree-l1"><a href="../blog/20210724-RepFuN.html">24 July - A fun application of RepLAB : solving combination puzzles</a></li>
+      
+      <li class="toctree-l1"><a href="../blog/20200123-RepLAB-website-live.html">26 January - The RepLAB documentation and the infrastructure behind it</a></li>
+      
+    </ul>
+  </div>
+</div>
+
+      
+    </div>
+  </div>
+        <div id="right-column">
+          
+          <div role="navigation" aria-label="breadcrumbs navigation">
+            <ol class="breadcrumb">
+              <li><a href="../index.html">Docs</a></li>
+              
+                <li><a href="index.html">Technical Reference</a></li>
+              
+              <li>Numerics</li>
+            </ol>
+          </div>
+          
+          <div class="document clearer body">
+             <section id="module-+replab">
+<span id="numerics"></span><h1>Numerics<a class="headerlink" href="#module-+replab" title="Permalink to this headline">¶</a></h1>
+<p>RepLAB provides the following multi-dimensional array types as an extension to the types provided by MATLAB/Octave.</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#+replab.cyclotomic" title="+replab.cyclotomic"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">cyclotomic</span></code></a> implements exact computation on the cyclotomic field. This enables RepLAB to handle any irreducible representation of a finite group, if care is taken to express it over the cyclotomics (which is always possible).</p></li>
+<li><p><a class="reference internal" href="#+replab.H" title="+replab.H"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">H</span></code></a> implements matrices of quaternions using a pair of complex matrices. Quaternion matrices are used to decompose real representations of quaternion-type.</p></li>
+</ul>
+<section id="cyclotomic">
+<h2>cyclotomic<a class="headerlink" href="#cyclotomic" title="Permalink to this headline">¶</a></h2>
+<dl class="mat class">
+<dt class="sig sig-object mat" id="+replab.cyclotomic">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">replab.</span></span><span class="sig-name descname"><span class="pre">cyclotomic</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">array</span></em>, <em class="sig-param"><span class="pre">size_</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.cyclotomic" title="Permalink to this definition">¶</a></dt>
+<dd><p>Multidimensional array with elements in the cyclotomic field</p>
+<p>Requires Java and the cyclolab support library.</p>
+<p>The implementation is pretty slow, but values are exact.</p>
+<p>We can construct cyclotomic arrays in various ways.</p>
+<p>They can be constructed from double floating-point arrays. Note that only fractions with a power-of-two
+denominator can be represented exactly.</p>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">replab</span><span class="o">.</span><span class="n">cyclotomic</span><span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span>
+<span class="go">    1/2</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">replab</span><span class="o">.</span><span class="n">cyclotomic</span><span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="mi">3</span><span class="p">)</span>
+<span class="go">    6004799503160661/18014398509481984</span>
+</pre></div>
+</div>
+<p>Note that passing a cyclotomic array as a parameter is the identity operation. This is useful when converting
+number types.</p>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">c</span> <span class="o">=</span> <span class="n">replab</span><span class="o">.</span><span class="n">cyclotomic</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="go">    1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">replab</span><span class="o">.</span><span class="n">cyclotomic</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
+<span class="go">    1</span>
+</pre></div>
+</div>
+<p>Cyclotomics can also be constructed from vpis:</p>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">c</span> <span class="o">=</span> <span class="n">replab</span><span class="o">.</span><span class="n">cyclotomic</span><span class="p">(</span><span class="n">vpi</span><span class="p">(</span><span class="s1">&#39;100000000000000&#39;</span><span class="p">))</span>
+<span class="go">    100000000000000</span>
+</pre></div>
+</div>
+<p>They can also be constructed from strings. A vector/matrix syntax is also available, but row coefficients
+must always be separated by commas.</p>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">replab</span><span class="o">.</span><span class="n">cyclotomic</span><span class="p">(</span><span class="s1">&#39;2/3&#39;</span><span class="p">)</span>
+<span class="go">    2/3</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">replab</span><span class="o">.</span><span class="n">cyclotomic</span><span class="p">(</span><span class="s1">&#39;[1, 0; 0, 1]&#39;</span><span class="p">)</span>
+<span class="go">    1  0</span>
+<span class="go">    0  1</span>
+</pre></div>
+</div>
+<p>The string syntax accepts:</p>
+<ul class="simple">
+<li><p>integers,</p></li>
+<li><p>the four operations <code class="docutils literal notranslate"><span class="pre">+</span></code>, <code class="docutils literal notranslate"><span class="pre">-</span></code>, <code class="docutils literal notranslate"><span class="pre">*</span></code>, <code class="docutils literal notranslate"><span class="pre">/</span></code>,</p></li>
+<li><p>powers <code class="docutils literal notranslate"><span class="pre">^</span></code> with integer exponents,</p></li>
+<li><p>parentheses,</p></li>
+<li><p>roots of unity as in Gap System (<code class="docutils literal notranslate"><span class="pre">E(n)</span></code> is <code class="docutils literal notranslate"><span class="pre">exp(2*i*pi/n)</span></code>),</p></li>
+<li><p>square roots of rational numbers,</p></li>
+<li><p>sines and cosines of rational multiples of <code class="docutils literal notranslate"><span class="pre">pi</span></code>.</p></li>
+</ul>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">replab</span><span class="o">.</span><span class="n">cyclotomic</span><span class="p">(</span><span class="s1">&#39;sqrt(2)&#39;</span><span class="p">)</span>
+<span class="go">    E(8)-E(8)^3</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">replab</span><span class="o">.</span><span class="n">cyclotomic</span><span class="p">(</span><span class="s1">&#39;cos(-pi/3)&#39;</span><span class="p">)</span>
+<span class="go">    -1/2</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">replab</span><span class="o">.</span><span class="n">cyclotomic</span><span class="p">(</span><span class="s1">&#39;(3 + 2/3)^3&#39;</span><span class="p">)</span>
+<span class="go">    1331/27</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">replab</span><span class="o">.</span><span class="n">cyclotomic</span><span class="p">(</span><span class="s1">&#39;E(3)^2&#39;</span><span class="p">)</span>
+<span class="go">    E(3)^2</span>
+</pre></div>
+</div>
+<p>Finally, the constructor also accepts heterogenous cell arrays, where the types above can be mixed and matched
+(except that strings must represent scalars, not matrices/vectors).</p>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">replab</span><span class="o">.</span><span class="n">cyclotomic</span><span class="p">({</span><span class="s1">&#39;1&#39;</span> <span class="n">vpi</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span> <span class="s1">&#39;1/2&#39;</span> <span class="mi">1</span><span class="p">})</span>
+<span class="go">      1    2</span>
+<span class="go">     1/2   1</span>
+</pre></div>
+</div>
+<p>A variety of static methods is available.</p>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">I</span> <span class="o">=</span> <span class="n">replab</span><span class="o">.</span><span class="n">cyclotomic</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+<span class="go">    1  0  0</span>
+<span class="go">    0  1  0</span>
+<span class="go">    0  0  1</span>
+</pre></div>
+</div>
+<div class="dropdown admonition">
+<p class="admonition-title">Class members list</p>
+<p><strong>Properties</strong></p>
+<p><strong>Standard MATLAB methods</strong></p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#+replab.cyclotomic.E" title="+replab.cyclotomic.E"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">E</span></code></a> – Returns roots of unity</p></li>
+<li><p><a class="reference internal" href="#+replab.cyclotomic.eye" title="+replab.cyclotomic.eye"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">eye</span></code></a> – Constructs the <code class="docutils literal notranslate"><span class="pre">n</span> <span class="pre">x</span> <span class="pre">n</span></code> identity matrix (incomplete)</p></li>
+<li><p><a class="reference internal" href="#+replab.cyclotomic.ones" title="+replab.cyclotomic.ones"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">ones</span></code></a> – Constructs a cyclotomic array filled with ones</p></li>
+<li><p><a class="reference internal" href="#+replab.cyclotomic.rand" title="+replab.cyclotomic.rand"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">rand</span></code></a> – Random cyclotomic matrix</p></li>
+<li><p><a class="reference internal" href="#+replab.cyclotomic.sparse" title="+replab.cyclotomic.sparse"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">sparse</span></code></a> – Constructs a 2D cyclotomic array using sparse matrix syntax (incomplete)</p></li>
+<li><p><a class="reference internal" href="#+replab.cyclotomic.zeros" title="+replab.cyclotomic.zeros"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">zeros</span></code></a> – Constructs a cyclotomic array filled with zeros</p></li>
+</ul>
+<p><strong>Cyclotomic constructions</strong></p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#+replab.cyclotomic.approximate" title="+replab.cyclotomic.approximate"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">approximate</span></code></a> – Constructs the simplest rational approximation within an interval, for coefficients of a matrix</p></li>
+<li><p><a class="reference internal" href="#+replab.cyclotomic.fromRationals" title="+replab.cyclotomic.fromRationals"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">fromRationals</span></code></a> – Constructs a cyclotomic matrix of rational numbers</p></li>
+<li><p><a class="reference internal" href="#+replab.cyclotomic.sqrtRational" title="+replab.cyclotomic.sqrtRational"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">sqrtRational</span></code></a> – Returns the square root of a rational number</p></li>
+</ul>
+<p><strong>Matrix concatenation</strong></p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#+replab.cyclotomic.blkdiag" title="+replab.cyclotomic.blkdiag"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">blkdiag</span></code></a> – Block diagonal concatenation of matrix input arguments</p></li>
+<li><p><a class="reference internal" href="#+replab.cyclotomic.horzcat" title="+replab.cyclotomic.horzcat"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">horzcat</span></code></a> – Horizontal concatenation (incomplete)</p></li>
+<li><p><a class="reference internal" href="#+replab.cyclotomic.vertcat" title="+replab.cyclotomic.vertcat"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">vertcat</span></code></a> – Vertical concatenation</p></li>
+</ul>
+<p><strong>General</strong></p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#+replab.cyclotomic.cyclo" title="+replab.cyclotomic.cyclo"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">cyclo</span></code></a> – Returns the cyclo.Cyclo object at the given index in this multidimensional array</p></li>
+<li><p><a class="reference internal" href="#+replab.cyclotomic.cyclotomic" title="+replab.cyclotomic.cyclotomic"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">cyclotomic</span></code></a> – Constructs a cyclotomic array from an array of coefficients</p></li>
+<li><p><a class="reference internal" href="#+replab.cyclotomic.data" title="+replab.cyclotomic.data"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">data</span></code></a> – Returns the java array containing the flat data of this array</p></li>
+<li><p><a class="reference internal" href="#+replab.cyclotomic.full" title="+replab.cyclotomic.full"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">full</span></code></a> – Placeholder as cyclotomic arrays are always dense</p></li>
+<li><p><a class="reference internal" href="#+replab.cyclotomic.toCellOfStrings" title="+replab.cyclotomic.toCellOfStrings"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">toCellOfStrings</span></code></a> – Returns a multi-dimensional cell array of strings corresponding to this cyclotomic array</p></li>
+</ul>
+<p><strong>Involutions</strong></p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#+replab.cyclotomic.conj" title="+replab.cyclotomic.conj"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">conj</span></code></a> – Complex conjugation</p></li>
+<li><p><a class="reference internal" href="#+replab.cyclotomic.ctranspose" title="+replab.cyclotomic.ctranspose"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">ctranspose</span></code></a> – Complex conjugate transpose</p></li>
+<li><p><a class="reference internal" href="#+replab.cyclotomic.inv" title="+replab.cyclotomic.inv"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">inv</span></code></a> – Matrix inverse</p></li>
+<li><p><a class="reference internal" href="#+replab.cyclotomic.transpose" title="+replab.cyclotomic.transpose"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">transpose</span></code></a> – Transpose</p></li>
+<li><p><a class="reference internal" href="#+replab.cyclotomic.uminus" title="+replab.cyclotomic.uminus"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">uminus</span></code></a> – Unary minus</p></li>
+</ul>
+<p><strong>Shape</strong></p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#+replab.cyclotomic.diag" title="+replab.cyclotomic.diag"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">diag</span></code></a> – Diagonal matrices and diagonals of a matrix</p></li>
+<li><p><a class="reference internal" href="#+replab.cyclotomic.ipermute" title="+replab.cyclotomic.ipermute"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">ipermute</span></code></a> – Inverse permute array dimensions</p></li>
+<li><p><a class="reference internal" href="#+replab.cyclotomic.permute" title="+replab.cyclotomic.permute"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">permute</span></code></a> – Permute array dimensions</p></li>
+<li><p><a class="reference internal" href="#+replab.cyclotomic.reshape" title="+replab.cyclotomic.reshape"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">reshape</span></code></a> – Reshape array</p></li>
+</ul>
+<p><strong>Display</strong></p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#+replab.cyclotomic.disp" title="+replab.cyclotomic.disp"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">disp</span></code></a> – Standard display method</p></li>
+<li><p><a class="reference internal" href="#+replab.cyclotomic.display" title="+replab.cyclotomic.display"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">display</span></code></a> –</p></li>
+<li><p><a class="reference internal" href="#+replab.cyclotomic.num2str" title="+replab.cyclotomic.num2str"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">num2str</span></code></a> – Conversion to string (incomplete)</p></li>
+</ul>
+<p><strong>Binary operations</strong></p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#+replab.cyclotomic.dot" title="+replab.cyclotomic.dot"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">dot</span></code></a> – Vector dot product (incomplete)</p></li>
+<li><p><a class="reference internal" href="#+replab.cyclotomic.eq" title="+replab.cyclotomic.eq"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">eq</span></code></a> – Equality test</p></li>
+<li><p><a class="reference internal" href="#+replab.cyclotomic.galois" title="+replab.cyclotomic.galois"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">galois</span></code></a> – Action of the Galois group</p></li>
+<li><p><a class="reference internal" href="#+replab.cyclotomic.kron" title="+replab.cyclotomic.kron"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">kron</span></code></a> –</p></li>
+<li><p><a class="reference internal" href="#+replab.cyclotomic.minus" title="+replab.cyclotomic.minus"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">minus</span></code></a> – Standard <code class="docutils literal notranslate"><span class="pre">-</span></code> operator</p></li>
+<li><p><a class="reference internal" href="#+replab.cyclotomic.mpower" title="+replab.cyclotomic.mpower"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">mpower</span></code></a> – Matrix power</p></li>
+<li><p><a class="reference internal" href="#+replab.cyclotomic.mrdivide" title="+replab.cyclotomic.mrdivide"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">mrdivide</span></code></a> – Division</p></li>
+<li><p><a class="reference internal" href="#+replab.cyclotomic.mtimes" title="+replab.cyclotomic.mtimes"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">mtimes</span></code></a> – Matrix multiplication</p></li>
+<li><p><a class="reference internal" href="#+replab.cyclotomic.ne" title="+replab.cyclotomic.ne"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">ne</span></code></a> – (Non-)equality test</p></li>
+<li><p><a class="reference internal" href="#+replab.cyclotomic.plus" title="+replab.cyclotomic.plus"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">plus</span></code></a> – Standard <code class="docutils literal notranslate"><span class="pre">+</span></code> operator</p></li>
+<li><p><a class="reference internal" href="#+replab.cyclotomic.rdivide" title="+replab.cyclotomic.rdivide"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">rdivide</span></code></a> – Pointwise <code class="docutils literal notranslate"><span class="pre">/</span></code> operator</p></li>
+<li><p><a class="reference internal" href="#+replab.cyclotomic.times" title="+replab.cyclotomic.times"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">times</span></code></a> – Pointwise <code class="docutils literal notranslate"><span class="pre">*</span></code> operator</p></li>
+</ul>
+<p><strong>Element-by-element computations</strong></p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#+replab.cyclotomic.double" title="+replab.cyclotomic.double"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">double</span></code></a> – Conversion to floating-point double</p></li>
+<li><p><a class="reference internal" href="#+replab.cyclotomic.doubleApproximation" title="+replab.cyclotomic.doubleApproximation"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">doubleApproximation</span></code></a> – Conversion to floating-point double with estimation of the error</p></li>
+<li><p><a class="reference internal" href="#+replab.cyclotomic.hash" title="+replab.cyclotomic.hash"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">hash</span></code></a> – Returns a multidimensional array of hash codes</p></li>
+<li><p><a class="reference internal" href="#+replab.cyclotomic.sqrt" title="+replab.cyclotomic.sqrt"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">sqrt</span></code></a> – Square root</p></li>
+</ul>
+<p><strong>Indexing</strong></p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#+replab.cyclotomic.find" title="+replab.cyclotomic.find"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">find</span></code></a> – Find indices of nonzero elements</p></li>
+<li><p><a class="reference internal" href="#+replab.cyclotomic.subsasgn" title="+replab.cyclotomic.subsasgn"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">subsasgn</span></code></a> – Assignment</p></li>
+<li><p><a class="reference internal" href="#+replab.cyclotomic.subsref" title="+replab.cyclotomic.subsref"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">subsref</span></code></a> – Indexing</p></li>
+</ul>
+<p><strong>Standard MATLAB properties</strong></p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#+replab.cyclotomic.imag" title="+replab.cyclotomic.imag"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">imag</span></code></a> – Returns the imaginary part</p></li>
+<li><p><a class="reference internal" href="#+replab.cyclotomic.isempty" title="+replab.cyclotomic.isempty"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">isempty</span></code></a> –</p></li>
+<li><p><a class="reference internal" href="#+replab.cyclotomic.isrational" title="+replab.cyclotomic.isrational"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">isrational</span></code></a> – Returns which coefficients are rational</p></li>
+<li><p><a class="reference internal" href="#+replab.cyclotomic.isreal" title="+replab.cyclotomic.isreal"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">isreal</span></code></a> –</p></li>
+<li><p><a class="reference internal" href="#+replab.cyclotomic.isscalar" title="+replab.cyclotomic.isscalar"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">isscalar</span></code></a> –</p></li>
+<li><p><a class="reference internal" href="#+replab.cyclotomic.isvector" title="+replab.cyclotomic.isvector"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">isvector</span></code></a> –</p></li>
+<li><p><a class="reference internal" href="#+replab.cyclotomic.iswhole" title="+replab.cyclotomic.iswhole"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">iswhole</span></code></a> – Returns which coefficients are integers</p></li>
+<li><p><a class="reference internal" href="#+replab.cyclotomic.length" title="+replab.cyclotomic.length"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">length</span></code></a> – Length of vector</p></li>
+<li><p><a class="reference internal" href="#+replab.cyclotomic.ndims" title="+replab.cyclotomic.ndims"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">ndims</span></code></a> – Number of dimensions</p></li>
+<li><p><a class="reference internal" href="#+replab.cyclotomic.numArgumentsFromSubscript" title="+replab.cyclotomic.numArgumentsFromSubscript"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">numArgumentsFromSubscript</span></code></a> –</p></li>
+<li><p><a class="reference internal" href="#+replab.cyclotomic.numel" title="+replab.cyclotomic.numel"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">numel</span></code></a> – Number of elements</p></li>
+<li><p><a class="reference internal" href="#+replab.cyclotomic.real" title="+replab.cyclotomic.real"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">real</span></code></a> – Returns the real part</p></li>
+<li><p><a class="reference internal" href="#+replab.cyclotomic.size" title="+replab.cyclotomic.size"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">size</span></code></a> – Size of array (incomplete)</p></li>
+</ul>
+<p><strong>Matrix decompositions</strong></p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#+replab.cyclotomic.ldl" title="+replab.cyclotomic.ldl"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">ldl</span></code></a> –</p></li>
+<li><p><a class="reference internal" href="#+replab.cyclotomic.lu" title="+replab.cyclotomic.lu"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">lu</span></code></a> – Returns the LU decomposition of this matrix</p></li>
+<li><p><a class="reference internal" href="#+replab.cyclotomic.null" title="+replab.cyclotomic.null"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">null</span></code></a> – Computes the null space of a cyclotomic matrix</p></li>
+<li><p><a class="reference internal" href="#+replab.cyclotomic.rref" title="+replab.cyclotomic.rref"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">rref</span></code></a> – Computes the row reduced echelon form</p></li>
+</ul>
+<p><strong>Contractions</strong></p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#+replab.cyclotomic.prod" title="+replab.cyclotomic.prod"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">prod</span></code></a> – Product of elements (incomplete)</p></li>
+<li><p><a class="reference internal" href="#+replab.cyclotomic.sum" title="+replab.cyclotomic.sum"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">sum</span></code></a> – Sum of elements (incomplete)</p></li>
+<li><p><a class="reference internal" href="#+replab.cyclotomic.trace" title="+replab.cyclotomic.trace"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">trace</span></code></a> – Sum of diagonal elements</p></li>
+</ul>
+</div>
+<div class="dropdown admonition">
+<p class="admonition-title">Inherited elements</p>
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.cyclotomic.display">
+<span class="sig-name descname"><span class="pre">display</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#+replab.cyclotomic.display" title="Permalink to this definition">¶</a></dt>
+<dd><p>No documentation</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.cyclotomic.isempty">
+<span class="sig-name descname"><span class="pre">isempty</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#+replab.cyclotomic.isempty" title="Permalink to this definition">¶</a></dt>
+<dd><p>No documentation</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.cyclotomic.isreal">
+<span class="sig-name descname"><span class="pre">isreal</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#+replab.cyclotomic.isreal" title="Permalink to this definition">¶</a></dt>
+<dd><p>No documentation</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.cyclotomic.isscalar">
+<span class="sig-name descname"><span class="pre">isscalar</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#+replab.cyclotomic.isscalar" title="Permalink to this definition">¶</a></dt>
+<dd><p>No documentation</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.cyclotomic.isvector">
+<span class="sig-name descname"><span class="pre">isvector</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#+replab.cyclotomic.isvector" title="Permalink to this definition">¶</a></dt>
+<dd><p>No documentation</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.cyclotomic.kron">
+<span class="sig-name descname"><span class="pre">kron</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#+replab.cyclotomic.kron" title="Permalink to this definition">¶</a></dt>
+<dd><p>No documentation</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.cyclotomic.ldl">
+<span class="sig-name descname"><span class="pre">ldl</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#+replab.cyclotomic.ldl" title="Permalink to this definition">¶</a></dt>
+<dd><p>No documentation</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.cyclotomic.numArgumentsFromSubscript">
+<span class="sig-name descname"><span class="pre">numArgumentsFromSubscript</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#+replab.cyclotomic.numArgumentsFromSubscript" title="Permalink to this definition">¶</a></dt>
+<dd><p>No documentation</p>
+</dd></dl>
+
+</div>
+<h3>Own members</h3><dl class="mat attribute">
+<dt class="sig sig-object mat" id="+replab.cyclotomic.data_">
+<span class="sig-name descname"><span class="pre">data_</span></span><a class="headerlink" href="#+replab.cyclotomic.data_" title="Permalink to this definition">¶</a></dt>
+<dd><p>1D array of cyclotomic numbers, elements are stored as in <code class="docutils literal notranslate"><span class="pre">array(:)</span></code></p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><code class="docutils literal notranslate"><span class="pre">cyclo.Cyclo[]</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="+replab.cyclotomic.size_">
+<span class="sig-name descname"><span class="pre">size_</span></span><a class="headerlink" href="#+replab.cyclotomic.size_" title="Permalink to this definition">¶</a></dt>
+<dd><p>Shape</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>integer(1,*)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="mat staticmethod">
+<dt class="sig sig-object mat" id="+replab.cyclotomic.E">
+<em class="property"><span class="pre">static</span> </em><span class="sig-name descname"><span class="pre">E</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">orders</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.cyclotomic.E" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns roots of unity</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>n</strong> (<span><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">integer(*,*)</span></code></span>) – Root orders</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The value <code class="docutils literal notranslate"><span class="pre">exp(2i*pi/n)</span></code></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#+replab.cyclotomic.cyclotomic" title="+replab.cyclotomic.cyclotomic"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">cyclotomic</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="mat staticmethod">
+<dt class="sig sig-object mat" id="+replab.cyclotomic.approximate">
+<em class="property"><span class="pre">static</span> </em><span class="sig-name descname"><span class="pre">approximate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">lowerBounds</span></em>, <em class="sig-param"><span class="pre">upperBounds</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.cyclotomic.approximate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Constructs the simplest rational approximation within an interval, for coefficients of a matrix</p>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">replab</span><span class="o">.</span><span class="n">cyclotomic</span><span class="o">.</span><span class="n">approximate</span><span class="p">(</span><span class="mf">3.141592</span><span class="p">,</span> <span class="mf">3.141593</span><span class="p">)</span>
+<span class="go">  355/113</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>lowerBounds</strong> (<span><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">double(...)</span></code></span>) – Interval lower bounds</p></li>
+<li><p><strong>upperBounds</strong> (<span><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">double(...)</span></code></span>) – Interval upper bounds</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The simplest rational approximation, coefficient by coefficient</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#+replab.cyclotomic.cyclotomic" title="+replab.cyclotomic.cyclotomic"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">cyclotomic</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.cyclotomic.blkdiag">
+<span class="sig-name descname"><span class="pre">blkdiag</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">lhs</span></em>, <em class="sig-param"><span class="pre">varargin</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.cyclotomic.blkdiag" title="Permalink to this definition">¶</a></dt>
+<dd><p>Block diagonal concatenation of matrix input arguments</p>
+<p>Compatible with MATLAB’s blkdiag</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.cyclotomic.conj">
+<span class="sig-name descname"><span class="pre">conj</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.cyclotomic.conj" title="Permalink to this definition">¶</a></dt>
+<dd><p>Complex conjugation</p>
+<p>Fully compatible with MATLAB’s conj</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.cyclotomic.ctranspose">
+<span class="sig-name descname"><span class="pre">ctranspose</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.cyclotomic.ctranspose" title="Permalink to this definition">¶</a></dt>
+<dd><p>Complex conjugate transpose</p>
+<p>Fully compatible with MATLAB’s ctranspose</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.cyclotomic.cyclo">
+<span class="sig-name descname"><span class="pre">cyclo</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">varargin</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.cyclotomic.cyclo" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the cyclo.Cyclo object at the given index in this multidimensional array</p>
+<p>Arguments are integer indices, as passed to subsref</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.cyclotomic.cyclotomic">
+<span class="sig-name descname"><span class="pre">cyclotomic</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">array</span></em>, <em class="sig-param"><span class="pre">size_</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.cyclotomic.cyclotomic" title="Permalink to this definition">¶</a></dt>
+<dd><p>Constructs a cyclotomic array from an array of coefficients</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>array</strong> – Coefficients</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.cyclotomic.data">
+<span class="sig-name descname"><span class="pre">data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.cyclotomic.data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the java array containing the flat data of this array</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.cyclotomic.diag">
+<span class="sig-name descname"><span class="pre">diag</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">varargin</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.cyclotomic.diag" title="Permalink to this definition">¶</a></dt>
+<dd><p>Diagonal matrices and diagonals of a matrix</p>
+<p>Fully compatible with MATLAB’s diag</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.cyclotomic.disp">
+<span class="sig-name descname"><span class="pre">disp</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.cyclotomic.disp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Standard display method</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.cyclotomic.dot">
+<span class="sig-name descname"><span class="pre">dot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">lhs</span></em>, <em class="sig-param"><span class="pre">rhs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.cyclotomic.dot" title="Permalink to this definition">¶</a></dt>
+<dd><p>Vector dot product (incomplete)</p>
+<p>Only supports the case where both <code class="docutils literal notranslate"><span class="pre">lhs</span></code> and <code class="docutils literal notranslate"><span class="pre">rhs</span></code> are vectors, and does not accept a <code class="docutils literal notranslate"><span class="pre">dim</span></code> argument.</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.cyclotomic.double">
+<span class="sig-name descname"><span class="pre">double</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.cyclotomic.double" title="Permalink to this definition">¶</a></dt>
+<dd><p>Conversion to floating-point double</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.cyclotomic.doubleApproximation">
+<span class="sig-name descname"><span class="pre">doubleApproximation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.cyclotomic.doubleApproximation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Conversion to floating-point double with estimation of the error</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.cyclotomic.eq">
+<span class="sig-name descname"><span class="pre">eq</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">lhs</span></em>, <em class="sig-param"><span class="pre">rhs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.cyclotomic.eq" title="Permalink to this definition">¶</a></dt>
+<dd><p>Equality test</p>
+</dd></dl>
+
+<dl class="mat staticmethod">
+<dt class="sig sig-object mat" id="+replab.cyclotomic.eye">
+<em class="property"><span class="pre">static</span> </em><span class="sig-name descname"><span class="pre">eye</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">n</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.cyclotomic.eye" title="Permalink to this definition">¶</a></dt>
+<dd><p>Constructs the <code class="docutils literal notranslate"><span class="pre">n</span> <span class="pre">x</span> <span class="pre">n</span></code> identity matrix (incomplete)</p>
+<p>Does not support the syntax with two arguments.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>n</strong> (<span><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">integer</span></code></span>) – Matrix size</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The constructed matrix</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#+replab.cyclotomic.cyclotomic" title="+replab.cyclotomic.cyclotomic"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">cyclotomic</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.cyclotomic.find">
+<span class="sig-name descname"><span class="pre">find</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">varargin</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.cyclotomic.find" title="Permalink to this definition">¶</a></dt>
+<dd><p>Find indices of nonzero elements</p>
+<p>Compatible with MATLAB’s find</p>
+</dd></dl>
+
+<dl class="mat staticmethod">
+<dt class="sig sig-object mat" id="+replab.cyclotomic.fromRationals">
+<em class="property"><span class="pre">static</span> </em><span class="sig-name descname"><span class="pre">fromRationals</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">numerators</span></em>, <em class="sig-param"><span class="pre">denominators</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.cyclotomic.fromRationals" title="Permalink to this definition">¶</a></dt>
+<dd><p>Constructs a cyclotomic matrix of rational numbers</p>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">replab</span><span class="o">.</span><span class="n">cyclotomic</span><span class="o">.</span><span class="n">fromRationals</span><span class="p">([</span><span class="mi">1</span> <span class="mi">1</span><span class="p">;</span> <span class="mi">1</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">2</span> <span class="mi">3</span><span class="p">;</span> <span class="mi">3</span> <span class="mi">2</span><span class="p">])</span>
+<span class="go">    1/2  1/3</span>
+<span class="go">    1/3  1/2</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>numerators</strong> (<span><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">double(*,*)</span></code></span>) – Coefficient numerators</p></li>
+<li><p><strong>denominators</strong> (<span><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">double(*,*)</span></code></span>) – Coefficient denominators</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The constructed matrix</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#+replab.cyclotomic.cyclotomic" title="+replab.cyclotomic.cyclotomic"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">cyclotomic</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.cyclotomic.full">
+<span class="sig-name descname"><span class="pre">full</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.cyclotomic.full" title="Permalink to this definition">¶</a></dt>
+<dd><p>Placeholder as cyclotomic arrays are always dense</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.cyclotomic.galois">
+<span class="sig-name descname"><span class="pre">galois</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">ord</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.cyclotomic.galois" title="Permalink to this definition">¶</a></dt>
+<dd><p>Action of the Galois group</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.cyclotomic.hash">
+<span class="sig-name descname"><span class="pre">hash</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.cyclotomic.hash" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a multidimensional array of hash codes</p>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">hash</span><span class="p">(</span><span class="n">replab</span><span class="o">.</span><span class="n">cyclotomic</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1579025880</span>
+<span class="go">    1</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Integer array of hash codes</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>integer(…)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.cyclotomic.horzcat">
+<span class="sig-name descname"><span class="pre">horzcat</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">lhs</span></em>, <em class="sig-param"><span class="pre">varargin</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.cyclotomic.horzcat" title="Permalink to this definition">¶</a></dt>
+<dd><p>Horizontal concatenation (incomplete)</p>
+<p>Incomplete implementation: only works on vectors and matrices</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.cyclotomic.imag">
+<span class="sig-name descname"><span class="pre">imag</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.cyclotomic.imag" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the imaginary part</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.cyclotomic.inv">
+<span class="sig-name descname"><span class="pre">inv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.cyclotomic.inv" title="Permalink to this definition">¶</a></dt>
+<dd><p>Matrix inverse</p>
+<p>Requires that the matrix is full rank</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.cyclotomic.ipermute">
+<span class="sig-name descname"><span class="pre">ipermute</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">order</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.cyclotomic.ipermute" title="Permalink to this definition">¶</a></dt>
+<dd><p>Inverse permute array dimensions</p>
+<p>Fully compatible with MATLAB’s permute</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.cyclotomic.isrational">
+<span class="sig-name descname"><span class="pre">isrational</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.cyclotomic.isrational" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns which coefficients are rational</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.cyclotomic.iswhole">
+<span class="sig-name descname"><span class="pre">iswhole</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.cyclotomic.iswhole" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns which coefficients are integers</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.cyclotomic.length">
+<span class="sig-name descname"><span class="pre">length</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.cyclotomic.length" title="Permalink to this definition">¶</a></dt>
+<dd><p>Length of vector</p>
+<p>Equivalent to <code class="docutils literal notranslate"><span class="pre">max(size(X))</span></code> if <code class="docutils literal notranslate"><span class="pre">isempty(X)</span></code> is false, otherwise <code class="docutils literal notranslate"><span class="pre">0</span></code>.</p>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">length</span><span class="p">(</span><span class="n">replab</span><span class="o">.</span><span class="n">cyclotomic</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">10</span><span class="p">))</span>
+<span class="go">    10</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Vector length</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>integer</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.cyclotomic.lu">
+<span class="sig-name descname"><span class="pre">lu</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.cyclotomic.lu" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the LU decomposition of this matrix</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">m</span> <span class="pre">x</span> <span class="pre">n</span></code> matrix must have <code class="docutils literal notranslate"><span class="pre">m</span> <span class="pre">&gt;=</span> <span class="pre">n</span></code>.</p>
+<p>It returns triangular matrices <code class="docutils literal notranslate"><span class="pre">L</span></code>, <code class="docutils literal notranslate"><span class="pre">U</span></code> and a permutation vector <code class="docutils literal notranslate"><span class="pre">p</span></code> such that <code class="docutils literal notranslate"><span class="pre">L*U</span> <span class="pre">==</span> <span class="pre">self(:,p)</span></code></p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><ul class="simple">
+<li><p><strong>L</strong> (<a href="#id1"><span class="problematic" id="id2">`</span></a>.cyclotomic`(*,*)) – Lower triangular matrix</p></li>
+<li><p><strong>U</strong> (<a href="#id3"><span class="problematic" id="id4">`</span></a>.cyclotomic`(*,*)) – Upper triangular matrix</p></li>
+<li><p><strong>p</strong> (<em>integer(1,*)</em>) – Permutation vector</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.cyclotomic.minus">
+<span class="sig-name descname"><span class="pre">minus</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">lhs</span></em>, <em class="sig-param"><span class="pre">rhs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.cyclotomic.minus" title="Permalink to this definition">¶</a></dt>
+<dd><p>Standard <code class="docutils literal notranslate"><span class="pre">-</span></code> operator</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.cyclotomic.mpower">
+<span class="sig-name descname"><span class="pre">mpower</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">e</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.cyclotomic.mpower" title="Permalink to this definition">¶</a></dt>
+<dd><p>Matrix power</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.cyclotomic.mrdivide">
+<span class="sig-name descname"><span class="pre">mrdivide</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">lhs</span></em>, <em class="sig-param"><span class="pre">rhs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.cyclotomic.mrdivide" title="Permalink to this definition">¶</a></dt>
+<dd><p>Division</p>
+<p>Only supports the case where the right hand side is scalar</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.cyclotomic.mtimes">
+<span class="sig-name descname"><span class="pre">mtimes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">lhs</span></em>, <em class="sig-param"><span class="pre">rhs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.cyclotomic.mtimes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Matrix multiplication</p>
+<p>Support both <code class="docutils literal notranslate"><span class="pre">m</span> <span class="pre">x</span> <span class="pre">n</span></code> by <code class="docutils literal notranslate"><span class="pre">n</span> <span class="pre">x</span> <span class="pre">p</span></code> matrix multiplication, and the case where one of the arguments is a scalar</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.cyclotomic.ndims">
+<span class="sig-name descname"><span class="pre">ndims</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.cyclotomic.ndims" title="Permalink to this definition">¶</a></dt>
+<dd><p>Number of dimensions</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Number of dimensions</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>integer</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.cyclotomic.ne">
+<span class="sig-name descname"><span class="pre">ne</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">rhs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.cyclotomic.ne" title="Permalink to this definition">¶</a></dt>
+<dd><p>(Non-)equality test</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.cyclotomic.null">
+<span class="sig-name descname"><span class="pre">null</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.cyclotomic.null" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes the null space of a cyclotomic matrix</p>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">M</span> <span class="o">=</span> <span class="n">replab</span><span class="o">.</span><span class="n">cyclotomic</span><span class="p">([</span><span class="mi">1</span> <span class="mi">3</span> <span class="mi">0</span><span class="p">;</span> <span class="o">-</span><span class="mi">2</span> <span class="o">-</span><span class="mi">6</span> <span class="mi">0</span><span class="p">;</span> <span class="mi">3</span> <span class="mi">9</span> <span class="mi">6</span><span class="p">]);</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">null</span><span class="p">(</span><span class="n">M</span><span class="p">)</span><span class="s1">&#39;</span>
+<span class="go">    -3  1  0</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The matrix null space</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="#+replab.cyclotomic.cyclotomic" title="+replab.cyclotomic.cyclotomic"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">cyclotomic</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.cyclotomic.num2str">
+<span class="sig-name descname"><span class="pre">num2str</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.cyclotomic.num2str" title="Permalink to this definition">¶</a></dt>
+<dd><p>Conversion to string (incomplete)</p>
+<p>Only supports matrices or vectors.</p>
+<p>Does not support format specifiers or a specified precision.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Possibly multiline string representation of the matrix</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>charstring</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.cyclotomic.numel">
+<span class="sig-name descname"><span class="pre">numel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.cyclotomic.numel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Number of elements</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Number of elements</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>integer</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="mat staticmethod">
+<dt class="sig sig-object mat" id="+replab.cyclotomic.ones">
+<em class="property"><span class="pre">static</span> </em><span class="sig-name descname"><span class="pre">ones</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">varargin</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.cyclotomic.ones" title="Permalink to this definition">¶</a></dt>
+<dd><p>Constructs a cyclotomic array filled with ones</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The constructed matrix</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="#+replab.cyclotomic.cyclotomic" title="+replab.cyclotomic.cyclotomic"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">cyclotomic</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.cyclotomic.permute">
+<span class="sig-name descname"><span class="pre">permute</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">order</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.cyclotomic.permute" title="Permalink to this definition">¶</a></dt>
+<dd><p>Permute array dimensions</p>
+<p>Fully compatible with MATLAB’s permute</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.cyclotomic.plus">
+<span class="sig-name descname"><span class="pre">plus</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">lhs</span></em>, <em class="sig-param"><span class="pre">rhs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.cyclotomic.plus" title="Permalink to this definition">¶</a></dt>
+<dd><p>Standard <code class="docutils literal notranslate"><span class="pre">+</span></code> operator</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.cyclotomic.prod">
+<span class="sig-name descname"><span class="pre">prod</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">dim</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.cyclotomic.prod" title="Permalink to this definition">¶</a></dt>
+<dd><p>Product of elements (incomplete)</p>
+<p>Does not support arrays with more than two dimensions, and does not support
+extra options (type, nanflag).</p>
+</dd></dl>
+
+<dl class="mat staticmethod">
+<dt class="sig sig-object mat" id="+replab.cyclotomic.rand">
+<em class="property"><span class="pre">static</span> </em><span class="sig-name descname"><span class="pre">rand</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">varargin</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.cyclotomic.rand" title="Permalink to this definition">¶</a></dt>
+<dd><p>Random cyclotomic matrix</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>maximalNumberOfTerms</strong> – Maximal number of terms</p></li>
+<li><p><strong>field</strong> – Whether to sample from real or complex cyclotomics</p></li>
+<li><p><strong>maximalOrder</strong> – Maximal root-of-unity order</p></li>
+<li><p><strong>maximalDenominator</strong> – Largest denominator for rational numbers</p></li>
+<li><p><strong>maximalAbsoluteValue</strong> – Approximate largest absolute value</p></li>
+</ul>
+</dd>
+<dt class="field-even">Kwtype maximalNumberOfTerms</dt>
+<dd class="field-even"><p>integer</p>
+</dd>
+<dt class="field-odd">Kwtype field</dt>
+<dd class="field-odd"><p>‘R’, ‘C’, ‘Q’</p>
+</dd>
+<dt class="field-even">Kwtype maximalOrder</dt>
+<dd class="field-even"><p>integer</p>
+</dd>
+<dt class="field-odd">Kwtype maximalDenominator</dt>
+<dd class="field-odd"><p>integer</p>
+</dd>
+<dt class="field-even">Kwtype maximalAbsoluteValue</dt>
+<dd class="field-even"><p>integer</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.cyclotomic.rdivide">
+<span class="sig-name descname"><span class="pre">rdivide</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">lhs0</span></em>, <em class="sig-param"><span class="pre">rhs0</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.cyclotomic.rdivide" title="Permalink to this definition">¶</a></dt>
+<dd><p>Pointwise <code class="docutils literal notranslate"><span class="pre">/</span></code> operator</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.cyclotomic.real">
+<span class="sig-name descname"><span class="pre">real</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.cyclotomic.real" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the real part</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.cyclotomic.reshape">
+<span class="sig-name descname"><span class="pre">reshape</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">varargin</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.cyclotomic.reshape" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reshape array</p>
+<p>Fully compatible with MATLAB’s reshape</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.cyclotomic.rref">
+<span class="sig-name descname"><span class="pre">rref</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.cyclotomic.rref" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes the row reduced echelon form</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The row reduced echelon form</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="#+replab.cyclotomic.cyclotomic" title="+replab.cyclotomic.cyclotomic"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">cyclotomic</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.cyclotomic.size">
+<span class="sig-name descname"><span class="pre">size</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">dim</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.cyclotomic.size" title="Permalink to this definition">¶</a></dt>
+<dd><p>Size of array (incomplete)</p>
+<p>Incomplete implementation: only supports the forms <code class="docutils literal notranslate"><span class="pre">s</span> <span class="pre">=</span> <span class="pre">size(array)</span></code> and <code class="docutils literal notranslate"><span class="pre">s</span> <span class="pre">=</span> <span class="pre">size(array,</span> <span class="pre">i)</span></code> where
+<code class="docutils literal notranslate"><span class="pre">i</span></code> is an integer scalar.</p>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">size</span><span class="p">(</span><span class="n">replab</span><span class="o">.</span><span class="n">cyclotomic</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span>
+<span class="go">    2     2</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>dim</strong> (<span><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">integer,</span> <span class="pre">optional</span></code></span>) – Dimension(s) to get the size of</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Size</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>integer or integer(1,*)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="mat staticmethod">
+<dt class="sig sig-object mat" id="+replab.cyclotomic.sparse">
+<em class="property"><span class="pre">static</span> </em><span class="sig-name descname"><span class="pre">sparse</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">I</span></em>, <em class="sig-param"><span class="pre">J</span></em>, <em class="sig-param"><span class="pre">K</span></em>, <em class="sig-param"><span class="pre">nR</span></em>, <em class="sig-param"><span class="pre">nC</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.cyclotomic.sparse" title="Permalink to this definition">¶</a></dt>
+<dd><p>Constructs a 2D cyclotomic array using sparse matrix syntax (incomplete)</p>
+<p>Only supports the five argument syntax</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The constructed matrix</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="#+replab.cyclotomic.cyclotomic" title="+replab.cyclotomic.cyclotomic"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">cyclotomic</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.cyclotomic.sqrt">
+<span class="sig-name descname"><span class="pre">sqrt</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.cyclotomic.sqrt" title="Permalink to this definition">¶</a></dt>
+<dd><p>Square root</p>
+<p>Requires that the argument contains rational coefficients, otherwise compatible with MATLAB’s sqrt</p>
+</dd></dl>
+
+<dl class="mat staticmethod">
+<dt class="sig sig-object mat" id="+replab.cyclotomic.sqrtRational">
+<em class="property"><span class="pre">static</span> </em><span class="sig-name descname"><span class="pre">sqrtRational</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">num</span></em>, <em class="sig-param"><span class="pre">den</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.cyclotomic.sqrtRational" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the square root of a rational number</p>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">replab</span><span class="o">.</span><span class="n">cyclotomic</span><span class="o">.</span><span class="n">sqrtRational</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<span class="go">    E(8)-E(8)^3</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">replab</span><span class="o">.</span><span class="n">cyclotomic</span><span class="o">.</span><span class="n">sqrtRational</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span>
+<span class="go">    E(8)/2-E(8)^3/2</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>num</strong> (<span><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">integer</span></code></span>) – Numerator</p></li>
+<li><p><strong>den</strong> (<span><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">integer,</span> <span class="pre">optional</span></code></span>) – Denominator, default value <code class="docutils literal notranslate"><span class="pre">1</span></code></p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The value <code class="docutils literal notranslate"><span class="pre">sqrt(num/den)</span></code></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#+replab.cyclotomic.cyclotomic" title="+replab.cyclotomic.cyclotomic"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">cyclotomic</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.cyclotomic.subsasgn">
+<span class="sig-name descname"><span class="pre">subsasgn</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">s</span></em>, <em class="sig-param"><span class="pre">val</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.cyclotomic.subsasgn" title="Permalink to this definition">¶</a></dt>
+<dd><p>Assignment</p>
+<p>Compatible with MATLAB’s subsasgn</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.cyclotomic.subsref">
+<span class="sig-name descname"><span class="pre">subsref</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">s</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.cyclotomic.subsref" title="Permalink to this definition">¶</a></dt>
+<dd><p>Indexing</p>
+<p>Compatible with MATLAB’s subsref</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.cyclotomic.sum">
+<span class="sig-name descname"><span class="pre">sum</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">dim</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.cyclotomic.sum" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sum of elements (incomplete)</p>
+<p>Does not support arrays with more than two dimensions, and does not support
+extra options (type, nanflag).</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.cyclotomic.times">
+<span class="sig-name descname"><span class="pre">times</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">lhs0</span></em>, <em class="sig-param"><span class="pre">rhs0</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.cyclotomic.times" title="Permalink to this definition">¶</a></dt>
+<dd><p>Pointwise <code class="docutils literal notranslate"><span class="pre">*</span></code> operator</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.cyclotomic.toCellOfStrings">
+<span class="sig-name descname"><span class="pre">toCellOfStrings</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.cyclotomic.toCellOfStrings" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a multi-dimensional cell array of strings corresponding to this cyclotomic array</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.cyclotomic.trace">
+<span class="sig-name descname"><span class="pre">trace</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.cyclotomic.trace" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sum of diagonal elements</p>
+<p>Fully compatible with MATLAB’s trace</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.cyclotomic.transpose">
+<span class="sig-name descname"><span class="pre">transpose</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.cyclotomic.transpose" title="Permalink to this definition">¶</a></dt>
+<dd><p>Transpose</p>
+<p>Fully compatible with MATLAB’s transpose</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.cyclotomic.uminus">
+<span class="sig-name descname"><span class="pre">uminus</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.cyclotomic.uminus" title="Permalink to this definition">¶</a></dt>
+<dd><p>Unary minus</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.cyclotomic.vertcat">
+<span class="sig-name descname"><span class="pre">vertcat</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">lhs</span></em>, <em class="sig-param"><span class="pre">varargin</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.cyclotomic.vertcat" title="Permalink to this definition">¶</a></dt>
+<dd><p>Vertical concatenation</p>
+</dd></dl>
+
+<dl class="mat staticmethod">
+<dt class="sig sig-object mat" id="+replab.cyclotomic.zeros">
+<em class="property"><span class="pre">static</span> </em><span class="sig-name descname"><span class="pre">zeros</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">varargin</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.cyclotomic.zeros" title="Permalink to this definition">¶</a></dt>
+<dd><p>Constructs a cyclotomic array filled with zeros</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The constructed matrix</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="#+replab.cyclotomic.cyclotomic" title="+replab.cyclotomic.cyclotomic"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">cyclotomic</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="h">
+<h2>H<a class="headerlink" href="#h" title="Permalink to this headline">¶</a></h2>
+<dl class="mat class">
+<dt class="sig sig-object mat" id="+replab.H">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">replab.</span></span><span class="sig-name descname"><span class="pre">H</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">M1</span></em>, <em class="sig-param"><span class="pre">Mi</span></em>, <em class="sig-param"><span class="pre">Mj</span></em>, <em class="sig-param"><span class="pre">Mk</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.H" title="Permalink to this definition">¶</a></dt>
+<dd><p>Quaternion matrix type</p>
+<p>A quaternion matrix can be expressed using four real matrices A, B, C and D:</p>
+<p><span class="math notranslate nohighlight">\(Q = A + B i + C j + D k\)</span> where <span class="math notranslate nohighlight">\(i^2 = j^2 = k^2 = i j k = -1\)</span> and <span class="math notranslate nohighlight">\(i j = k\)</span>, <span class="math notranslate nohighlight">\(j k = i\)</span> and <span class="math notranslate nohighlight">\(k i = j\)</span>.</p>
+<p>We choose to encode our quaternions using two matrices <span class="math notranslate nohighlight">\(X = A + B i\)</span> and <span class="math notranslate nohighlight">\(Y = C + D i\)</span>, where
+we now identify <span class="math notranslate nohighlight">\(i\)</span> with the complex imaginary unit.</p>
+<p>Thus <span class="math notranslate nohighlight">\(Q = X + Y j\)</span>.</p>
+<p>The class supports sparse components for efficiency.</p>
+<div class="dropdown admonition">
+<p class="admonition-title">Class members list</p>
+<p><strong>Properties</strong></p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#+replab.H.X" title="+replab.H.X"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">X</span></code></a> – First part</p></li>
+<li><p><a class="reference internal" href="#+replab.H.Y" title="+replab.H.Y"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">Y</span></code></a> – Second part</p></li>
+</ul>
+<p><strong>General</strong></p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#+replab.H.H" title="+replab.H.H"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">H</span></code></a> – Quaternion constructor</p></li>
+<li><p><a class="reference internal" href="#+replab.H.abs" title="+replab.H.abs"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">abs</span></code></a> – Computes the absolute value, array coefficient by coefficient</p></li>
+<li><p><a class="reference internal" href="#+replab.H.abs2" title="+replab.H.abs2"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">abs2</span></code></a> – Computes the square of the absolute value, array coefficient by coefficient</p></li>
+<li><p><a class="reference internal" href="#+replab.H.blkdiag" title="+replab.H.blkdiag"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">blkdiag</span></code></a> –</p></li>
+<li><p><a class="reference internal" href="#+replab.H.conj" title="+replab.H.conj"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">conj</span></code></a> –</p></li>
+<li><p><a class="reference internal" href="#+replab.H.ctranspose" title="+replab.H.ctranspose"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">ctranspose</span></code></a> –</p></li>
+<li><p><a class="reference internal" href="#+replab.H.decode" title="+replab.H.decode"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">decode</span></code></a> – Decodes the given complex matrix into a quaternion matrix</p></li>
+<li><p><a class="reference internal" href="#+replab.H.decompose" title="+replab.H.decompose"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">decompose</span></code></a> – Decomposes the first and second part from the given matrix, interpreted as a quaternion matrix</p></li>
+<li><p><a class="reference internal" href="#+replab.H.diag" title="+replab.H.diag"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">diag</span></code></a> –</p></li>
+<li><p><a class="reference internal" href="#+replab.H.disp" title="+replab.H.disp"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">disp</span></code></a> – Standard display method</p></li>
+<li><p><a class="reference internal" href="#+replab.H.encode" title="+replab.H.encode"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">encode</span></code></a> – Encodes the given matrix, interpreted as a quaternion, into a complex matrix</p></li>
+<li><p><a class="reference internal" href="#+replab.H.end" title="+replab.H.end"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">end</span></code></a> –</p></li>
+<li><p><a class="reference internal" href="#+replab.H.eps" title="+replab.H.eps"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">eps</span></code></a> – Computes the spacing of floating point numbers</p></li>
+<li><p><a class="reference internal" href="#+replab.H.eq" title="+replab.H.eq"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">eq</span></code></a> –</p></li>
+<li><p><a class="reference internal" href="#+replab.H.horzcat" title="+replab.H.horzcat"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">horzcat</span></code></a> –</p></li>
+<li><p><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">i</span></code> – Quaternion unit <code class="docutils literal notranslate"><span class="pre">i</span></code></p></li>
+<li><p><a class="reference internal" href="#+replab.H.inv" title="+replab.H.inv"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">inv</span></code></a> –</p></li>
+<li><p><a class="reference internal" href="#+replab.H.isscalar" title="+replab.H.isscalar"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">isscalar</span></code></a> –</p></li>
+<li><p><a class="reference internal" href="#+replab.H.j" title="+replab.H.j"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">j</span></code></a> – Quaternion unit <code class="docutils literal notranslate"><span class="pre">j</span></code></p></li>
+<li><p><a class="reference internal" href="#+replab.H.k" title="+replab.H.k"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">k</span></code></a> – Quaternion unit <code class="docutils literal notranslate"><span class="pre">k</span></code></p></li>
+<li><p><a class="reference internal" href="#+replab.H.kron" title="+replab.H.kron"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">kron</span></code></a> –</p></li>
+<li><p><a class="reference internal" href="#+replab.H.minus" title="+replab.H.minus"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">minus</span></code></a> –</p></li>
+<li><p><a class="reference internal" href="#+replab.H.mldivide" title="+replab.H.mldivide"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">mldivide</span></code></a> – Backslash or left matrix divide</p></li>
+<li><p><a class="reference internal" href="#+replab.H.mrdivide" title="+replab.H.mrdivide"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">mrdivide</span></code></a> – Slash or right matrix divide</p></li>
+<li><p><a class="reference internal" href="#+replab.H.mtimes" title="+replab.H.mtimes"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">mtimes</span></code></a> –</p></li>
+<li><p><a class="reference internal" href="#+replab.H.ne" title="+replab.H.ne"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">ne</span></code></a> –</p></li>
+<li><p><a class="reference internal" href="#+replab.H.norm" title="+replab.H.norm"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">norm</span></code></a> –</p></li>
+<li><p><a class="reference internal" href="#+replab.H.part1" title="+replab.H.part1"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">part1</span></code></a> – Returns the real part of the quaternion</p></li>
+<li><p><a class="reference internal" href="#+replab.H.parti" title="+replab.H.parti"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">parti</span></code></a> – Returns the <code class="docutils literal notranslate"><span class="pre">i</span></code> part of the quaternion</p></li>
+<li><p><a class="reference internal" href="#+replab.H.partj" title="+replab.H.partj"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">partj</span></code></a> – Returns the <code class="docutils literal notranslate"><span class="pre">j</span></code> part of the quaternion</p></li>
+<li><p><a class="reference internal" href="#+replab.H.partk" title="+replab.H.partk"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">partk</span></code></a> – Returns the <code class="docutils literal notranslate"><span class="pre">k</span></code> part of the quaternion</p></li>
+<li><p><a class="reference internal" href="#+replab.H.plus" title="+replab.H.plus"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">plus</span></code></a> –</p></li>
+<li><p><a class="reference internal" href="#+replab.H.randn" title="+replab.H.randn"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">randn</span></code></a> – Returns a normally distributed quaternion multidimensional array</p></li>
+<li><p><a class="reference internal" href="#+replab.H.rdivide" title="+replab.H.rdivide"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">rdivide</span></code></a> –</p></li>
+<li><p><a class="reference internal" href="#+replab.H.real" title="+replab.H.real"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">real</span></code></a> –</p></li>
+<li><p><a class="reference internal" href="#+replab.H.sign" title="+replab.H.sign"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">sign</span></code></a> –</p></li>
+<li><p><a class="reference internal" href="#+replab.H.size" title="+replab.H.size"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">size</span></code></a> –</p></li>
+<li><p><a class="reference internal" href="#+replab.H.sqrt" title="+replab.H.sqrt"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">sqrt</span></code></a> – Quaternion element-by-element square root</p></li>
+<li><p><a class="reference internal" href="#+replab.H.subsasgn" title="+replab.H.subsasgn"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">subsasgn</span></code></a> –</p></li>
+<li><p><a class="reference internal" href="#+replab.H.subsref" title="+replab.H.subsref"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">subsref</span></code></a> –</p></li>
+<li><p><a class="reference internal" href="#+replab.H.times" title="+replab.H.times"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">times</span></code></a> –</p></li>
+<li><p><a class="reference internal" href="#+replab.H.toStringCell" title="+replab.H.toStringCell"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">toStringCell</span></code></a> – Computes a string representation of the elements of the array</p></li>
+<li><p><a class="reference internal" href="#+replab.H.trace" title="+replab.H.trace"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">trace</span></code></a> –</p></li>
+<li><p><a class="reference internal" href="#+replab.H.transpose" title="+replab.H.transpose"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">transpose</span></code></a> –</p></li>
+<li><p><a class="reference internal" href="#+replab.H.uminus" title="+replab.H.uminus"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">uminus</span></code></a> –</p></li>
+<li><p><a class="reference internal" href="#+replab.H.uplus" title="+replab.H.uplus"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">uplus</span></code></a> –</p></li>
+<li><p><a class="reference internal" href="#+replab.H.vertcat" title="+replab.H.vertcat"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">vertcat</span></code></a> –</p></li>
+</ul>
+</div>
+<div class="dropdown admonition">
+<p class="admonition-title">Inherited elements</p>
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.H.blkdiag">
+<span class="sig-name descname"><span class="pre">blkdiag</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#+replab.H.blkdiag" title="Permalink to this definition">¶</a></dt>
+<dd><p>No documentation</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.H.conj">
+<span class="sig-name descname"><span class="pre">conj</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#+replab.H.conj" title="Permalink to this definition">¶</a></dt>
+<dd><p>No documentation</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.H.ctranspose">
+<span class="sig-name descname"><span class="pre">ctranspose</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#+replab.H.ctranspose" title="Permalink to this definition">¶</a></dt>
+<dd><p>No documentation</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.H.diag">
+<span class="sig-name descname"><span class="pre">diag</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#+replab.H.diag" title="Permalink to this definition">¶</a></dt>
+<dd><p>No documentation</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.H.end">
+<span class="sig-name descname"><span class="pre">end</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#+replab.H.end" title="Permalink to this definition">¶</a></dt>
+<dd><p>No documentation</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.H.eq">
+<span class="sig-name descname"><span class="pre">eq</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#+replab.H.eq" title="Permalink to this definition">¶</a></dt>
+<dd><p>No documentation</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.H.horzcat">
+<span class="sig-name descname"><span class="pre">horzcat</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#+replab.H.horzcat" title="Permalink to this definition">¶</a></dt>
+<dd><p>No documentation</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.H.inv">
+<span class="sig-name descname"><span class="pre">inv</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#+replab.H.inv" title="Permalink to this definition">¶</a></dt>
+<dd><p>No documentation</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.H.isscalar">
+<span class="sig-name descname"><span class="pre">isscalar</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#+replab.H.isscalar" title="Permalink to this definition">¶</a></dt>
+<dd><p>No documentation</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.H.kron">
+<span class="sig-name descname"><span class="pre">kron</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#+replab.H.kron" title="Permalink to this definition">¶</a></dt>
+<dd><p>No documentation</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.H.minus">
+<span class="sig-name descname"><span class="pre">minus</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#+replab.H.minus" title="Permalink to this definition">¶</a></dt>
+<dd><p>No documentation</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.H.mtimes">
+<span class="sig-name descname"><span class="pre">mtimes</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#+replab.H.mtimes" title="Permalink to this definition">¶</a></dt>
+<dd><p>No documentation</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.H.ne">
+<span class="sig-name descname"><span class="pre">ne</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#+replab.H.ne" title="Permalink to this definition">¶</a></dt>
+<dd><p>No documentation</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.H.norm">
+<span class="sig-name descname"><span class="pre">norm</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#+replab.H.norm" title="Permalink to this definition">¶</a></dt>
+<dd><p>No documentation</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.H.plus">
+<span class="sig-name descname"><span class="pre">plus</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#+replab.H.plus" title="Permalink to this definition">¶</a></dt>
+<dd><p>No documentation</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.H.rdivide">
+<span class="sig-name descname"><span class="pre">rdivide</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#+replab.H.rdivide" title="Permalink to this definition">¶</a></dt>
+<dd><p>No documentation</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.H.real">
+<span class="sig-name descname"><span class="pre">real</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#+replab.H.real" title="Permalink to this definition">¶</a></dt>
+<dd><p>No documentation</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.H.sign">
+<span class="sig-name descname"><span class="pre">sign</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#+replab.H.sign" title="Permalink to this definition">¶</a></dt>
+<dd><p>No documentation</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.H.size">
+<span class="sig-name descname"><span class="pre">size</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#+replab.H.size" title="Permalink to this definition">¶</a></dt>
+<dd><p>No documentation</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.H.subsasgn">
+<span class="sig-name descname"><span class="pre">subsasgn</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#+replab.H.subsasgn" title="Permalink to this definition">¶</a></dt>
+<dd><p>No documentation</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.H.subsref">
+<span class="sig-name descname"><span class="pre">subsref</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#+replab.H.subsref" title="Permalink to this definition">¶</a></dt>
+<dd><p>No documentation</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.H.times">
+<span class="sig-name descname"><span class="pre">times</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#+replab.H.times" title="Permalink to this definition">¶</a></dt>
+<dd><p>No documentation</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.H.trace">
+<span class="sig-name descname"><span class="pre">trace</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#+replab.H.trace" title="Permalink to this definition">¶</a></dt>
+<dd><p>No documentation</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.H.transpose">
+<span class="sig-name descname"><span class="pre">transpose</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#+replab.H.transpose" title="Permalink to this definition">¶</a></dt>
+<dd><p>No documentation</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.H.uminus">
+<span class="sig-name descname"><span class="pre">uminus</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#+replab.H.uminus" title="Permalink to this definition">¶</a></dt>
+<dd><p>No documentation</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.H.uplus">
+<span class="sig-name descname"><span class="pre">uplus</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#+replab.H.uplus" title="Permalink to this definition">¶</a></dt>
+<dd><p>No documentation</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.H.vertcat">
+<span class="sig-name descname"><span class="pre">vertcat</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#+replab.H.vertcat" title="Permalink to this definition">¶</a></dt>
+<dd><p>No documentation</p>
+</dd></dl>
+
+</div>
+<h3>Own members</h3><dl class="mat attribute">
+<dt class="sig sig-object mat" id="+replab.H.X">
+<span class="sig-name descname"><span class="pre">X</span></span><a class="headerlink" href="#+replab.H.X" title="Permalink to this definition">¶</a></dt>
+<dd><p>First part</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="+replab.H.Y">
+<span class="sig-name descname"><span class="pre">Y</span></span><a class="headerlink" href="#+replab.H.Y" title="Permalink to this definition">¶</a></dt>
+<dd><p>Second part</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.H.H">
+<span class="sig-name descname"><span class="pre">H</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">M1</span></em>, <em class="sig-param"><span class="pre">Mi</span></em>, <em class="sig-param"><span class="pre">Mj</span></em>, <em class="sig-param"><span class="pre">Mk</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.H.H" title="Permalink to this definition">¶</a></dt>
+<dd><p>Quaternion constructor</p>
+<p>Constructs a quaternion as:
+`` Q = M1 + Mi * i + Mj * j + Mk * k `` where <code class="docutils literal notranslate"><span class="pre">i</span></code>, <code class="docutils literal notranslate"><span class="pre">j</span></code>, <code class="docutils literal notranslate"><span class="pre">k</span></code> are the quaternion units.</p>
+<p>Some matrices can be complex, in which case the complex imaginary unit is identified with <code class="docutils literal notranslate"><span class="pre">i</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>M1</strong> (<span><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">double(d1,d2)</span></code></span>) – Must be provided</p></li>
+<li><p><strong>Mi</strong> (double(d1,d2) or <code class="docutils literal notranslate"><span class="pre">[]</span></code>) – Matrix to be multiplied by <code class="docutils literal notranslate"><span class="pre">i</span></code></p></li>
+<li><p><strong>Mj</strong> (double(d1,d2) or <code class="docutils literal notranslate"><span class="pre">[]</span></code>) – Matrix to be multiplied by <code class="docutils literal notranslate"><span class="pre">j</span></code></p></li>
+<li><p><strong>Mk</strong> (double(d1,d2) or <code class="docutils literal notranslate"><span class="pre">[]</span></code>) – Matrix to be multiplied by <code class="docutils literal notranslate"><span class="pre">k</span></code></p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.H.abs">
+<span class="sig-name descname"><span class="pre">abs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.H.abs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes the absolute value, array coefficient by coefficient</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Magnitude of each quaternion coefficient</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>double</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.H.abs2">
+<span class="sig-name descname"><span class="pre">abs2</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.H.abs2" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes the square of the absolute value, array coefficient by coefficient</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Square of the magnitude of each quaternion coefficient</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>double</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="mat staticmethod">
+<dt class="sig sig-object mat" id="+replab.H.decode">
+<em class="property"><span class="pre">static</span> </em><span class="sig-name descname"><span class="pre">decode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">Z</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.H.decode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Decodes the given complex matrix into a quaternion matrix</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>Z</strong> (<span><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">double(*,*)</span></code></span>) – Complex matrix encoding a quaternion algebra, see <a class="reference internal" href="#+replab.H.encode" title="+replab.H.encode"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">encode</span></code></a></p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Quaternion matrix</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#+replab.H" title="+replab.H"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">replab.H</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="mat staticmethod">
+<dt class="sig sig-object mat" id="+replab.H.decompose">
+<em class="property"><span class="pre">static</span> </em><span class="sig-name descname"><span class="pre">decompose</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">Q</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.H.decompose" title="Permalink to this definition">¶</a></dt>
+<dd><p>Decomposes the first and second part from the given matrix, interpreted as a quaternion matrix</p>
+<p>The result of this call is equivalent to <code class="docutils literal notranslate"><span class="pre">tmp</span> <span class="pre">=</span> <span class="pre">replab.H(Q);</span> <span class="pre">X</span> <span class="pre">=</span> <span class="pre">tmp.X;</span> <span class="pre">Y</span> <span class="pre">=</span> <span class="pre">tmp.Y</span></code>, but it
+avoids unnecessary construction of temporary objects.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>Q</strong> (<code class="xref mat mat-obj docutils literal notranslate"><span class="pre">replab.H</span></code> or double multidimensional array) – Quaternion to decompose</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>X</strong> (<em>double multidimensional array</em>) – First part of the quaternion matrix</p></li>
+<li><p><strong>Y</strong> (<em>double multidimensional array</em>) – Second part of the quaternion matrix</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.H.disp">
+<span class="sig-name descname"><span class="pre">disp</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.H.disp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Standard display method</p>
+</dd></dl>
+
+<dl class="mat staticmethod">
+<dt class="sig sig-object mat" id="+replab.H.encode">
+<em class="property"><span class="pre">static</span> </em><span class="sig-name descname"><span class="pre">encode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">Q</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.H.encode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Encodes the given matrix, interpreted as a quaternion, into a complex matrix</p>
+<p>Uses the encoding of a quaternion <code class="docutils literal notranslate"><span class="pre">q</span> <span class="pre">=</span> <span class="pre">a</span> <span class="pre">+</span> <span class="pre">b</span> <span class="pre">i</span> <span class="pre">+</span> <span class="pre">c</span> <span class="pre">j</span> <span class="pre">+</span> <span class="pre">d</span> <span class="pre">k</span></code> as <code class="docutils literal notranslate"><span class="pre">[a</span> <span class="pre">+</span> <span class="pre">i*b,</span> <span class="pre">c</span> <span class="pre">+</span> <span class="pre">i*d;</span> <span class="pre">-c</span> <span class="pre">+</span> <span class="pre">i*d,</span> <span class="pre">a</span> <span class="pre">-</span> <span class="pre">i*b]</span></code></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>Q</strong> (<a class="reference internal" href="#+replab.H.H" title="+replab.H.H"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">H</span></code></a>) – Quaternion matrix</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Complex matrix encoding the given quaternion matrix</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>double(*,*)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.H.eps">
+<span class="sig-name descname"><span class="pre">eps</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.H.eps" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes the spacing of floating point numbers</p>
+</dd></dl>
+
+<dl class="mat staticmethod">
+<dt class="sig sig-object mat" id="+replab.H.j">
+<em class="property"><span class="pre">static</span> </em><span class="sig-name descname"><span class="pre">j</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#+replab.H.j" title="Permalink to this definition">¶</a></dt>
+<dd><p>Quaternion unit <code class="docutils literal notranslate"><span class="pre">j</span></code></p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Quaternion scalar matrix</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="#+replab.H.H" title="+replab.H.H"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">H</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="mat staticmethod">
+<dt class="sig sig-object mat" id="+replab.H.k">
+<em class="property"><span class="pre">static</span> </em><span class="sig-name descname"><span class="pre">k</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#+replab.H.k" title="Permalink to this definition">¶</a></dt>
+<dd><p>Quaternion unit <code class="docutils literal notranslate"><span class="pre">k</span></code></p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Quaternion scalar matrix</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="#+replab.H.H" title="+replab.H.H"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">H</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.H.mldivide">
+<span class="sig-name descname"><span class="pre">mldivide</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">Q1</span></em>, <em class="sig-param"><span class="pre">Q2</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.H.mldivide" title="Permalink to this definition">¶</a></dt>
+<dd><p>Backslash or left matrix divide</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.H.mrdivide">
+<span class="sig-name descname"><span class="pre">mrdivide</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">Q1</span></em>, <em class="sig-param"><span class="pre">Q2</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.H.mrdivide" title="Permalink to this definition">¶</a></dt>
+<dd><p>Slash or right matrix divide</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.H.part1">
+<span class="sig-name descname"><span class="pre">part1</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.H.part1" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the real part of the quaternion</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Real part</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>double(…)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.H.parti">
+<span class="sig-name descname"><span class="pre">parti</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.H.parti" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the <code class="docutils literal notranslate"><span class="pre">i</span></code> part of the quaternion</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Part</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>double(…)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.H.partj">
+<span class="sig-name descname"><span class="pre">partj</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.H.partj" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the <code class="docutils literal notranslate"><span class="pre">j</span></code> part of the quaternion</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Part</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>double(…)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.H.partk">
+<span class="sig-name descname"><span class="pre">partk</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.H.partk" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the <code class="docutils literal notranslate"><span class="pre">k</span></code> part of the quaternion</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Part</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>double(…)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="mat staticmethod">
+<dt class="sig sig-object mat" id="+replab.H.randn">
+<em class="property"><span class="pre">static</span> </em><span class="sig-name descname"><span class="pre">randn</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">varargin</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.H.randn" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a normally distributed quaternion multidimensional array</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>varargin</strong> – Arguments passed to <code class="docutils literal notranslate"><span class="pre">randn</span></code></p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Quaternion multidimensional array</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#+replab.H.H" title="+replab.H.H"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">H</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.H.sqrt">
+<span class="sig-name descname"><span class="pre">sqrt</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.H.sqrt" title="Permalink to this definition">¶</a></dt>
+<dd><p>Quaternion element-by-element square root</p>
+<p>See <a class="reference external" href="https://math.stackexchange.com/questions/382431/square-roots-of-quaternions">https://math.stackexchange.com/questions/382431/square-roots-of-quaternions</a></p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.H.toStringCell">
+<span class="sig-name descname"><span class="pre">toStringCell</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.H.toStringCell" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes a string representation of the elements of the array</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>String representation</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>cell(…) of charstring</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+</section>
+
+<div class="section">
+   
+</div>
+
+          </div>
+            
+  <div class="footer-relations">
+    
+      <div class="pull-left">
+        <a class="btn btn-default" href="base.html" title="previous chapter (use the left arrow)">Base object types and functions</a>
+      </div>
+    
+      <div class="pull-right">
+        <a class="btn btn-default" href="groups.html" title="next chapter (use the right arrow)">Base group structures</a>
+      </div>
+    </div>
+    <div class="clearer"></div>
+  
+        </div>
+        <div class="clearfix"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../mat-modindex.html" title="MATLAB Module Index"
+             >matlab index</a> |</li>
+        <li class="right" >
+          <a href="groups.html" title="Base group structures"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="base.html" title="Base object types and functions"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.9.2-SNAP documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" >Technical Reference</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Numerics</a></li> 
+      </ul>
+    </div>
+<script type="text/javascript">
+  $("#mobile-toggle a").click(function () {
+    $("#left-column").toggle();
+  });
+</script>
+<script type="text/javascript" src="../_static/js/bootstrap.js"></script>
+  <div class="footer">
+    &copy; Copyright 2018-2020, Denis Rosset, Jean-Daniel Bancal and collaborators. Created using <a href="http://sphinx.pocoo.org/">Sphinx</a>.
+  </div>
+  </body>
+</html>

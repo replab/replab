@@ -1,0 +1,829 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  
+  <!-- Licensed under the Apache 2.0 License -->
+  <link rel="stylesheet" type="text/css" href="../_static/fonts/open-sans/stylesheet.css" />
+  <!-- Licensed under the SIL Open Font License -->
+  <link rel="stylesheet" type="text/css" href="../_static/fonts/source-serif-pro/source-serif-pro.css" />
+  <link rel="stylesheet" type="text/css" href="../_static/css/bootstrap.min.css" />
+  <link rel="stylesheet" type="text/css" href="../_static/css/bootstrap-theme.min.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+    <title>Global settings &#8212; RepLAB 0.9.2-SNAP documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/guzzle.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/custom.css" />
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../_static/js/collapse_helper.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Graphs" href="graph.html" />
+    <link rel="prev" title="Chemistry" href="chemistry.html" /> 
+  
+   
+  
+<style type="text/css">
+  ul.ablog-archive {
+    list-style: none;
+    overflow: auto;
+    margin-left: 0px;
+  }
+  ul.ablog-archive li {
+    float: left;
+    margin-right: 5px;
+    font-size: 80%;
+  }
+  ul.postlist a {
+    font-style: italic;
+  }
+  ul.postlist-style-disc {
+    list-style-type: disc;
+  }
+  ul.postlist-style-none {
+    list-style-type: none;
+  }
+  ul.postlist-style-circle {
+    list-style-type: circle;
+  }
+</style>
+
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../mat-modindex.html" title="MATLAB Module Index"
+             >matlab index</a> |</li>
+        <li class="right" >
+          <a href="graph.html" title="Graphs"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="chemistry.html" title="Chemistry"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.9.2-SNAP documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">Technical Reference</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Global settings</a></li> 
+      </ul>
+    </div>
+    <div class="container-wrapper">
+
+      <div id="mobile-toggle">
+        <a href="#"><span class="glyphicon glyphicon-align-justify" aria-hidden="true"></span></a>
+      </div>
+  <div id="left-column">
+    <div class="sphinxsidebar"><div class="text-logo">
+  <a href="
+    ../index.html">RepLAB</a>&nbsp;&nbsp;
+  <a href="https://github.com/replab/replab"><i class="fab fa-github"></i></a>&nbsp;
+  <a href="https://github.com/replab/replab/archive/v0.9.2-SNAP.zip"><i class="fa fa-download"></i></a>&nbsp;
+  <a href="https://gitter.im/replab/replab"><i class="fab fa-gitter"></i></a>&nbsp;
+  <a href="https://travis-ci.com/replab/replab"><i class="fas fa-sync-alt"></i></a>&nbsp;
+  <a href="https://codecov.io/gh/replab/replab"><i class="fas fa-umbrella"></i></a>
+</div><div class="sidebar-block">
+  <div class="sidebar-toc">
+    
+    
+      <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/index.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../howto/index.html">How to</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../topic/index.html">Topic guides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../publications/index.html">Publications</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Technical Reference</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="commands.html">Commands</a></li>
+<li class="toctree-l2"><a class="reference internal" href="base.html">Base object types and functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="numerics.html">Numerics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="groups.html">Base group structures</a></li>
+<li class="toctree-l2"><a class="reference internal" href="continuous_groups.html">Continuous groups</a></li>
+<li class="toctree-l2"><a class="reference internal" href="permutation_groups.html">Permutation groups</a></li>
+<li class="toctree-l2"><a class="reference internal" href="named_discrete_groups.html">Named discrete groups</a></li>
+<li class="toctree-l2"><a class="reference internal" href="abstract_groups.html">Abstract groups and atlas</a></li>
+<li class="toctree-l2"><a class="reference internal" href="group_products.html">Group product constructions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="group_subsets.html">Group subsets</a></li>
+<li class="toctree-l2"><a class="reference internal" href="group_morphisms.html">Group morphisms</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rep.html">Representations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="equivariant.html">Equivariant spaces</a></li>
+<li class="toctree-l2"><a class="reference internal" href="characters.html">Characters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="convex_programming.html">Convex programming</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chemistry.html">Chemistry</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Global settings</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#atlasentries">AtlasEntries</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#atlasmaximalorder">AtlasMaximalOrder</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#autoconjugacyclassesmaximalorder">AutoConjugacyClassesMaximalOrder</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#autoinstall">AutoInstall</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#bsgsfailureprobability">BsgsFailureProbability</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#charactertablesymmetricgroupirrep">CharacterTableSymmetricGroupIrrep</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#codebase">CodeBase</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#consoleusehtml">ConsoleUseHTML</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#cosetenumerationmethod">CosetEnumerationMethod</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#defaulthelpfunction">DefaultHelpFunction</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#doubleeigtol">DoubleEigTol</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#doublesdptol">DoubleSdpTol</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#factorizationordercutoff">FactorizationOrderCutoff</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#fastchaindomainsize">FastChainDomainSize</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#fastchainorder">FastChainOrder</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#formatcharactertable">FormatCharacterTable</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#gapbinarypath">GapBinaryPath</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#matrixgrouptol">MatrixGroupTol</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#maxcosets">MaxCosets</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#maxdeductions">MaxDeductions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#morphismnchecks">MorphismNChecks</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#nextuniqueid">NextUniqueId</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#randomizedschreiersimstries">RandomizedSchreierSimsTries</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#replabpath">ReplabPath</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#runsinmatlabemacs">RunsInMatlabEmacs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#strmaxcolumns">StrMaxColumns</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#strmaxrows">StrMaxRows</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#usereconstruction">UseReconstruction</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#verboseinit">VerboseInit</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#verbosity">Verbosity</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#verifiedarithmetic">VerifiedArithmetic</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#warnonmultiplemethodgroups">WarnOnMultipleMethodGroups</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#yolo">Yolo</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="graph.html">Graphs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="misc.html">Miscellaneous functions/classes</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../development/index.html">Development/Community</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../blog/index.html">Blog</a></li>
+</ul>
+
+    
+  </div>
+</div>
+<div class="sidebar-block">
+  <div class="sidebar-wrapper">
+    <h2><a href="../blog.html">Recent Blog Posts</a></h2>
+  </div>
+  <div class="sidebar-toc">
+    <ul>
+      
+      
+      <li class="toctree-l1"><a href="../blog/20210724-RepFuN.html">24 July - A fun application of RepLAB : solving combination puzzles</a></li>
+      
+      <li class="toctree-l1"><a href="../blog/20200123-RepLAB-website-live.html">26 January - The RepLAB documentation and the infrastructure behind it</a></li>
+      
+    </ul>
+  </div>
+</div>
+
+      
+    </div>
+  </div>
+        <div id="right-column">
+          
+          <div role="navigation" aria-label="breadcrumbs navigation">
+            <ol class="breadcrumb">
+              <li><a href="../index.html">Docs</a></li>
+              
+                <li><a href="index.html">Technical Reference</a></li>
+              
+              <li>Global settings</li>
+            </ol>
+          </div>
+          
+          <div class="document clearer body">
+             <section id="module-+replab.+globals">
+<span id="global-settings"></span><h1>Global settings<a class="headerlink" href="#module-+replab.+globals" title="Permalink to this headline">¶</a></h1>
+<p>Various global settings such as tolerances, …</p>
+<section id="atlasentries">
+<h2>AtlasEntries<a class="headerlink" href="#atlasentries" title="Permalink to this headline">¶</a></h2>
+<dl class="mat function">
+<dt class="sig sig-object mat" id="+replab.+globals.atlasEntries">
+<span class="sig-prename descclassname"><span class="pre">replab.globals.</span></span><span class="sig-name descname"><span class="pre">atlasEntries</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">newValue</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+globals.atlasEntries" title="Permalink to this definition">¶</a></dt>
+<dd><p>Library of groups and character tables</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>newValue</strong> (integer or <code class="docutils literal notranslate"><span class="pre">[]</span></code>, optional) – Value to be stored if provided</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Stored atlas entries</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>cell(1,*) of <a class="reference internal" href="abstract_groups.html#+replab.AtlasEntry" title="+replab.AtlasEntry"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">replab.AtlasEntry</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="atlasmaximalorder">
+<h2>AtlasMaximalOrder<a class="headerlink" href="#atlasmaximalorder" title="Permalink to this headline">¶</a></h2>
+<dl class="mat function">
+<dt class="sig sig-object mat" id="+replab.+globals.atlasMaximalOrder">
+<span class="sig-prename descclassname"><span class="pre">replab.globals.</span></span><span class="sig-name descname"><span class="pre">atlasMaximalOrder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">newValue</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+globals.atlasMaximalOrder" title="Permalink to this definition">¶</a></dt>
+<dd><p>Maximum order for which a user-defined group is automatically recognized</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>newValue</strong> (integer or <code class="docutils literal notranslate"><span class="pre">[]</span></code>, optional) – Value to be stored if provided</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Stored integer value</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>integer</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="autoconjugacyclassesmaximalorder">
+<h2>AutoConjugacyClassesMaximalOrder<a class="headerlink" href="#autoconjugacyclassesmaximalorder" title="Permalink to this headline">¶</a></h2>
+<dl class="mat function">
+<dt class="sig sig-object mat" id="+replab.+globals.autoConjugacyClassesMaximalOrder">
+<span class="sig-prename descclassname"><span class="pre">replab.globals.</span></span><span class="sig-name descname"><span class="pre">autoConjugacyClassesMaximalOrder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">newValue</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+globals.autoConjugacyClassesMaximalOrder" title="Permalink to this definition">¶</a></dt>
+<dd><p>Maximum order for which algorithms depending on conjugacy classes are automatically used</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>newValue</strong> (integer or <code class="docutils literal notranslate"><span class="pre">[]</span></code>, optional) – Value to be stored if provided</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Stored integer value</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>integer</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="autoinstall">
+<h2>AutoInstall<a class="headerlink" href="#autoinstall" title="Permalink to this headline">¶</a></h2>
+<dl class="mat function">
+<dt class="sig sig-object mat" id="+replab.+globals.autoInstall">
+<span class="sig-prename descclassname"><span class="pre">replab.globals.</span></span><span class="sig-name descname"><span class="pre">autoInstall</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">newValue</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+globals.autoInstall" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get/set whether dependencies should be automatically downloaded and installed</p>
+</dd></dl>
+
+</section>
+<section id="bsgsfailureprobability">
+<h2>BsgsFailureProbability<a class="headerlink" href="#bsgsfailureprobability" title="Permalink to this headline">¶</a></h2>
+<dl class="mat function">
+<dt class="sig sig-object mat" id="+replab.+globals.bsgsFailureProbability">
+<span class="sig-prename descclassname"><span class="pre">replab.globals.</span></span><span class="sig-name descname"><span class="pre">bsgsFailureProbability</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">newValue</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+globals.bsgsFailureProbability" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</section>
+<section id="charactertablesymmetricgroupirrep">
+<h2>CharacterTableSymmetricGroupIrrep<a class="headerlink" href="#charactertablesymmetricgroupirrep" title="Permalink to this headline">¶</a></h2>
+<dl class="mat function">
+<dt class="sig sig-object mat" id="+replab.+globals.characterTableSymmetricGroupIrrep">
+<span class="sig-prename descclassname"><span class="pre">replab.globals.</span></span><span class="sig-name descname"><span class="pre">characterTableSymmetricGroupIrrep</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">newValue</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+globals.characterTableSymmetricGroupIrrep" title="Permalink to this definition">¶</a></dt>
+<dd><p>Default form of irreducible representations of the symmetric group</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>newValue</strong> ({‘specht’, ‘seminormal’, ‘orthogonal’} or <code class="docutils literal notranslate"><span class="pre">[]</span></code>, optional) – Value to be stored if provided</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Stored integer value</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>integer</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="codebase">
+<h2>CodeBase<a class="headerlink" href="#codebase" title="Permalink to this headline">¶</a></h2>
+<dl class="mat function">
+<dt class="sig sig-object mat" id="+replab.+globals.codeBase">
+<span class="sig-prename descclassname"><span class="pre">replab.globals.</span></span><span class="sig-name descname"><span class="pre">codeBase</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">newValue</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+globals.codeBase" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get/set the parsed code used in the help system</p>
+<p>If called without argument, returns the stored value.</p>
+<p>The call with one argument changes the stored value; it should only be called
+as part of <code class="docutils literal notranslate"><span class="pre">replab_init</span></code>.</p>
+<p>The stored value survives <code class="docutils literal notranslate"><span class="pre">clear</span> <span class="pre">all</span></code> as this function is locked.</p>
+<p>Call <code class="docutils literal notranslate"><span class="pre">replab.globals.codeBase([])</span></code> or <code class="docutils literal notranslate"><span class="pre">help</span> <span class="pre">-clear</span></code> to clear it.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>newValue</strong> (<span><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">function_handle,</span> <span class="pre">optional</span></code></span>) – Sets the stored value</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Stored function handle</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>function_handle</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="consoleusehtml">
+<h2>ConsoleUseHTML<a class="headerlink" href="#consoleusehtml" title="Permalink to this headline">¶</a></h2>
+<dl class="mat function">
+<dt class="sig sig-object mat" id="+replab.+globals.consoleUseHTML">
+<span class="sig-prename descclassname"><span class="pre">replab.globals.</span></span><span class="sig-name descname"><span class="pre">consoleUseHTML</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">newValue</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+globals.consoleUseHTML" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns whether the console output accepts a subset of the HTML language</p>
+<p>The subset is the one parsed by MATLAB when using the GUI; it mostly accepts
+<code class="docutils literal notranslate"><span class="pre">strong</span></code> (for bold text) and <code class="docutils literal notranslate"><span class="pre">a</span> <span class="pre">href=</span></code> (for links) HTML tags.</p>
+</dd></dl>
+
+</section>
+<section id="cosetenumerationmethod">
+<h2>CosetEnumerationMethod<a class="headerlink" href="#cosetenumerationmethod" title="Permalink to this headline">¶</a></h2>
+<dl class="mat function">
+<dt class="sig sig-object mat" id="+replab.+globals.cosetEnumerationMethod">
+<span class="sig-prename descclassname"><span class="pre">replab.globals.</span></span><span class="sig-name descname"><span class="pre">cosetEnumerationMethod</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">newValue</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+globals.cosetEnumerationMethod" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to use for coset enumeration</p>
+<p>RepLAB can either use <a href="#id1"><span class="problematic" id="id2">``</span></a>’R’<a href="#id3"><span class="problematic" id="id4">``</span></a>elator-based or <a href="#id5"><span class="problematic" id="id6">``</span></a>’C’<a href="#id7"><span class="problematic" id="id8">``</span></a>oset-table based enumeration, see Chapter 5 of
+Holt, Derek, Handbook of Computational Group Theory, Chapman &amp; Hall/CRC, 2004, pp. 149–198</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>newValue</strong> ({‘R’, ‘C’} or <code class="docutils literal notranslate"><span class="pre">[]</span></code>, optional) – Value to be stored if provided</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Stored integer value</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>integer</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="defaulthelpfunction">
+<h2>DefaultHelpFunction<a class="headerlink" href="#defaulthelpfunction" title="Permalink to this headline">¶</a></h2>
+<dl class="mat function">
+<dt class="sig sig-object mat" id="+replab.+globals.defaultHelpFunction">
+<span class="sig-prename descclassname"><span class="pre">replab.globals.</span></span><span class="sig-name descname"><span class="pre">defaultHelpFunction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">newValue</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+globals.defaultHelpFunction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get/set the function handle corresponding to the default help function (one input/output variant)</p>
+<p>If called without argument, returns the stored value.</p>
+<p>The call with one argument changes the stored value; it should only be called
+as part of <code class="docutils literal notranslate"><span class="pre">replab_init</span></code>.</p>
+<p>The stored value survives <code class="docutils literal notranslate"><span class="pre">clear</span> <span class="pre">all</span></code> as this function is locked.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>newValue</strong> (<span><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">function_handle,</span> <span class="pre">optional</span></code></span>) – Sets the stored value</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Stored function handle</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>function_handle</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="doubleeigtol">
+<h2>DoubleEigTol<a class="headerlink" href="#doubleeigtol" title="Permalink to this headline">¶</a></h2>
+<dl class="mat function">
+<dt class="sig sig-object mat" id="+replab.+globals.doubleEigTol">
+<span class="sig-prename descclassname"><span class="pre">replab.globals.</span></span><span class="sig-name descname"><span class="pre">doubleEigTol</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">newValue</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+globals.doubleEigTol" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</section>
+<section id="doublesdptol">
+<h2>DoubleSdpTol<a class="headerlink" href="#doublesdptol" title="Permalink to this headline">¶</a></h2>
+<dl class="mat function">
+<dt class="sig sig-object mat" id="+replab.+globals.doubleSdpTol">
+<span class="sig-prename descclassname"><span class="pre">replab.globals.</span></span><span class="sig-name descname"><span class="pre">doubleSdpTol</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">newValue</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+globals.doubleSdpTol" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</section>
+<section id="factorizationordercutoff">
+<h2>FactorizationOrderCutoff<a class="headerlink" href="#factorizationordercutoff" title="Permalink to this headline">¶</a></h2>
+<dl class="mat function">
+<dt class="sig sig-object mat" id="+replab.+globals.factorizationOrderCutoff">
+<span class="sig-prename descclassname"><span class="pre">replab.globals.</span></span><span class="sig-name descname"><span class="pre">factorizationOrderCutoff</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">newValue</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+globals.factorizationOrderCutoff" title="Permalink to this definition">¶</a></dt>
+<dd><p>Maximum order under which use orbit enumeration to factorize group elements in generator words</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>newValue</strong> (integer or <code class="docutils literal notranslate"><span class="pre">[]</span></code>, optional) – Value to be stored if provided</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Stored integer value</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>integer</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="fastchaindomainsize">
+<h2>FastChainDomainSize<a class="headerlink" href="#fastchaindomainsize" title="Permalink to this headline">¶</a></h2>
+<dl class="mat function">
+<dt class="sig sig-object mat" id="+replab.+globals.fastChainDomainSize">
+<span class="sig-prename descclassname"><span class="pre">replab.globals.</span></span><span class="sig-name descname"><span class="pre">fastChainDomainSize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">newValue</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+globals.fastChainDomainSize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Maximum domainSize for fast chain construction</p>
+<p>See <a class="reference internal" href="permutation_groups.html#+replab.PermutationGroup.partialChain" title="+replab.PermutationGroup.partialChain"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">replab.PermutationGroup.partialChain</span></code></a></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>newValue</strong> (integer or <code class="docutils literal notranslate"><span class="pre">[]</span></code>, optional) – Value to be stored if provided</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Stored integer value</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>integer</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="fastchainorder">
+<h2>FastChainOrder<a class="headerlink" href="#fastchainorder" title="Permalink to this headline">¶</a></h2>
+<dl class="mat function">
+<dt class="sig sig-object mat" id="+replab.+globals.fastChainOrder">
+<span class="sig-prename descclassname"><span class="pre">replab.globals.</span></span><span class="sig-name descname"><span class="pre">fastChainOrder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">newValue</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+globals.fastChainOrder" title="Permalink to this definition">¶</a></dt>
+<dd><p>Maximum order for fast chain construction</p>
+<p>See <a class="reference internal" href="permutation_groups.html#+replab.PermutationGroup.partialChain" title="+replab.PermutationGroup.partialChain"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">replab.PermutationGroup.partialChain</span></code></a></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>newValue</strong> (integer or <code class="docutils literal notranslate"><span class="pre">[]</span></code>, optional) – Value to be stored if provided</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Stored integer value</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>integer</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="formatcharactertable">
+<h2>FormatCharacterTable<a class="headerlink" href="#formatcharactertable" title="Permalink to this headline">¶</a></h2>
+<dl class="mat function">
+<dt class="sig sig-object mat" id="+replab.+globals.formatCharacterTable">
+<span class="sig-prename descclassname"><span class="pre">replab.globals.</span></span><span class="sig-name descname"><span class="pre">formatCharacterTable</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">newValue</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+globals.formatCharacterTable" title="Permalink to this definition">¶</a></dt>
+<dd><p>Maximum order under which use orbit enumeration to factorize group elements in generator words</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>newValue</strong> ({‘gap’, ‘plain’, or <code class="docutils literal notranslate"><span class="pre">[]</span></code>, optional) – Value to be stored if provided</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Stored integer value</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>integer</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="gapbinarypath">
+<h2>GapBinaryPath<a class="headerlink" href="#gapbinarypath" title="Permalink to this headline">¶</a></h2>
+<dl class="mat function">
+<dt class="sig sig-object mat" id="+replab.+globals.gapBinaryPath">
+<span class="sig-prename descclassname"><span class="pre">replab.globals.</span></span><span class="sig-name descname"><span class="pre">gapBinaryPath</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">newValue</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+globals.gapBinaryPath" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get/set the path to the GAP System binary</p>
+<p>(On a Linux system, this is the path to the <code class="docutils literal notranslate"><span class="pre">gap.sh</span></code> script).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>newValue</strong> (charstring or <code class="docutils literal notranslate"><span class="pre">[]</span></code>, optional) – Value to be stored if provided</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Stored integer value</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>integer</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="matrixgrouptol">
+<h2>MatrixGroupTol<a class="headerlink" href="#matrixgrouptol" title="Permalink to this headline">¶</a></h2>
+<dl class="mat function">
+<dt class="sig sig-object mat" id="+replab.+globals.matrixGroupTol">
+<span class="sig-prename descclassname"><span class="pre">replab.globals.</span></span><span class="sig-name descname"><span class="pre">matrixGroupTol</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">newValue</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+globals.matrixGroupTol" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tolerance for equality tests in continuous matrix groups</p>
+<p>See <a class="reference internal" href="continuous_groups.html#+replab.ClassicalCompactGroup" title="+replab.ClassicalCompactGroup"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">replab.ClassicalCompactGroup</span></code></a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>newValue</strong> (nonnegative double or <code class="docutils literal notranslate"><span class="pre">[]</span></code>, optional) – Value to be stored if provided</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Stored integer value</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>double</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="maxcosets">
+<h2>MaxCosets<a class="headerlink" href="#maxcosets" title="Permalink to this headline">¶</a></h2>
+<dl class="mat function">
+<dt class="sig sig-object mat" id="+replab.+globals.maxCosets">
+<span class="sig-prename descclassname"><span class="pre">replab.globals.</span></span><span class="sig-name descname"><span class="pre">maxCosets</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">newValue</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+globals.maxCosets" title="Permalink to this definition">¶</a></dt>
+<dd><p>Maximum number of cosets to enumerate during the Todd-Coxeter algorithm</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>newValue</strong> (integer or <code class="docutils literal notranslate"><span class="pre">[]</span></code>, optional) – Value to be stored if provided</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Stored integer value</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>integer</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="maxdeductions">
+<h2>MaxDeductions<a class="headerlink" href="#maxdeductions" title="Permalink to this headline">¶</a></h2>
+<dl class="mat function">
+<dt class="sig sig-object mat" id="+replab.+globals.maxDeductions">
+<span class="sig-prename descclassname"><span class="pre">replab.globals.</span></span><span class="sig-name descname"><span class="pre">maxDeductions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">newValue</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+globals.maxDeductions" title="Permalink to this definition">¶</a></dt>
+<dd><p>Maximum number of deductions to store during the Todd-Coxeter algorithm</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>newValue</strong> (integer or <code class="docutils literal notranslate"><span class="pre">[]</span></code>, optional) – Value to be stored if provided</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Stored integer value</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>integer</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="morphismnchecks">
+<h2>MorphismNChecks<a class="headerlink" href="#morphismnchecks" title="Permalink to this headline">¶</a></h2>
+<dl class="mat function">
+<dt class="sig sig-object mat" id="+replab.+globals.morphismNChecks">
+<span class="sig-prename descclassname"><span class="pre">replab.globals.</span></span><span class="sig-name descname"><span class="pre">morphismNChecks</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">newValue</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+globals.morphismNChecks" title="Permalink to this definition">¶</a></dt>
+<dd><p>Default number of randomized checks to perform when constructing morphisms</p>
+<p>If equal to <code class="docutils literal notranslate"><span class="pre">inf</span></code> and for finite groups, it performs a deterministic check.</p>
+<p>See for example <a class="reference internal" href="groups.html#+replab.FiniteGroup.morphismByImages" title="+replab.FiniteGroup.morphismByImages"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">replab.FiniteGroup.morphismByImages</span></code></a></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>newValue</strong> (integer or <code class="docutils literal notranslate"><span class="pre">inf</span></code> or <code class="docutils literal notranslate"><span class="pre">[]</span></code>, optional) – Value to be stored if provided</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Stored integer value</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>integer</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="nextuniqueid">
+<h2>NextUniqueId<a class="headerlink" href="#nextuniqueid" title="Permalink to this headline">¶</a></h2>
+<dl class="mat function">
+<dt class="sig sig-object mat" id="+replab.+globals.nextUniqueId">
+<span class="sig-prename descclassname"><span class="pre">replab.globals.</span></span><span class="sig-name descname"><span class="pre">nextUniqueId</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+globals.nextUniqueId" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a unique integer</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Unique integer to be used as ID</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>integer</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="randomizedschreiersimstries">
+<h2>RandomizedSchreierSimsTries<a class="headerlink" href="#randomizedschreiersimstries" title="Permalink to this headline">¶</a></h2>
+<dl class="mat function">
+<dt class="sig sig-object mat" id="+replab.+globals.randomizedSchreierSimsTries">
+<span class="sig-prename descclassname"><span class="pre">replab.globals.</span></span><span class="sig-name descname"><span class="pre">randomizedSchreierSimsTries</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">newValue</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+globals.randomizedSchreierSimsTries" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets/sets the number of sifted elements before the BSGS chain is declared complete</p>
+<p>This is the number of successive failed attempts to generate a new strong generator
+before deciding the chain is complete in the randomized Schreier-Sims algorithm;
+the probability of failure is then less than 1/2^value.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>newValue</strong> (<span><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">integer,</span> <span class="pre">optional</span></code></span>) – New value</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The current value.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>integer</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="replabpath">
+<h2>ReplabPath<a class="headerlink" href="#replabpath" title="Permalink to this headline">¶</a></h2>
+<dl class="mat function">
+<dt class="sig sig-object mat" id="+replab.+globals.replabPath">
+<span class="sig-prename descclassname"><span class="pre">replab.globals.</span></span><span class="sig-name descname"><span class="pre">replabPath</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">newValue</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+globals.replabPath" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get/set the root RepLAB folder (i.e. the folder containing <code class="docutils literal notranslate"><span class="pre">src</span></code> and <code class="docutils literal notranslate"><span class="pre">replab_init</span></code>)</p>
+<p>If called without argument, returns the stored value.</p>
+<p>The call with one argument changes the stored value; it should only be called
+as part of <code class="docutils literal notranslate"><span class="pre">replab_init</span></code>.</p>
+<p>The stored value survives <code class="docutils literal notranslate"><span class="pre">clear</span> <span class="pre">all</span></code> as this function is locked.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>newValue</strong> (<span><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">charstring,</span> <span class="pre">optional</span></code></span>) – Sets the stored value</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Path of the root RepLAB folder</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>charstring</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="runsinmatlabemacs">
+<h2>RunsInMatlabEmacs<a class="headerlink" href="#runsinmatlabemacs" title="Permalink to this headline">¶</a></h2>
+<dl class="mat function">
+<dt class="sig sig-object mat" id="+replab.+globals.runsInMatlabEmacs">
+<span class="sig-prename descclassname"><span class="pre">replab.globals.</span></span><span class="sig-name descname"><span class="pre">runsInMatlabEmacs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">newValue</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+globals.runsInMatlabEmacs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns whether the MATLAB/Octave shell is running in the matlab-emacs mode</p>
+</dd></dl>
+
+</section>
+<section id="strmaxcolumns">
+<h2>StrMaxColumns<a class="headerlink" href="#strmaxcolumns" title="Permalink to this headline">¶</a></h2>
+<dl class="mat function">
+<dt class="sig sig-object mat" id="+replab.+globals.strMaxColumns">
+<span class="sig-prename descclassname"><span class="pre">replab.globals.</span></span><span class="sig-name descname"><span class="pre">strMaxColumns</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">newValue</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+globals.strMaxColumns" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get/set the maximal number of columns to display when pretty printing</p>
+<p>The default stored value is <code class="docutils literal notranslate"><span class="pre">[]</span></code>; when the stored value is <code class="docutils literal notranslate"><span class="pre">[]</span></code>, it returns the current terminal width;
+otherwise it returns the integer stored value.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>newValue</strong> (integer or <code class="docutils literal notranslate"><span class="pre">[]</span></code>, optional) – Value to be stored if provided</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Stored integer value, or computed terminal width</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>integer</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="strmaxrows">
+<h2>StrMaxRows<a class="headerlink" href="#strmaxrows" title="Permalink to this headline">¶</a></h2>
+<dl class="mat function">
+<dt class="sig sig-object mat" id="+replab.+globals.strMaxRows">
+<span class="sig-prename descclassname"><span class="pre">replab.globals.</span></span><span class="sig-name descname"><span class="pre">strMaxRows</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">newValue</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+globals.strMaxRows" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get/set the maximal number of rows to display when pretty printing</p>
+<p>The default stored value is <code class="docutils literal notranslate"><span class="pre">[]</span></code>; when the stored value is <code class="docutils literal notranslate"><span class="pre">[]</span></code>, it returns the current terminal height;
+otherwise it returns the integer stored value.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>newValue</strong> (integer or <code class="docutils literal notranslate"><span class="pre">[]</span></code>, optional) – Value to be stored if provided</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Stored integer value, or computed terminal height</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>integer</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="usereconstruction">
+<h2>UseReconstruction<a class="headerlink" href="#usereconstruction" title="Permalink to this headline">¶</a></h2>
+<dl class="mat function">
+<dt class="sig sig-object mat" id="+replab.+globals.useReconstruction">
+<span class="sig-prename descclassname"><span class="pre">replab.globals.</span></span><span class="sig-name descname"><span class="pre">useReconstruction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">newValue</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+globals.useReconstruction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get/set whether to use the group reconstruction when computing equivariant projections</p>
+</dd></dl>
+
+</section>
+<section id="verboseinit">
+<h2>VerboseInit<a class="headerlink" href="#verboseinit" title="Permalink to this headline">¶</a></h2>
+<dl class="mat function">
+<dt class="sig sig-object mat" id="+replab.+globals.verboseInit">
+<span class="sig-prename descclassname"><span class="pre">replab.globals.</span></span><span class="sig-name descname"><span class="pre">verboseInit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">newValue</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+globals.verboseInit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get/set whether the initialization is verbose</p>
+</dd></dl>
+
+</section>
+<section id="verbosity">
+<h2>Verbosity<a class="headerlink" href="#verbosity" title="Permalink to this headline">¶</a></h2>
+<dl class="mat function">
+<dt class="sig sig-object mat" id="+replab.+globals.verbosity">
+<span class="sig-prename descclassname"><span class="pre">replab.globals.</span></span><span class="sig-name descname"><span class="pre">verbosity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">newValue</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+globals.verbosity" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get/set the verbosity level</p>
+<p>The levels are understood as follows:</p>
+<ul class="simple">
+<li><p>1 is INFO, the standard log level indicating what is happening</p></li>
+<li><p>2 is DEBUG, used for information that may be needed for diagnosing issues</p></li>
+<li><p>3 is TRACE, the most fine-grained level of information, expect it to be very verbose</p></li>
+</ul>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>newValue</strong> (<span><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">integer,</span> <span class="pre">optional</span></code></span>) – New value; if empty queries the global variable. 0 is silent, for 1/2/3 see list above</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The stored value</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>integer</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="verifiedarithmetic">
+<h2>VerifiedArithmetic<a class="headerlink" href="#verifiedarithmetic" title="Permalink to this headline">¶</a></h2>
+<dl class="mat function">
+<dt class="sig sig-object mat" id="+replab.+globals.verifiedArithmetic">
+<span class="sig-prename descclassname"><span class="pre">replab.globals.</span></span><span class="sig-name descname"><span class="pre">verifiedArithmetic</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">newValue</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+globals.verifiedArithmetic" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get/set whether to use verified arithmetic</p>
+</dd></dl>
+
+</section>
+<section id="warnonmultiplemethodgroups">
+<h2>WarnOnMultipleMethodGroups<a class="headerlink" href="#warnonmultiplemethodgroups" title="Permalink to this headline">¶</a></h2>
+<dl class="mat function">
+<dt class="sig sig-object mat" id="+replab.+globals.warnOnMultipleMethodGroups">
+<span class="sig-prename descclassname"><span class="pre">replab.globals.</span></span><span class="sig-name descname"><span class="pre">warnOnMultipleMethodGroups</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">newValue</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+globals.warnOnMultipleMethodGroups" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get/set whether to use the group reconstruction when computing equivariant projections</p>
+</dd></dl>
+
+</section>
+<section id="yolo">
+<h2>Yolo<a class="headerlink" href="#yolo" title="Permalink to this headline">¶</a></h2>
+<dl class="mat function">
+<dt class="sig sig-object mat" id="+replab.+globals.yolo">
+<span class="sig-prename descclassname"><span class="pre">replab.globals.</span></span><span class="sig-name descname"><span class="pre">yolo</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">newValue</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+globals.yolo" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get/set whether to error on unsound error bounds</p>
+</dd></dl>
+
+</section>
+</section>
+
+<div class="section">
+   
+</div>
+
+          </div>
+            
+  <div class="footer-relations">
+    
+      <div class="pull-left">
+        <a class="btn btn-default" href="chemistry.html" title="previous chapter (use the left arrow)">Chemistry</a>
+      </div>
+    
+      <div class="pull-right">
+        <a class="btn btn-default" href="graph.html" title="next chapter (use the right arrow)">Graphs</a>
+      </div>
+    </div>
+    <div class="clearer"></div>
+  
+        </div>
+        <div class="clearfix"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../mat-modindex.html" title="MATLAB Module Index"
+             >matlab index</a> |</li>
+        <li class="right" >
+          <a href="graph.html" title="Graphs"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="chemistry.html" title="Chemistry"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.9.2-SNAP documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" >Technical Reference</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Global settings</a></li> 
+      </ul>
+    </div>
+<script type="text/javascript">
+  $("#mobile-toggle a").click(function () {
+    $("#left-column").toggle();
+  });
+</script>
+<script type="text/javascript" src="../_static/js/bootstrap.js"></script>
+  <div class="footer">
+    &copy; Copyright 2018-2020, Denis Rosset, Jean-Daniel Bancal and collaborators. Created using <a href="http://sphinx.pocoo.org/">Sphinx</a>.
+  </div>
+  </body>
+</html>

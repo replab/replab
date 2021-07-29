@@ -1,0 +1,695 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  
+  <!-- Licensed under the Apache 2.0 License -->
+  <link rel="stylesheet" type="text/css" href="../../_static/fonts/open-sans/stylesheet.css" />
+  <!-- Licensed under the SIL Open Font License -->
+  <link rel="stylesheet" type="text/css" href="../../_static/fonts/source-serif-pro/source-serif-pro.css" />
+  <link rel="stylesheet" type="text/css" href="../../_static/css/bootstrap.min.css" />
+  <link rel="stylesheet" type="text/css" href="../../_static/css/bootstrap-theme.min.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+    <title>Symmetries in Bell nonlocality, part 2 &#8212; RepLAB 0.9.2-SNAP documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/guzzle.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css" />
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css" />
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "document", "processHtmlClass": "math|output_area"}}</script>
+    <script src="../../_static/js/collapse_helper.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Symmetries in Bell nonlocality, part 3" href="bell3.html" />
+    <link rel="prev" title="Symmetries in Bell nonlocality, part 1" href="bell1.html" /> 
+  
+   
+  
+<style type="text/css">
+  ul.ablog-archive {
+    list-style: none;
+    overflow: auto;
+    margin-left: 0px;
+  }
+  ul.ablog-archive li {
+    float: left;
+    margin-right: 5px;
+    font-size: 80%;
+  }
+  ul.postlist a {
+    font-style: italic;
+  }
+  ul.postlist-style-disc {
+    list-style-type: disc;
+  }
+  ul.postlist-style-none {
+    list-style-type: none;
+  }
+  ul.postlist-style-circle {
+    list-style-type: circle;
+  }
+</style>
+
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../mat-modindex.html" title="MATLAB Module Index"
+             >matlab index</a> |</li>
+        <li class="right" >
+          <a href="bell3.html" title="Symmetries in Bell nonlocality, part 3"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="bell1.html" title="Symmetries in Bell nonlocality, part 1"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">RepLAB 0.9.2-SNAP documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" >Topic guides</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="index.html" accesskey="U">Nonlocality</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Symmetries in Bell nonlocality, part 2</a></li> 
+      </ul>
+    </div>
+    <div class="container-wrapper">
+
+      <div id="mobile-toggle">
+        <a href="#"><span class="glyphicon glyphicon-align-justify" aria-hidden="true"></span></a>
+      </div>
+  <div id="left-column">
+    <div class="sphinxsidebar"><div class="text-logo">
+  <a href="
+    ../../index.html">RepLAB</a>&nbsp;&nbsp;
+  <a href="https://github.com/replab/replab"><i class="fab fa-github"></i></a>&nbsp;
+  <a href="https://github.com/replab/replab/archive/v0.9.2-SNAP.zip"><i class="fa fa-download"></i></a>&nbsp;
+  <a href="https://gitter.im/replab/replab"><i class="fab fa-gitter"></i></a>&nbsp;
+  <a href="https://travis-ci.com/replab/replab"><i class="fas fa-sync-alt"></i></a>&nbsp;
+  <a href="https://codecov.io/gh/replab/replab"><i class="fas fa-umbrella"></i></a>
+</div><div class="sidebar-block">
+  <div class="sidebar-toc">
+    
+    
+      <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/index.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../howto/index.html">How to</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Topic guides</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">Nonlocality</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="bell1.html">Symmetries in Bell nonlocality, part 1</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Symmetries in Bell nonlocality, part 2</a></li>
+<li class="toctree-l3"><a class="reference internal" href="bell3.html">Symmetries in Bell nonlocality, part 3</a></li>
+<li class="toctree-l3"><a class="reference internal" href="npa.html">Symmetric NPA relaxations</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../membrane/index.html">Membrane vibration modes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../SDP.html">Symmetric SDPs</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../publications/index.html">Publications</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api/index.html">Technical Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../development/index.html">Development/Community</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../blog/index.html">Blog</a></li>
+</ul>
+
+    
+  </div>
+</div>
+<div class="sidebar-block">
+  <div class="sidebar-wrapper">
+    <h2><a href="../../blog.html">Recent Blog Posts</a></h2>
+  </div>
+  <div class="sidebar-toc">
+    <ul>
+      
+      
+      <li class="toctree-l1"><a href="../../blog/20210724-RepFuN.html">24 July - A fun application of RepLAB : solving combination puzzles</a></li>
+      
+      <li class="toctree-l1"><a href="../../blog/20200123-RepLAB-website-live.html">26 January - The RepLAB documentation and the infrastructure behind it</a></li>
+      
+    </ul>
+  </div>
+</div>
+
+      
+    </div>
+  </div>
+        <div id="right-column">
+          
+          <div role="navigation" aria-label="breadcrumbs navigation">
+            <ol class="breadcrumb">
+              <li><a href="../../index.html">Docs</a></li>
+              
+                <li><a href="../index.html">Topic guides</a></li>
+              
+                <li><a href="index.html">Nonlocality</a></li>
+              
+              <li>Symmetries in Bell nonlocality, part 2</li>
+            </ol>
+          </div>
+          
+          <div class="document clearer body">
+             
+<style>
+/* CSS for nbsphinx extension */
+
+/* remove conflicting styling from Sphinx themes */
+div.nbinput.container div.prompt *,
+div.nboutput.container div.prompt *,
+div.nbinput.container div.input_area pre,
+div.nboutput.container div.output_area pre,
+div.nbinput.container div.input_area .highlight,
+div.nboutput.container div.output_area .highlight {
+    border: none;
+    padding: 0;
+    margin: 0;
+    box-shadow: none;
+}
+
+div.nbinput.container > div[class*=highlight],
+div.nboutput.container > div[class*=highlight] {
+    margin: 0;
+}
+
+div.nbinput.container div.prompt *,
+div.nboutput.container div.prompt * {
+    background: none;
+}
+
+div.nboutput.container div.output_area .highlight,
+div.nboutput.container div.output_area pre {
+    background: unset;
+}
+
+div.nboutput.container div.output_area div.highlight {
+    color: unset;  /* override Pygments text color */
+}
+
+/* avoid gaps between output lines */
+div.nboutput.container div[class*=highlight] pre {
+    line-height: normal;
+}
+
+/* input/output containers */
+div.nbinput.container,
+div.nboutput.container {
+    display: -webkit-flex;
+    display: flex;
+    align-items: flex-start;
+    margin: 0;
+    width: 100%;
+}
+@media (max-width: 540px) {
+    div.nbinput.container,
+    div.nboutput.container {
+        flex-direction: column;
+    }
+}
+
+/* input container */
+div.nbinput.container {
+    padding-top: 5px;
+}
+
+/* last container */
+div.nblast.container {
+    padding-bottom: 5px;
+}
+
+/* input prompt */
+div.nbinput.container div.prompt pre {
+    color: #307FC1;
+}
+
+/* output prompt */
+div.nboutput.container div.prompt pre {
+    color: #BF5B3D;
+}
+
+/* all prompts */
+div.nbinput.container div.prompt,
+div.nboutput.container div.prompt {
+    width: 4.5ex;
+    padding-top: 5px;
+    position: relative;
+    user-select: none;
+}
+
+div.nbinput.container div.prompt > div,
+div.nboutput.container div.prompt > div {
+    position: absolute;
+    right: 0;
+    margin-right: 0.3ex;
+}
+
+@media (max-width: 540px) {
+    div.nbinput.container div.prompt,
+    div.nboutput.container div.prompt {
+        width: unset;
+        text-align: left;
+        padding: 0.4em;
+    }
+    div.nboutput.container div.prompt.empty {
+        padding: 0;
+    }
+
+    div.nbinput.container div.prompt > div,
+    div.nboutput.container div.prompt > div {
+        position: unset;
+    }
+}
+
+/* disable scrollbars on prompts */
+div.nbinput.container div.prompt pre,
+div.nboutput.container div.prompt pre {
+    overflow: hidden;
+}
+
+/* input/output area */
+div.nbinput.container div.input_area,
+div.nboutput.container div.output_area {
+    -webkit-flex: 1;
+    flex: 1;
+    overflow: auto;
+}
+@media (max-width: 540px) {
+    div.nbinput.container div.input_area,
+    div.nboutput.container div.output_area {
+        width: 100%;
+    }
+}
+
+/* input area */
+div.nbinput.container div.input_area {
+    border: 1px solid #e0e0e0;
+    border-radius: 2px;
+    /*background: #f5f5f5;*/
+}
+
+/* override MathJax center alignment in output cells */
+div.nboutput.container div[class*=MathJax] {
+    text-align: left !important;
+}
+
+/* override sphinx.ext.imgmath center alignment in output cells */
+div.nboutput.container div.math p {
+    text-align: left;
+}
+
+/* standard error */
+div.nboutput.container div.output_area.stderr {
+    background: #fdd;
+}
+
+/* ANSI colors */
+.ansi-black-fg { color: #3E424D; }
+.ansi-black-bg { background-color: #3E424D; }
+.ansi-black-intense-fg { color: #282C36; }
+.ansi-black-intense-bg { background-color: #282C36; }
+.ansi-red-fg { color: #E75C58; }
+.ansi-red-bg { background-color: #E75C58; }
+.ansi-red-intense-fg { color: #B22B31; }
+.ansi-red-intense-bg { background-color: #B22B31; }
+.ansi-green-fg { color: #00A250; }
+.ansi-green-bg { background-color: #00A250; }
+.ansi-green-intense-fg { color: #007427; }
+.ansi-green-intense-bg { background-color: #007427; }
+.ansi-yellow-fg { color: #DDB62B; }
+.ansi-yellow-bg { background-color: #DDB62B; }
+.ansi-yellow-intense-fg { color: #B27D12; }
+.ansi-yellow-intense-bg { background-color: #B27D12; }
+.ansi-blue-fg { color: #208FFB; }
+.ansi-blue-bg { background-color: #208FFB; }
+.ansi-blue-intense-fg { color: #0065CA; }
+.ansi-blue-intense-bg { background-color: #0065CA; }
+.ansi-magenta-fg { color: #D160C4; }
+.ansi-magenta-bg { background-color: #D160C4; }
+.ansi-magenta-intense-fg { color: #A03196; }
+.ansi-magenta-intense-bg { background-color: #A03196; }
+.ansi-cyan-fg { color: #60C6C8; }
+.ansi-cyan-bg { background-color: #60C6C8; }
+.ansi-cyan-intense-fg { color: #258F8F; }
+.ansi-cyan-intense-bg { background-color: #258F8F; }
+.ansi-white-fg { color: #C5C1B4; }
+.ansi-white-bg { background-color: #C5C1B4; }
+.ansi-white-intense-fg { color: #A1A6B2; }
+.ansi-white-intense-bg { background-color: #A1A6B2; }
+
+.ansi-default-inverse-fg { color: #FFFFFF; }
+.ansi-default-inverse-bg { background-color: #000000; }
+
+.ansi-bold { font-weight: bold; }
+.ansi-underline { text-decoration: underline; }
+
+
+div.nbinput.container div.input_area div[class*=highlight] > pre,
+div.nboutput.container div.output_area div[class*=highlight] > pre,
+div.nboutput.container div.output_area div[class*=highlight].math,
+div.nboutput.container div.output_area.rendered_html,
+div.nboutput.container div.output_area > div.output_javascript,
+div.nboutput.container div.output_area:not(.rendered_html) > img{
+    padding: 5px;
+    margin: 0;
+}
+
+/* fix copybtn overflow problem in chromium (needed for 'sphinx_copybutton') */
+div.nbinput.container div.input_area > div[class^='highlight'],
+div.nboutput.container div.output_area > div[class^='highlight']{
+    overflow-y: hidden;
+}
+
+/* hide copybtn icon on prompts (needed for 'sphinx_copybutton') */
+.prompt a.copybtn {
+    display: none;
+}
+
+/* Some additional styling taken form the Jupyter notebook CSS */
+div.rendered_html table {
+  border: none;
+  border-collapse: collapse;
+  border-spacing: 0;
+  color: black;
+  font-size: 12px;
+  table-layout: fixed;
+}
+div.rendered_html thead {
+  border-bottom: 1px solid black;
+  vertical-align: bottom;
+}
+div.rendered_html tr,
+div.rendered_html th,
+div.rendered_html td {
+  text-align: right;
+  vertical-align: middle;
+  padding: 0.5em 0.5em;
+  line-height: normal;
+  white-space: normal;
+  max-width: none;
+  border: none;
+}
+div.rendered_html th {
+  font-weight: bold;
+}
+div.rendered_html tbody tr:nth-child(odd) {
+  background: #f5f5f5;
+}
+div.rendered_html tbody tr:hover {
+  background: rgba(66, 165, 245, 0.2);
+}
+</style>
+<section id="Symmetries-in-Bell-nonlocality,-part-2">
+<h1>Symmetries in Bell nonlocality, part 2<a class="headerlink" href="#Symmetries-in-Bell-nonlocality,-part-2" title="Permalink to this headline">¶</a></h1>
+<p>We describe the relabelings in the CHSH scenario, and decompose their action on probability distributions <span class="math notranslate nohighlight">\(P(ab|xy)\)</span>, now using an abstract group construction.</p>
+<p>We identify those relabelings with a <a class="reference external" href="https://en.wikipedia.org/wiki/Wreath_product">wreath product</a> construction, which RepLAB supports. This topic guide can also be considered as a (small) introduction to the group constructions available in RepLAB.</p>
+<p>Before using <em>RepLAB</em> commands, we must first initialize the library:</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
+</pre></div>
+</div>
+<div class="input_area highlight-octave notranslate"><div class="highlight"><pre>
+<span></span><span class="nb">addpath</span><span class="p">([</span><span class="nb">pwd</span><span class="p">,</span> <span class="s">&#39;/../../..&#39;</span><span class="p">]);</span>
+<span class="n">replab_init</span><span class="p">(</span><span class="s">&#39;verbose&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<section id="Only-outputs">
+<h2>Only outputs<a class="headerlink" href="#Only-outputs" title="Permalink to this headline">¶</a></h2>
+<p>Outputs are binary, so the relabelling of outputs is the symmetric group of domain size 2.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+</pre></div>
+</div>
+<div class="input_area highlight-octave notranslate"><div class="highlight"><pre>
+<span></span><span class="n">outputGroup</span> <span class="p">=</span> <span class="n">replab</span><span class="p">.</span><span class="n">S</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+outputGroup =
+
+Symmetric group acting on 2 elements
+            identity: [1, 2]
+generator(1 or &#39;x1&#39;): [2, 1]
+    recognize.source: Cyclic group C(2) of order 2 &lt; x | x^2 = 1 &gt;
+
+</pre></div></div>
+</div>
+<p>Now, an element of <code class="docutils literal notranslate"><span class="pre">outputGroup</span></code> is just a permutation of the two outputs:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+</pre></div>
+</div>
+<div class="input_area highlight-octave notranslate"><div class="highlight"><pre>
+<span></span><span class="n">outputGroup</span><span class="p">.</span><span class="n">elements</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+ans =
+
+Indexed family of 2 elements
+1 = [1, 2]
+2 = [2, 1]
+
+</pre></div></div>
+</div>
+<p>The representation of this relabelling on the probabilities <span class="math notranslate nohighlight">\(P(a)\)</span> is then the defining representation</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+</pre></div>
+</div>
+<div class="input_area highlight-octave notranslate"><div class="highlight"><pre>
+<span></span><span class="n">outputRep</span> <span class="p">=</span> <span class="n">outputGroup</span><span class="p">.</span><span class="n">naturalRep</span>
+<span class="n">outputRep</span><span class="p">.</span><span class="nb">image</span><span class="p">([</span><span class="mi">2</span> <span class="mi">1</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+outputRep =
+
+Orthogonal reducible representation
+          dimension: 2
+divisionAlgebraName: []
+              field: &#39;R&#39;
+              group: Symmetric group acting on 2 elements
+   imagesErrorBound: 0
+          isUnitary: true
+           morphism: replab.mrp.PermToFiniteGroup
+       preimages{1}: [2, 1]
+          images{1}: [0, 1; 1, 0]
+
+ans =
+
+   0   1
+   1   0
+
+</pre></div></div>
+</div>
+</section>
+<section id="Inputs-and-outputs">
+<h2>Inputs and outputs<a class="headerlink" href="#Inputs-and-outputs" title="Permalink to this headline">¶</a></h2>
+<p>In the CHSH scenario, each party has two binary measurements. Therefore, a copy of <span class="math notranslate nohighlight">\(S_2\)</span> acts on the outputs of the first measurement, and a second copy of <span class="math notranslate nohighlight">\(S_2\)</span> acting on the outputs of the second measurement, while another copy of <span class="math notranslate nohighlight">\(S_2\)</span> permutes the choice of measurement (input).</p>
+<p>This is described by the wreath product of <span class="math notranslate nohighlight">\(S_2\)</span> by <span class="math notranslate nohighlight">\(S_2\)</span>.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+</pre></div>
+</div>
+<div class="input_area highlight-octave notranslate"><div class="highlight"><pre>
+<span></span><span class="n">inputGroup</span> <span class="p">=</span> <span class="n">replab</span><span class="p">.</span><span class="n">S</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">ioGroup</span> <span class="p">=</span> <span class="n">inputGroup</span><span class="p">.</span><span class="n">wreathProduct</span><span class="p">(</span><span class="n">outputGroup</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+inputGroup =
+
+Symmetric group acting on 2 elements
+            identity: [1, 2]
+generator(1 or &#39;x1&#39;): [2, 1]
+    recognize.source: Cyclic group C(2) of order 2 &lt; x | x^2 = 1 &gt;
+
+ioGroup =
+
+replab.prods.WreathProductGroup_finite
+             A: Symmetric group acting on 2 elements
+             H: Symmetric group acting on 2 elements
+             N: Direct product group with 2 factors
+generatorNames: {&#39;x1&#39;, &#39;x2&#39;, &#39;x3&#39;}
+    generators: 1 x 3 cell
+      identity: {[1, 2], {[1, 2], [1, 2]}}
+             n: 2
+           phi: replab.perm.PermutationCellAction
+representative: {[1, 2], {[1, 2], [1, 2]}}
+          type: replab.prods.WreathProductGroup_finite
+
+</pre></div></div>
+</div>
+<p>Elements of <code class="docutils literal notranslate"><span class="pre">ioGroup</span></code> are now composed of a permutation of inputs, and the conditional output permutation for <span class="math notranslate nohighlight">\(x=1,2\)</span>:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+</pre></div>
+</div>
+<div class="input_area highlight-octave notranslate"><div class="highlight"><pre>
+<span></span><span class="n">ioGroup</span><span class="p">.</span><span class="n">elements</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+ans =
+
+Indexed family of 8 elements
+1 = {[1, 2], {[1, 2], [1, 2]}}
+2 = {[1, 2], {[1, 2], [2, 1]}}
+3 = {[1, 2], {[2, 1], [1, 2]}}
+4 = {[1, 2], {[2, 1], [2, 1]}}
+5 = {[2, 1], {[1, 2], [1, 2]}}
+6 = {[2, 1], {[1, 2], [2, 1]}}
+7 = {[2, 1], {[2, 1], [1, 2]}}
+8 = {[2, 1], {[2, 1], [2, 1]}}
+
+</pre></div></div>
+</div>
+<p>The representation on the conditional probility <span class="math notranslate nohighlight">\(P(a|x)\)</span> is the imprimitive representation, given that we use the defining representation for the inner group</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+</pre></div>
+</div>
+<div class="input_area highlight-octave notranslate"><div class="highlight"><pre>
+<span></span><span class="n">ioRep</span> <span class="p">=</span> <span class="n">ioGroup</span><span class="p">.</span><span class="n">imprimitiveRep</span><span class="p">(</span><span class="n">outputRep</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+</pre></div>
+</div>
+<div class="input_area highlight-octave notranslate"><div class="highlight"><pre>
+<span></span><span class="n">ioRep</span><span class="p">.</span><span class="nb">image</span><span class="p">({[</span><span class="mi">2</span> <span class="mi">1</span><span class="p">]</span> <span class="p">{[</span><span class="mi">1</span> <span class="mi">2</span><span class="p">]</span> <span class="p">[</span><span class="mi">1</span> <span class="mi">2</span><span class="p">]}})</span> <span class="c">% permuting only the inputs</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+ans =
+
+   0   0   1   0
+   0   0   0   1
+   1   0   0   0
+   0   1   0   0
+
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+</pre></div>
+</div>
+<div class="input_area highlight-octave notranslate"><div class="highlight"><pre>
+<span></span><span class="n">ioRep</span><span class="p">.</span><span class="nb">image</span><span class="p">({[</span><span class="mi">1</span> <span class="mi">2</span><span class="p">]</span> <span class="p">{[</span><span class="mi">2</span> <span class="mi">1</span><span class="p">]</span> <span class="p">[</span><span class="mi">1</span> <span class="mi">2</span><span class="p">]}})</span> <span class="c">% permuting only the outputs, conditioned on $x=1$</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+ans =
+
+   0   1   0   0
+   1   0   0   0
+   0   0   1   0
+   0   0   0   1
+
+</pre></div></div>
+</div>
+</section>
+</section>
+
+<div class="section">
+   
+</div>
+
+          </div>
+            
+  <div class="footer-relations">
+    
+      <div class="pull-left">
+        <a class="btn btn-default" href="bell1.html" title="previous chapter (use the left arrow)">Symmetries in Bell nonlocality, part 1</a>
+      </div>
+    
+      <div class="pull-right">
+        <a class="btn btn-default" href="bell3.html" title="next chapter (use the right arrow)">Symmetries in Bell nonlocality, part 3</a>
+      </div>
+    </div>
+    <div class="clearer"></div>
+  
+        </div>
+        <div class="clearfix"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../mat-modindex.html" title="MATLAB Module Index"
+             >matlab index</a> |</li>
+        <li class="right" >
+          <a href="bell3.html" title="Symmetries in Bell nonlocality, part 3"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="bell1.html" title="Symmetries in Bell nonlocality, part 1"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">RepLAB 0.9.2-SNAP documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" >Topic guides</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="index.html" >Nonlocality</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Symmetries in Bell nonlocality, part 2</a></li> 
+      </ul>
+    </div>
+<script type="text/javascript">
+  $("#mobile-toggle a").click(function () {
+    $("#left-column").toggle();
+  });
+</script>
+<script type="text/javascript" src="../../_static/js/bootstrap.js"></script>
+  <div class="footer">
+    &copy; Copyright 2018-2020, Denis Rosset, Jean-Daniel Bancal and collaborators. Created using <a href="http://sphinx.pocoo.org/">Sphinx</a>.
+  </div>
+  </body>
+</html>
