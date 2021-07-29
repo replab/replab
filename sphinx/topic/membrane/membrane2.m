@@ -15,7 +15,8 @@
 
 % # Eigenvalue problem of a vibrating square membrane, part 2
 
-run ../../../replab_init
+addpath([pwd, '/../../..']);
+replab_init('verbose', 0);
 g1 = [9 6 3 8 5 2 7 4 1];
 g2 = [3 2 1 6 5 4 9 8 7];
 DH = replab.PermutationGroup.of(g1, g2)
@@ -60,7 +61,7 @@ M_block(8:9, 8:9);
 
 M_block(6:9,6:9)
 
-% Therefore, by permuting the rows and columns ``[6 7 8 9]`` $\to$ ``[6 8 7 9]``, this block in the 4th isotypic component acquires the form $ \mathbb{I}_2 \otimes A$, which is obviously block diagonal by the properties of the Kronecker product:
+% Therefore, by permuting the rows and columns ``[6 7 8 9]`` $\to$ ``[6 8 7 9]``, this block in the 4th isotypic component acquires the form $\mathbb{I}_2 \otimes A$, which is obviously block diagonal by the properties of the Kronecker product:
 
 M_block_Iso4 = M_block([6 8 7 9],[6 8 7 9])
 
@@ -84,7 +85,7 @@ M_block_Iso4 = M_block([6 8 7 9],[6 8 7 9])
 
 Block1 = M_block(1:3,1:3)
 
-% We can now apply the *MATLAB/Octave* **eig** function directly to this particular block and obtain then eigenvalues and eigenvectors for the first component in descending order:
+% We can now apply the *MATLAB/Octave* **eig** function directly to this particular block and obtain then eigenvalues and eigenvectors for the first component:
 
 [U1,E1] = eig(Block1)
 
@@ -112,7 +113,8 @@ Block4 = M_block_Iso4
 % Following the above, we can extract the ground state as demonstrated below:
 
 x1 = basis(:,1); x2 = basis(:,2); x3 = basis(:,3); % Define the basis vectors in the first isotypic component
-gs = U1(1,3)*x1 + U1(2,3)*x2 + U1(3,3)*x3; % Extract the coefficients for the linear combination
+lowestIndex = find(diag(E1) == min(diag(E1))); % Identify the index of the lowest frequency
+gs = U1(1,lowestIndex)*x1 + U1(2,lowestIndex)*x2 + U1(3,lowestIndex)*x3; % Extract the coefficients for the linear combination
 GS_matrix = reshape(gs, [3 3])' % convert the column vector into a "lattice function"
 
 % This lattice function is the approximation to the ground oscillation of the membrane, since the numbers assigned to the nine points describe the displacements of the membrane at the corresponding positions.
@@ -121,7 +123,8 @@ GS_matrix = reshape(gs, [3 3])' % convert the column vector into a "lattice func
 %
 % In a completely analogous manner the lattice function for the oscillation with the highest eigenvalue can also be found. Since we have already sorted out the eigenvalues, we know that the eigenvector for this eigenspace is encoded in the first column of the matrix $U_1$, and it turns out that we can write the basis vector for this eigenstate as a linear combination of the basis of the first isotypic component as exemplified below
 
-hs = U1(1,1)*x1 + U1(2,1)*x2 + U1(3,1)*x3;
+highestIndex = find(diag(E1) == max(diag(E1))); % Identify the index of the highest frequency
+hs = U1(1,highestIndex)*x1 + U1(2,highestIndex)*x2 + U1(3,highestIndex)*x3;
 HS_matrix = reshape(hs,[3 3])'
 
 % Proceeding in a similar manner, we can get the basis for each of the eigenspaces $E_{\lambda}$ and express it with respect to the reordered basis vectors in the isotypic components of the natural representation. Remember that the coefficients for the linear expansion can in principle be always read off from the columns of a matrix $U_i$.
@@ -133,23 +136,22 @@ HS_matrix = reshape(hs,[3 3])'
 [s,t] = meshgrid(1:3);
 figure;
 subplot(1,2,1)
-surfc(GS_matrix,'EdgeColor','red')
-title('Ground Oscillation State')
-view(285,11)
-grid off;
-colorbar ("southoutside");
-subplot(1,2,2)
-surfc(HS_matrix,'EdgeColor','blue')
+surf(GS_matrix,'EdgeColor','red')
 colormap('jet')
-title('Highest Frequency State')
+title('Ground Oscillation State')
 grid off;
-colorbar ("southoutside");
-view(285,11)
+axis([1 3 1 3 -0.6 0.6])
 hold on
 plane=0*s;
 mesh(s,t,plane,'EdgeColor', 'green')
 hold off
-view(10,20)
+view(285,11)
+subplot(1,2,2)
+surf(HS_matrix,'EdgeColor','red')
+title('Highest Frequency State')
+axis([1 3 1 3 -0.6 0.6])
+view(285,11)
+grid off;
 
 % The important thing to notice here is that in the **ground oscillation** the displacements of each of the lattice points have the same sign, thus recovering the result from the *theory of continuous oscillators* that the ground oscillation never vanishes in the interior of the membrane. On the other hand, as fas as the **oscillation with the highest frequency** is concerned, the displacements have a maximal number of sign changes. To clarify this, we have included in the plot the plane $z=0$, so that we can verify that between two positive displacements there is a negative one (this can be seen from the lattice function ``HS_matrix`` as well), leading to a maximum number of node lines in the membrane region. We refer the reader to the classical [texbook](https://onlinelibrary.wiley.com/doi/book/10.1002/9783527617210) of Courant and Hilbert for a complete treatment of vibrations and eigenvalue problems.
 

@@ -26,7 +26,7 @@ classdef LeftCoset < replab.Coset
                 parent = group.closure(element);
             end
             if group.isNormalizedBy(element)
-                l = replab.NormalCoset(group, element, parent);
+                l = replab.NormalCoset.make(group, element, parent);
                 return
             end
             chain = parent.niceMorphism.imageGroup(group).lexChain;
@@ -50,6 +50,10 @@ classdef LeftCoset < replab.Coset
             end
             matrix = sortrows(g(H'))';
             E = replab.indf.FiniteGroupIndexedFamily(matrix, self.isomorphism);
+        end
+
+        function s = computeSetProduct(self)
+            s = replab.SetProduct(self.parent, horzcat({{self.representative}}, self.group.setProduct.sets), false);
         end
 
     end
@@ -84,7 +88,32 @@ classdef LeftCoset < replab.Coset
                 el = self.isomorphism.imageElement(el);
             end
             el = replab.bsgs.Cosets.leftRepresentative(self.groupChain, el);
-            b = isequal(self.representative, el);
+            if ~isempty(self.isomorphism)
+                el = self.isomorphism.preimageElement(el);
+            end
+            b = self.parent.eqv(self.representative, el);
+        end
+
+        % Coset
+
+        function [l, r] = factorizeShortRepresentativeLetters(self)
+        % Returns a tentatively short word corresponding to an element of this coset
+        %
+        % An effort is made to identify a short word, but without optimality guarantees.
+        %
+        % Returns
+        % -------
+        %   l: integer(1,\*)
+        %     Letters of the word representing an element of ``self``
+        %   r: element of `.group`
+        %     Represented coset element
+            if isa(self.group, 'replab.PermutationGroup')
+                permCoset = self;
+            else
+                permCoset = self.group.niceGroup.leftCoset(self.isomorphism.imageElement(self.representative), self.parent.niceGroup);
+            end
+            [l, r] = self.parent.niceGroup.factorization.factorizeRepresentativeOfLeftCoset(permCoset);
+            r = self.isomorphism.preimageElement(r);
         end
 
     end

@@ -7,7 +7,7 @@ classdef Class < replab.infra.SourceElement
         propertyLines % integer(1,\*): Line numbers of properties
     end
 
-    properties (Access = protected)
+    properties % (Access = protected) % changed to make Octave happy
         ownDocumentationElements_
         inheritedDocumentationElements_
         inheritedElementsStruct_
@@ -32,13 +32,11 @@ classdef Class < replab.infra.SourceElement
             oe = struct;
             for i = 1:length(classData.ownMethods)
                 md = classData.ownMethods{i};
-                if ~isequal(md.name, classData.name)
-                    kind = 'method';
-                    m = replab.infra.ConcreteClassElement(codeBase, package, self, md.name, md.declarationLineNumber, ...
-                                                          kind, md.declaration, md.attributes, ...
-                                                          md.docLines, md.docLineNumbers);
-                    oe.(m.name) = m;
-                end
+                kind = 'method';
+                m = replab.infra.ConcreteClassElement(codeBase, package, self, md.name, md.declarationLineNumber, ...
+                                                      kind, md.declaration, md.attributes, ...
+                                                      md.docLines, md.docLineNumbers);
+                oe.(m.name) = m;
             end
             for i = 1:length(classData.ownProperties)
                 pd = classData.ownProperties{i};
@@ -175,16 +173,7 @@ classdef Class < replab.infra.SourceElement
 
         function on = ownMethodGroupNames(self)
             om = self.ownMethods;
-            n = length(om);
-            on = cell(1, n);
-            for i = 1:n
-                m = om{i};
-                if isfield(m.attributes, 'group')
-                    on{i} = m.attributes.group;
-                else
-                    on{i} = '';
-                end
-            end
+            on = cellfun(@(x) x.declarations.bestEffortGroup, om, 'uniform', 0);
         end
 
         function op = ownProperties(self)

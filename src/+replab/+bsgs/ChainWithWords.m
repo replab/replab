@@ -10,6 +10,7 @@ classdef ChainWithWords < replab.Str
 
     properties (SetAccess = protected)
         group % (`+replab.PermutationGroup`): Permutation group for which this chain is computed
+        generators % (cell(1,\*) of elements of `.group`): Generators on which to decompose group elements
         chain % (`.Chain`): BSGS chain of the group being computed
         completed % (logical): Whether the chain has been completed
         n % (integer): Domain size
@@ -24,7 +25,7 @@ classdef ChainWithWords < replab.Str
 
     methods
 
-        function self = ChainWithWords(group)
+        function self = ChainWithWords(group, generators)
         % Constructs an empty mutable chain to start the Minkwitz algorithm
         %
         % Args:
@@ -46,6 +47,7 @@ classdef ChainWithWords < replab.Str
                 nuw{i} = {[]};
             end
             self.group = group;
+            self.generators = generators;
             self.chain = chain;
             self.completed = false;
             self.n = n;
@@ -82,7 +84,80 @@ classdef ChainWithWords < replab.Str
                 nu = self.nu{i}(:,ind)';
                 nuw = self.nuw{i}{ind};
                 g = nu(g);
-                w = replab.fp.composeLetters(w, -fliplr(nuw));
+                w = replab.fp.Letters.compose(w, -fliplr(nuw));
+            end
+        end
+
+        function [w, r] = wordLeftCoset(self, representative, subgroupChain)
+        % Returns a tentatively short word corresponding to an element of the given left coset
+        %
+        % The left coset is given by a chain describing a subgroup and a representative.
+        %
+        % An effort is made to identify a short word within the coset, but without optimality guarantees.
+        %
+        % Notes: If the coset basis is different than the chain's basis,
+        % the coset chain basis is readjusted to match the same basis.
+        %
+        % Args:
+        %   representative (permutation): Coset representative
+        %   subgroupChain (`+replab.+bsgs.Chain`): Chain describing the coset group factor
+        %
+        % Returns
+        % -------
+        %   w: integer(1,\*)
+        %     Letters of the word representing an element of ``coset``
+        %   r: permutation
+        %     The member of the coset corresponding to the word returned
+            assert(self.completed);
+
+            if length(subgroupChain.B) == 0
+                % coset contains a single element, use a simpler method
+                w = self.word(representative);
+                r = representative;
+                return
+            end
+
+            if ~isequal(self.B, subgroupChain.B)
+                subgroupChain = subgroupChain.mutableCopy;
+                subgroupChain.baseChange(self.B, false);
+                subgroupChain.makeImmutable;
+            end
+
+            % Now we do the job
+            w = [];
+            g = representative;
+            r = g;
+            for i = 1:self.k
+                beta = self.B(i);
+                j = find(subgroupChain.B == beta, 1);
+                if isempty(j) || (length(subgroupChain.Delta{j}) == 1)
+                    % No freedom in the permutation at this stage
+                    b = g(beta);
+                else
+                    % Explore the coset group
+                    wordLengths = zeros(1, length(subgroupChain.Delta{j}));
+                    for it = 1:length(subgroupChain.Delta{j})
+                        b = g(subgroupChain.Delta{j}(it));
+                        ind = self.iOrbit(b,i);
+                        assert(ind > 0, 'Permutation not contained in the group');
+                        nuw = self.nuw{i}{ind};
+                        wordLengths(it) = length(replab.fp.Letters.compose(w, -fliplr(nuw)));
+                    end
+                    % Apply a permutation so as to stay in the coset but
+                    % yields a shorter word at this stage
+                    bestIt = find(wordLengths == min(wordLengths), 1);
+                    Uj = subgroupChain.U{j};
+                    u = Uj(:, bestIt)';
+                    g = g(u);
+                    r = r(u);
+                    b = g(beta);
+                end
+                ind = self.iOrbit(b,i);
+                assert(ind > 0, 'Permutation not contained in the group');
+                nu = self.nu{i}(:,ind)';
+                nuw = self.nuw{i}{ind};
+                g = nu(g);
+                w = replab.fp.Letters.compose(w, -fliplr(nuw));
             end
         end
 
@@ -141,7 +216,7 @@ classdef ChainWithWords < replab.Str
                 v = self.nu{i}(:,ind)';
                 vw = self.nuw{i}{ind};
                 r = v(t);
-                rw = replab.fp.composeLetters(vw, tw);
+                rw = replab.fp.Letters.compose(vw, tw);
                 if length(tw) < length(vw)
                     t_inv = self.group.inverse(t);
                     tw_inv = -fliplr(tw);
@@ -213,7 +288,7 @@ classdef ChainWithWords < replab.Str
         % Returns:
         %   integer(1,\*): Next word in the enumeration
             assert(~self.completed);
-            nG = self.group.nGenerators;
+            nG = length(self.generators);
             L = length(w);
             l = L;
             while l > 0
@@ -260,7 +335,7 @@ classdef ChainWithWords < replab.Str
                             yw = self.nuw{j}{oy};
                             if new(ix, j) || new(iy, j)
                                 t = x(y); % we do not need to inverse the product (left/right action thing)
-                                tw = replab.fp.composeLetters(xw, yw);
+                                tw = replab.fp.Letters.compose(xw, yw);
                                 self.round(l, j, t, tw);
                             end
                         end
@@ -294,7 +369,7 @@ classdef ChainWithWords < replab.Str
                                 assert(nuii(bi) == self.B(i));
                                 nuiiw = self.nuw{i}{ii};
                                 t = self.group.composeWithInverse(x, nuii);
-                                tw = replab.fp.composeLetters(xw, -fliplr(nuiiw));
+                                tw = replab.fp.Letters.compose(xw, -fliplr(nuiiw));
                                 if length(tw) < l
                                     ind = length(self.orbit{i}) + 1;
                                     self.orbit{i}(ind) = p;
@@ -329,7 +404,7 @@ classdef ChainWithWords < replab.Str
             count = 0;
             while count < nRounds || ~self.tableFull
                 tw = self.next(tw);
-                t = self.group.imageLetters(tw);
+                t = self.group.composeLetters(self.generators, tw);
                 self.round(l, 1, t, tw);
                 count = count + 1;
             end
@@ -363,7 +438,7 @@ classdef ChainWithWords < replab.Str
             count = 0;
             while count < nRounds || ~self.tableFull
                 tw = self.next(tw);
-                t = self.group.imageLetters(tw);
+                t = self.group.composeLetters(self.generators, tw);
                 self.round(l, 1, t, tw);
                 if mod(count, s) == 0
                     self.improve(l);

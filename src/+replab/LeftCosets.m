@@ -87,18 +87,19 @@ classdef LeftCosets < replab.Cosets
 
         function mu = computeLeftAction(self)
         % Returns, as a morphism, the action of the given group of its left cosets
-            nG = self.group.nGenerators;
-            ds = self.group.domainSize;
+            permGrp = self.group.niceGroup;
+            nG = permGrp.nGenerators;
+            ds = permGrp.domainSize;
             T = self.transversalAsMatrix;
             S = replab.perm.Set(ds);
             S.insert(T);
             n = size(T, 2);
             images = cell(1, nG);
             for i = 1:nG
-                g = self.group.generator(i);
+                g = permGrp.generator(i);
                 img = zeros(1, n);
                 for j = 1:n
-                    gt = self.cosetRepresentative(g(T(:,j)'));
+                    gt = replab.bsgs.Cosets.leftRepresentative(self.subgroupChain, g(T(:,j)'));
                     loc = S.find(gt');
                     assert(length(loc) == 1);
                     img(j) = loc;
@@ -106,7 +107,7 @@ classdef LeftCosets < replab.Cosets
                 images{i} = img;
             end
             Sn = replab.S(n);
-            mu = self.group.morphismByImages(Sn, images);
+            mu = self.group.morphismByImages(Sn, 'images', images);
         end
 
     end

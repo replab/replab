@@ -25,6 +25,12 @@ classdef FiniteGroupLaws < replab.laws.GroupLaws
             self.assert(self.T.isTrivial == (self.T.nGenerators == 0));
         end
 
+        function law_withGeneratorNames_(self)
+        % Checks that renaming generators works properly
+            G = self.T.withGeneratorNames(replab.FiniteGroup.defaultGeneratorNames(self.T.nGenerators));
+            assert(G.nGenerators == self.T.nGenerators);
+        end
+
         function law_order_(self)
         % Checks that a group is trivial iff its order is 1
             self.assert(self.T.isTrivial == (self.T.order == 1));
@@ -52,9 +58,9 @@ classdef FiniteGroupLaws < replab.laws.GroupLaws
             elementsLaws = self.T.elements.laws;
         end
 
-        function law_decomposition_size_(self)
+        function law_setProduct_size_(self)
         % Checks that the cartesian product set decomposition has the correct size
-            D = self.T.decomposition.T;
+            D = self.T.setProduct.sets;
             o = vpi(1);
             for i = 1:length(D)
                 o = o * length(D{i});
@@ -75,6 +81,27 @@ classdef FiniteGroupLaws < replab.laws.GroupLaws
                 sub = self.T.subgroup({t});
             end
             self.assert(sub.order == self.T.elementOrder(t));
+        end
+
+        function law_factorizeLetters_imageLetters_T(self, t)
+            l = self.T.factorizeLetters(t);
+            t1 = self.T.imageLetters(l);
+            self.T.assertEqv(t, t1);
+        end
+
+        function law_factorizeWord_imageWord_T(self, t)
+            w = self.T.factorizeWord(t);
+            t1 = self.T.imageWord(w);
+            self.T.assertEqv(t, t1);
+        end
+
+        function law_relators_are_satisfied_(self)
+            if self.T.inCache('relators')
+                for i = 1:length(self.T.relators)
+                    g = self.T.imageWord(self.T.relators{i});
+                    assert(self.T.isIdentity(g));
+                end
+            end
         end
 
     end

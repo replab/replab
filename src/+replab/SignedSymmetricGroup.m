@@ -8,7 +8,6 @@ classdef SignedSymmetricGroup < replab.SignedPermutationGroup
         %
         % Args:
         %   domainSize (integer): Domain size, must be > 0
-            o = factorial(vpi(domainSize))*vpi(2)^domainSize;
             switch domainSize
               case 0
                 generators = cell(1, 0);
@@ -22,23 +21,28 @@ classdef SignedSymmetricGroup < replab.SignedPermutationGroup
                 flip = [-1 2:domainSize];
                 generators = {shift trans flip};
             end
-            self = self@replab.SignedPermutationGroup(domainSize, generators, o, 'self');
+            type = 'self';
+            self@replab.SignedPermutationGroup(domainSize, generators, 'type', type);
         end
 
-        %% Str methods
+    end
+
+    methods % Implementations
+
+        % Str
 
         function s = headerStr(self)
             s = sprintf('Signed permutations acting on {-%d..-1 1..%d}', self.domainSize, self.domainSize);
         end
 
-        %% Domain methods
+        % Domain
 
         function s = sample(self)
             n = self.domainSize;
             s = randperm(n) .* (randi([0 1], 1, n)*2-1);
         end
 
-        %% Finite group methods
+        % FiniteGroup
 
         function b = contains(self, g)
             assert(length(g) == self.domainSize, 'Signed permutation in wrong domain');
@@ -51,7 +55,9 @@ classdef SignedSymmetricGroup < replab.SignedPermutationGroup
     methods (Access = protected)
 
         function o = computeOrder(self)
-            o = factorial(vpi(self.domainSize)) * vpi(2)^self.domainSize;
+            ds = self.domainSize;
+            o = replab.util.factorial(ds)*replab.util.multiplyIntegers(ones(1, ds)*2);
+            % faster than o = factorial(vpi(domainSize))*vpi(2)^domainSize;
         end
 
 % $$$         function E = computeElements(self)

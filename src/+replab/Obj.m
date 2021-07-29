@@ -52,9 +52,13 @@ classdef Obj < replab.Str
         % - ``=``: The existing value and the given value are compared for equality using ``==``
         % - ``error``: Raises an error
         %
+        % Note that function handles cannot be stored in the cache (if that is necessary, they can be wrapped in
+        % a scalar cell array); function handles are used to provide lazy evaluation of properties, and will be
+        % called once when the property is requested.
+        %
         % Args:
         %   name (charstring): Name of the property
-        %   value: Value of the property
+        %   value: Value of the property, or a function handle able to compute the value
         %   handleExisting ({'overwrite', 'ignore', 'isequal', '=='}, optional): What to do if the value is already known, default ``'ignore'``
             if isempty(self.cache_)
                 self.cache_ = struct;
@@ -70,9 +74,9 @@ classdef Obj < replab.Str
                     self.cache_.(name) = value;
                   case 'ignore'
                   case '=='
-                    assert(self.cache_.(name) == value);
+                    assert(self.cachedOrEmpty(name) == value);
                   case 'isequal'
-                    assert(isequal(self.cache_.(name), value));
+                    assert(isequal(self.cachedOrEmpty(name), value));
                   otherwise
                     error('Invalid argument handleExisting')
                 end
@@ -81,23 +85,39 @@ classdef Obj < replab.Str
             end
         end
 
+        function res = cachedOrDefault(self, name, defaultValue)
+        % Returns the cached property if it exists, or the provided default value if it is unknown yet
+        %
+        % See `.cached` and `.cachedOrEmpty`.
+        %
+        % Args:
+        %   name (charstring): Name of the property
+        %   defaultValue: Value returned in case the property is unknown
+        %
+        % Returns
+        %   The property value if known, otherwise ``defaultValue``
+            if self.inCache(name)
+                res = self.cache_.(name);
+                if isa(res, 'function_handle')
+                    res = res();
+                    self.cache_.(name) = res;
+                end
+            else
+                res = defaultValue;
+            end
+        end
+
         function res = cachedOrEmpty(self, name)
         % Returns the cached property if it exists, or ``[]`` if it is unknown yet
         %
-        % See `.cached`.
+        % See `.cached` and `.cachedOrDefault`.
+        %
         % Args:
         %   name (charstring): Name of the property
         %
         % Returns:
         %   The property value if known, otherwise ``[]``
-            if isempty(self.cache_)
-                self.cache_ = struct;
-            end
-            if isfield(self.cache_, name)
-                res = self.cache_.(name);
-            else
-                res = [];
-            end
+            res = self.cachedOrDefault(name, []);
         end
 
         function res = cached(self, name, fun)
@@ -117,6 +137,10 @@ classdef Obj < replab.Str
             end
             if isfield(self.cache_, name)
                 res = self.cache_.(name);
+                if isa(res, 'function_handle')
+                    res = res();
+                    self.cache_.(name) = res;
+                end
             else
                 res = fun();
                 self.cache_.(name) = res;

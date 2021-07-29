@@ -32,19 +32,18 @@ classdef ChainWithImages < replab.Str
 
     methods
 
-        function self = ChainWithImages(n, J, S, T, Sind, Delta, iDelta, U, Uinv, V, Vinv)
+        function self = ChainWithImages(n, J, B, S, T, Sind, Delta, iDelta, U, Uinv, V, Vinv)
         % Constructs an empty mutable chain for a group of permutations acting on ``n`` elements
         %
         % Args:
         %   n (integer): Domain size
-        %                               The default value is `+replab.+bsgs.TrivialGroup`
         %
         % Returns:
         %   `+replab.bsgs.ChainWithImages`: A constructed BSGS chain
             self.isMutable = true;
             self.n = n;
             self.J = J;
-            if nargin == 1
+            if nargin > 2
                 self.B = B;
                 self.S = S;
                 self.T = T;
@@ -121,9 +120,10 @@ classdef ChainWithImages < replab.Str
         %
         % Returns:
         %   vpi: Size of the group stored in the chain
-            o = vpi(1);
-            for i = 1:self.length
-                o = o * vpi(length(self.Delta{i}));
+            if self.length == 0
+                o = vpi(1);
+            else
+                o = replab.util.multiplyIntegers(self.orbitSizes);
             end
         end
 
@@ -391,26 +391,102 @@ classdef ChainWithImages < replab.Str
             i = k + 1; % marker that we striped through the chain
         end
 
-        %% Mutable methods
+        function [res, errorBound] = double(self, isUnitary)
+        % Returns a new BSGS chain with the images approximated
+        %
+        % Args:
+        %   isUnitary (logical): Whether the representation described by the chain is unitary
+        %
+        % Returns
+        % -------
+        %   res: `+replab.+bsgs.ChainWithImages`
+        %     Chain with approximate images
+        %   errorBound: double
+        %     Bound on the computed images
+            if nargin < 2
+                isUnitary = false;
+            end
+            k = self.length;
+            newT = cellfun(@(t) double(t), self.T, 'uniform', 0);
+            newV = cell(1, k);
+            newVinv = cell(1, k);
+            maxCondNums = zeros(1, k);
+            maxErrors = zeros(1, k);
+            for i = 1:k
+                Vi = self.V{i};
+                Vinvi = self.Vinv{i};
+                l = length(Vi);
+                newVi = cell(1, l);
+                newVinvi = cell(1, l);
+                maxError = 0;
+                maxCondNum = 1;
+                for j = 1:length(Vi)
+                    if isa(Vi{j}, 'replab.cyclotomic')
+                        [approx, err] = Vi{j}.doubleApproximation;
+                    else
+                        approx = Vi{j};
+                        err = 0;
+                    end
+                    newVi{j} = replab.numerical.bestStorage(approx);
+                    maxError = max(maxError, norm(err, 'fro'));
+                    if isUnitary
+                        newVinv{j} = newVi{j}';
+                    else
+                        if isa(Vinvi{j}, 'replab.cyclotomic')
+                            [approx, err] = Vinvi{j}.doubleApproximation;
+                        else
+                            approx = Vinvi{j};
+                            err = 0;
+                        end
+                        newVinvi{j} = replab.numerical.bestStorage(approx);
+                        maxCondNum = max(maxCondNum, replab.numerical.condUpperBound(newVi{j}, newVinvi{j}));
+                        maxError = max(maxError, norm(err, 'fro'));
+                    end
+                end
+                maxCondNums(i) = maxCondNum;
+                maxErrors(i) = maxError;
+                newV{i} = newVi;
+                newVinv{i} = newVinvi;
+            end
+            errorBound = 0;
+            for i = 1:k
+                errorBound = errorBound + maxErrors(i)*prod(maxCondNums(1:i-1))*prod(maxCondNums(i+1:end));
+            end
+            res = replab.bsgs.ChainWithImages(self.n, self.J, self.B, self.S, newT, self.Sind, self.Delta, self.iDelta, ...
+                                              self.U, self.Uinv, newV, newVinv);
+            if ~self.isMutable
+                res.makeImmutable;
+            end
+        end
 
-        function mutableMapImages(self, mu)
-        % Maps in place the chain images
+        function res = mapImages(self, mu)
+        % Returns a new BSGS chain with the images mapped through a function
+        %
+        % The returned chain has the same mutability (`.isMutable`) as this chain.
         %
         % Args:
         %   mu (`+replab.Morphism`): Group homomorphism from the current `J` to ``newJ``
-            assert(self.isMutable);
+        %
+        % Returns:
+        %   `+replab.+bsgs.ChainWithImages`: A copy of this BSGS chain with updated images
             k = self.length;
             f = @(v) mu.imageElement(v);
-            self.T = cellfun(f, self.T, 'uniform', 0);
+            newT = cellfun(f, self.T, 'uniform', 0);
+            newV = cell(1, k);
+            newVinv = cell(1, k);
             for i = 1:k
-                Vi = self.V{i};
-                self.V{i} = cellfun(f, Vi, 'uniform', 0);
-                Vinvi = self.Vinv{i};
-                self.Vinv{i} = cellfun(f, Vinvi, 'uniform', 0);
+                newV{i} = cellfun(f, self.V{i}, 'uniform', 0);
+                newVinv{i} = cellfun(f, self.Vinv{i}, 'uniform', 0);
             end
-            self.J = mu.target;
+            newJ = mu.target;
+            res = replab.bsgs.ChainWithImages(self.n, newJ, self.B, self.S, newT, self.Sind, self.Delta, self.iDelta, ...
+                                              self.U, self.Uinv, newV, newVinv);
+            if ~self.isMutable
+                res.makeImmutable;
+            end
         end
 
+        %% Mutable methods
 
         function insertInOrbit(self, i, b, u, v)
         % Inserts a new orbit element in an orbit
@@ -547,8 +623,8 @@ classdef ChainWithImages < replab.Str
         function randomizedSchreierSims(self, order)
         % Runs the randomized Schreier-Sims algorithm
         %
-        % Failure probability can be tuned using replab.Parameters.randomizedSchreierSimsTries
-            nTries = replab.Parameters.randomizedSchreierSimsTries;
+        % Failure probability can be tuned using replab.globals.randomizedSchreierSimsTries
+            nTries = replab.globals.randomizedSchreierSimsTries;
             R = replab.bsgs.RandomBagWithImages(self.n, self.S, [], [], self.J, self.T);
             c = 0;
             if isempty(order)
@@ -572,27 +648,21 @@ classdef ChainWithImages < replab.Str
 
     methods (Static)
 
-        function C = make(n, target, generators, images, finalizeImages, base, order)
-            if nargin < 7
+        function C = make(n, target, preimages, images, base, order)
+            if nargin < 6
                 order = [];
             end
-            if nargin < 6
-                base = [];
-            end
             if nargin < 5
-                finalizeImages = [];
+                base = [];
             end
             C = replab.bsgs.ChainWithImages(n, target);
             for i = 1:length(base)
                 C.insertEndBasePoint(base(i));
             end
-            for i = 1:length(generators)
-                C.stripAndAddStrongGenerator(generators{i}, images{i});
+            for i = 1:length(preimages)
+                C.stripAndAddStrongGenerator(preimages{i}, images{i});
             end
             C.randomizedSchreierSims(order);
-            if ~isempty(finalizeImages)
-                C.mutableMapImages(finalizeImages);
-            end
             C.makeImmutable;
         end
 

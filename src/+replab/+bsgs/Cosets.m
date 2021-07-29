@@ -32,6 +32,10 @@ classdef Cosets
         %   integer(\*,\*): Transversal matrix with permutations as columns
             n = group.n;
             L = group.length;
+            if L == 0
+                T = (1:group.n)';
+                return
+            end
             stackG = zeros(n, L+1); % current group element
             stackG(:,1) = 1:n;
             stackS = cell(1, L+1);

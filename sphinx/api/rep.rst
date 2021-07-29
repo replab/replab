@@ -3,51 +3,41 @@ Representations
 
 .. module:: +replab
 
--  `.Rep` is a real or complex representation of a finitely generated
-   group with associated `.RepLaws`.
+Representation in RepLAB, whether they are exact or inexact, reducible or irreducible, are described by the `.Rep` base class.
 
--  `.RepByImages` is a real or complex representation described by the
-   (matrix) images of the group generators; the computation of images
-   rests on the factorization of group elements.
+* `.Rep` is a real or complex representation of a compact group.
 
--  `.SimilarRep` describes a representation with an associated change of basis matrix.
+Some representations encode a division algebra using real or complex coefficients.
 
-Once a `.Rep` has been constructed, it can be decomposed into
-irreducible representations using the ``rep.decomposition`` method.
+* `.DivisionAlgebra` provides information about the division algebra encoding handled by RepLAB.
 
--  `.SubRep` describes a subrepresentation of an existing
-   representation. The instance can remember which representation it
-   splits (as a ``parent``) and the change of basis matrix (``basis``).
+A particular type of representation is a representation of a finite group given by generator images.
 
--  `.Isotypic` are isotypic components, which group equivalent
-   irreducible representations present in a representation. If the irreducible
-   representations are all in the same basis, this will be an instance of
-   `.HarmonizedIsotypic`.
+*  `.RepByImages` is a real or complex representation described by the (matrix) images of the group generators.
 
--  `.Irreducible` regroups isotypic components, with associated
-   `.IrreducibleLaws`.
+Once a `.Rep` has been constructed, it can be decomposed into irreducible representations using the ``rep.decomposition`` method.
 
-Representations induce vector spaces.
+*  `.SubRep` describes a subrepresentation of an existing representation. The instance can remember which
+   representation it splits (`.SubRep.parent`) and the change of basis maps (`.SubRep.injection`, `.SubRep.projection`).
 
--  `.Equivariant` describes the vector space of equivariant linear maps
-   between two representations of the same group, with specialization
-   for commutant maps of isotypic and irreducible decompositions:
-   `.IsotypicCommutant` and `.IrreducibleCommutant`.
+*  `.Isotypic` are isotypic components, which group equivalent irreps present in a representation.
+
+*  `.Irreducible` represents the decomposition of a representation into isotypic components.
 
 Rep
 +++
 
 .. autoclass:: Rep
 
+DivisionAlgebra
++++++++++++++++
+
+.. autoclass:: DivisionAlgebra
+
 RepByImages
 +++++++++++
 
 .. autoclass:: RepByImages
-
-SimilarRep
-++++++++++
-
-.. autoclass:: SimilarRep
 
 SubRep
 ++++++
@@ -59,32 +49,7 @@ Isotypic
 
 .. autoclass:: Isotypic
 
-HarmonizedIsotypic
-++++++++++++++++++
-
-.. autoclass:: HarmonizedIsotypic
-
 Irreducible
 +++++++++++
 
 .. autoclass:: Irreducible
-
-Equivariant
-+++++++++++
-
-.. autoclass:: Equivariant
-
-IsotypicCommutant
-+++++++++++++++++
-
-.. autoclass:: IsotypicCommutant
-
-IrreducibleCommutant
-++++++++++++++++++++
-
-.. autoclass:: IrreducibleCommutant
-
-CharacterTable
-++++++++++++++
-
-.. autoclass:: CharacterTable

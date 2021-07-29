@@ -2,18 +2,49 @@ classdef SymmetricGroup < replab.PermutationGroup
 % Describes permutations over n = "domainSize" elements, i.e. the symmetric group Sn
 %
 % Example:
-%   >>> S5 = replab.SymmetricGroup(5);
+%   >>> S5 = replab.S(5);
 %   >>> S5.order
 %      ans =
 %      120
 
-    methods
+    methods (Static)
 
-        function self = SymmetricGroup(domainSize)
+        function G = make(n)
         % Constructs the symmetric over a given domain size
+        %
+        % This static method keeps the constructed copies of ``S(n)`` in cache.
         %
         % Args:
         %   domainSize (integer): Domain size, must be > 0
+        %
+        % Returns:
+        %   `.SymmetricGroup`: The constructed or cached symmetric group
+            persistent cache
+            if isempty(cache)
+                cache = cell(1, 0);
+            end
+            if n+1 > length(cache) || isempty(cache{n+1})
+                cache{1,n+1} = replab.SymmetricGroup(n, true);
+            end
+            G = cache{n+1};
+        end
+
+    end
+
+    methods
+        % TODO: after deprecation period (Access = protected)
+
+        function self = SymmetricGroup(domainSize, fromMake)
+        % Constructs the symmetric over a given domain size
+        %
+        % Instead of the constructor, use `.make`, which caches the constructed group.
+        %
+        % Args:
+        %   domainSize (integer): Domain size, must be >= 0
+            if nargin < 2 || isempty(fromMake) || ~fromMake
+                % TODO: remove deprecation warning
+                warning('Direct constructor call is deprecated. Please call replab.S(n) instead of replab.SymmetricGroup(n)');
+            end
             if domainSize < 2
                 generators = cell(1, 0);
             elseif domainSize == 2
@@ -21,7 +52,7 @@ classdef SymmetricGroup < replab.PermutationGroup
             else
                 generators = {[2:domainSize 1] [2 1 3:domainSize]};
             end
-            self = self@replab.PermutationGroup(domainSize, generators, [], 'self');
+            self@replab.PermutationGroup(domainSize, generators, 'type', 'self');
         end
 
     end
@@ -50,63 +81,12 @@ classdef SymmetricGroup < replab.PermutationGroup
 
     end
 
-    methods % Element creation methods
-
-        function p = transposition(self, i, j)
-        % Returns the transposition permuting ``i`` and ``j``.
-        %
-        % Args:
-        %   i (integer): First domain element to be transposed.
-        %   j (integer): Second domain element to be transposed.
-        %
-        % Returns:
-        %   permutation: The constructed transposition
-            n = self.domainSize;
-            assert(1 <= i);
-            assert(i <= n);
-            assert(1 <= j);
-            assert(j <= n);
-            assert(i ~= j);
-            p = 1:n;
-            p([i j]) = [j i];
-        end
-
-        function p = shift(self, i)
-        % Returns the cyclic permutation that shifts the domain indices by ``i``.
-        %
-        % Args:
-        %   i: Shift so that ``j`` is sent to ``j + i`` (wrapping around).
-        %
-        % Returns:
-        %   permutation: The constructed cyclic shift
-            p = mod((0:n-1)+i, n)+1;
-        end
-
-        function p = fromCycles(self, varargin)
-        % Constructs a permutation from a product of cycles.
-        %
-        % Each cycle is given as a row vector, and the sequence of cycles is given as variable arguments.
-        %
-        % Args:
-        %   varargin (cell(1,\*) of integer(1,\*)): Sequence of cycles as row vectors of indices
-        %
-        % Returns:
-        %   permutation: The permutation corresponding to the product of cycles.
-            n = self.domainSize;
-            p = 1:n;
-            for i = length(varargin):-1:1
-                cycle = varargin{i};
-                % cycle 2 3 1 means that 2 -> 3, 3 -> 1, 1 -> 2
-                cycleImage = [cycle(2:end) cycle(1)];
-                newEl = 1:n;
-                newEl(cycle) = cycleImage;
-                p = newEl(p); % compose(newEl, p);
-            end
-        end
-
-    end
-
     methods (Access = protected)
+
+        function classes = computeConjugacyClasses(self)
+            I = replab.sym.IntegerPartition.all(self.domainSize);
+            classes = replab.ConjugacyClasses.sorted(self, cellfun(@(ip) ip.conjugacyClass, I, 'uniform', 0));
+        end
 
         function c = computeChain(self)
             self.order; % force order computation
@@ -121,11 +101,6 @@ classdef SymmetricGroup < replab.PermutationGroup
             E = replab.IndexedFamily.lambda(self.order, ...
                                             @(ind) self.enumeratorAt(ind), ...
                                             @(el) self.enumeratorFind(el));
-        end
-
-        function d = computeDecomposition(self)
-            G = self.subgroup(self.generators, self.order);
-            d = G.decomposition;
         end
 
         function ind = enumeratorFind(self, g)
@@ -163,17 +138,46 @@ classdef SymmetricGroup < replab.PermutationGroup
 
     methods % Representations
 
-        function rep = irrep(self, partition)
+        function [rep data] = irrep(self, partition, form)
         % Returns the irreducible representation of this symmetric group corresponding the given Young Diagram
+        %
+        % Example:
+        %   >>> S5 = replab.S(5);
+        %   >>> rep = S5.irrep([3 2], 'specht');
+        %   >>> rep.dimension
+        %         5
+        %   >>> rep = S5.irrep([3 2], 'seminormal');
+        %   >>> rep.dimension
+        %         5
+        %   >>> rep = S5.irrep([3 2], 'orthogonal');
+        %   >>> rep.dimension
+        %         5
         %
         % Args:
         %   partition (integer(1,\*)): The partition corresponding the Young Diagram, with elements listed in
         %                              decreasing order (e.g ``[3 3 1]`` represents the partition of 7 elements: ``7 = 3+3+1``
+        %   form ('specht', 'seminormal', or 'orthogonal'): The form the irrep takes. Default is 'specht'.
+        %
+        % Note: 'specht' is slower to construct than 'seminormal' or 'orthogonal' but, unlike them, has integer entries.
         %
         % Returns:
         %   `+replab.Rep`: The corresponding irreducible representation
             assert(sum(partition) == self.domainSize);
-            rep = replab.sym.SymmetricGroupIrrep(self, partition);
+            if nargin == 2
+                form = 'specht';
+            end
+            partition = sort(partition,'descend');
+            switch form
+              case 'specht'
+                data = replab.sym.SymmetricSpechtIrrep(self, partition);
+              case 'seminormal'
+                data = replab.sym.SymmetricYoungIrrep(self, partition, 'seminormal');
+              case 'orthogonal'
+                data = replab.sym.SymmetricYoungIrrep(self, partition, 'orthogonal');
+              otherwise
+                error('That is not a valid irreducible representation form')
+            end
+            rep = data.rep;
         end
 
     end
@@ -196,7 +200,7 @@ classdef SymmetricGroup < replab.PermutationGroup
         %                              in decreasing order (e.g ``[5 3 1]`` represents the partition of 9 elements ``9 = 5+3+1``
         % Returns:
         %   integer: The dimension of the corresponding irreducible representation.
-            dim = replab.sym.SymmetricGroupIrrep.dimension(partition);
+            dim = replab.sym.findPartitions.dimension(partition);
         end
 
     end

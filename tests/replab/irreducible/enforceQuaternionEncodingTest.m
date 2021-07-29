@@ -76,14 +76,11 @@ function testHasCorrectForm
              0 -1 -1 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 2 0 0 0 0 0 0 0 0 0 0
              0 0 0 0 -1 0 0 0 1 0 0 0 1 0 0 0 0 0 1 -1 0 0 1 0 1 0 0 0 0 0 0 0
              0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 3 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0];
-    sub = rep.subRep(basis);
-    sub.isIrreducible = true;
-    sub.frobeniusSchurIndicator = -2;
-    ctx = replab.Context.make;
-    res = replab.irreducible.enforceQuaternionEncoding(sub, ctx);
-    ctx.close;
-    assert(res.parent == sub);
+    sub = rep.subRep(basis, 'isIrreducible', true, 'frobeniusSchurIndicator', -2);
+    irreps = sub.split;
+    assert(length(irreps) == 1);
+    res = irreps{1};
     X = res.sample;
-    X1 = replab.domain.QuaternionTypeMatrices(32, 32).project(X);
-    assert(norm(X - X1) < replab.Parameters.doubleEigTol);
+    X1 = replab.domain.QuaternionTypeMatrices(32, 32, 'group').project(X);
+    assert(norm(X - X1) < replab.globals.doubleEigTol);
 end

@@ -3,16 +3,17 @@ classdef Parser
 %
 % The grammar is given by:
 %
-%   <presentation> ::= '<' <generator> (','? <generator>)* '|' <relators> '>'
-%   <relators> ::= (<equation> (',' <equation>)*)?
-%   <equation> ::= <nonEmptyWord> ('=' <nonEmptyWord>)*
-%   <word> ::= <nonEmptyWord>?
-%   <nonEmptyWord> ::= <component> ('*' <component> | '/' <component> | <component>)*
-%   <component> ::= <part> <exponent>?
-%   <part> ::= <identity> | <generator> | <subword> | <commutator>
-%   <subword> ::= '(' <nonEmptyWord> ')'
-%   <commutator> ::= '[' <nonEmptyWord> ',' <nonEmptyWord> ']'
-%   <generator> ::= corresponds to the regexp [A-Za-z][A-Za-z0-9_]*
+% ::
+%    <presentation> ::= '<' <generator> (','? <generator>)* '|' <relators> '>'
+%    <relators> ::= (<equation> (',' <equation>)*)?
+%    <equation> ::= <nonEmptyWord> ('=' <nonEmptyWord>)*
+%    <word> ::= <nonEmptyWord>?
+%    <nonEmptyWord> ::= <component> ('*' <component> | '/' <component> | <component>)*
+%    <component> ::= <part> <exponent>?
+%    <part> ::= <identity> | <generator> | <subword> | <commutator>
+%    <subword> ::= '(' <nonEmptyWord> ')'
+%    <commutator> ::= '[' <nonEmptyWord> ',' <nonEmptyWord> ']'
+%    <generator> ::= corresponds to the regexp [A-Za-z][A-Za-z0-9_]*
 
 % The commutator $[x,y]$ can be defined in two ways:
 %
@@ -117,6 +118,9 @@ classdef Parser
                 e = -e; % invert
                 w = fliplr(-w);
             end
+            if e == 0
+                w = zeros(1, 0);
+            end
             if e > 1
                 w = repmat(w, 1, e);
             end
@@ -183,6 +187,7 @@ classdef Parser
             if tokens(1, pos) ~= types.EQUALITY
                 % this is already a relator, return
                 relators = {lhs};
+                return
             end
             elements = {lhs};
             while tokens(1, pos) == types.EQUALITY

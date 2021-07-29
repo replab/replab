@@ -13,27 +13,20 @@ classdef Str < handle
 % Compare the two outputs:
 %
 % Example:
-%   >>> P = replab.SymmetricGroup(3)
+%   >>> P = replab.S(3)
 %     P =
-%     Symmetric group acting on 3 elements
-%       domainSize: 3
-%         identity: [1, 2, 3]
-%             type: Symmetric group acting on 3 elements
-%     generator(1): [2, 3, 1]
-%     generator(2): [2, 1, 3]
-%        recognize: AtlasResult (Dihedral group of order 6)
+%         Symmetric group acting on 3 elements
+%                     identity: [1, 2, 3]
+%         generator(1 or 'x1'): [2, 3, 1]
+%         generator(2 or 'x2'): [2, 1, 3]
+%             recognize.source: Dihedral group of order 6 < a, x | a^3 = x^2 = x a x^-1 a = 1 >
 %   >>> replab.longStr(P)
-%     ans =
-%     7x1 cell array
-%     {'Symmetric group acting on 3 elements'                 }
-%     {'  domainSize: 3'                                      }
-%     {'    identity: [1, 2, 3]'                              }
-%     {'        type: Symmetric group acting on 3 elements'   }
-%     {'generator(1): [2, 3, 1]'                              }
-%     {'generator(2): [2, 1, 3]'                              }
-%     {'   recognize: AtlasResult (Dihedral group of order 6)'}
+%     {'Symmetric group acting on 3 elements'
+%      '            identity: [1, 2, 3]'
+%      'generator(1 or ''x1''): [2, 3, 1]'
+%      'generator(2 or ''x2''): [2, 1, 3]'
+%      '    recognize.source: Dihedral group of order 6'}
 %   >>> replab.shortStr(P)
-%     ans =
 %     'Symmetric group acting on 3 elements'
 
     methods % Prettyprinting

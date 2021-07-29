@@ -8,7 +8,7 @@ function test_suite = SetTest()
 end
 
 function test_sort
-    G = replab.DihedralGroup(10);
+    G = replab.PermutationGroup.dihedral(10);
     s = replab.perm.Set(G.domainSize);
     s.insert(G.chain.allElements);
     s.sort;

@@ -7,7 +7,7 @@ classdef IndexedFamily < replab.Domain
 % The family supports element indexing and searching for elements.
 
     properties (SetAccess = protected)
-        nElements % vpi: Number of elements contained in this enumerator
+        nElements % (vpi): Number of elements contained in this enumerator
     end
 
     methods

@@ -8,8 +8,8 @@ function test_suite = ParserTest()
 end
 
 function test_parse_words
-    assertEqual(replab.fp.parseLetters('[a,x]', {'a' 'x'}), [-1 -2 1 2]);
-    assertEqual(replab.fp.parseLetters('a (x a)^2', {'a' 'x'}), [1 2 1 2 1]);
+    assertEqual(replab.fp.Letters.parse('[a,x]', {'a' 'x'}), [-1 -2 1 2]);
+    assertEqual(replab.fp.Letters.parse('a (x a)^2', {'a' 'x'}), [1 2 1 2 1]);
 end
 
 function test_parse_correct_presentations

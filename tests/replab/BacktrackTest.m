@@ -13,7 +13,7 @@ function test_backtrack
     s = randi(3, 1, n);
     g = G.sample;
     t(g) = s;
-    g1 = G.findPermutationsTo(s, t).representative;
+    g1 = G.vectorFindPermutationsTo(s, t).representative;
     assert(~isempty(g));
     assert(isequal(t(g), s));
 end

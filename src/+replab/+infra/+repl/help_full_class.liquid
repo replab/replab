@@ -1,5 +1,8 @@
  Class `{{ el.fullIdentifier }}`:
 \n
+{% call strjoin(replab.infra.indent(el.doc.lines, 3), char(10)) %}
+\n
+\n
    In package:\n
      `{{el.package.fullIdentifier}}`\n
 \n
@@ -44,7 +47,7 @@
 
 {% for mg in el.allMethodGroups %}
 {% if mg.hasAccessibleMethods %}
-   Methods:\t{{ mg.name }}\n
+   {{ mg.name }} methods:\t\n
    \t\n
 {% for m in mg.methodsInGroup %}
 {% if m.isAccessible %}

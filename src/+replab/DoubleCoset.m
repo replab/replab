@@ -34,8 +34,16 @@ classdef DoubleCoset < replab.FiniteSet
 
         % Domain
 
+        function b = eqv(self, lhs, rhs)
+            b = self.type.eqv(lhs, rhs);
+        end
+
+        function l = laws(self)
+            l = replab.laws.DoubleCosetLaws(self);
+        end
+
         function s = sample(self)
-            s = self.type.compose(self.H.sample, self.type.compose(self.representative, self.K.sample));
+            s = self.parent.compose(self.H.sample, self.parent.compose(self.representative, self.K.sample));
         end
 
         % FiniteSet
@@ -64,9 +72,13 @@ classdef DoubleCoset < replab.FiniteSet
                 b = false;
                 return
             end
-            dc = replab.DoubleCoset(self.H, el, self.K, self.parent);
+            dc = replab.DoubleCoset.make(self.H, el, self.K, self.parent);
             b = self.parent.eqv(self.representative, dc.representative);
         end
+
+    end
+
+    methods (Access = protected)
 
         function E = computeElements(self)
         % Returns an indexed family of the elements of this double coset
@@ -97,6 +109,10 @@ classdef DoubleCoset < replab.FiniteSet
             E = replab.indf.FiniteGroupIndexedFamily(S.matrix, self.isomorphism);
         end
 
+        function s = computeSetProduct(self)
+            s = replab.SetProduct(self.parent, horzcat(Hs.sets, {{self.representative}}, Ks.sets), false);
+        end
+
     end
 
     methods (Static)
@@ -111,7 +127,7 @@ classdef DoubleCoset < replab.FiniteSet
         % Returns:
         %   integer: 1 if ``lhs > rhs``, 0 if ``lhs == rhs``, -1 if ``lhs < rhs``
             v = lhs - rhs;
-            ind = find(v ~= 0, 1)
+            ind = find(v ~= 0, 1);
             c = sign(v(ind));
         end
 

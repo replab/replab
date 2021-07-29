@@ -5,7 +5,7 @@ function runNTimes(nRuns, laws, methodName, sets)
 %   nRuns (integer): Number of runs
 %   laws (`+replab.Laws`): Laws instance
 %   methodName (charstring): Method name describing the law
-%   sets (cell{1,:} of `+replab.Domain`): Domains to use for the law parameters
+%   sets (cell(1,\*) of `+replab.Domain`): Domains to use for the law parameters
     nArgs = length(sets);
     for i = 1:nRuns
         skipRun = false;
@@ -27,7 +27,7 @@ function runNTimes(nRuns, laws, methodName, sets)
                 fprintf('skipping slow test');
                 return
               otherwise
-                    rethrow(err);
+                rethrow(err);
             end
         end
     end

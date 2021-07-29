@@ -1,11 +1,8 @@
-function initHelp(verbose)
+function initHelp
 % Initializes the RepLAB help system
 %
 % In particular, it attemps to locate the original Matlab/Octave help function and preserve a handle of it;
 % if the help function is not already shadowed, it shadows it with the integrated RepLAB help system
-%
-% Args:
-%   verbose ({0, 1, 2}): Controls the display level
 
     candidates = replab.init.findInstancesInPath('help'); % Finds all candidates in the path for "help"
     basePath = replab.globals.replabPath;
@@ -39,13 +36,14 @@ function initHelp(verbose)
                 && ~isempty(strfind(fileread(candidate), targetPatternEmacs)) ...
                 && isempty(matlabEmacsHelpPath)
             matlabEmacsHelpPath = candidate;
-        elseif replab.compat.endsWith(candidate, 'replab/src/help_overload/help.m') && isempty(replabHelpPath)
+        elseif replab.compat.endsWith(candidate, 'src/help_overload/help.m') && isempty(replabHelpPath)
             replabHelpPath = candidate;
         else
             unknownHelpPaths{end+1} = candidate;
         end
     end
     myHelpPath = fullfile(replab.globals.replabPath, 'src', 'help_overload', 'help.m');
+    myHelpPath = strrep(myHelpPath, '\', '/');
 
     if ~isempty(replabHelpPath) && ~isequal(replabHelpPath, myHelpPath)
         error('Another version %s of the RepLAB help overload %s already exists in the path.', ...

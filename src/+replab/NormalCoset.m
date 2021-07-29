@@ -32,6 +32,10 @@ classdef NormalCoset < replab.LeftCoset & replab.RightCoset
             E = computeElements@replab.LeftCoset(self);
         end
 
+        function s = computeSetProduct(self)
+            s = computeSetProduct@replab.LeftCoset(self);
+        end
+
     end
 
     methods
@@ -46,6 +50,10 @@ classdef NormalCoset < replab.LeftCoset & replab.RightCoset
 
         function b = contains(self, el)
             b = contains@replab.LeftCoset(self, el);
+        end
+
+        function [l, r] = factorizeShortRepresentativeLetters(self)
+            [l, r] = factorizeShortRepresentativeLetters@replab.LeftCoset(self);
         end
 
     end

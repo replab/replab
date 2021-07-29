@@ -3,7 +3,7 @@ The RepLAB documentation and the infrastructure behind it
 
 .. post:: 26 Jan, 2020
    :tags: release
-   :category: Relase
+   :category: Release
    :author: Denis Rosset
    :location: Waterloo, Ontario, Canada
    :excerpt: 2

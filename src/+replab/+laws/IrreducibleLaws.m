@@ -1,6 +1,6 @@
 classdef IrreducibleLaws < replab.Laws
 
-    properties
+    properties (SetAccess = protected)
         irreducible % Irreducible decomposition
         M % d x d matrices of the real/complex relevant field
     end

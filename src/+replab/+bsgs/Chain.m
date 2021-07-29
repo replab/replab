@@ -100,12 +100,25 @@ classdef Chain < replab.Str
             end
         end
 
-        function l = hasSortedBase(self)
-        % Returns true if the points in this base are monotonically increasing
+        function l = isLex(self)
+        % Returns true if the points in this base are monotonically increasing, and stabilize the points before them
         %
         % Returns:
-        %   logical: True if ``base(l) < base(l+1)`` holds for all ``l``.
-            l = all(self.B(2:end) > self.B(1:end-1));
+        %   logical: True if ``base(l) < base(l+1)`` holds for all ``l`` and transversals ``U{l}`` all stabilize ``1:base(l)-1``
+            l = false;
+            prev = 0;
+            for i = 1:length(self.B)
+                beta = self.B(i);
+                if i > 1 && beta < prev
+                    return
+                end
+                U = self.U{i};
+                if ~all(all(bsxfun(@eq, U(1:beta-1,:), (1:beta-1)')))
+                    return
+                end
+                prev = beta;
+            end
+            l = true;
         end
 
         function b = base(self)
@@ -1045,7 +1058,7 @@ classdef Chain < replab.Str
                 for k = Srange
                     x = self.S(:,k)';
                     uxb_inv = Uinv(:,iOrbit(x(b),i))';
-                    toStrip = ub(x(uxb_inv));
+                    toStrip = uxb_inv(x(ub));
                     if any(toStrip ~= 1:n)
                         y = true;
                         [h j] = self.strip(toStrip);
@@ -1078,11 +1091,11 @@ classdef Chain < replab.Str
         %
         % Args:
         %   maxOrder (integer or vpi or ``inf``): Order cutoff
-            if nargin < 2
-                maxOrder = inf;
+            if nargin < 2 || isinf(maxOrder)
+                maxOrder = [];
             end
             i = self.length;
-            while i >= 1 && self.order <= maxOrder
+            while i >= 1 && (isempty(maxOrder) || self.order <= maxOrder)
                 i = self.schreierSimsTest(i);
             end
         end
@@ -1090,8 +1103,8 @@ classdef Chain < replab.Str
         function randomizedSchreierSims(self, order)
         % Runs the randomized Schreier-Sims algorithm
         %
-        % Failure probability can be tuned using replab.Parameters.randomizedSchreierSimsTries
-            nTries = replab.Parameters.randomizedSchreierSimsTries;
+        % Failure probability can be tuned using replab.globals.randomizedSchreierSimsTries
+            nTries = replab.globals.randomizedSchreierSimsTries;
             R = replab.bsgs.RandomBag(self.n, self.S, [], []);
             c = 0;
             if isempty(order)
@@ -1159,9 +1172,13 @@ classdef Chain < replab.Str
             for i = 1:length(generators)
                 C.stripAndAddStrongGenerator(generators{i});
             end
-            C.deterministicSchreierSims(1000);
-            if C.order > 1000
-                C.randomizedSchreierSims(order);
+            if ~isempty(order)
+                C.deterministicSchreierSims(1000);
+                if order > 1000
+                    C.randomizedSchreierSims(order);
+                end
+            else
+                C.deterministicSchreierSims;
             end
             C.makeImmutable;
         end

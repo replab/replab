@@ -39,9 +39,9 @@ function writeElementDocTests(doctestPath, el)
             fprintf(fid, 'function test_%s\n', innerNames{j});
             fprintf(fid, '  filename = ''%s'';\n', filename);
             v = values{j};
-            for k = 1:v.nCommands
-                fprintf(fid, '  out = evalc(%s);\n', v.quotedCommand(k));
-                fprintf(fid, '  assertEqualEvalcOutput(out, %s, filename, %d);\n', v.quotedOutput(k), v.lineNumbers(k));
+            for k = 1:v.nStatements
+                st = v.statements{k};
+                st.write(fid);
             end
             fprintf(fid, 'end\n');
             fprintf(fid, '\n');

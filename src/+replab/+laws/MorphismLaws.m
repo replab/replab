@@ -2,8 +2,8 @@ classdef MorphismLaws < replab.Laws
 
     properties (SetAccess = protected)
         morphism % (`+replab.Morphism`): Morphism tested
-        S % (`+replab.FiniteGroup`): Source group
-        T % (`+replab.FiniteGroup`): Target group
+        S % (`+replab.Group`): Source group
+        T % (`+replab.Group`): Target group
     end
 
     methods
@@ -37,6 +37,14 @@ classdef MorphismLaws < replab.Laws
 
         function law_identity_(self)
             self.T.assertEqv(self.T.identity, self.morphism.imageElement(self.S.identity));
+        end
+
+        function L = laws_torusMap(self)
+            if ~isempty(self.morphism.torusMap)
+                L = replab.laws.TorusMorphismLaws(self.morphism);
+            else
+                L = replab.Laws.empty;
+            end
         end
 
     end

@@ -106,7 +106,7 @@ function [contents, docTopic] = help(varargin)
                 end
             else
                 stdout = 1;
-                fwrite(stdout, contents);
+                fwrite(stdout, [char(10), contents, char(10)]);
             end
         end
         clear contents; % to avoid displaying twice if called from the command line

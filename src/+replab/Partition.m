@@ -28,11 +28,15 @@ classdef Partition < replab.Str
         % See also:
         %   `.fromBlocks`
         %   `.check`
-            
+
             self.n = length(blockIndex);
             self.blockIndex = blockIndex;
             self.blocks = blocks;
         end
+
+    end
+
+    methods
 
         function check(self)
         % Verifies the sanity of this partition
@@ -47,55 +51,9 @@ classdef Partition < replab.Str
             end
         end
 
-        function l = ne(self, rhs)
-        % Checks if this partition differs to another partition
-        %
-        % Args:
-        %   rhs (`.Partition`): Another partition
-        %
-        % Returns:
-        %   logical: True is both partitions differ
-            l = ~(self == rhs);
-        end
+    end
 
-        function l = eq(self, rhs)
-        % Checks if this partition is equal to another partition
-        %
-        % Args:
-        %   rhs (`.Partition`): Another partition
-        %
-        % Returns:
-        %   logical: True is both partitions are equal
-            l = isequal(self.blockIndex, rhs.blockIndex);
-        end
-
-        function s = shortStr(self, maxColumns)
-            s = '';
-            for i = 1:min(self.nBlocks, maxColumns)
-                if i > 1
-                    s = [s '|'];
-                end
-                b = self.block(i);
-                for j = 1:min(length(b), maxColumns)
-                    if j > 1 && self.n > 9
-                        s = sprintf('%s %d', s, b(j));
-                    else
-                        s = sprintf('%s%d', s, b(j));
-                    end
-                end
-                if length(b) > maxColumns
-                    s = sprintf('%s...', s);
-                end
-            end
-            if self.nBlocks > maxColumns
-                s = sprintf('%s...', s);
-            end
-        end
-
-        function lines = longStr(self, maxRows, maxColumns)
-            lines = replab.str.longStr(self, maxRows, maxColumns);
-            lines{1} = ['Partition ''' self.shortStr(maxColumns) ''''];
-        end
+    methods % Properties
 
         function n = nBlocks(self)
         % Returns the number of subsets/blocks in this partition
@@ -135,6 +93,174 @@ classdef Partition < replab.Str
         %   integer: Size of the ``i``-th block in this partition
             sz = length(self.block{i});
         end
+
+    end
+
+    methods % Comparison
+
+        function l = ne(self, rhs)
+        % Checks if this partition differs to another partition
+        %
+        % Args:
+        %   rhs (`.Partition`): Another partition
+        %
+        % Returns:
+        %   logical: True is both partitions differ
+            l = ~(self == rhs);
+        end
+
+        function l = eq(self, rhs)
+        % Checks if this partition is equal to another partition
+        %
+        % Args:
+        %   rhs (`.Partition`): Another partition
+        %
+        % Returns:
+        %   logical: True is both partitions are equal
+            if ~isa(rhs, 'replab.Partition')
+                l = false;
+                return
+            end
+            l = isequal(self.blockIndex, rhs.blockIndex);
+        end
+
+        function b = le(self, rhs)
+        % Returns whether the given partition is coarser than this partition
+        %
+        % Args:
+        %   rhs (`.Partition`): Partition to compare this one with
+        %
+        % Returns:
+        %   logical: True if every block of this partition is a subset of a block of the given partition
+            inSameRhsBlock = cellfun(@(b) all(rhs.blockIndex(b) == rhs.blockIndex(b(1))), self.blocks, 'uniform', 1);
+            b = all(inSameRhsBlock);
+        end
+
+        function b = ge(self, rhs)
+        % Returns whether the given partition is finer than this partition
+        %
+        % Args:
+        %   rhs (`.Partition`): Partition to compare this one with
+        %
+        % Returns:
+        %   logical: True if every block of the given partition is a subset of a block of this partition
+            b = rhs <= self;
+        end
+
+        function b = lt(self, rhs)
+        % Returns whether the given partition is strictly coarser than this partition
+        %
+        % This is a strict version of `.le`
+        %
+        % Args:
+        %   rhs (`.Partition`): Partition to compare this one with
+        %
+        % Returns:
+        %   logical: True if ``self <= rhs`` and ``self ~= rhs``
+            b = (self <= rhs) && (self ~= rhs);
+        end
+
+        function b = gt(self, rhs)
+        % Returns whether the given partition is strictly finer than this partition
+        %
+        % Args:
+        %   rhs (`.Partition`): Partition to compare this one with
+        %
+        % Returns:
+        %   logical: True if ``self >= rhs`` and ``self ~= rhs``
+            b = (self >= rhs) && (self ~= rhs);
+        end
+
+        function res = join(lhs, rhs)
+        % Returns the finest common coarsening of two partitions
+        %
+        % Args:
+        %   rhs (`.Partition`): Other partition
+        %
+        % Returns:
+        %   `.Partition`: The coarsening of the two partitions
+            lhsDone = false(1, lhs.nBlocks);
+            rhsDone = false(1, rhs.nBlocks);
+            blocks = cell(1, 0);
+            while ~all(lhsDone)
+                block = zeros(1, 0); % new block to add
+                todo = find(~lhsDone, 1);
+                while ~isempty(todo)
+                    lhsBlkInd = todo(end);
+                    todo = todo(1:end-1);
+                    if ~lhsDone(lhsBlkInd)
+                        lhsBlk = lhs.blocks{lhsBlkInd};
+                        block = horzcat(block, lhsBlk);
+                        lhsDone(lhsBlkInd) = true;
+                        rhsBlkInds = unique(rhs.blockIndex(lhsBlk));
+                        rhsBlkInds = rhsBlkInds(~rhsDone(rhsBlkInds));
+                        rhsBlks = rhs.blocks(rhsBlkInds);
+                        rhsBlk = horzcat(rhsBlks{:});
+                        rhsDone(rhsBlkInds) = true;
+                        lhsBlkInds = unique(lhs.blockIndex(rhsBlk));
+                        lhsBlkInds = lhsBlkInds(~lhsDone(lhsBlkInds));
+                        todo = horzcat(todo, lhsBlkInds);
+                    end
+                end
+                blocks{1,end+1} = block;
+            end
+            res = replab.Partition.fromBlocks(blocks);
+        end
+
+        function res = meet(self, rhs)
+        % Returns the common refinement of two partitions
+        %
+        % Args:
+        %   rhs (`.Partition`): Other partition
+        %
+        % Returns:
+        %   `.Partition`: The refinement of both partitions
+            blocks = cell(1, 0);
+            for i = 1:self.nBlocks
+                lb = self.blocks{i};
+                inP = replab.Partition.fromVector(rhs.blockIndex(lb));
+                blocks = horzcat(blocks, cellfun(@(b) lb(b), inP.blocks, 'uniform', 0));
+            end
+            res = replab.Partition.fromBlocks(blocks);
+        end
+
+    end
+
+    methods % Implementations
+
+        % Str
+
+        function s = shortStr(self, maxColumns)
+            s = '';
+            for i = 1:min(self.nBlocks, maxColumns)
+                if i > 1
+                    s = [s '|'];
+                end
+                b = self.block(i);
+                for j = 1:min(length(b), maxColumns)
+                    if j > 1 && self.n > 9
+                        s = sprintf('%s %d', s, b(j));
+                    else
+                        s = sprintf('%s%d', s, b(j));
+                    end
+                end
+                if length(b) > maxColumns
+                    s = sprintf('%s...', s);
+                end
+            end
+            if self.nBlocks > maxColumns
+                s = sprintf('%s...', s);
+            end
+        end
+
+        function lines = longStr(self, maxRows, maxColumns)
+            lines = replab.str.longStr(self, maxRows, maxColumns);
+            lines{1} = ['Partition ''' self.shortStr(maxColumns) ''''];
+        end
+
+    end
+
+    methods
 
         function [P1 pind] = restrictedToBlocks(self, selBlocks)
         % Returns the partition containing only the given blocks
@@ -176,8 +302,32 @@ classdef Partition < replab.Str
 
     methods (Static)
 
+        function P = trivial(n)
+        % Constructs the trivial partition with a single block of given cardinality
+        %
+        % Args:
+        %   n (integer): Size of the partition and single block
+        %
+        % Returns:
+        %   `.Partition`: Trivial partition
+            P = replab.Partition.fromBlocks({1:n});
+        end
+
+        function P = finest(n)
+        % Constructs the partition of ``n`` singleton blocks
+        %
+        % Args:
+        %   n (integer): Size of the partition and number of blocks
+        %
+        % Returns:
+        %   `.Partition`: Partition
+            P = replab.Partition.fromBlocks(num2cell(1:n));
+        end
+
         function P = fromBlocks(blocks)
         % Constructs a partition from disjoint blocks
+        %
+        % The blocks will be sorted and reorganized.
         %
         % Example:
         %   >>> replab.Partition.fromBlocks({[1 2 5] [3 4]})
@@ -207,6 +357,35 @@ classdef Partition < replab.Str
             P = replab.Partition(blockIndex, blocks);
         end
 
+        function P = fromApproximateVector(vec, tol)
+        % Returns the partition that groups approximately equal coefficients of a vector
+        %
+        % Example:
+        %   >>> replab.Partition.fromApproximateVector([0.1 0.2 0.9 1 0.3], 0.11)
+        %     Partition '125|34'
+        %     blockIndex: [1, 1, 2, 2, 1]
+        %         blocks: {[1, 2, 5], [3, 4]}
+        %              n: 5
+        %
+        % Args:
+        %   vec (double(1,\*), real): Vector to group the coefficients of
+        %   tol (double): Tolerance
+        %
+        % Returns:
+        %   `.Partition`: Partition of blocks with approximately equal coefficients
+            assert(isreal(vec));
+            [v1, I] = sort(vec);
+            close = [(v1(2:end) - v1(1:end-1) <= tol) false];
+            next = 1;
+            blocks = cell(1, 0);
+            while next <= length(vec)
+                current = next;
+                next = find(~close(current:end), 1) + current; % + 1 - 1
+                blocks{1,end+1} = I(current:next-1);
+            end
+            P = replab.Partition.fromBlocks(blocks);
+        end
+
         function P = fromVector(vec)
         % Returns the partition that groups equal coefficients of a vector
         %
@@ -221,7 +400,7 @@ classdef Partition < replab.Str
         %   vec (double(1,\*)): Vector to group the coefficients of
         %
         % Returns:
-        %   `.replab.Partition`: Partition of blocks with equal coefficients
+        %   `.Partition`: Partition of blocks with equal coefficients
             assert(isvector(vec));
             v = unique(vec);
             blocks = {};
@@ -236,19 +415,18 @@ classdef Partition < replab.Str
         %
         % Args:
         %   permutations (integer(nG, d)): Permutations given as rows in a matrix
+        %
+        % Returns:
+        %   `.Partition`: Partition containing the orbits
             d = size(permutations, 2);
             nG = size(permutations, 1);
-            
+
             % We list the edges of the graph
             edges = permutations.';
             edges = [kron(ones(nG,1), (1:d)'), edges(:)];
-            if nG*d > 1000
-                % Do not optimize list for small problems
-                edges = unique(sort(edges,2), 'rows');
-            end
 
             % Compute the connected components
-            P = replab.Graph.fromEdges(edges, d).connectedComponents;
+            P = replab.UndirectedGraph.fromEdges(edges, d).connectedComponents;
         end
 
     end

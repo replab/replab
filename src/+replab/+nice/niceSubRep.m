@@ -1,24 +1,43 @@
-function sub1 = niceSubRep(sub)
-% Attempts to make the basis of a subrepresentation nicer
-%
-% Args:
-%   rep (`+replab.SubRep`): Subrepresentation to work on
-%
-% Returns:
-%   `+replab.SubRep` or `+replab.DispatchNext`: Subrepresentation with nicer basis if found
-    assert(isa(sub, 'replab.SubRep'));
-    if ~replab.dispatch('exists', 'replab.nice.niceSubRep')
-        replab.dispatch('register', 'replab.nice.niceSubRep', 'recoverReal', 10, ...
-                        @(sub) replab.nice.niceSubRepRecoverReal(sub));
-        replab.dispatch('register', 'replab.nice.niceSubRep', 'recoverInteger', 5, ...
-                        @(sub) replab.nice.niceSubRepRecoverInteger(sub));
-        replab.dispatch('register', 'replab.nice.niceSubRep', 'original', 0, ...
-                        @(sub) replab.nice.niceSubRepOriginal(sub));
-    end
-    sub1 = replab.dispatch('call', 'replab.nice.niceSubRep', sub);
-    if isa(sub1, 'replab.DispatchNext')
+function subRep1 = niceSubRep(subRep)
+    subRep1 = [];
+    if ~isempty(subRep.divisionAlgebraName)
         return
     end
-    assert(isa(sub1, 'replab.SubRep'));
-    assert(sub1.parent == sub.parent);
+    P = subRep.projector;
+    P = replab.numerical.refineProjector(P);
+    P = replab.numerical.refineProjector(P);
+    % try to make the subrepresentation injection/projection maps real
+    tol = replab.globals.doubleEigTol;
+    maximumDenominator = 1200;
+    if ~replab.numerical.isNonZeroMatrix(imag(P), replab.globals.doubleEigTol)
+        P = full(real(P));
+        C = replab.numerical.recoverRational(P, tol, maximumDenominator);
+        Cdouble = double(C);
+        rationalBasis = false;
+        if ~isempty(C)
+            if subRep.parent.isExact
+                C1 = subRep.parent.commutant.project(C, 'exact');
+                if all(all(C == C1))
+                    rationalBasis = true;
+                end
+            else
+                [Pproj, error1] = subRep.parent.commutant.project(P);
+                [Cproj, error2] = subRep.parent.commutant.project(Cdouble);
+                if norm(Cproj - Cdouble, 'fro') <= norm(Pproj - P, 'fro') + error1 + error2
+                    rationalBasis = true;
+                end
+            end
+            if rationalBasis
+                [~,~,jb] = qr(Cdouble, 'vector');
+                injection = C(:, jb(1:subRep.dimension));
+                subRep1 = subRep.parent.subRep(injection);
+                return
+            else
+                [~,~,jb] = qr(P, 'vector');
+                injection = P(:, jb(1:subRep.dimension));
+                subREp1 = subRep.parent.subRep(injection, 'forceReal', true);
+                return
+            end
+        end
+    end
 end

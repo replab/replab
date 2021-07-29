@@ -7,7 +7,7 @@ function s = shortStr(obj, maxColumns)
             if length(s) < maxColumns
                 s = [s '}'];
             end
-        elseif isa(obj, 'vpi')
+        elseif isa(obj, 'vpi') || isa(obj, 'replab.cyclotomic')
             s = num2str(obj);
             if size(s, 1) > 1
                 % corrects for multiline vpi num2str
@@ -46,10 +46,12 @@ function s = shortStr(obj, maxColumns)
     elseif isvector(obj)
         [lp rp] = replab.str.brackets(obj);
         elements = arrayfun(@(i) replab.str.cellStr(obj, maxColumns, i), 1:length(obj), 'uniform', 0);
-        s = [lp strjoin(elements, ', ') rp];
-        if size(obj, 1) > 1
-            s = [s '.'''];
+        if size(obj, 1) > 1 % column vector
+            sep = '; ';
+        else
+            sep = ', ';
         end
+        s = [lp strjoin(elements, sep) rp];
     elseif ismatrix(obj)
         [lp rp] = replab.str.brackets(obj);
         rowFun = @(r) strjoin(arrayfun(@(c) replab.str.cellStr(obj, maxColumns, r, c), 1:size(obj, 2), 'uniform', 0), ', ');

@@ -52,6 +52,34 @@ classdef Laws < replab.Str
             self.skipSlow = true;
         end
 
+        function b = assertApproxEqual(self, X1, X2, tol, context)
+            if nargin < 5
+                context = '';
+            end
+            delta = norm(X1 - X2, 'fro');
+            if delta <= tol
+                return
+            end
+            e1 = norm(eps(X1), 'fro');
+            e2 = norm(eps(X2), 'fro');
+            if delta <= tol + e1 + e2
+                return
+            end
+            names = evalin('caller', 'who');
+            nV = length(names);
+            values = cell(1, nV);
+            for i = 1:nV
+                values{i} = evalin('caller', names{i});
+            end
+            errorId = 'assertTrue:falseCondition';
+            message = replab.laws.message('%s = norm(X1 - X2) > tol = %s', context, {delta, tol + e1 + e2}, names, values);
+            if replab.compat.isOctave
+                error(errorId, '%s', message);
+            else
+                throwAsCaller(MException(errorId, '%s', message));
+            end
+        end
+
         function assert(self, predicate, context)
         % Assert function with a verbose error message
             if ~isscalar(predicate) || ~islogical(predicate)
@@ -124,7 +152,7 @@ classdef Laws < replab.Str
         end
 
         function res = checkSilent(self)
-        % Runs the randomized tests without usign MOxUnit, and returns whether all tests passed
+        % Runs the randomized tests without using MOxUnit, and returns whether all tests passed
         %
         % Example:
         %    >>> S10 = replab.S(10);
@@ -182,6 +210,14 @@ classdef Laws < replab.Str
     end
 
     methods (Static)
+
+        function L = empty
+        % Returns an empty set of laws
+        %
+        % Returns:
+        %   `.Laws`: Empty set of laws
+            L = replab.laws.Collection(cell(1, 0));
+        end
 
         function skip
             errorId = 'replab:skip';

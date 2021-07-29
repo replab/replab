@@ -28,10 +28,10 @@ function test_conjugacyClass_number
     end
     for i = 1:length(d)
         S = replab.S(d(i));
-        C = S.conjugacyClasses;
+        C = S.conjugacyClasses.classes;
         sz = sum(cellfun(@(c) double(c.nElements), C));
         assert(sz == S.order);
-        ni = length(S.conjugacyClasses);
+        ni = length(C);
         assert(n(i) == ni);
     end
 end

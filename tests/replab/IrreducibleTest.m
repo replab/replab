@@ -19,5 +19,19 @@ function test_irreducible_commutant
     assertEqual(dec.irrep(1,1).dimension, 1);
     C = dec.commutant;
     X = randn(d, d);
-    X1 = C.projectAndReduceFromParent(X);
+    X1 = C.project(X);
+    % TODO: add test
+end
+
+function test_import_export
+    G = replab.S(3);
+    parent = G.naturalRep;
+    dec = parent.decomposition('exact').squeeze;
+    data = dec.export;
+    dec1 = replab.Irreducible.import(parent, data);
+    dec1.check;
+    dec = parent.decomposition;
+    data = dec.export;
+    dec1 = replab.Irreducible.import(parent, data);
+    dec1.check;
 end

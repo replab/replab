@@ -1,5 +1,5 @@
 classdef OrderedPartitionStabilizer < replab.bsgs.Backtrack
-% Computes the unordered partition stabilizer of a group
+% Computes the ordered partition stabilizer of a group
 
     properties
         partition % (`+replab.Partition`): Partition to stabilize
@@ -22,12 +22,14 @@ classdef OrderedPartitionStabilizer < replab.bsgs.Backtrack
             blocks = partition.blocks;
             lengths = cellfun(@length, blocks);
             mask = lengths > 1; % filter singleton blocks
+            points = blocks(~mask);
+            points = [points{:}];
+            group = group.pointwiseStabilizer(points);
             blocks = blocks(mask);
             lengths = lengths(mask);
             [~, I] = sort(cellfun(@length, blocks));
             blocks = blocks(I);
             base = [blocks{:}];
-
             self@replab.bsgs.Backtrack(group, base, knownSubgroup, knownSubgroup, debug);
             self.partition = partition;
             self.blockIndex = partition.blockIndex;

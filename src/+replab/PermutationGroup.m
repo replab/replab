@@ -7,45 +7,36 @@ classdef PermutationGroup < replab.FiniteGroup
 
     methods % Constructor
 
-        function self = PermutationGroup(domainSize, generators, order, type, chain)
+        function self = PermutationGroup(domainSize, generators, varargin)
         % Constructs a permutation group
         %
         % Args:
         %   domainSize (integer): Size of the domain
         %   generators (cell(1,\*) of permutation): Group generators
+        %
+        % Keyword Args:
+        %   generatorNames (cell(1,\*) of charstring): Names of the generators
         %   order (vpi, optional): Order of the group
         %   type (`+replab.PermutationGroup`, optional): Type of this group if known,
         %                                                or ``'self'`` if this group is its own type
+        %   relators (cell(1,\*) of charstring): Relators
         %   chain (`+replab.+bsgs.Chain`): BSGS chain describing the group
-            self.domainSize = domainSize;
             identity = 1:domainSize;
-            self.identity = identity;
-            self.representative = self.identity;
-            self.generators = generators;
-            for i = 1:self.nGenerators
+            for i = 1:length(generators)
                 assert(~all(generators{i} == identity), 'Generators cannot contain the identity');
             end
-            if nargin > 2 && ~isempty(order)
-                self.cache('order', order, '==');
-            end
-            if nargin < 4
-                type = [];
-            end
-            if isempty(type)
-                self.type = replab.S(domainSize);
-            elseif isequal(type, 'self')
-                self.type = self;
+            args = struct('type', [], 'chain', [], 'relators', []);
+            [args, restArgs] = replab.util.populateStruct(args, varargin);
+            if ~isempty(args.type)
+                type = args.type;
             else
-                self.type = type;
+                type = replab.S(domainSize);
             end
-            if nargin > 4 && ~isempty(chain)
-                base = chain.base;
-                if any(base(2:end) < base(1:end-1))
-                    chain = chain.mutableCopy;
-                    chain.baseChange(1:domainSize, true);
-                    chain.makeImmutable;
-                end
-                self.cache('chain', chain, 'ignore');
+            self@replab.FiniteGroup(identity, generators, type, restArgs{:});
+            self.domainSize = domainSize;
+            if ~isempty(args.chain)
+                assert(~args.chain.isMutable);
+                self.cache('chain', args.chain, 'ignore');
             end
         end
 
@@ -57,42 +48,64 @@ classdef PermutationGroup < replab.FiniteGroup
             if nargin < 2
                 type = [];
             end
-            pg = replab.PermutationGroup(chain.n, chain.strongGenerators, chain.order, type, chain);
+            pg = replab.PermutationGroup(chain.n, chain.strongGenerators, 'order', chain.order, 'type', type, 'chain', chain);
         end
 
     end
 
     methods (Access = protected)
 
+        function f = computeFactorization(self)
+            f = replab.mrp.Factorization.make(self);
+        end
+
+        function c = computeLexChain(self)
+            c = self.chain;
+            if ~c.isLex
+                c = c.mutableCopy;
+                c.baseChange(1:self.domainSize, true);
+                c.makeImmutable;
+            end
+        end
+
+        function chain = computeChain(self)
+            chain = self.cachedOrEmpty('partialChain');
+            if isempty(chain)
+                chain = replab.bsgs.Chain.make(self.domainSize, self.generators, [], self.cachedOrEmpty('order'));
+            else
+                if chain.isMutable
+                    if self.inCache('order')
+                        chain.randomizedSchreierSims(self.cachedOrEmpty('order'));
+                    else
+                        chain.deterministicSchreierSims;
+                    end
+                    chain.makeImmutable;
+                    self.cache('partialChain', chain, 'overwrite');
+                end
+            end
+        end
+
+        function c = computePartialChain(self)
+            if self.inCache('chain')
+                c = self.chain;
+            else
+                c = replab.bsgs.Chain.makeBoundedOrder(self.domainSize, self.generators, replab.globals.fastChainOrder);
+            end
+        end
+
+    end
+
+    methods (Access = protected) % Implementations
+
         function o = computeOrder(self)
             o = self.chain.order;
         end
 
         function E = computeElements(self)
-            basis = replab.util.MixedRadix(self.lexChain.orbitSizes, true, true);
+            basis = replab.util.MixedRadix(self.lexChain.orbitSizes, true, false);
             atFun = @(ind) self.lexChain.elementFromIndices(basis.ind2sub(ind));
             findFun = @(el) basis.sub2ind(self.lexChain.indicesFromElement(el));
             E = replab.IndexedFamily.lambda(self.order, atFun, findFun);
-        end
-
-        function m = computeNiceMorphism(self)
-            m = replab.FiniteIsomorphism.identity(self);
-        end
-
-        function dec = computeDecomposition(self)
-            c = self.chain;
-            k = c.length;
-            T = cell(1, k);
-            for i = 1:k
-                Ui = c.U{i};
-                m = size(Ui, 2);
-                Ti = cell(1, m);
-                for j = 1:m
-                    Ti{j} = Ui(:,j)';
-                end
-                T{i} = Ti;
-            end
-            dec = replab.FiniteGroupDecomposition(self, T);
         end
 
         function classes = computeConjugacyClasses(self)
@@ -112,7 +125,7 @@ classdef PermutationGroup < replab.FiniteGroup
                 reps(i,:) = classes{i}.representative;
             end
             [~, I] = sortrows(reps);
-            classes = classes(I); % sort by minimal representative
+            classes = replab.ConjugacyClasses(self, classes(I)); % sort by minimal representative
         end
 
         function res = computeIsCyclic(self)
@@ -147,8 +160,8 @@ classdef PermutationGroup < replab.FiniteGroup
                 return
             end
             C = self.conjugacyClasses;
-            for i = 1:length(C)
-                c = C{i}.representative;
+            for i = 1:C.nClasses
+                c = C.classes{i}.representative;
                 if ~self.isIdentity(c)
                     if self.normalClosure(self.subgroup({c})) ~= self
                         res = false;
@@ -157,36 +170,6 @@ classdef PermutationGroup < replab.FiniteGroup
                 end
             end
             res = true; % all conjugacy classes generate the full group
-        end
-
-        function c = computeLexChain(self)
-            c = self.chain;
-            if ~c.hasSortedBase
-                c = c.mutableCopy;
-                c.baseChange(1:self.domainSize, true);
-                c.makeImmutable;
-            end
-        end
-
-        function chain = computeChain(self)
-            chain = self.cachedOrEmpty('partialChain');
-            if isempty(chain)
-                chain = replab.bsgs.Chain.make(self.domainSize, self.generators, [], self.cachedOrEmpty('order'));
-            else
-                if chain.isMutable
-                    chain.randomizedSchreierSims(self.cachedOrEmpty('order'));
-                    chain.makeImmutable;
-                    self.cache('partialChain', chain, 'overwrite');
-                end
-            end
-        end
-
-        function c = computePartialChain(self)
-            if self.inCache('chain')
-                c = self.chain;
-            else
-                c = replab.bsgs.Chain.makeBoundedOrder(self.domainSize, self.generators, replab.globals.fastChainOrder);
-            end
         end
 
         function sub = computeDerivedSubgroup(self)
@@ -220,12 +203,57 @@ classdef PermutationGroup < replab.FiniteGroup
                     end
                 end
             end
-            sub = replab.PermutationGroup(self.domainSize, generators, chain.order, self.type, chain);
+            chain.makeImmutable;
+            sub = replab.PermutationGroup(self.domainSize, generators, 'order', chain.order, 'type', self.type, 'chain', chain);
+        end
+
+        function s = computeSetProduct(self)
+            c = self.chain;
+            k = c.length;
+            T = cell(1, k);
+            for i = 1:k
+                Ui = c.U{i};
+                m = size(Ui, 2);
+                Ti = cell(1, m);
+                for j = 1:m
+                    Ti{j} = Ui(:,j)';
+                end
+                T{i} = Ti;
+            end
+            s = replab.SetProduct(self, T, true);
+        end
+
+    end
+
+    methods (Access = protected)
+
+        function G = computeNiceGroup(self)
+            G = self;
+        end
+
+        function m = computeNiceMorphism(self)
+            m = replab.FiniteIsomorphism.identity(self);
         end
 
     end
 
     methods % Group internal description
+
+        function c = chain(self)
+        % Returns the stabilizer chain corresponding to this permutation group.
+        %
+        % Returns:
+        %   `+replab.+bsgs.Chain`: Stabilizer chain
+            c = self.cached('chain', @() self.computeChain);
+        end
+
+        function f = factorization(self)
+        % Returns an object able to compute factorizations in the group generators
+        %
+        % Returns:
+        %   `+replab.+mrp.Factorization`: A factorization instance
+            f = self.cached('factorization', @() self.computeFactorization);
+        end
 
         function c = lexChain(self)
         % Returns the reduced stabilizer chain corresponding to this permutation group in lexicographic order
@@ -237,17 +265,26 @@ classdef PermutationGroup < replab.FiniteGroup
             c = self.cached('lexChain', @() self.computeLexChain);
         end
 
-        function c = chain(self)
-        % Returns the stabilizer chain corresponding to this permutation group.
-        %
-        % Returns:
-        %   `+replab.+bsgs.Chain`: Stabilizer chain
-            c = self.cached('chain', @() self.computeChain);
-        end
-
         function c = partialChain(self)
         % Returns the stabilizer chain corresponding to this permutation group if it can be computed quickly
             c = self.cached('partialChain', @() self.computePartialChain);
+        end
+
+    end
+
+    methods (Access = protected)
+
+        % Morphisms
+
+        function m = morphismByImages_(self, target, preimages, images, imageElementFun)
+            assert(length(preimages) == length(images));
+            if isa(target, 'replab.PermutationGroup')
+                m = replab.mrp.PermToPerm(self, target, preimages, images, imageElementFun);
+            elseif isa(target, 'replab.FiniteGroup')
+                m = replab.mrp.PermToFiniteGroup(self, target, preimages, images, imageElementFun);
+            else
+                m = replab.mrp.PermToGroup(self, target, preimages, images, imageElementFun);
+            end
         end
 
     end
@@ -262,6 +299,11 @@ classdef PermutationGroup < replab.FiniteGroup
             else
                 s = sprintf('Permutation group acting on %d elements', self.domainSize);
             end
+        end
+
+        function names = hiddenFields(self)
+            names = hiddenFields@replab.FiniteGroup(self);
+            names{1,end+1} = 'domainSize';
         end
 
         % replab.Obj
@@ -305,9 +347,47 @@ classdef PermutationGroup < replab.FiniteGroup
             z(x) = x(y);
         end
 
-        % Group properties
+        % FiniteGroup
 
-        % Group elements
+        function res = withGeneratorNames(self, newNames)
+        % Returns a modified copy of this finite group with renamed generators
+        %
+        % Args:
+        %   newNames (cell(1,\*) of charstring): New generator names
+        %
+        % Returns:
+        %   `.FiniteGroup`: Updated copy
+            if isequal(self.generatorNames, newNames)
+                res = self;
+                return
+            end
+            args = cell(1, 0);
+            if self.inCache('order')
+                args = horzcat(args, {'order', self.order});
+            end
+            if self.inCache('chain')
+                args = horzcat(args, {'chain', self.chain});
+            end
+            res = replab.PermutationGroup(self.domainSize, self.generators, 'type', self.type, 'generatorNames', newNames, args{:});
+        end
+
+        function A = abstractGroup(self, generatorNames)
+            if nargin < 2 || isempty(generatorNames)
+                generatorNames = self.generatorNames;
+            end
+            A = replab.AbstractGroup(generatorNames, self.relators(generatorNames), 'permutationGenerators', self.generators);
+        end
+
+        function m = abstractMorphism(self, generatorNames)
+            if nargin < 2 || isempty(generatorNames)
+                generatorNames = self.generatorNames;
+            end
+            m = self.abstractGroup(generatorNames).niceMorphism.inverse;
+        end
+
+    end
+
+    methods % Group elements
 
         function b = contains(self, g)
         % Tests whether this group contains the given element
@@ -338,8 +418,13 @@ classdef PermutationGroup < replab.FiniteGroup
             end
         end
 
+        function l = factorizeLetters(self, element)
+            l = self.factorization.factorize(element);
+        end
 
-        % Construction of groups
+    end
+
+    methods % Construction of groups
 
         function res = closure(self, rhs)
             if isa(rhs, 'replab.PermutationGroup')
@@ -376,9 +461,13 @@ classdef PermutationGroup < replab.FiniteGroup
         end
 
         function nc = normalClosure(self, rhs)
+            if isa(rhs, 'replab.FiniteGroup')
+                toCheck = rhs.generators;
+            else
+                toCheck = {rhs};
+            end
             chain = replab.bsgs.Chain(self.domainSize);
             generators = {};
-            toCheck = rhs.generators;
             while ~isempty(toCheck)
                 rhsg = toCheck{end};
                 toCheck = toCheck(1:end-1);
@@ -392,12 +481,13 @@ classdef PermutationGroup < replab.FiniteGroup
                     end
                 end
             end
-            nc = replab.PermutationGroup(self.domainSize, generators, chain.order, self.type, chain);
+            chain.makeImmutable;
+            nc = replab.PermutationGroup(self.domainSize, generators, 'order', chain.order, 'type', self.type, 'chain', chain);
         end
 
         % Subgroups
 
-        function grp = subgroupWithGenerators(self, generators, order)
+        function sub = subgroupWithGenerators(self, generators, order)
         % Constructs a permutation subgroup from its generators
         %
         % Args:
@@ -409,7 +499,11 @@ classdef PermutationGroup < replab.FiniteGroup
             if nargin < 3
                 order = [];
             end
-            grp = replab.PermutationGroup(self.domainSize, generators, order, self.type);
+            if length(generators) == self.nGenerators && all(arrayfun(@(i) self.eqv(self.generator(i), generators{i}), 1:length(generators)))
+                sub = self;
+            else
+                sub = replab.PermutationGroup(self.domainSize, generators, 'order', order, 'type', self.type);
+            end
         end
 
         function c = centralizer(self, other)
@@ -454,16 +548,6 @@ classdef PermutationGroup < replab.FiniteGroup
             res = isa(rhs, 'replab.PermutationGroup') && (self.type.domainSize == rhs.type.domainSize);
         end
 
-        % Morphisms
-
-        function m = morphismByImages(self, target, images)
-            if isa(target, 'replab.PermutationGroup')
-                m = replab.fm.PermToPerm(self, target, images);
-            else
-                m = replab.fm.PermToFinite(self, target, images);
-            end
-        end
-
         % Representations
 
         function rep = regularRep(self)
@@ -480,7 +564,7 @@ classdef PermutationGroup < replab.FiniteGroup
                 end
                 perms{i} = img;
             end
-            rep = self.permutationRep(o, perms);
+            rep = self.permutationRep(o, 'preimages', self.generators, 'images', perms);
         end
 
     end
@@ -536,15 +620,46 @@ classdef PermutationGroup < replab.FiniteGroup
             sub = replab.bsgs.OrderedPartitionStabilizer(self, partition).subgroup;
         end
 
-        function P = findPermutationsTo(self, s, t, sStabilizer, tStabilizer)
-        % Finds the permutations that sends a vector to another vector
+        function [sMinLex, P] = vectorFindLexMinimal(self, s, sStabilizer)
+        % Finds the lexicographic minimal vector under permutation of its coefficients by this group
+        %
+        % Example:
+        %   >>> n = 10;
+        %   >>> s = randi([-3 3], 1, n);
+        %   >>> G = replab.S(n);
+        %   >>> [sml, P] = G.vectorFindLexMinimal(s);
+        %   >>> all(sml == sort(s)) % lexmin using the symmetric group is simply a sort
+        %       1
+        %   >>> all(sml(P.representative) == s)
+        %       1
+        %
+        % Args:
+        %   s (double(1,domainSize)): Vector to permute
+        %   sStabilizer (`.PermutationGroup` or ``[]``, optional): Stabilzier of ``s``
+        %
+        % Returns
+        % -------
+        %   sMinLex: double(1,domainSize):
+        %     Minimal lexicographic representative of ``s`` under permutation by this group
+        %   P: `.LeftCoset`
+        %     Set of permutations ``p`` such that ``sMinLex == s(inverse(p))`` or ``s == sMinLex(p)``
+            if nargin < 3 || isempty(sStabilizer)
+                sStabilizer = self.vectorStabilizer(s);
+            end
+            lm = replab.bsgs.LexMin(self, s, sStabilizer);
+            [sMinLex, p] = lm.search;
+            P = sStabilizer.leftCoset(p, self);
+        end
+
+        function P = vectorFindPermutationsTo(self, s, t, sStabilizer, tStabilizer)
+        % Finds the permutations that send a vector to another vector
         %
         % We return the set of ``p`` such that ``t == s(inverse(p))`` or ``s == t(p)``.
         %
         % We use this notation as the left action of ``p`` on a list ``s`` is given by ``s(inverse(p))``.
         %
         % Args:
-        %   s (double(1,\*)): Source vector
+        %   s (double(1,domainSize)): Source vector
         %   t (double(1,domainSize)): Target vector
         %   sStabilizer (`.PermutationGroup` or ``[]``, optional): Stabilizer of ``s``
         %   tStabilizer (`.PermutationGroup` or ``[]``, optional): Stabilizer of ``t``
@@ -557,9 +672,38 @@ classdef PermutationGroup < replab.FiniteGroup
             if nargin < 5 || isequal(tStabilizer, [])
                 tStabilizer = self.vectorStabilizer(t);
             end
-            p = replab.bsgs.PermutationTo(self, s, t, sStabilizer, tStabilizer).find;
+            p = replab.bsgs.VectorPermutationTo(self, s, t, sStabilizer, tStabilizer).find;
             if ~isempty(p)
                 P = sStabilizer.leftCoset(p, self);
+            else
+                P = [];
+            end
+        end
+
+        function P = matrixFindPermutationsTo(self, S, T, SStabilizer, TStabilizer)
+        % Finds the permutations that send a matrix to another matrix
+        %
+        % We return the set of ``p`` such that ``T == S(inverse(p),inverse(p))`` or ``S == T(p,p)``.
+        %
+        % We use this notation as the left action of ``p`` on a matrix ``S`` is given by ``S(inverse(p),inverse(p))``.
+        %
+        % Args:
+        %   S (double(1,domainSize)): Source matrix
+        %   T (double(1,domainSize)): Target matrix
+        %   SStabilizer (`.PermutationGroup` or ``[]``, optional): Stabilizer of ``S``
+        %   TStabilizer (`.PermutationGroup` or ``[]``, optional): Stabilizer of ``T``
+        %
+        % Returns:
+        %   `+replab.LeftCoset`: The set of permutations ``{p}`` such that ``T == S(inverse(p),inverse(p))``; or ``[]`` if no element found
+            if nargin < 4 || isequal(SStabilizer, [])
+                SStabilizer = self.matrixStabilizer(S);
+            end
+            if nargin < 5 || isequal(TStabilizer, [])
+                TStabilizer = self.matrixStabilizer(T);
+            end
+            p = replab.bsgs.MatrixPermutationTo(self, S, T, SStabilizer, TStabilizer).find;
+            if ~isempty(p)
+                P = SStabilizer.leftCoset(p, self);
             else
                 P = [];
             end
@@ -575,6 +719,24 @@ classdef PermutationGroup < replab.FiniteGroup
         %   `.PermutationGroup`: The subgroup of this group leaving ``vector`` invariant
             partition = replab.Partition.fromVector(vector);
             sub = self.orderedPartitionStabilizer(partition);
+        end
+
+        function sub = matrixStabilizer(self, matrix)
+        % Returns the permutation subgroup that leaves a given matrix invariant by joint permutation of its rows and columns
+        %
+        % Example:
+        %   >>> S4 = replab.S(4);
+        %   >>> A = [1 1 0 1; 1 1 1 0; 0 1 1 1; 1 0 1 1]; % adjacency matrix of the square
+        %   >>> G = S4.matrixStabilizer(A);
+        %   >>> G.order == 8 % is the dihedral group of order 8
+        %       1
+        %
+        % Args:
+        %   matrix (double(domainSize,domainSize)): Matrix to stabilize under permutation
+        %
+        % Returns:
+        %   `.PermutationGroup`: The subgroup of this group such that every element ``g`` satisfies ``matrix(g,g) == matrix``
+            sub = replab.bsgs.MatrixAutomorphism(self, matrix).subgroup;
         end
 
         function s = setwiseStabilizer(self, set)
@@ -621,9 +783,13 @@ classdef PermutationGroup < replab.FiniteGroup
             c = self.chain.mutableCopy;
             c.baseChange(set, true);
             l = find(~ismember(c.base, set), 1); % find the first base point that is not in set
-            immutable = true;
-            c = c.chainFromLevel(l, immutable);
-            s = replab.PermutationGroup.fromChain(c, self.type);
+            if isempty(l)
+                s = self.trivialSubgroup;
+            else
+                immutable = true;
+                c = c.chainFromLevel(l, immutable);
+                s = replab.PermutationGroup.fromChain(c, self.type);
+            end
         end
 
         function o = orbits(self)
@@ -704,10 +870,10 @@ classdef PermutationGroup < replab.FiniteGroup
         function perm = indexRelabelingPermutation(self, g, indexRange)
         % Returns the permutation that acts by permuting tensor coefficients
         %
-        % Let I = (i1, ..., id) be a sequence of indices, where d = self.domainSize
-        % and 1 <= i1,...,id <= indexRange
+        % Let ``I = (i_1, ..., i_d)`` be a sequence of indices, where ``d = self.domainSize``
+        % and ``1 <= i_1,...,i_d <= indexRange``
         %
-        % We enumerate elements of I by first incrementing id, then i_(d-1), etc...
+        % We enumerate elements of ``I`` by first incrementing ``i_d``, then ``i_{d-1}``, etc...
         %
         % We compute the permutation of domain size ``indexRange^domainSize`` that acts on the
         % indices of I according to the argument ``g``.
@@ -720,15 +886,19 @@ classdef PermutationGroup < replab.FiniteGroup
         %   permutation: The permutation on the enumeration of indices
             n = self.domainSize;
             dims = indexRange * ones(1, n);
-            perm = permute(reshape(1:prod(dims), dims), fliplr(n +  1 - g));
+            perm = permute(reshape(1:prod(dims), dims), fliplr(n+1-g));
             perm = perm(:)';
         end
 
         function phi = indexRelabelingMorphism(self, indexRange)
         % Returns the morphism the permutation action of this group on tensor coefficients
         %
-        % The tensor coefficients correspond to R^ir x R^ir ... (domainSize times)
-        % where ir = indexRange
+        % The tensor coefficients correspond to ``R^ir x R^ir ... (domainSize times)``
+        % where ``ir = indexRange``.
+        %
+        % The enumeration of indices is done in the same order as in `.indexRelabelingPermutation`:
+        % if ``I = (i1, ..., id)`` is a sequence of indices, we increment first ``id``, then
+        % ``i_{d-1}`` and so on.
         %
         % See also:
         %   `+replab.PermutationGroup.indexRelabelingPermutation`
@@ -769,7 +939,7 @@ classdef PermutationGroup < replab.FiniteGroup
         %
         % Returns:
         %   replab.Rep: The (real) natural permutation representation
-            rho = self.permutationRep(self.domainSize, self.generators);
+            rho = self.permutationRep(self.domainSize, 'preimages', self.generators, 'images', self.generators);
         end
 
         function rho = standardRep(self)
@@ -780,23 +950,139 @@ classdef PermutationGroup < replab.FiniteGroup
         % acting on $n$ elements; but we can reuse that subrepresentation on
         % subgroups of the symmetric group.
         %
-        % It corresponds to the representation orthogonal to the
-        % trivial representation with basis ``[1, 1, ..., 1]'/sqrt(d)``
+        % It corresponds to the representation complementary to the
+        % trivial representation with basis ``[1, 1, ..., 1]'``
         %
         % Returns:
-        %   `+replab.Rep`: The (real) standard representation
-            [B_internal E_internal] = replab.sym.sageSpechtStandardBasis(self.domainSize);
-            rho = self.naturalRep.subRep(B_internal, E_internal);
+        %   `+replab.SubRep`: The (real) standard representation
+            d = self.domainSize;
+            [injectiond projection] = replab.sym.sageSpechtStandardBasis(d);
+            rho = self.naturalRep.subRep(replab.cyclotomic(injectiond)/d, 'projection', replab.cyclotomic(projection));
         end
 
         function rho = signRep(self)
-        % Returns the sign representation of this permutation
-            rho = replab.RepByImages.fromImageFunction(self, 'R', 1, @(g) replab.Permutation.sign(g));
+        % Returns the sign representation of this permutation group
+        %
+        % Returns:
+        %   `+replab.Rep`: One dimensional sign representation of this group
+            preimages = self.generators;
+            images = cellfun(@(g) replab.Permutation.sign(g), preimages, 'uniform', 0);
+            rho = self.signedPermutationRep(1, 'preimages', preimages, 'images', images);
         end
 
     end
 
-    methods(Static)
+    methods (Static) % Construction of standard groups
+
+        function G = symmetric(n)
+        % Returns the symmetric group acting on a certain domain size
+        %
+        % Args:
+        %   domainSize (integer): Domain size, must be >= 0
+        %
+        % Returns:
+        %   `+replab.PermutationGroup`: Symmetric group
+            G = replab.SymmetricGroup.make(n);
+        end
+
+        function G = kleinFourGroup
+        % Constructs the Klein Four-Group
+        %
+        % This corresponds to the symmetry group of a non-square rectangle, and corresponds to the direct product ``S2 x S2``.
+        %
+        % Returns:
+        %   `+replab.PermutationGroup`: The Klein four-group as a permutation gorup
+            g1 = [2,1,4,3];
+            g2 = [3,4,1,2];
+            G = replab.PermutationGroup.of(g1, g2);
+        end
+
+        function G = dihedral(n)
+        % Constructs the dihedral group of order ``2*n``
+        %
+        % This corresponds to the group of symmetries of the polygon with ``n`` vertices
+        %
+        % Args:
+        %   n (integer): Half the dihedral group order
+        %
+        % Returns:
+        %   `+replab.PermutationGroup`: The dihedral group permuting the vertices of the ``n``-gon
+            switch n
+              case 1
+                G = replab.PermutationGroup.symmetric(2);
+              case 2
+                G = replab.PermutationGroup.kleinFourGroup;
+              otherwise
+                g1 = fliplr(1:n);
+                g2 = [2:n 1];
+                G = replab.PermutationGroup.of(g1, g2);
+            end
+        end
+
+        function G = alternating(n)
+        % Constructs the alternating group
+        %
+        % Args:
+        %   n (integer): Group degree
+        %
+        % Returns:
+        %   `+replab.PermutationGroup`: The alternating group of degree ``n``
+            Sn = replab.PermutationGroup.symmetric(n);
+            if n <= 2 % special case: group is trivial
+                G = replab.PermutationGroup.trivial(n);
+            else
+                t = [2 3 1 4:n];
+                if n == 3 % special case: it is a cyclic group, one generator only
+                    G = Sn.subgroupWithGenerators({t}, Sn.order/2);
+                    return
+                end
+                % generators from page 2100 of
+                % https://www.ams.org/journals/tran/2003-355-05/S0002-9947-03-03040-X/S0002-9947-03-03040-X.pdf
+                if mod(n, 2) == 0
+                    s = [2 1 4:n 3];
+                else
+                    s = [1 2 4:n 3];
+                end
+                G = Sn.subgroupWithGenerators({s t}, Sn.order/2);
+            end
+        end
+
+        function G = cyclic(n)
+        % Constructs the cyclic group of order ``n`` acting on ``n`` points
+        %
+        % Args:
+        %   n (integer): Cyclic group order and domain size
+        %
+        % Returns:
+        %   `+replab.PermutationGroup`: The cyclic group of given order/domain size
+            Sn = replab.PermutationGroup.symmetric(n);
+            if n == 1
+                G = Sn;
+            else
+                G = Sn.subgroupWithGenerators({[2:n 1]}, vpi(n));
+            end
+        end
+
+        function G = trivial(n)
+        % Constructs the trivial permutation group acting on ``n`` points
+        %
+        % Example:
+        %   >>> G = replab.PermutationGroup.trivial(4);
+        %   >>> G.order
+        %     1
+        %
+        % Args:
+        %   n (integer): Domain size
+        %
+        % Returns:
+        %   `+replab.PermutationGroup`: Trivial group
+            Sn = replab.S(n);
+            G = Sn.subgroup({});
+        end
+
+    end
+
+    methods (Static) % Construction of permutation groups
 
         function G = permutingGivenPoints(n, points)
         % Constructs the group that permutes the given points
@@ -823,23 +1109,6 @@ classdef PermutationGroup < replab.FiniteGroup
                 gen2(points) = gen2([points(2:end) points(1)]);
                 G = replab.PermutationGroup.of(gen1, gen2);
             end
-        end
-
-        function G = trivial(n)
-        % Constructs the trivial permutation group acting on ``n`` points
-        %
-        % Example:
-        %   >>> G = replab.PermutationGroup.trivial(4);
-        %   >>> G.order
-        %     1
-        %
-        % Args:
-        %   n (integer): Domain size
-        %
-        % Returns:
-        %   `+replab.PermutationGroup`: Trivial group
-            Sn = replab.S(n);
-            G = Sn.subgroup({});
         end
 
         function G = of(varargin)

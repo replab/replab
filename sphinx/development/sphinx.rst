@@ -45,6 +45,12 @@ Follow `<https://nbsphinx.readthedocs.io/en/latest/installation.html>`_
 In particular, install the Python package nbsphinx, and the Ubuntu package pandoc
 
 
+Then install also the project requirements by running the following command within the 'sphinx' folder:
+
+::
+   pip install -r requirements.txt
+
+
 Later on?
 
 Proof environment? `<https://framagit.org/spalax/sphinxcontrib-proof/>`_

@@ -1,18 +1,29 @@
 classdef AbstractGroup < replab.NiceFiniteGroup
-% Describes a group whose elements are written as products of generators
+% Finite group defined using a presentation: a set of generators and a set of relations among generators
 %
-% The elements of that group obey an equivalence relation, which can be given in two different ways:
+% The name of generator always start with a letter (a-z or A-Z), and then contain either letters (a-z or A-Z),
+% digits (0-9) or underscores. Words in the generators are strings (charstring) containing generators separated
+% by spaces, that sequence being understood as a product of generators.
 %
-% - A list of relations form a group presentation (see `<https://en.wikipedia.org/wiki/Presentation_of_a_group>`_
+% In a word, generators can be taken to an integer power, using the syntax ``x^n`` where ``x`` is the name of a generator
+% and ``n`` is an integer. In the word syntax, we optionally accept explicit multiplication operators (``*``),
+% division operators (then ``x/y`` is understood as ``x y^-1``), parenthesis, and commutators ``[x, y] = x^-1 y^-1 x y``.
 %
-% - The equivalence relation is given by an homomorphism into an explicit realization of the group.
+% The abstract group is defined by a set of relations, that define equivalence relations between words. For example,
+% a cyclic group is defined by the generator ``x`` and the relation ``x^n = 1`` where ``n`` is the order of the group.
+% Then we deduce the relations ``x^(n+m) = x^m`` and that ``x^-m = x^(n-m)`` for any integer ``m``.
 %
-% We now give two corresponding examples.
+% Informally, the abstract group is the "largest" group with the sets of generators subject to these relations. Note
+% that RepLAB rewrites all relations as ``lhs = 1``, and those left hand sides are named "relators".
+%
+% See `<https://en.wikipedia.org/wiki/Presentation_of_a_group>`_ for a detailed discussion.
+%
+% Internally, RepLAB computes a realization of the abstract group as a permutation group, and delegates the computations
+% to that permutation group.
 %
 % Example:
-%   >>> [G, x] = replab.AbstractGroup.parsePresentation('< x | x^3 = 1 >');
+%   >>> [G, x] = replab.AbstractGroup.fromPresentation('< x | x^3 = 1 >');
 %   >>> x
-%       x =
 %       'x'
 %   >>> G.compose(x, x)
 %       'x^2'
@@ -20,46 +31,68 @@ classdef AbstractGroup < replab.NiceFiniteGroup
 %       3
 %
 % Example:
-%   >>> G = replab.AbstractGroup({'s', 't'}, replab.S(3));
+%   >>> G = replab.AbstractGroup({'x'}, {'x^3'});
 %   >>> G.order
-%       6
-%   >>> G.elements.at(3)
-%       't'
+%       3
 %
 % Abstract groups can also be created by isomorphisms from an explicit group.
 %
 % Example:
 %   >>> G = replab.S(3);
-%   >>> f = G.abstractGroupIsomorphism({'s' 't'});
+%   >>> f = G.abstractMorphism({'s' 't'});
 %   >>> f.imageElement([2 3 1])
 %       's'
+
+    properties (SetAccess = protected)
+       name % (charstring): Group name
+       inAtlas % (logical): Whether this group is already part of the atlas
+    end
 
     properties (Access = protected)
         groupId % (integer): Unique group id
     end
 
-    properties (SetAccess = protected)
-        generatorNames % (cell(1,\*) of charstring): Generator names
-        permutationGroup % (`.PermutationGroup`): Permutation group realization of this abstract group
-        name % (charstring or ``[]``): Group name
+    methods (Access = protected)
+
+        function P = computePermutationGroup(self)
+            R = cellfun(@(w) replab.fp.Letters.parse(w, self.generatorNames), self.relators, 'uniform', 0);
+            [gens, domainSize, order] = replab.fp.permutationRealizationForRelators(self.nGenerators, R);
+            isId = cellfun(@(g) isequal(g, 1:domainSize), gens);
+            if any(isId)
+                error('One of the generators in the presentation is the identity');
+            end
+
+            P = replab.PermutationGroup(domainSize, gens, 'order', order, 'generatorNames', self.generatorNames, 'relators', self.relators);
+        end
+
+    end
+
+    methods
+
+        function P = permutationGroup(self)
+        % Returns a realization of this abstract group using a permutation group
+        %
+        % The generators of the abstract group match the generators of the permutation group.
+        %
+        % Returns:
+        %   `.PermutationGroup`: Realization of this abstract group
+            P = self.cached('permutationGroup', @() self.computePermutationGroup);
+        end
+
     end
 
     methods (Static)
 
-        function A = make(generatorNames, relatorWords)
-            relators = cellfun(@(w) replab.fp.parseLetters(w, generatorNames), relatorWords, 'uniform', 0);
-            gens = replab.fp.permutationGeneratorsForRelators(length(generatorNames), relators);
-            pg = replab.PermutationGroup.of(gens{:});
-            A = replab.AbstractGroup(generatorNames, pg, relatorWords);
-        end
-
-        function [A varargout] = parsePresentation(str)
+        function [A, varargout] = fromPresentation(str, varargin)
         % Creates an abstract group from a presentation string
         %
         % Returns the finite group generators as additional output arguments.
         %
+        % Additional arguments are passed to the `.AbstractGroup` constructor.
+        %
         % Example:
-        %   >>> [G, x] = replab.AbstractGroup.parsePresentation('< x | x^3 = 1 >');
+        %   >>> [G, x] = replab.AbstractGroup.fromPresentation('< x | x^3 = 1 >');
+        %   >>> [G, x, y] = replab.AbstractGroup.fromPresentation('< x, y | x^3 = y^2 = x y x y^-1 = 1 >');
         %
         % Args:
         %   str (charstring): Single-line description string
@@ -68,16 +101,16 @@ classdef AbstractGroup < replab.NiceFiniteGroup
         %   `.AbstractGroup`: The parsed abstract group
             [ok, generatorNames, relatorLetters] = replab.fp.Parser.parsePresentation(str);
             assert(ok, 'Error in given presentation string');
-            relatorLetters = cellfun(@(r) replab.fp.reduceLetters(r), relatorLetters, 'uniform', 0);
+            relatorLetters = cellfun(@(r) replab.fp.Letters.reduce(r), relatorLetters, 'uniform', 0);
             mask = cellfun(@isempty, relatorLetters);
             relatorLetters = relatorLetters(~mask);
             relators = cell(1, length(relatorLetters));
             for i = 1:length(relatorLetters)
-                relators{i} = replab.fp.printLetters(relatorLetters{i}, generatorNames, ' ');
+                relators{i} = replab.fp.Letters.print(relatorLetters{i}, generatorNames, ' ');
             end
-            A = replab.AbstractGroup.make(generatorNames, relators);
+            A = replab.AbstractGroup(generatorNames, relators, varargin{:});
             if nargout > 1
-                for i = 1:length(A.nGenerators)
+                for i = 1:A.nGenerators
                     varargout{i} = A.generator(i);
                 end
             end
@@ -87,16 +120,36 @@ classdef AbstractGroup < replab.NiceFiniteGroup
 
     methods (Access = protected)
 
-        function r = computeRelators(self)
-            r = replab.fp.relatorsForPermutationGroup(self.permutationGroup, self.generatorNames);
-            r = cellfun(@(w) self.fromLetters(w), r, 'uniform', 0);
+        function G = computeNiceGroup(self)
+            G = self.permutationGroup;
         end
 
         function m = computeNiceMorphism(self)
-            if self.order <= 65536
-                m = replab.nfg.AbstractGroupIsomorphismEnumeration.make(self);
-            else
-                m = replab.nfg.AbstractGroupIsomorphismChain(self);
+            m = replab.mrp.AbstractGroupNiceIsomorphism(self);
+        end
+
+        function A = computeAbstractGroup(self)
+            A = self;
+        end
+
+        function m = computeAbstractMorphism(self)
+            m = replab.FiniteIsomorphism.identity(self);
+        end
+
+        function R = computeRecognize(self)
+            R = [];
+            if ~self.inAtlas
+                R = replab.Atlas.recognize(self);
+            end
+        end
+
+        function R = computeFastRecognize(self)
+            R = [];
+            if ~self.inAtlas
+                R = self.niceGroup.fastRecognize;
+                if ~isempty(R)
+                    R = R.andThen(self.niceMorphism.inverse);
+                end
             end
         end
 
@@ -104,64 +157,64 @@ classdef AbstractGroup < replab.NiceFiniteGroup
 
     methods
 
-        function self = AbstractGroup(generatorNames, permutationGroup, relators, name)
-        % Creates an abstract group from generator names, images and optional relators
+        function self = AbstractGroup(generatorNames, relators, varargin)
+        % Creates an abstract group from generator names and relators
         %
         % Args:
         %   generatorNames (cell(1,\*) of charstring): Generator names
-        %   permutationGroup (`.PermutationGroup`): Permutation group realization of this abstract group
         %   relators (cell(1,\*) of charstring, optional): Relators
-            self.type = self;
-            self.groupId = replab.globals.nextUniqueId;
-            self.identity = '1';
-            self.generatorNames = generatorNames;
-            self.generators = generatorNames;
-            self.permutationGroup = permutationGroup;
-            if nargin >= 3 && ~isempty(relators)
-                self.cache('relators', relators, 'error');
-            end
-            if nargin >= 4 && ~isempty(name);
-                self.name = name;
+        %
+        % Keyword Args:
+        %   name (charstring, optional): Group name, optional
+        %   order (integer, optional): Group order
+        %   permutationGenerators (cell(1,\*) of permutation): Realization of the generators using permutations
+        %   inAtlas (logical, optional): Whether this group is part of the atlas
+            args = struct('order', 0, 'permutationGenerators', 'none', 'generatorNames', 'none', 'name', 'Abstract group', 'inAtlas', false);
+            [args, restArgs] = replab.util.populateStruct(args, varargin);
+            assert(isequal(args.generatorNames, 'none'), 'Cannot provide generatorNames argument in addition');
+            identity = '1';
+            generators = generatorNames;
+            type = 'self';
+            if args.order > 0
+                args1 = {'order', args.order};
             else
-                self.name = 'Abstract group';
+                args1 = {};
+            end
+            self@replab.NiceFiniteGroup(identity, generators, type, 'generatorNames', generatorNames, 'relators', relators, args1{:}, restArgs{:});
+            self.name = args.name;
+            self.groupId = replab.globals.nextUniqueId;
+            self.inAtlas = args.inAtlas;
+            if ~isequal(args.permutationGenerators, 'none')
+                if isempty(args.permutationGenerators)
+                    domainSize = 1;
+                else
+                    domainSize = length(args.permutationGenerators{1});
+                end
+                permutationGroup = replab.PermutationGroup(domainSize, args.permutationGenerators, 'generatorNames', generatorNames, 'relators', relators, args1{:});
+                self.cache('permutationGroup', permutationGroup);
             end
         end
 
-        function A1 = withRenamedGenerators(self, generatorNames1)
-        % Returns a modified copy of this abstract group with the generators renamed
+        function res = simplify(self, word)
+        % Attempts to simplify the given word
         %
         % Args:
-        %   generatorNames1 (cell(1,\*) of charstring): New generator names
+        %   word (charstring): Word to simplify
         %
         % Returns:
-        %   `.AbstractGroup`: Updated copy
-            A1 = replab.AbstractGroup(generatorNames1, self.permutationGroup, self.cachedOrEmpty('relators'));
-            if self.inCache('niceMorphism')
-                A1.cache('niceMorphism', self.niceMorphism.withUpdatedSource(A1), 'error');
+        %   charstring: Simplified word
+            res = self.niceMorphism.preimageElement(self.niceMorphism.imageElement(word));
+            if length(res) > length(word)
+                res = word;
             end
         end
 
-        function r = relators(self)
-        % Returns the list of relators defining this abstract group
-        %
-        % Returns:
-        %   cell(1,\*) of charstring: Words defining the relators
-            r = self.cached('relators', @() self.computeRelators);
-        end
-
-        function s = presentationString(self)
-            r = self.relators;
-            gens = strjoin(self.generatorNames, ', ');
-            rels = strjoin(self.relators, ' = ');
-            s = sprintf('< %s | %s = 1 >', gens, rels);
-        end
-
-        function letters = toLetters(self, word)
+        function letters = factorizeLetters(self, word)
         % Parses word letters from word as a string
         %
         % Example:
-        %   >>> A = replab.AbstractGroup({'x'}, {[2 3 1]}, {'x^3'});
-        %   >>> isequal(A.toLetters('x^2'), [1 1])
+        %   >>> A = replab.AbstractGroup({'x'}, {'x^3'});
+        %   >>> isequal(A.factorizeLetters('x^2'), [1 1])
         %       1
         %
         % Args:
@@ -179,11 +232,11 @@ classdef AbstractGroup < replab.NiceFiniteGroup
             assert(tokens(1, pos) == replab.fp.Parser.types.END, 'Badly terminated word');
         end
 
-        function word = fromLetters(self, letters)
+        function word = imageLetters(self, letters)
         % Prints a word formed of letters as a string
         %
         %   >>> A = replab.AbstractGroup({'x'}, {[2 3 1]}, {'x^3'});
-        %   >>> A.fromLetters([1 1])
+        %   >>> A.imageLetters([1 1])
         %       'x^2'
         %
         % Args:
@@ -191,7 +244,7 @@ classdef AbstractGroup < replab.NiceFiniteGroup
         %
         % Returns:
         %   charstring: Word as a string
-            word = replab.fp.printLetters(letters, self.generatorNames, ' ');
+            word = replab.fp.Letters.print(letters, self.generatorNames, ' ');
         end
 
         function img = computeImage(self, word, target, targetGeneratorImages)
@@ -206,7 +259,7 @@ classdef AbstractGroup < replab.NiceFiniteGroup
         %
         % Returns:
         %   permutation: Computed image
-            letters = self.toLetters(word);
+            letters = self.factorizeLetters(word);
             img = target.identity;
             for i = 1:length(letters)
                 l = letters(i);
@@ -218,27 +271,15 @@ classdef AbstractGroup < replab.NiceFiniteGroup
             end
         end
 
-        function l = imagesDefineMorphism(self, target, targetGeneratorImages)
-        % Checks whether the given images satisfy the relations of the presentation of this group
-        %
-        % If it returns true, it means those images describe a valid homomorphism from this `.AbstractGroup`
-        % to the given target group.
+        function m = renamingMorphism(self, newNames)
+        % Returns a morphism from this abstract group with the generators renamed
         %
         % Args:
-        %   target (`+replab.Group`): Target group
-        %   targetGeneratorImages (cell(1,\*) of elements of ``target``): Images of the generators of this group
+        %   newNames (cell(1,\*) of charstring): New generator names
         %
         % Returns:
-        %   logical: True if the images verify the presentation
-            nR = length(self.relators);
-            for i = 1:nR
-                r = self.relators{i};
-                if ~target.isIdentity(self.computeImage(r, target, targetGeneratorImages))
-                    l = false;
-                    return
-                end
-            end
-            l = true;
+        %   `.AbstractGroup`: Updated copy
+            m = replab.mrp.AbstractGroupRenamingIsomorphism(self, self.withGeneratorNames(newNames));
         end
 
     end
@@ -246,25 +287,37 @@ classdef AbstractGroup < replab.NiceFiniteGroup
     methods % Implementations
 
         function res = eq(self, rhs)
-            res = (self.groupId == rhs.groupId);
+            if ~isa(rhs, 'replab.AbstractGroup')
+                res = false;
+                return
+            end
+            res = (self.type.groupId == rhs.type.groupId) && self.niceGroup == rhs.niceGroup;
         end
 
         function res = ne(self, rhs)
-            res = self.groupId ~= rhs.groupId;
+            res = ~(self == rhs);
         end
 
         % Str
 
         function s = shortStr(self, maxColumns)
-            if self.inCache('relators')
-                s = self.presentationString;
-            else
-                s = 'AbstractGroup';
-            end
+            s = [self.name ' ' self.presentation];
         end
 
         function h = headerStr(self)
             h = self.name;
+        end
+
+        function names = hiddenFields(self)
+            names = hiddenFields@replab.NiceFiniteGroup(self);
+            names{1,end+1} = 'type';
+            names{1,end+1} = 'inAtlas';
+        end
+
+        function [names, values] = additionalFields(self)
+            [names, values] = additionalFields@replab.NiceFiniteGroup(self);
+            names{1,end+1} = 'relators';
+            values{1,end+1} = self.relators;
         end
 
         % Domain
@@ -280,24 +333,74 @@ classdef AbstractGroup < replab.NiceFiniteGroup
         % Monoid
 
         function z = compose(self, x, y)
-            xl = self.toLetters(x);
-            yl = self.toLetters(y);
-            zl = replab.fp.composeLetters(xl, yl);
-            z = self.fromLetters(zl);
+            xl = self.factorizeLetters(x);
+            yl = self.factorizeLetters(y);
+            zl = replab.fp.Letters.compose(xl, yl);
+            z = self.imageLetters(zl);
         end
 
         % Group
 
         function z = inverse(self, x)
-            xl = self.toLetters(x);
-            zl = replab.fp.inverseLetters(xl);
-            z = self.fromLetters(zl);
+            xl = self.factorizeLetters(x);
+            zl = replab.fp.Letters.inverse(xl);
+            z = self.imageLetters(zl);
+        end
+
+        % FiniteSet
+
+        function b = hasSameTypeAs(self, rhs)
+            b = self.type.groupId == rhs.type.groupId;
+        end
+
+        % FiniteGroup
+
+        function A1 = withGeneratorNames(self, newNames)
+        % Returns a modified copy of this abstract group with the generators renamed
+        %
+        % Note: the abstract group returned by this method is not equal to the original abstract group. This differs
+        % from the behavior of `.withGeneratorNames` called on any `.FiniteGroup` which is not an abstract group.
+        %
+        % Args:
+        %   newNames (cell(1,\*) of charstring): New generator names
+        %
+        % Returns:
+        %   `.AbstractGroup`: Updated copy
+            if isequal(self.generatorNames, newNames)
+                A1 = self;
+                return
+            end
+            rels = cellfun(@(r) replab.fp.Letters.print(self.factorizeLetters(r), newNames), self.relators, 'uniform', 0);
+            args = {};
+            if self.inCache('order')
+                args{1,end+1} = 'order';
+                args{1,end+1}=  self.order;
+            end
+            if self.inCache('permutationGroup')
+                args{1,end+1} = 'permutationGenerators';
+                args{1,end+1} = self.permutationGroup.generators;
+            end
+            A1 = replab.AbstractGroup(newNames, rels, args{:});
+        end
+
+        function A = abstractGroup(self, generatorNames)
+            if nargin < 2 || isempty(generatorNames)
+                generatorNames = self.generatorNames;
+            end
+            A = self.withGeneratorNames(generatorNames);
+        end
+
+        function m = abstractMorphism(self, generatorNames)
+            if nargin < 2 || isempty(generatorNames)
+                generatorNames = self.generatorNames;
+            end
+            m = self.renamingMorphism(generatorNames);
         end
 
         % NiceFiniteGroup
 
         function perm = niceImage(self, word)
-            letters = self.toLetters(word);
+            letters = self.factorizeLetters(word);
             pg = self.permutationGroup;
             perm = pg.identity;
             for i = 1:length(letters)

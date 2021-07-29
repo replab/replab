@@ -4,9 +4,12 @@
 [submodule "MOcov"]
 	path = external/MOcov
 	url = https://github.com/MOcov/MOcov.git
-[submodule "SDPT3"]
-	path = external/SDPT3
-	url = https://github.com/SQLP/SDPT3
 [submodule "YALMIP"]
 	path = external/YALMIP
 	url = https://github.com/yalmip/YALMIP
+[submodule "external/cyclolab"]
+	path = external/cyclolab
+	url = https://github.com/denisrosset/cyclolab.git
+[submodule "external/sdpt3"]
+	path = external/sdpt3
+	url = https://github.com/sqlp/sdpt3

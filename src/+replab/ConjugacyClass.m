@@ -27,13 +27,51 @@ classdef ConjugacyClass < replab.FiniteSet
 
     end
 
+    methods (Access = protected)
+
+        function o = computeElementOrder(self)
+            o = self.group.elementOrder(self.representative);
+        end
+
+    end
+
+    methods
+
+        function o = elementOrder(self)
+        % Returns the order of the elements in this conjugacy class
+        %
+        % Returns:
+        %   integer: Element order
+            o = self.cached('elementOrder', @() self.computeElementOrder);
+        end
+
+        function c1 = imap(self, f)
+        % Maps this conjugacy class under an isomorphism
+        %
+        % Args:
+        %   f (`.FiniteIsomorphism`): Isomorphism with ``self.group.isSubgroupOf(f.source)``
+        %
+        % Returns:
+        %   `.ConjugacyClass`: The conjugacy class mapped under ``f``, expressed as a subset of ``f.image``
+            if self.group.order < f.source.order
+                f = f.restrictedSource(self.group);
+            end
+            if isa(f, 'replab.mrp.NiceIsomorphism') % preserves lexicographic order
+                c1 = replab.ConjugacyClass(f.target, f.imageElement(self.representative), f.imageGroup(self.representativeCentralizer));
+            else
+                c1 = replab.ConjugacyClass.make(f.target, f.imageElement(self.representative), f.imageGroup(self.representativeCentralizer));
+            end
+        end
+
+    end
+
     methods (Static)
 
         function c = make(group, element, elementCentralizer)
             if nargin < 3
                 elementCentralizer = group.centralizer(element);
             end
-            prmGroup = group.niceMorphism.imageGroup(group); % TODO: image
+            prmGroup = group.niceMorphism.image;
             prmElement = group.niceMorphism.imageElement(element);
             [h1 g] = replab.bsgs.ConjugacyClasses.representative(prmGroup, prmElement);
             representative = group.niceMorphism.preimageElement(h1);
@@ -50,9 +88,28 @@ classdef ConjugacyClass < replab.FiniteSet
             E = cellfun(@(t) self.group.leftConjugate(t, self.representative), T, 'uniform', 0);
         end
 
+        function n = computeNElements(self)
+            n = self.group.order / self.representativeCentralizer.order;
+        end
+
     end
 
     methods % Implementations
+
+        % Str
+
+        function s = shortStr(self, maxColumns)
+            s = sprintf('ConjugacyClass of %s in %s', replab.shortStr(self.representative, maxColumns), replab.shortStr(self.group, maxColumns));
+            if length(s) > maxColumns
+                s = sprintf('ConjugacyClass of %s', replab.shortStr(self.representative, maxColumns));
+            end
+        end
+
+        % Obj
+
+        function l = laws(self)
+            l = replab.laws.ConjugacyClassLaws(self);
+        end
 
         % Domain
 
@@ -64,7 +121,7 @@ classdef ConjugacyClass < replab.FiniteSet
         % FiniteSet
 
         function s = nElements(self)
-            s = self.group.order / self.representativeCentralizer.order;
+            s = self.cached('nElements', @() self.computeNElements);
         end
 
         function b = contains(self, t)

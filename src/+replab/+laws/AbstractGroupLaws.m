@@ -12,7 +12,7 @@ classdef AbstractGroupLaws < replab.laws.FiniteGroupLaws
     methods
 
         function law_relators_are_satisfied_by_permutation_realization_(self)
-            assert(self.T.imagesDefineMorphism(self.T.permutationGroup, self.T.permutationGroup.generators));
+            assert(self.T.isMorphismByImages(self.T.permutationGroup, 'images', self.T.permutationGroup.generators));
         end
 
     end

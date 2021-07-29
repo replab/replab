@@ -8,13 +8,22 @@ classdef NiceFiniteGroup < replab.FiniteGroup
 % permutation groups can be handled by efficient BSGS algorithms, the requested computations can be
 % translated back and forth between this group and a permutation group.
 %
-% In particular, the decomposition of the finite group in a product of sets (`.FiniteGroupDecomposition`),
+% In particular, the decomposition of the finite group in a product of sets (`.SetProduct`),
 % the enumeration of elements using a `.IndexedFamily`, the construction of subgroups is all handled
 % by permutation group algorithms.
 %
 % Note that the `.niceImage` method of this group should be valid for all elements of the parent as well,
 % and that groups having the same type (as verified by `.hasSameTypeAs`) should return the same images
 % under `.niceImage`.
+
+    methods
+
+        function self = NiceFiniteGroup(identity, generators, type, varargin)
+        % Constructs a nice finite group
+            self@replab.FiniteGroup(identity, generators, type, varargin{:});
+        end
+
+    end
 
     methods % Nice monomorphism support
 
@@ -34,44 +43,35 @@ classdef NiceFiniteGroup < replab.FiniteGroup
             error('Abstract');
         end
 
-        function G = niceGroup(self)
-        % Returns the permutation group isomorphic to this finite group
+        function sub = niceSubgroup(self, generators, order, niceGroup)
+        % Constructs a subgroup of this group with a small optional optimization
         %
-        % This is the image of `.niceMorphism`.
+        % This method is used by the other subgroup construction methods.
         %
-        % Returns:
-        %   `+replab.PermutationGroup`: The image of the isomorphism
-            G = self.cached('niceGroup', @() self.computeNiceGroup);
+        % Args:
+        %   generators (cell(1,\*) of group elements): Subgroup generators
+        %   order (vpi or ``[]``, optional): Subgroup order if known, default value ``[]``
+        %   niceGroup (`.PermutationGroup` or ``[]``, optional): Permutation realization of the subgroup if known, default value ``[]``
+            if nargin < 3 || isempty(order)
+                order = [];
+            end
+            sub = replab.NiceFiniteSubgroup(self.type, generators, 'order', order);
+            if nargin > 3 && ~isempty(niceGroup)
+                sub.cache('niceGroup', niceGroup, '==');
+            end
         end
 
     end
 
-    methods (Access = protected)
-
-        function G = computeNiceGroup(self)
-            gens = cellfun(@(g) self.niceImage(g), self.generators, 'uniform', 0);
-            ds = length(self.niceImage(self.identity));
-            G = replab.PermutationGroup(ds, gens, self.cachedOrEmpty('order'));
-        end
+    methods (Access = protected) % Implementations
 
         function order = computeOrder(self)
             order = self.niceGroup.order;
         end
 
-        function m = computeNiceMorphism(self)
-            m = replab.nfg.NiceFiniteGroupIsomorphism(self, self.niceGroup);
-        end
-
-        function dec = computeDecomposition(self)
-            prmD = self.niceGroup.decomposition;
-            T1 = cellfun(@(T) cellfun(@(t) self.niceMorphism.preimageElement(t), T, 'uniform', 0), prmD.T, 'uniform', 0);
-            dec = replab.FiniteGroupDecomposition(self, T1);
-        end
-
         function C = computeConjugacyClasses(self)
-            C = cellfun(@(cl) replab.ConjugacyClass(self, self.niceMorphism.preimageElement(cl.representative), ...
-                                                    self.niceMorphism.preimageGroup(cl.representativeCentralizer)), ...
-                        self.niceGroup.conjugacyClasses, 'uniform', 0);
+            nc = self.niceGroup.conjugacyClasses;
+            C = nc.imap(self.niceMorphism.inverse);
         end
 
         function res = computeIsCyclic(self)
@@ -88,8 +88,33 @@ classdef NiceFiniteGroup < replab.FiniteGroup
             E = replab.IndexedFamily.lambda(self.order, atFun, findFun);
         end
 
+        function dec = computeSetProduct(self)
+            prmD = self.niceGroup.setProduct;
+            sets1 = cellfun(@(T) cellfun(@(t) self.niceMorphism.preimageElement(t), T, 'uniform', 0), prmD.sets, 'uniform', 0);
+            dec = replab.SetProduct(self, sets1, true);
+        end
+
         function sub = computeDerivedSubgroup(self)
             sub = self.niceMorphism.preimageGroup(self.niceGroup.derivedSubgroup);
+        end
+
+    end
+
+    methods (Access = protected)
+
+        function G = computeNiceGroup(self)
+            gens = cellfun(@(g) self.niceImage(g), self.generators, 'uniform', 0);
+            ds = length(self.niceImage(self.identity));
+            if self.inCache('order')
+                args = {'order', self.order};
+            else
+                args = {};
+            end
+            G = replab.PermutationGroup(ds, gens, args{:});
+        end
+
+        function m = computeNiceMorphism(self)
+            m = replab.mrp.NiceFiniteGroupIsomorphism(self, self.niceGroup);
         end
 
     end
@@ -107,6 +132,20 @@ classdef NiceFiniteGroup < replab.FiniteGroup
 
         % FiniteGroup
 
+        function A = abstractGroup(self, generatorNames)
+            if nargin < 2 || isempty(generatorNames)
+                generatorNames = self.generatorNames;
+            end
+            A = self.niceGroup.abstractGroup(generatorNames);
+        end
+
+        function m = abstractMorphism(self, generatorNames)
+            if nargin < 2 || isempty(generatorNames)
+                generatorNames = self.generatorNames;
+            end
+            m = self.niceMorphism.andThen(self.niceGroup.abstractMorphism(generatorNames));
+        end
+
         % Group elements
 
         function b = contains(self, g)
@@ -115,6 +154,10 @@ classdef NiceFiniteGroup < replab.FiniteGroup
 
         function o = elementOrder(self, g)
             o = self.niceGroup.elementOrder(self.niceImage(g));
+        end
+
+        function l = factorizeLetters(self, element)
+            l = self.niceGroup.factorizeLetters(self.niceImage(element));
         end
 
         % Construction of groups
@@ -148,7 +191,7 @@ classdef NiceFiniteGroup < replab.FiniteGroup
             if isa(obj, 'replab.FiniteGroup')
                 res = self.niceGroup.normalClosure(self.type.niceMorphism.imageGroup(obj));
             else
-                res = self.niceGroup.normalClosure(self.niceImage(obj));
+                res = self.niceGroup.normalClosure(self.type.niceImage(obj));
             end
             res1 = self.type.niceMorphism.preimageGroup(res);
         end
@@ -159,14 +202,11 @@ classdef NiceFiniteGroup < replab.FiniteGroup
             if nargin < 3
                 order = [];
             end
-            niceGroup = self.niceGroup.subgroupWithGenerators(cellfun(@(g) self.niceImage(g), generators, 'uniform', 0), order);
-            sub = self.niceSubgroup(generators, order, niceGroup);
-        end
-
-        function sub = niceSubgroup(self, generators, order, niceGroup)
-            sub = replab.NiceFiniteSubgroup(self.type, generators, order);
-            if nargin > 3 && ~isempty(niceGroup)
-                sub.cache('niceGroup', niceGroup, '==');
+            if length(generators) == self.nGenerators && all(arrayfun(@(i) self.eqv(self.generator(i), generators{i}), 1:length(generators)))
+                sub = self;
+            else
+                niceGroup = self.niceGroup.subgroupWithGenerators(cellfun(@(g) self.niceImage(g), generators, 'uniform', 0), order);
+                sub = self.niceSubgroup(generators, order, niceGroup);
             end
         end
 
@@ -199,19 +239,34 @@ classdef NiceFiniteGroup < replab.FiniteGroup
                 tCentralizer = self.niceMorphism.imageGroup(tCentralizer);
             end
             B = self.niceGroup.findLeftConjugations(s, t, sCentralizer, tCentralizer);
-            subgroup = self.niceMorphism.preimageGroup(B.subgroup);
+            group = self.niceMorphism.preimageGroup(B.group);
             canRep = self.niceMorphism.preimageElement(B.representative);
-            B = replab.LeftCoset(subgroup, canRep, self);
+            B = replab.LeftCoset(group, canRep, self);
         end
 
         % Relation to other groups
 
+        % Representations
+
+        function rep = regularRep(self)
+            rep = self.niceMorphism.andThen(self.niceGroup.regularRep);
+        end
+
+    end
+
+    methods (Access = protected)
+
         % Morphisms
 
-        function m = morphismByImages(self, target, images)
+        function m = morphismByImages_(self, target, preimages, images, imageElementFun)
             first = self.niceMorphism; % maps this to the perm group
-            second = self.niceGroup.morphismByImages(target, images); % from the perm group to the images
-            m = first.andThen(second);
+            preimagesNG = cellfun(@(g) self.niceMorphism.imageElement(g), preimages, 'uniform', 0);
+            second = self.niceGroup.morphismByImages(target, 'preimages', preimagesNG, 'images', images, 'nChecks', 0); % from the perm group to the images
+            if isa(second, 'replab.FiniteMorphism')
+                m = replab.mrp.FiniteComposition(second, first, imageElementFun);
+            else
+                m = replab.mrp.Composition(second, first, imageElementFun);
+            end
         end
 
     end

@@ -26,7 +26,7 @@ classdef RightCoset < replab.Coset
                 parent = group.closure(element);
             end
             if group.isNormalizedBy(element)
-                r = replab.NormalCoset(group, element, parent);
+                r = replab.NormalCoset.make(group, element, parent);
                 return
             end
             chain = parent.niceMorphism.imageGroup(group).lexChain;
@@ -54,6 +54,10 @@ classdef RightCoset < replab.Coset
             end
             matrix = sortrows(matrix')';
             E = replab.indf.FiniteGroupIndexedFamily(matrix, self.isomorphism);
+        end
+
+        function s = computeSetProduct(self)
+            s = replab.SetProduct(self.parent, horzcat(self.group.setProduct.sets, {{self.representative}}), false);
         end
 
     end
@@ -88,7 +92,28 @@ classdef RightCoset < replab.Coset
                 el = self.isomorphism.imageElement(el);
             end
             el = replab.bsgs.Cosets.rightRepresentative(self.groupChain, el);
-            b = isequal(self.representative, el);
+            if ~isempty(self.isomorphism)
+                el = self.isomorphism.preimageElement(el);
+            end
+            b = self.parent.eqv(self.representative, el);
+        end
+
+        % Coset
+
+        function [l, r] = factorizeShortRepresentativeLetters(self)
+        % Returns a tentatively short word corresponding to an element of this coset
+        %
+        % An effort is made to identify a short word, but without optimality guarantees.
+        %
+        % Returns
+        % -------
+        %   l: integer(1,\*)
+        %     Letters of the word representing an element of ``self``
+        %   r: element of `.group`
+        %     Represented coset element
+            [linv, rinv] = self.group.leftCoset(self.group.inverse(self.representative), self.parent).factorizeShortRepresentativeLetters;
+            l = replab.fp.Letters.inverse(linv);
+            r = self.group.inverse(rinv);
         end
 
     end
