@@ -1,11 +1,16 @@
+% We symmetrize the computation in
+% P. D. Johnson, "Compatible quantum correlations: Extension problems for Werner and isotropic states"
+% Phys. Rev. A, vol. 88, no. 3, 2013
+% doi: 10.1103/PhysRevA.88.032323.
+
 % Declare the symmetry group: U(2) acting on each subsystem
 % We do not use permutation of subsystems as it complicates the PPT constraint
 
 G = replab.U(2);
 % The representation of the two qubit state
-rep = kron(G.definingRep, G.definingRep);
-% The representation acting on the partially transposed state
-repT = kron(G.definingRep, dual(G.definingRep));
+rep2 = kron(G.definingRep, G.definingRep);
+% The representation
+rep3 = kron(G.definingRep, G.definingRep);
 
 % Spaces of equivariant Hermitian matrices
 H = rep.hermitianInvariant;
@@ -14,7 +19,7 @@ HT = repT.hermitianInvariant;
 % The partial transpose linear map
 pptFun = @(X) reshape(permute(reshape(X, [2 2 2 2]), [3 2 1 4]), [4 4]);
 % Upgraded as an equivariant super operator from the space H to the space HT
-ppt = replab.equiop.generic(H, HT, pptFun);
+ppt = replab.equiop(H, HT, pptFun);
 
 % Define the singlet state as an equivar
 singlet = replab.equivar(H, 'value', [0 0 0 0; 0 1 -1 0; 0 -1 1 0; 0 0 0 0]/2);
@@ -30,8 +35,8 @@ rho = singlet*t + noise*(1-t);
 % we use the syntax sdpvar(EV) to recover the sdpvar in the original (i.e. non symmetry adapted) basis
 
 C = [trace(sdpvar(rho)) == 1
-     issdp(rho)
-     issdp(ppt(rho))];
+     sdp(rho)
+     sdp(ppt(rho))];
 
 % note that this is a linear program now
 optimize(C, -t)
