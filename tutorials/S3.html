@@ -640,25 +640,15 @@ ans =
 </pre></div>
 </div>
 </div>
-<p>associating the each generator its parity (i.e. either <span class="math notranslate nohighlight">\(+1\)</span> or <span class="math notranslate nohighlight">\(-1\)</span>). Since the parity of [2 3 1] is 1 and the parity of [2 1 3] is -1, this is achieved by instantiating the class <em>RepByImage</em> as follows:</p>
-<div class="nbinput docutils container">
+<p>associating the each generator its parity (i.e. either <span class="math notranslate nohighlight">\(+1\)</span> or <span class="math notranslate nohighlight">\(-1\)</span>). Since the parity of [2 3 1] is 1 and the parity of [2 1 3] is -1, this is achieved by instantiating calling the <em>repByImages</em> methods on the group:</p>
+<div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
 </pre></div>
 </div>
 <div class="input_area highlight-octave notranslate"><div class="highlight"><pre>
-<span></span><span class="n">parRep</span> <span class="p">=</span> <span class="n">replab</span><span class="p">.</span><span class="n">RepByImages</span><span class="p">(</span><span class="n">S3</span><span class="p">,</span> <span class="s">&#39;R&#39;</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="p">{</span><span class="mi">1</span> <span class="o">-</span><span class="mi">1</span><span class="p">},</span> <span class="p">{</span><span class="mi">1</span> <span class="o">-</span><span class="mi">1</span><span class="p">});</span>
+<span></span><span class="n">parRep</span> <span class="p">=</span> <span class="n">S3</span><span class="p">.</span><span class="n">repByImages</span><span class="p">(</span><span class="s">&#39;R&#39;</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="s">&#39;preimages&#39;</span><span class="p">,</span> <span class="n">S3</span><span class="p">.</span><span class="n">generators</span><span class="p">,</span> <span class="s">&#39;images&#39;</span><span class="p">,</span> <span class="p">{</span><span class="mi">1</span> <span class="o">-</span><span class="mi">1</span><span class="p">});</span>
 </pre></div>
 </div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-error: &#39;imagesErrorBound&#39; undefined near line 16, column 16
-error: called from
-    RepByImages at line 16 column 35
-</pre></div></div>
 </div>
 <p>We can check that this representation is valid</p>
 <div class="nbinput docutils container">
@@ -678,15 +668,10 @@ error: called from
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-error: &#39;parRep&#39; undefined near line 1, column 1
-error: &#39;parRep&#39; undefined near line 1, column 1
-ans =
-
-   0   0   1
-   1   0   0
-   0   1   0
-
-error: &#39;parRep&#39; undefined near line 1, column 1
+image1 = -1
+image2 = -1
+ans = 1
+ans = 1
 </pre></div></div>
 </div>
 <p>The parity of each binary permutation <code class="docutils literal notranslate"><span class="pre">[2</span> <span class="pre">1</span> <span class="pre">3]</span></code> and <code class="docutils literal notranslate"><span class="pre">[1</span> <span class="pre">3</span> <span class="pre">2]</span></code> is <span class="math notranslate nohighlight">\(-1\)</span>, and their product, the cycle [2 3 1], has parity <span class="math notranslate nohighlight">\(1\)</span>.</p>
@@ -708,7 +693,12 @@ error: &#39;parRep&#39; undefined near line 1, column 1
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-error: &#39;parRep&#39; undefined near line 2, column 2
+Image of [1  2  3] : 1
+Image of [1  3  2] : -1
+Image of [2  1  3] : -1
+Image of [2  3  1] : 1
+Image of [3  1  2] : 1
+Image of [3  2  1] : -1
 </pre></div></div>
 </div>
 <p>Therefore, this representation is not <em>faithful</em>.</p>
@@ -717,24 +707,14 @@ error: &#39;parRep&#39; undefined near line 2, column 2
 <h2>The trivial representation of S(3)<a class="headerlink" href="#The-trivial-representation-of-S(3)" title="Permalink to this headline">¶</a></h2>
 <p>An even simpler representation of the group S(n) is one in which the image of all elements is set to <span class="math notranslate nohighlight">\(1\)</span>. This is called the <em>trivial representation</em>.</p>
 <p>It can be constructed similarly from the image of the generators:</p>
-<div class="nbinput docutils container">
+<div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
 </pre></div>
 </div>
 <div class="input_area highlight-octave notranslate"><div class="highlight"><pre>
-<span></span><span class="n">trivRep</span> <span class="p">=</span> <span class="n">replab</span><span class="p">.</span><span class="n">RepByImages</span><span class="p">(</span><span class="n">S3</span><span class="p">,</span> <span class="s">&#39;R&#39;</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="p">{</span><span class="mi">1</span> <span class="mi">1</span><span class="p">},</span> <span class="p">{</span><span class="mi">1</span> <span class="mi">1</span><span class="p">});</span>
+<span></span><span class="n">trivRep</span> <span class="p">=</span> <span class="n">S3</span><span class="p">.</span><span class="n">repByImages</span><span class="p">(</span><span class="s">&#39;R&#39;</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="s">&#39;preimages&#39;</span><span class="p">,</span> <span class="n">S3</span><span class="p">.</span><span class="n">generators</span><span class="p">,</span> <span class="s">&#39;images&#39;</span><span class="p">,</span> <span class="p">{</span><span class="mi">1</span> <span class="mi">1</span><span class="p">});</span>
 </pre></div>
 </div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-error: &#39;imagesErrorBound&#39; undefined near line 16, column 16
-error: called from
-    RepByImages at line 16 column 35
-</pre></div></div>
 </div>
 <p>This time, the group law is trivially satisfied since all images are indeed equal to <span class="math notranslate nohighlight">\(1\)</span>:</p>
 <div class="nbinput docutils container">
@@ -753,7 +733,12 @@ error: called from
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-error: &#39;trivRep&#39; undefined near line 2, column 2
+Image of [1  2  3] : 1
+Image of [1  3  2] : 1
+Image of [2  1  3] : 1
+Image of [2  3  1] : 1
+Image of [3  1  2] : 1
+Image of [3  2  1] : 1
 </pre></div></div>
 </div>
 </section>
@@ -775,7 +760,17 @@ error: &#39;trivRep&#39; undefined near line 2, column 2
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-error: &#39;parRep&#39; undefined near line 1, column 1
+newRep =
+
+Orthogonal direct sum representation
+          dimension: 4
+divisionAlgebraName: []
+              field: &#39;R&#39;
+              group: Symmetric group acting on 3 elements
+          isUnitary: true
+          factor(1): Orthogonal reducible representation
+          factor(2): Orthogonal representation
+
 </pre></div></div>
 </div>
 <p>The images are then <span class="math notranslate nohighlight">\(4 \times 4\)</span> matrices</p>
@@ -794,8 +789,20 @@ error: &#39;parRep&#39; undefined near line 1, column 1
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-error: &#39;newRep&#39; undefined near line 1, column 1
-error: &#39;newRep&#39; undefined near line 1, column 1
+ans =
+
+   0   1   0   0
+   1   0   0   0
+   0   0   1   0
+   0   0   0  -1
+
+ans =
+
+   1   0   0   0
+   0   0   1   0
+   0   1   0   0
+   0   0   0  -1
+
 </pre></div></div>
 </div>
 <p>As expected, the images have a block diagonal structure. The properties of a direct sum representation are thus captured by the properties of the representation in each block. Such a representation is <em>reducible</em>.</p>
