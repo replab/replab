@@ -19,7 +19,7 @@ replab_init('verbose', 0);
 % Changes of bases for one system are described by the group $U(2)$
 
 d = 2;
-U2 = replab.UnitaryGroup(d);
+U2 = replab.U(d);
 
 % We construct the defining representation of this group, which acts on $C^2$:
 
@@ -53,5 +53,3 @@ dec.component(2).irrepDimension
 
 singletBasis = dec.component(1).basis
 rest = dec.component(2).basis
-
-
