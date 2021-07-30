@@ -36,7 +36,7 @@ S3.order
 
 % As we see, permutations are represented by row-vectors with an arrangement of the elements $1,\ldots,n$.
 %
-% The group structure defines how elements of the group compose with each other. 
+% The group structure defines how elements of the group compose with each other.
 % For instance, permuting the first two elements in $1,2,3$, followed by a permutation of the second and third elements results in a cyclic permutation:
 
 element1 = [2 1 3];
@@ -72,7 +72,7 @@ natRep.image(S3.compose(element1, element2))
 % acting on the representation images accurately reflects the group algebra.
 %
 % It can be checked, moreover, that the natural representation is faithful, i.e. each group element has its own distinct image. This needs
-% not always be the case as in the following two examples. 
+% not always be the case as in the following two examples.
 %
 % ## The parity representation of $S_3$
 %
@@ -85,9 +85,9 @@ generators{:}
 
 d = 1;
 
-% associating the each generator its parity (i.e. either $+1$ or $-1$). Since the parity of [2 3 1] is 1 and the parity of [2 1 3] is -1, this is achieved by instantiating the class *RepByImage* as follows:
+% associating the each generator its parity (i.e. either $+1$ or $-1$). Since the parity of [2 3 1] is 1 and the parity of [2 1 3] is -1, this is achieved by instantiating calling the *repByImages* methods on the group:
 
-parRep = replab.RepByImages(S3, 'R', d, {1 -1}, {1 -1});
+parRep = S3.repByImages('R', d, 'preimages', S3.generators, 'images', {1 -1});
 
 % We can check that this representation is valid
 
@@ -112,7 +112,7 @@ end
 %
 % It can be constructed similarly from the image of the generators:
 
-trivRep = replab.RepByImages(S3, 'R', d, {1 1}, {1 1});
+trivRep = S3.repByImages('R', d, 'preimages', S3.generators, 'images', {1 1});
 
 % This time, the group law is trivially satisfied since all images are indeed equal to $1$:
 
