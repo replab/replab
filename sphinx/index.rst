@@ -67,6 +67,9 @@ Because no open source library exists to decomposes arbitrary permutation/monomi
 
 That said, other libraries working on the same problem space include:
 
+-  The `GAP System 4 package RepnDecomp <https://gap-packages.github.io/RepnDecomp>`_ by
+   Kaashif Hymabaccus.
+
 -  The `GAP System 3 package AREP <https://www.gap-system.org/Gap3/Packages3/arep.html>`_ by
    Sebastian Egner and Markus Püschel.
 
