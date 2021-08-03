@@ -611,8 +611,16 @@ classdef SubRep < replab.Rep
 
         % Str
 
-        function [names values] = additionalFields(self)
-            [names values] = additionalFields@replab.Rep(self);
+        function names = hiddenFields(self)
+            names = hiddenFields@replab.Rep(self);
+            names{1, end+1} = 'injection_internal';
+            names{1, end+1} = 'projection_internal';
+            names{1, end+1} = 'mapsAreAdjoint';
+            names{1, end+1} = 'isSimilarRep';
+        end
+
+        function [names, values] = additionalFields(self)
+            [names, values] = additionalFields@replab.Rep(self);
             if self.dimension < 15
                 if self.isExact
                     type = 'exact';

@@ -35,6 +35,11 @@ classdef RepByImages_monomial < replab.RepByImages
 
     methods % Implementations
 
+        function names = hiddenFields(self)
+            names = hiddenFields@replab.RepByImages(self);
+            names{1, end+1} = 'morphism';
+        end
+
         function b = isExact(self)
             b = true;
         end

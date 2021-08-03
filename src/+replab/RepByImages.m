@@ -77,6 +77,7 @@ classdef RepByImages < replab.Rep
             names = hiddenFields@replab.Rep(self);
             names{1, end+1} = 'preimages';
             names{1, end+1} = 'images';
+            names{1, end+1} = 'imagesErrorBound';
         end
 
         function [names values] = additionalFields(self)

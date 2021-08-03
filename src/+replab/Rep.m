@@ -1048,6 +1048,13 @@ classdef Rep < replab.Obj
 
         % Str
 
+        function names = hiddenFields(self)
+            names = hiddenFields@replab.Obj(self);
+            if isempty(self.divisionAlgebraName)
+                names{1, end+1} = 'divisionAlgebraName';
+            end
+        end
+
         function s = headerStr(self)
             p = {};
             if self.isUnitary
