@@ -56,8 +56,7 @@ Work in progress
 - RepLAB works in double floating-point precision.
 - We are still working on the estimation/control of numerical errors (a few criteria are currently hard-coded).
   That said, **RepLAB** works fine for representations of medium size ($d$ equal to a few thousands).
-- While RepLAB has a basic implementation of computational group theory algorithms, it does not offer much to work with groups.
-- Construction of representation by images (`replab.RepByImages`) should be done only with matrices that can be represented exactly in floating-point arithmetic, as errors accumulate quickly otherwise (in most of our cases, we use signed permutation matrices which are fine).
+- While RepLAB has implementations of several computational group theory algorithms, their performance is not competitive with dedicated computational group theory software such as GAP or Magma.
 - The documentation is still a work in progress, and tutorials/how to guides/... will be added as the project progresses.
 
 Why RepLAB?
@@ -90,4 +89,4 @@ Feedback and suggestions are always welcome. We ask participants to follow the g
 License
 -------
 
-RepLAB is (C) 2018-2020 Denis Rosset, Jean-Daniel Bancal and other collaborators, and licensed under the `Mozilla Public License 2.0 <https://github.com/replab/replab/LICENSE>`_.
+RepLAB is (C) 2018-2021 Denis Rosset, Jean-Daniel Bancal and other collaborators, and licensed under the `Mozilla Public License 2.0 <https://github.com/replab/replab/LICENSE>`_.
