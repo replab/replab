@@ -15,7 +15,7 @@
   <link rel="stylesheet" type="text/css" href="_static/css/bootstrap-theme.min.css" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-    <title>Welcome to RepLAB! &#8212; RepLAB 0.9.1 documentation</title>
+    <title>Welcome to RepLAB! &#8212; RepLAB 0.9.2 documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="_static/guzzle.css" />
     <link rel="stylesheet" type="text/css" href="_static/togglebutton.css" />
@@ -75,7 +75,7 @@
         <li class="right" >
           <a href="tutorials/index.html" title="Tutorials"
              accesskey="N">next</a> |</li>
-        <li class="nav-item nav-item-0"><a href="#">RepLAB 0.9.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="#">RepLAB 0.9.2 documentation</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">Welcome to RepLAB!</a></li> 
       </ul>
     </div>
@@ -89,7 +89,7 @@
   <a href="
     #">RepLAB</a>&nbsp;&nbsp;
   <a href="https://github.com/replab/replab"><i class="fab fa-github"></i></a>&nbsp;
-  <a href="https://github.com/replab/replab/archive/v0.9.1.zip"><i class="fa fa-download"></i></a>&nbsp;
+  <a href="https://github.com/replab/replab/archive/v0.9.2.zip"><i class="fa fa-download"></i></a>&nbsp;
   <a href="https://gitter.im/replab/replab"><i class="fab fa-gitter"></i></a>&nbsp;
   <a href="https://travis-ci.com/replab/replab"><i class="fas fa-sync-alt"></i></a>&nbsp;
   <a href="https://codecov.io/gh/replab/replab"><i class="fas fa-umbrella"></i></a>
@@ -144,7 +144,7 @@
 </div>
 <section id="welcome-to-replab">
 <h1>Welcome to RepLAB!<a class="headerlink" href="#welcome-to-replab" title="Permalink to this headline">¶</a></h1>
-<p>Current version: 0.9.1 (<a class="reference external" href="https://github.com/replab/replab">GitHub</a> / <a class="reference external" href="https://github.com/replab/replab/archive/v0.9.1.zip">latest release ZIP</a> / <a class="reference internal" href="tutorials/installation.html"><span class="doc">installation instructions</span></a>).</p>
+<p>Current version: 0.9.2 (<a class="reference external" href="https://github.com/replab/replab">GitHub</a> / <a class="reference external" href="https://github.com/replab/replab/archive/v0.9.2.zip">latest release ZIP</a> / <a class="reference internal" href="tutorials/installation.html"><span class="doc">installation instructions</span></a>).</p>
 <p><strong>RepLAB</strong> provides tools to study representations of finite groups and decompose them numerically.
 It is compatible with both <a class="reference external" href="https://www.mathworks.com/products/matlab.html">MATLAB</a> and <a class="reference external" href="https://www.gnu.org/software/octave/">Octave</a>.</p>
 <figure class="align-center responsive" id="id2">
@@ -178,8 +178,7 @@ They have everything to get you started, from installation instructions to hands
 <li><p>RepLAB works in double floating-point precision.</p></li>
 <li><p>We are still working on the estimation/control of numerical errors (a few criteria are currently hard-coded).
 That said, <strong>RepLAB</strong> works fine for representations of medium size (<span class="math notranslate nohighlight">\(d\)</span> equal to a few thousands).</p></li>
-<li><p>While RepLAB has a basic implementation of computational group theory algorithms, it does not offer much to work with groups.</p></li>
-<li><p>Construction of representation by images (<code class="xref mat mat-obj docutils literal notranslate"><span class="pre">replab.RepByImages</span></code>) should be done only with matrices that can be represented exactly in floating-point arithmetic, as errors accumulate quickly otherwise (in most of our cases, we use signed permutation matrices which are fine).</p></li>
+<li><p>While RepLAB has implementations of several computational group theory algorithms, their performance is not competitive with dedicated computational group theory software such as GAP or Magma.</p></li>
 <li><p>The documentation is still a work in progress, and tutorials/how to guides/… will be added as the project progresses.</p></li>
 </ul>
 </section>
@@ -188,6 +187,8 @@ That said, <strong>RepLAB</strong> works fine for representations of medium size
 <p>Because no open source library exists to decomposes arbitrary permutation/monomial representations into irreducible representations over the reals. RepLAB implements numerical methods that perform this decomposition up to machine precision.</p>
 <p>That said, other libraries working on the same problem space include:</p>
 <ul class="simple">
+<li><p>The <a class="reference external" href="https://gap-packages.github.io/RepnDecomp">GAP System 4 package RepnDecomp</a> by
+Kaashif Hymabaccus.</p></li>
 <li><p>The <a class="reference external" href="https://www.gap-system.org/Gap3/Packages3/arep.html">GAP System 3 package AREP</a> by
 Sebastian Egner and Markus Püschel.</p></li>
 <li><p><a class="reference external" href="http://ncsostools.fis.unm.si/documentation/awbd">NCSOStools</a> includes an implementation of the Murota-Kanno-Kojima-Kojima-Maehara algorithm to decompose matrix *-algebras.</p></li>
@@ -204,7 +205,7 @@ now more <a class="reference external" href="https://github.com/replab/replab/gr
 </section>
 <section id="license">
 <h2>License<a class="headerlink" href="#license" title="Permalink to this headline">¶</a></h2>
-<p>RepLAB is (C) 2018-2020 Denis Rosset, Jean-Daniel Bancal and other collaborators, and licensed under the <a class="reference external" href="https://github.com/replab/replab/LICENSE">Mozilla Public License 2.0</a>.</p>
+<p>RepLAB is (C) 2018-2021 Denis Rosset, Jean-Daniel Bancal and other collaborators, and licensed under the <a class="reference external" href="https://github.com/replab/replab/LICENSE">Mozilla Public License 2.0</a>.</p>
 </section>
 </section>
 
@@ -237,7 +238,7 @@ now more <a class="reference external" href="https://github.com/replab/replab/gr
         <li class="right" >
           <a href="tutorials/index.html" title="Tutorials"
              >next</a> |</li>
-        <li class="nav-item nav-item-0"><a href="#">RepLAB 0.9.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="#">RepLAB 0.9.2 documentation</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">Welcome to RepLAB!</a></li> 
       </ul>
     </div>
