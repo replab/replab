@@ -13,7 +13,7 @@ function iso1 = niceIsotypic(iso)
     end
     if iso.trivialDimension == iso.dimension
         sub1 = replab.nice.niceSubRep(iso);
-        iso1 = replab.Isotypic.fromTrivialSubRep(iso.parent, sub1);
+        iso1 = replab.Isotypic.fromTrivialSubRep(sub1);
         return
     end
 end

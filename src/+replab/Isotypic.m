@@ -37,6 +37,7 @@ classdef Isotypic < replab.SubRep
         %
         % Returns:
         %   `.Isotypic`: The corresponding trivial isotypic component
+            assert(isa(trivial, 'replab.SubRep'));
             parent = trivial.parent;
             dT = trivial.dimension;
             if dT == 0
