@@ -1132,9 +1132,16 @@ classdef PermutationGroup < replab.FiniteGroup
         % Returns:
         %   `+replab.PermutationGroup`: The permutation group given as the closure of the generators
             assert(nargin > 0, 'Must be called with at least one generator');
-            n = length(varargin{1});
+            mask = cellfun(@ischar, varargin);
+            generators = varargin(~mask);
+            names = varargin(mask);
+            n = length(generators{1});
             Sn = replab.S(n);
-            G = Sn.subgroup(varargin);
+            G = Sn.subgroup(generators);
+            if ~isempty(names)
+                assert(length(names) == length(generators));
+                G = G.withGeneratorNames(names);
+            end
         end
 
     end
