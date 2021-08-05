@@ -8,12 +8,14 @@ classdef Trivial
             relators = cell(1, 0);
             A = replab.AbstractGroup(cell(1, 0), cell(1, 0), 'permutationGenerators', cell(1, 0), 'order', vpi(1), 'name', 'TrivialGroup', 'inAtlas', true);
             classes = replab.ConjugacyClasses(A, {A.conjugacyClass(A.identity)});
-            irrepsC = {A.trivialRep('C', 1)};
-            irrepsR = {A.trivialRep('R', 1)};
-            values = replab.cyclotomic(1);
             A.cache('conjugacyClasses', classes, 'error');
-            A.cache('realCharacterTable', replab.RealCharacterTable(A, classes, values, 'irreps', irrepsR);
-            A.cache('complexCharacterTable', replab.RealCharacterTable(A, classes, values, 'irreps', irrepsC);
+            if replab.init.cyclolab().works
+                irrepsC = {A.trivialRep('C', 1)};
+                irrepsR = {A.trivialRep('R', 1)};
+                values = replab.cyclotomic(1);
+                A.cache('realCharacterTable', replab.RealCharacterTable(A, classes, values, 'irreps', irrepsR);
+                A.cache('complexCharacterTable', replab.RealCharacterTable(A, classes, values, 'irreps', irrepsC);
+            end
         end
 
         function R = recognize(G)

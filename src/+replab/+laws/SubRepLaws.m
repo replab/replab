@@ -8,13 +8,13 @@ classdef SubRepLaws < replab.laws.RepLaws
         end
 
         function law_injection_and_projection_(self)
-            if self.rep.isExact
+            if self.rep.isExact && replab.init.cyclolab().works
                 self.assert(all(all(self.rep.projection('exact') * self.rep.injection('exact') == eye(self.rep.dimension))));
             end
         end
 
         function law_projector_commutes_G(self, g)
-            if self.rep.isExact
+            if self.rep.isExact && replab.init.cyclolab().works
                 piA = self.rep.projector('exact');
                 img = self.rep.parent.image(g, 'exact');
                 self.assert(all(all(piA*img == img*piA)));
@@ -29,7 +29,7 @@ classdef SubRepLaws < replab.laws.RepLaws
         end
 
         function law_relation_with_parent_rep_G(self, g)
-            if self.rep.isExact
+            if self.rep.isExact && replab.init.cyclolab().works
                 rep = self.rep.parent.image(g, 'exact');
                 sub1 = self.rep.image(g, 'exact');
                 sub2 = self.rep.projection('exact') * self.rep.parent.image(g, 'exact') * self.rep.injection('exact');

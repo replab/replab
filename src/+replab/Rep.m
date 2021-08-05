@@ -340,7 +340,7 @@ classdef Rep < replab.Obj
         %
         % Returns:
         %   logical: True if the group element is in the kernel
-            if self.isExact
+            if self.isExact && replab.init.cyclolab().works
                 chi = trace(self.image(g, 'exact'));
                 b = chi == self.dimension;
             else
@@ -356,7 +356,7 @@ classdef Rep < replab.Obj
                 chi = real(trace(self.image(g, 'double')));
                 % the matrix with a given Frobenius norm F maximizing the trace is F*eye(d)/sqrt(d),
                 % which is of trace F*sqrt(d)
-                chiError = sqrt(self.dimension)*self.errorBound; % worst error on the character value
+                chiError = max(1e-15, sqrt(self.dimension)*self.errorBound); % worst error on the character value
                 chiLB = chi - chiError;
                 chiUB = chi + chiError;
 
@@ -1627,7 +1627,7 @@ classdef Rep < replab.Obj
             end
             isExact = isa(injection, 'replab.cyclotomic') && (isempty(projection) || isa(projection, 'replab.cyclotomic'));
             if isempty(projection)
-                if isExact
+                if self.isExact && replab.init.cyclolab().works
                     if self.isUnitary
                         % slower because cyclotomic doesn't implement \ or /
                         projection = inv(injection'*injection)*injection';

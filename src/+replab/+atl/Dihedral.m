@@ -187,10 +187,12 @@ classdef Dihedral
             classList = cellfun(@(r) G.permutationGroup.conjugacyClass(r), C, 'uniform', 0);
             classes = replab.ConjugacyClasses(G.permutationGroup, classList);
             G.cache('conjugacyClasses', classes.imap(G.niceMorphism.inverse), 'error');
-            ctR = replab.atl.Dihedral.characterTable(G.permutationGroup, classes, stop, 'R');
-            ctC = replab.atl.Dihedral.characterTable(G.permutationGroup, classes, stop, 'C');
-            G.cache('realCharacterTable', ctR.imap(G.niceMorphism.inverse), 'error');
-            G.cache('complexCharacterTable', ctC.imap(G.niceMorphism.inverse), 'error');
+            if replab.init.cyclolab().works
+                ctR = replab.atl.Dihedral.characterTable(G.permutationGroup, classes, stop, 'R');
+                ctC = replab.atl.Dihedral.characterTable(G.permutationGroup, classes, stop, 'C');
+                G.cache('realCharacterTable', ctR.imap(G.niceMorphism.inverse), 'error');
+                G.cache('complexCharacterTable', ctC.imap(G.niceMorphism.inverse), 'error');
+            end
         end
 
     end

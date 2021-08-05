@@ -8,15 +8,15 @@ function test_suite = QuantumTest()
     if ReplabTestParameters.onlyFastTests
         return
     end
-    if exist('syms') && ~replab.compat.isOctave
-        %        G = replab.quantum.GeneralizedPauli(3);
-        %test_suite = replab.FiniteGroupLaws(G).addTestCases(test_suite);
-        %test_suite = replab.RepLaws(G.definingRep).addTestCases(test_suite);
-        [G rep] = replab.quantum.clifford_qudit(2);
-        test_suite = G.laws.addTestCases(test_suite);
-        test_suite = rep.laws.addTestCases(test_suite);
+    if ~replab.init.cyclolab().works
+        return
     end
-
+    %        G = replab.quantum.GeneralizedPauli(3);
+    %test_suite = replab.FiniteGroupLaws(G).addTestCases(test_suite);
+    %test_suite = replab.RepLaws(G.definingRep).addTestCases(test_suite);
+    [G rep] = replab.quantum.clifford_qudit(2);
+    test_suite = G.laws.addTestCases(test_suite);
+    test_suite = rep.laws.addTestCases(test_suite);
 %     % The following test is currently commented as of issue #247
 %     [G rep] = replab.quantum.clifford_qudit(3);
 %     test_suite = replab.FiniteGroupLaws(G).addTestCases(test_suite);

@@ -24,7 +24,7 @@ classdef RepLaws < replab.Laws
         end
 
         function law_composition_GG(self, g1, g2)
-            if self.rep.isExact
+            if self.rep.isExact && replab.init.cyclolab().works
                 rho1 = self.rep.image(g1, 'exact');
                 rho2 = self.rep.image(g2, 'exact');
                 g12 = self.G.compose(g1, g2);

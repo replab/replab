@@ -95,7 +95,13 @@ classdef GeneralizedSymmetricGroup < replab.perm.GeneralizedSymmetricSubgroup
             [N D] = rat(angles/2/pi);
             o = 1;
             for i = 1:n
-                if V(i) == 1i
+                if V(i) == 1
+                    N(i) = 1;
+                    D(i) = 1;
+                elseif V(i) == -1
+                    N(i) = -1;
+                    D(i) = 1;
+                elseif V(i) == 1i
                     o = lcm(o, 4);
                     N(i) = 1;
                     D(i) = 4;

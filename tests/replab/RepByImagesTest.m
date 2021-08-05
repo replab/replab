@@ -5,17 +5,22 @@ function test_suite = RepByImagesTest()
     catch
     end
     initTestSuite;
-    % cyclotomics
-    G = replab.AbstractGroup.fromPresentation('<a, x | a^8 = x^2 = 1, x a x^-1 = a^-1 >');
-    sqrt1_2 = replab.cyclotomic.sqrtRational(1,2);
-    img_a = [sqrt1_2 -sqrt1_2
-             sqrt1_2 sqrt1_2];
-    img_x = replab.cyclotomic([1 0; 0 -1]);
-    rep = G.repByImages('R', 2, {img_a img_x});
-    test_suite = rep.laws.addTestCases(test_suite);
+    if replab.init.cyclolab().works
+        % cyclotomics
+        G = replab.AbstractGroup.fromPresentation('<a, x | a^8 = x^2 = 1, x a x^-1 = a^-1 >');
+        sqrt1_2 = replab.cyclotomic.sqrtRational(1,2);
+        img_a = [sqrt1_2 -sqrt1_2
+                 sqrt1_2 sqrt1_2];
+        img_x = replab.cyclotomic([1 0; 0 -1]);
+        rep = G.repByImages('R', 2, {img_a img_x});
+        test_suite = rep.laws.addTestCases(test_suite);
+    end
 end
 
 function test_cyclotomic
+    if ~replab.init.cyclolab().works
+        return
+    end
     S8 = replab.S(8); % we write D_16 as a subgroup of S_8
     a = [2 3 4 5 6 7 8 1]; % cyclic rotation
     x = [8 7 6 5 4 3 2 1]; % reflection
@@ -58,6 +63,9 @@ function test_pauli_group_is_not_unitary_2_design
 end
 
 function test_cell_images
+    if ~replab.init.cyclolab().works
+        return
+    end
     G = replab.S(3);
     rep = G.repByImages('R', 2, 'preimages', {[2 1 3] [1 3 2]}, 'images', {[1 0; 0 -1] {'-1/2' '3/4'; '1' '1/2'}});
     assert(all(all(rep.image([3 2 1], 'exact') == replab.cyclotomic({'-1/2' '-3/4'; '-1' '1/2'}))));

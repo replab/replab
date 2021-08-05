@@ -5,6 +5,9 @@ function test_suite = CharacterTableTest()
     catch
     end
     initTestSuite;
+    if ~replab.init.cyclolab().works
+        return
+    end
     G = replab.PermutationGroup.kleinFourGroup;
     test_suite = G.characterTable.laws.addTestCases(test_suite);
     G = replab.PermutationGroup.dihedral(4);

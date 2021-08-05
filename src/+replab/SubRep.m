@@ -497,7 +497,7 @@ classdef SubRep < replab.Rep
         end
 
         function rho = image_double_sparse(self, g)
-            if self.isExact
+            if self.isExact && replab.init.cyclolab().works
                 rho = double(self.image_exact(g));
             else
                 rho = self.projection('double/sparse') * self.parent.image(g, 'double/sparse') * self.injection('double/sparse');
@@ -622,7 +622,7 @@ classdef SubRep < replab.Rep
         function [names, values] = additionalFields(self)
             [names, values] = additionalFields@replab.Rep(self);
             if self.dimension < 15
-                if self.isExact
+                if self.isExact && replab.init.cyclolab().works
                     type = 'exact';
                 else
                     type = 'double';

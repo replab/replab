@@ -54,24 +54,26 @@ classdef Symmetric
             partitions = replab.sym.IntegerPartition.all(n);
             classes = cellfun(@(p) p.conjugacyClass, partitions, 'uniform', 0);
             classes = replab.ConjugacyClasses.sorted(G.permutationGroup, classes);
-            irreps = cell(1, length(partitions));
-            for i = 1:length(partitions)
-                % TODO: use lambda
-                irreps{i} = replab.sym.SymmetricSpechtIrrep(G.permutationGroup, partitions{i}.partition).rep;
-            end
-            values = zeros(length(irreps), classes.nClasses);
-            for i = 1:length(irreps)
-                for j = 1:classes.nClasses
-                    % TODO: use Kronecker
-                    values(i, j) = trace(irreps{i}.image(classes.classes{j}.representative));
+            if replab.init.cyclolab().works
+                irreps = cell(1, length(partitions));
+                for i = 1:length(partitions)
+                    % TODO: use lambda
+                    irreps{i} = replab.sym.SymmetricSpechtIrrep(G.permutationGroup, partitions{i}.partition).rep;
                 end
+                values = zeros(length(irreps), classes.nClasses);
+                for i = 1:length(irreps)
+                    for j = 1:classes.nClasses
+                        % TODO: use Kronecker
+                        values(i, j) = trace(irreps{i}.image(classes.classes{j}.representative));
+                    end
+                end
+                values = replab.cyclotomic(values);
+                ctR = replab.RealCharacterTable(G.permutationGroup, classes, values, 'irreps', irreps);
+                ctC = replab.ComplexCharacterTable.fromRealCharacterTable(ctR);
+                G.cache('realCharacterTable', ctR.imap(G.niceMorphism.inverse), 'error');
+                G.cache('complexCharacterTable', ctC.imap(G.niceMorphism.inverse), 'error');
             end
-            values = replab.cyclotomic(values);
-            ctR = replab.RealCharacterTable(G.permutationGroup, classes, values, 'irreps', irreps);
-            ctC = replab.ComplexCharacterTable.fromRealCharacterTable(ctR);
             G.cache('conjugacyClasses', classes.imap(G.niceMorphism.inverse), 'error');
-            G.cache('realCharacterTable', ctR.imap(G.niceMorphism.inverse), 'error');
-            G.cache('complexCharacterTable', ctC.imap(G.niceMorphism.inverse), 'error');
         end
 
         function R = recognize(G)

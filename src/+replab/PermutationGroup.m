@@ -956,8 +956,12 @@ classdef PermutationGroup < replab.FiniteGroup
         % Returns:
         %   `+replab.SubRep`: The (real) standard representation
             d = self.domainSize;
-            [injectiond projection] = replab.sym.sageSpechtStandardBasis(d);
-            rho = self.naturalRep.subRep(replab.cyclotomic(injectiond)/d, 'projection', replab.cyclotomic(projection));
+            [injectiond, projection] = replab.sym.sageSpechtStandardBasis(d);
+            if replab.init.cyclolab().works
+                rho = self.naturalRep.subRep(replab.cyclotomic(injectiond)/d, 'projection', replab.cyclotomic(projection));
+            else
+                rho = self.naturalRep.subRep(injectiond/d, 'projection', projection);
+            end
         end
 
         function rho = signRep(self)

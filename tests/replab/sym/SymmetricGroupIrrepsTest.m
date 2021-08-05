@@ -6,6 +6,10 @@ function test_suite = SymmetricGroupIrrepsTest()
     end
     initTestSuite;
 
+    if ~replab.init.cyclolab().works
+        return
+    end
+
     if ReplabTestParameters.onlyFastTests
         youngs = {[2 1]};
     else
