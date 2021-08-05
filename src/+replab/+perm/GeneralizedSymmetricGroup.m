@@ -99,8 +99,8 @@ classdef GeneralizedSymmetricGroup < replab.perm.GeneralizedSymmetricSubgroup
                     N(i) = 1;
                     D(i) = 1;
                 elseif V(i) == -1
-                    N(i) = -1;
-                    D(i) = 1;
+                    N(i) = 1;
+                    D(i) = 2;
                 elseif V(i) == 1i
                     o = lcm(o, 4);
                     N(i) = 1;
