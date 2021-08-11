@@ -2,7 +2,7 @@ classdef SignedPermutationGroup < replab.NiceFiniteGroup
 % A base class for all signed permutation groups
 
     properties (SetAccess = protected)
-        domainSize % d when this group acts on {-d..-1, 1..d}
+        domainSize % (integer): The integer $d$ when this group acts on $\{-d, .., -1, 1, .., d\}$
     end
 
     methods
@@ -108,7 +108,9 @@ classdef SignedPermutationGroup < replab.NiceFiniteGroup
             end
         end
 
-        %% Methods specific to signed permutation groups
+    end
+
+    methods % Signed permutation methods
 
         function G = permutationPart(self)
         % Returns the permutation part of the current group
@@ -140,7 +142,9 @@ classdef SignedPermutationGroup < replab.NiceFiniteGroup
             p = abs(g);
         end
 
-        %% Actions
+    end
+
+    methods % Actions
 
         function A = naturalAction(self)
         % Returns the action of elements of this group on {-d..-1 1..d}
@@ -164,7 +168,9 @@ classdef SignedPermutationGroup < replab.NiceFiniteGroup
             A = replab.perm.SignedPermutationMatrixAction(self);
         end
 
-        %% Representation construction
+    end
+
+    methods % Representation construction
 
         function rho = naturalRep(self)
         % Natural representation on R^d of signed permutations on integers -d..-1, 1..d
@@ -178,23 +184,52 @@ classdef SignedPermutationGroup < replab.NiceFiniteGroup
         function G = of(varargin)
         % Constructs a nontrivial signed permutation group from the given generators
         %
-        % If you do not know the number of generators in advance, and would like to handle the
-        % case of a trivial group, use ``H = replab.SignedSymmetricGroup(n); H.subgroup(generators)`` instead.
-        %
         % Example:
-        %   >>> G = replab.SignedPermutationGroup.of([2 3 4 1], [4 3 2 1]);
-        %   >>> G.order == 8
+        %   >>> s = [-1 -2 -3 -4];
+        %   >>> i = [2 -1 4 -3];
+        %   >>> j = [3 -4 -1 2];
+        %   >>> Q = replab.SignedPermutationGroup.of(s, i, j);
+        %   >>> Q.order == 8
         %     1
         %
+        % The generators of the group can be named by preceding them all by a charstring:
+        %
+        % Example:
+        %   >>> s = [-1 -2 -3 -4];
+        %   >>> i = [2 -1 4 -3];
+        %   >>> j = [3 -4 -1 2];
+        %   >>> Q = replab.SignedPermutationGroup.of('s', s, 'i', i, 'j', j);
+        %   >>> Q.order == 8
+        %     1
+        %
+        % This method cannot construct trivial groups without any generators.
+        % In that case, use the constructor:
+        %
+        % Example:
+        %   >>> generators = {};
+        %   >>> domainSize = 4;
+        %   >>> G = replab.SignedPermutationGroup(domainSize, generators)
+        %
         % Args:
-        %   varargin (cell(1,\*) of permutation): Group generators
+        %   varargin (cell(1,\*) of signed permutations): Group generators, pos
         %
         % Returns:
-        %   `+replab.SignedPermutationGroup`: The permutation group given as the closure of the generators
+        %   `.SignedPermutationGroup`: The signed permutation group given as the closure of the generators
             assert(nargin > 0, 'Must be called with at least one generator');
-            n = length(varargin{1});
-            Sn = replab.SignedSymmetricGroup(n);
-            G = Sn.subgroup(varargin);
+            mask = cellfun(@ischar, varargin);
+            if mask(1) % named generators
+                assert(mod(nargin, 2) == 0);
+                assert(all(mask(1:2:end)));
+                assert(all(~mask(2:2:end)));
+                names = varargin(1:2:end);
+                generators = varargin(2:2:end);
+                domainSize = length(generators{1});
+                G = replab.SignedPermutationGroup(domainSize, generators, 'generatorNames', names);
+            else
+                generators = varargin;
+                domainSize = length(generators{1});
+                G = replab.SignedPermutationGroup(domainSize, generators);
+            end
         end
 
     end

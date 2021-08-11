@@ -2,7 +2,7 @@ classdef PermutationGroup < replab.FiniteGroup
 % A base class for all permutation groups
 
     properties (SetAccess = protected)
-        domainSize % integer: The integer ``d``, as this group acts on ``{1, ..., d}``
+        domainSize % (integer): The integer $d$, as this group acts on $\{1, .., d\}$
     end
 
     methods % Constructor
@@ -1118,29 +1118,47 @@ classdef PermutationGroup < replab.FiniteGroup
         function G = of(varargin)
         % Constructs a nontrivial permutation group from the given generators
         %
-        % If you do not know the number of generators in advance, and would like to handle the
-        % case of a trivial group, use ``Sn = replab.S(n); Sn.subgroup(generators)`` instead.
-        %
         % Example:
         %   >>> G = replab.PermutationGroup.of([2 3 4 1], [4 3 2 1]);
         %   >>> G.order
         %     8
         %
+        % The generators of the group can be named by preceding them all by a charstring:
+        %
+        % Example:
+        %   >>> G = replab.PermutationGroup.of('r', [2 3 4 1], 's', [4 3 2 1]);
+        %   >>> G.order
+        %       8
+        %   >>> G.factorizeWord([3 4 1 2])
+        %       'r^2'
+        %
+        % This method cannot construct trivial groups without any generators.
+        % In that case, use the constructor:
+        %
+        % Example:
+        %   >>> generators = {};
+        %   >>> domainSize = 4;
+        %   >>> G = replab.PermutationGroup(domainSize, generators)
+        %
         % Args:
         %   varargin (cell(1,\*) of permutation): Group generators
         %
         % Returns:
-        %   `+replab.PermutationGroup`: The permutation group given as the closure of the generators
+        %   `.PermutationGroup`: The permutation group given as the closure of the generators
             assert(nargin > 0, 'Must be called with at least one generator');
             mask = cellfun(@ischar, varargin);
-            generators = varargin(~mask);
-            names = varargin(mask);
-            n = length(generators{1});
-            Sn = replab.S(n);
-            G = Sn.subgroup(generators);
-            if ~isempty(names)
-                assert(length(names) == length(generators));
-                G = G.withGeneratorNames(names);
+            if mask(1) % named generators
+                assert(mod(nargin, 2) == 0);
+                assert(all(mask(1:2:end)));
+                assert(all(~mask(2:2:end)));
+                names = varargin(1:2:end);
+                generators = varargin(2:2:end);
+                domainSize = length(generators{1});
+                G = replab.PermutationGroup(domainSize, generators, 'generatorNames', names);
+            else
+                generators = varargin;
+                domainSize = length(generators{1});
+                G = replab.PermutationGroup(domainSize, generators);
             end
         end
 
