@@ -642,9 +642,25 @@ classdef cyclotomic
         end
 
         function res = eq(lhs, rhs)
-        % Equality test
+        % Equality test, returns a multidimensional array
             [lhs, rhs] = replab.cyclotomic.shape(lhs, rhs);
             res = reshape(javaMethod('eqv', 'cyclo.Lab', lhs.data, rhs.data), size(lhs));
+        end
+
+        function res = isequal(lhs, rhs)
+        % Equality test, returns a scalar
+            if ~isequal(size(lhs), size(rhs))
+                res = false;
+                return
+            end
+            res = all(javaMethod('eqv', 'cyclo.Lab', lhs.data, rhs.data));
+        end
+
+        function res = isequaln(lhs, rhs)
+        % Equality test, returns a scalar
+        %
+        % Same as isequal as we do not have NaN
+            res = isequal(lhs, rhs);
         end
 
         function res = galois(self, ord)
