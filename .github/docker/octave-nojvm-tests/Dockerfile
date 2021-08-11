@@ -11,6 +11,7 @@ RUN apt-get update && apt-get install -y -q python3-pip pandoc unzip curl
 # Remove java
 RUN sudo update-alternatives --remove-all "java"
 RUN sudo update-alternatives --remove-all "javac"
+RUN sudo apt-get purge openjdk-\* icedtea-\* icedtea6-\*
 
 RUN mkdir /workspace
 
