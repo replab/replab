@@ -38,7 +38,7 @@ function test_stays_sparse
     S3 = replab.PermutationGroup.of([2 3 1], [2 1 3]);
     M1 = sparse([0 0 1; 1 0 0; 0 1 0]);
     M2 = sparse([0 1 0; 1 0 0; 0 0 1]);
-    rep = S3.repByImages('R', 3, {M1 M2});
+    rep = S3.repByImages('R', 3, 'images', {M1 M2});
     for i = 1:5
         I = rep.image(S3.sample, 'double/sparse');
         assert(issparse(I));
