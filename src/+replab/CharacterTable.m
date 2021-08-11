@@ -194,7 +194,7 @@ classdef CharacterTable < replab.Obj
             if isa(arg, 'replab.Character')
                 for i = 1:n
                     ct = self.character(i);
-                    mults(i) = ct.dot(arg);
+                    mults(i) = double(ct.dot(arg));
                 end
             elseif isa(arg, 'replab.rep.TensorRep')
                 factorM = cellfun(@(f) self.multiplicities(f), arg.factors, 'uniform', 0);
@@ -204,7 +204,8 @@ classdef CharacterTable < replab.Obj
                 end
             elseif isa(arg, 'replab.Rep')
                 for i = 1:n
-                    mults(i) = self.character(i).dotRep(arg);
+                    ct = self.character(i);
+                    mults(i) = double(ct.dotRep(arg));
                 end
             else
                 error('Invalid argument');

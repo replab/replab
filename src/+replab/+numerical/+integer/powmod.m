@@ -21,9 +21,10 @@ function y = powmod(x, a, n)
             a = floor(a / 2);
         end;
     else
-        x_ = java.math.BigInteger(num2str(x));
-        a_ = java.math.BigInteger(num2str(a));
-        n_ = java.math.BigInteger(num2str(n));
-        y = x_.modPow(a_, n_).doubleValue();
+        x_ = javaObject('java.math.BigInteger', num2str(x));
+        a_ = javaObject('java.math.BigInteger', num2str(a));
+        n_ = javaObject('java.math.BigInteger', num2str(n));
+        y = javaMethod('modPow', x_, a_, n_);
+        y = javaMethod('doubleValue', y);
     end
 end
