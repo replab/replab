@@ -31,8 +31,13 @@ function writeNotebook(notebooksPath, notebook)
     % Copy file over
     line = fgetl(fidIn);
     while ischar(line)
-        % We copy the line with an extra ';' to make sure it is quiet
-        fprintf(fidOut, '%s;\n', line);
+        % We copy the line over
+    	if isequal(line(end-2:end), '...')
+            fprintf(fidOut, '%s\n', line);
+    	else
+            % If the line finishes, we add an extra ';' to limit the verbose level
+            fprintf(fidOut, '%s;\n', line);
+    	end
         line = fgetl(fidIn);
     end
     fprintf(fidOut, 'end\n');
