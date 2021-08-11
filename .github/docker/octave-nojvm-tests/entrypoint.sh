@@ -24,6 +24,10 @@ echo "TEST_COMMAND=$TEST_COMMAND";
 # Check what octave packages we have installed
 octave -q --eval "ver"
 
+# Check that java is not present in the system anymore
+which java
+java -version
+
 # Check that octave cannot access java
 octave --eval "b = javaMethod('valueOf', 'java.math.BigInteger', 2)"
 
