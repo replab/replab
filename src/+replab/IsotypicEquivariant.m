@@ -418,7 +418,7 @@ classdef IsotypicEquivariant < replab.SubEquivariant
                 err = sX*(eR*cC + cR*eC);
             end
             err = max(err, 10*sqrt(repR.dimension*repC.dimension)*eps);
-            assert(err < 1e-10, 'Error to big');
+            assert(err < 1e-8, 'Error to big');
             if norm(X, 'fro') < err
                 E = [];
                 return
