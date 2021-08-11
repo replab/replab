@@ -13,6 +13,10 @@ function res = md5(bytes)
 % Returns:
 %   charstring: MD5 hash in hexadecimal notation
     if usejava('jvm')
+        if isempty(bytes)
+            res = 'D41D8CD98F00B204E9800998ECF8427E';
+            return
+        end
         md = javaMethod('getInstance', 'java.security.MessageDigest', 'MD5');
         res = typecast(md.digest(uint8(bytes)), 'uint8');
         res = strjoin(arrayfun(@(b) dec2hex(b, 2), res, 'uniform', 0), '');
