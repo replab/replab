@@ -193,7 +193,8 @@ classdef CharacterTable < replab.Obj
             mults = zeros(1, n);
             if isa(arg, 'replab.Character')
                 for i = 1:n
-                    mults(i) = self.character(i).dot(arg);
+                    ct = self.character(i);
+                    mults(i) = ct.dot(arg);
                 end
             elseif isa(arg, 'replab.rep.TensorRep')
                 factorM = cellfun(@(f) self.multiplicities(f), arg.factors, 'uniform', 0);
