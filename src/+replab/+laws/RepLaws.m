@@ -53,7 +53,7 @@ classdef RepLaws < replab.Laws
             condI = self.rep.conditionNumberEstimate;
             % (X + dX)(I + dI) - (I + dI)(X + dX) = XI - IX + dX I + X dI - dX I - dI X + dX dI - dI dX
             % 2 * norm(dX, 'fro') * norm(I, 2) + 2 * norm(dI, 'fro') * norm(X, 2)
-            tol = 2*errI*condI + 2*errX*condX;
+            tol = 2*errI*condI + 2*errX*condX + 1e-15;
             self.assertApproxEqual(X * I, I * X, tol);
         end
 
