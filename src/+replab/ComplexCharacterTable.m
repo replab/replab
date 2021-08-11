@@ -2,7 +2,7 @@ classdef ComplexCharacterTable < replab.CharacterTable
 % Describes the standard character table of a group
 %
 % Example:
-%   >>> G = replab.PermutationGroup.dihedral(3);
+%   >>> G = replab.PermutationGroup.dihedral(3); % doctest: +cyclotomic
 %   >>> G.characterTable
 %       Class  1a   3a   2a
 %        Size   1    2    3
@@ -164,7 +164,7 @@ classdef ComplexCharacterTable < replab.CharacterTable
         % Maps the character table under an isomorphism
         %
         % Example:
-        %   >>> D6a = replab.PermutationGroup.of([3 2 1], [2 3 1]);
+        %   >>> D6a = replab.PermutationGroup.of([3 2 1], [2 3 1]); % doctest: +cyclotomic
         %   >>> D6b = replab.PermutationGroup.of([1 4 3 2], [1 3 4 2]);
         %   >>> f = D6a.isomorphismByImages(D6b, 'preimages', D6a.generators, 'images', D6b.generators);
         %   >>> Ca = D6a.characterTable;

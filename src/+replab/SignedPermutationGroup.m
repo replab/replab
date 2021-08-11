@@ -208,7 +208,9 @@ classdef SignedPermutationGroup < replab.NiceFiniteGroup
         % Example:
         %   >>> generators = {};
         %   >>> domainSize = 4;
-        %   >>> G = replab.SignedPermutationGroup(domainSize, generators)
+        %   >>> G = replab.SignedPermutationGroup(domainSize, generators);
+        %   >>> G.order
+        %       1
         %
         % Args:
         %   varargin (cell(1,\*) of signed permutations): Group generators, pos
