@@ -211,6 +211,15 @@ classdef SubRep < replab.Rep
             end
         end
 
+        function b = injectionIsExact(self)
+        % Returns whether the injection map is written either with cyclotomics or integer coefficients
+        %
+        % Returns:
+        %   logical: True if that is the case
+            I = self.injection_internal;
+            b = (isa(I, 'cyclotomic') || replab.numerical.isExact(I));
+        end
+
         function b = mapsAreExact(self)
         % Returns whether both the injection map and the projection map are written either with cyclotomics or integer coefficients
         %
@@ -230,9 +239,6 @@ classdef SubRep < replab.Rep
             I = self.injection_internal;
             P = self.projection_internal;
             b = self.mapsAreExact && all(all(I == round(double(I)))) && all(all(P == round(double(P))));
-        end
-
-        function b = mapsArePermutationMatrices(self)
         end
 
         function e = projectorErrorBound(self)
@@ -622,7 +628,7 @@ classdef SubRep < replab.Rep
         function [names, values] = additionalFields(self)
             [names, values] = additionalFields@replab.Rep(self);
             if self.dimension < 15
-                if self.isExact && replab.init.cyclolab().works
+                if self.injectionIsExact && replab.init.cyclolab().works
                     type = 'exact';
                 else
                     type = 'double';

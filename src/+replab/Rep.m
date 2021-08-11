@@ -1642,18 +1642,19 @@ classdef Rep < replab.Obj
                         projection = inv(injection'*injection)*injection'*P2;
                     end
                 else % non exact
+                    inj = double(injection);
                     if self.isUnitary
-                        projection = (injection'*injection)\injection';
+                        projection = (inj'*inj)\inj';
                     else
                         if args.largeScale
-                            projection = replab.rep.findProjection_largeScale(self, injection, args.nSamples, args.tolerances, [], [], args.forceReal);
+                            projection = replab.rep.findProjection_largeScale(self, inj, args.nSamples, args.tolerances, [], [], args.forceReal);
                         else
-                            P1 = injection*inv(injection'*injection)*injection';
+                            P1 = inj*inv(inj'*inj)*inj';
                             P2 = self.commutant.project(P1);
                             if args.forceReal
                                 P2 = real(P2);
                             end
-                            projection = injection \ P2;
+                            projection = inj \ P2;
                         end
                     end
                 end
