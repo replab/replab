@@ -883,13 +883,13 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
         % Example:
         %   >>> G = replab.S(4);
         %   >>> C = G.centralizer([2 3 1 4]);
-        %   >>> C == replab.S(4).subgroup({[2 3 1 4]})
+        %   >>> C == replab.PermutationGroup.of([2 3 1 4])
         %     1
         %
         % Example:
         %   >>> G = replab.S(4);
         %   >>> C = G.centralizer(G.subgroup({[2 3 1 4]}));
-        %   >>> C == replab.S(4).subgroup({[2 3 1 4]})
+        %   >>> C == replab.PermutationGroup.of([2 3 1 4])
         %     1
         %
         % Args:
@@ -904,10 +904,10 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
         % Computes the intersection of two groups
         %
         % Example:
-        %   >>> D12 = replab.S(6).subgroup({[1 6 5 4 3 2], [2 1 6 5 4 3]});
-        %   >>> G = replab.S(6).subgroup({[2 1 3 4 5 6], [2 3 4 5 1 6]});
+        %   >>> D12 = replab.PermutationGroup.of([1 6 5 4 3 2], [2 1 6 5 4 3]);
+        %   >>> G = replab.PermutationGroup.of([2 1 3 4 5 6], [2 3 4 5 1 6]);
         %   >>> I = D12.intersection(G);
-        %   >>> I == replab.S(6).subgroup({[5 4 3 2 1 6]})
+        %   >>> I == replab.PermutationGroup.of([5 4 3 2 1 6])
         %       1
         %
         % Args:
