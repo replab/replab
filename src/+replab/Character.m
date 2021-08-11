@@ -2,7 +2,7 @@ classdef Character < replab.Obj
 % Describes a character
 %
 % Example:
-%   >>> D = replab.PermutationGroup.dihedral(6);
+%   >>> D = replab.PermutationGroup.dihedral(6); % doctest: +cyclotomic
 %   >>> rep = D.repByImages('R', 1, 'preimages', {[6 5 4 3 2 1], [2 3 4 5 6 1]}, 'images', {1 -1});
 %   >>> c = replab.Character.fromRep(rep);
 %   >>> g = [2 3 4 5 6 1];

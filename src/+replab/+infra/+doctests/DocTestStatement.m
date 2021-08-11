@@ -31,6 +31,9 @@ classdef DocTestStatement < replab.Str
         %
         % Args:
         %   fid (integer): File handle
+            if isfield(self.flags, 'cyclotomic') && self.flags.cyclotomic
+                fprintf(fid, '  if ~replab.init.cyclolab().works\n    return\n  end\n');
+            end
             quote = @(s) ['''' strrep(s, '''', '''''') ''''];
             quotes = @(S) ['{' strjoin(cellfun(quote, S, 'uniform', 0), ', ') '}'];
             quotedCommand = quote(self.command);

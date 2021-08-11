@@ -24,6 +24,9 @@ function test_irreducible_commutant
 end
 
 function test_import_export
+    if ~replab.init.cyclolab().works
+        return
+    end
     G = replab.S(3);
     parent = G.naturalRep;
     dec = parent.decomposition('exact').squeeze;

@@ -1138,7 +1138,9 @@ classdef PermutationGroup < replab.FiniteGroup
         % Example:
         %   >>> generators = {};
         %   >>> domainSize = 4;
-        %   >>> G = replab.PermutationGroup(domainSize, generators)
+        %   >>> G = replab.PermutationGroup(domainSize, generators);
+        %   >>> G.order
+        %       1
         %
         % Args:
         %   varargin (cell(1,\*) of permutation): Group generators

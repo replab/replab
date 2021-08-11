@@ -142,7 +142,7 @@ classdef SymmetricGroup < replab.PermutationGroup
         % Returns the irreducible representation of this symmetric group corresponding the given Young Diagram
         %
         % Example:
-        %   >>> S5 = replab.S(5);
+        %   >>> S5 = replab.S(5); % doctest: +cyclotomic
         %   >>> rep = S5.irrep([3 2], 'specht');
         %   >>> rep.dimension
         %         5
