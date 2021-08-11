@@ -1022,7 +1022,11 @@ classdef cyclotomic
         %
         % Returns:
         %   integer(...): Integer array of hash codes
-            h = arrayfun(@(c) javaMethod('hashCode', c), self.data_);
+            d = self.data_;
+            h = zeros(1, length(d));
+            for i = 1:length(d)
+                h(i) = javaMethod('hashCode', d(i));
+            end
             h = reshape(h, self.size_);
         end
 
