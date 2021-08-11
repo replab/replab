@@ -39,7 +39,7 @@ classdef CosetTable < replab.Str
             t = replab.str.Table(C);
             invNames = cellfun(@(x) ['inv(', x, ')'], self.generatorNames, 'uniform', 0);
             t.addColumnNames([self.generatorNames, invNames]);
-            t.addRowNames(cellfun(@(i) str2num(i), 1:size(self.internal.C, 1), 'uniform', 0));
+            t.addRowNames(arrayfun(@(i) num2str(i), 1:size(self.internal.C, 1), 'uniform', 0));
             t.setRowSep(1, '-');
             t.setColSep(1, ' | ');
         end
