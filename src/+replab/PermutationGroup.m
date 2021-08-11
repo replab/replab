@@ -745,7 +745,7 @@ classdef PermutationGroup < replab.FiniteGroup
         % i.e. for this group ``G``, it returns ``H = {g \in G : g(set) = set}``
         %
         % Example:
-        %   >>> G = replab.PermutationGroup.of([3 1 2 4] [1 4 2 3]);
+        %   >>> G = replab.PermutationGroup.of([3 1 2 4], [1 4 2 3]);
         %   >>> H = G.setwiseStabilizer([1 2]);
         %   >>> H == replab.PermutationGroup.of([2 1 4 3])
         %       1
