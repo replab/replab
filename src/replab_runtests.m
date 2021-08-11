@@ -82,15 +82,15 @@ function result = replab_runtests(withCoverage, onlyFastTests)
     end
 
     % Create doctests
-    if ReplabTestParameters.onlyFastTests == 0 && ~replab.compat.isOctave
+    %if ReplabTestParameters.onlyFastTests == 0 && ~replab.compat.isOctave
         % Disable doc tests as they are not stable yet
-        replab_generate('doctests');
-    else
-        rp = replab.globals.replabPath;
-        testRoot = fullfile(rp, 'tests');
-        doctestRoot = fullfile(rp, 'tests', 'doctest');
-        replab.infra.mkCleanDir(testRoot, 'doctest');
-    end
+    replab_generate('doctests');
+        %    else
+        %rp = replab.globals.replabPath;
+        %testRoot = fullfile(rp, 'tests');
+        %doctestRoot = fullfile(rp, 'tests', 'doctest');
+        %replab.infra.mkCleanDir(testRoot, 'doctest');
+        %end
 
     % calls the relevant test suite
     if ReplabTestParameters.withCoverage == 1
