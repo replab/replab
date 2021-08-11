@@ -32,7 +32,7 @@ function writeNotebook(notebooksPath, notebook)
     line = fgetl(fidIn);
     while ischar(line)
         % We copy the line over
-    	if isequal(line(end-2:end), '...')
+    	if (length(line) >= 3) && isequal(line(end-2:end), '...')
             fprintf(fidOut, '%s\n', line);
     	else
             % If the line finishes, we add an extra ';' to limit the verbose level
