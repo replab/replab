@@ -127,9 +127,10 @@ coverage.*
 coverage_html
 
 ##---------------------------------------------------
-# doctests generated files .gitignore
+# doctests and notebooks generated files .gitignore
 ##---------------------------------------------------
 tests/doctest
+tests/notebooks
 
 ## Jupyter checkpoints
 .ipynb_checkpoints

@@ -40,7 +40,7 @@ replab_init('verbose', 0);
 %
 % We’ll explain our process on the representation $U \otimes U \otimes U$ where $U$ is the unitary group of dimension 3.
 
-replab.equi.plotConvergence(true);
+%replab.equi.plotConvergence(true);
 U3 = replab.U(3);
 rep = U3.definingRep.tensorPower(3);
 

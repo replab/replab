@@ -80,6 +80,7 @@ classdef Table < replab.Str
             % use variables if given and otherwise default settings
             s = struct(varargin{:});
             % variables with default settings
+            self.colAlign = '';
             if isfield(s, 'colAlign')
                 if length(s(1).colAlign) == self.nColumns + 1 && isfield(s, 'colName')
                     self.setAlign(1:self.nColumns, s(1).colAlign(2:end))
@@ -89,6 +90,7 @@ classdef Table < replab.Str
             else
                 self.setAlign(1:self.nColumns, repmat('c', 1, dim(2)))
             end
+            self.colSep = '';
             if isfield(s, 'colSep')
                 self.setColSep(0:self.nColumns, s(1).colSep);
             else
@@ -187,7 +189,7 @@ classdef Table < replab.Str
             spec = self.colAlign;
             if len > maxColumns
                 truncated = true;
-                ellipsisCol = cell(dim(1), 1);
+                ellipsisCol = repmat({''}, dim(1), 1);
                 ellipsisCol{max(floor(dim(1)/2), 1)} = omitSymbol;
                 if ~isempty(self.omitRange)
                     [dots, hide] = self.addEllipses(self.omitRange);
@@ -474,10 +476,10 @@ classdef Table < replab.Str
         end
 
         function addColumn(self, column, loc, sep, align)
-        % adds column to the table
+        % Adds column to the table
         %
-        % Convention: loc = 0 means add a column to left of the table and
-        %             loc = T.nColumns adds a column to right of the table
+        % Convention: ``loc = 0`` means add a column to left of the table and
+        %             ``loc = T.nColumns`` adds a column to right of the table
         %
         % Args:
         %   column (cell(1,nColumns)): Column to add to table

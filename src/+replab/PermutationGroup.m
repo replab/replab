@@ -745,13 +745,13 @@ classdef PermutationGroup < replab.FiniteGroup
         % i.e. for this group ``G``, it returns ``H = {g \in G : g(set) = set}``
         %
         % Example:
-        %   >>> G = replab.S(4).subgroup({[3 1 2 4] [1 4 2 3]});
+        %   >>> G = replab.PermutationGroup.of([3 1 2 4], [1 4 2 3]);
         %   >>> H = G.setwiseStabilizer([1 2]);
-        %   >>> H == replab.S(4).subgroup({[2 1 4 3]})
+        %   >>> H == replab.PermutationGroup.of([2 1 4 3])
         %       1
         %
         % Example:
-        %   >>> G = replab.S(10).subgroup({[1,3,2,10,9,8,6,5,7,4], [1,4,3,2,5,6,7,8,9,10]});
+        %   >>> G = replab.PermutationGroup.of([1,3,2,10,9,8,6,5,7,4], [1,4,3,2,5,6,7,8,9,10]);
         %   >>> H = G.setwiseStabilizer([2 3]);
         %   >>> H.order
         %       10
@@ -1138,7 +1138,9 @@ classdef PermutationGroup < replab.FiniteGroup
         % Example:
         %   >>> generators = {};
         %   >>> domainSize = 4;
-        %   >>> G = replab.PermutationGroup(domainSize, generators)
+        %   >>> G = replab.PermutationGroup(domainSize, generators);
+        %   >>> G.order
+        %       1
         %
         % Args:
         %   varargin (cell(1,\*) of permutation): Group generators

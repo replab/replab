@@ -12,7 +12,7 @@ function test_suite = RepByImagesTest()
         img_a = [sqrt1_2 -sqrt1_2
                  sqrt1_2 sqrt1_2];
         img_x = replab.cyclotomic([1 0; 0 -1]);
-        rep = G.repByImages('R', 2, {img_a img_x});
+        rep = G.repByImages('R', 2, 'images', {img_a, img_x});
         test_suite = rep.laws.addTestCases(test_suite);
     end
 end
@@ -28,7 +28,7 @@ function test_cyclotomic
     s2 = replab.cyclotomic.sqrtRational(1, 2);
     sigma_a = replab.cyclotomic.sqrtRational(1, 2) * [1 -1; 1 1];
     sigma_x = replab.cyclotomic([1 0; 0 -1]);
-    sigma = D16.repByImages('R', 2, 'preimages', {a x}, 'images', {sigma_a sigma_x});
+    sigma = D16.repByImages('R', 2, 'preimages', {a, x}, 'images', {sigma_a, sigma_x});
     img1 = sigma.image(S8.compose(a, x)); % should be [1 1; 1 -1]/sqrt(2)
     img2 = replab.cyclotomic.sqrtRational(1, 2) * [1 1; 1 -1];
     assert(norm(double(img1) - double(img2)) == 0);
@@ -38,7 +38,7 @@ function test_stays_sparse
     S3 = replab.PermutationGroup.of([2 3 1], [2 1 3]);
     M1 = sparse([0 0 1; 1 0 0; 0 1 0]);
     M2 = sparse([0 1 0; 1 0 0; 0 0 1]);
-    rep = S3.repByImages('R', 3, {M1 M2});
+    rep = S3.repByImages('R', 3, 'images', {M1 M2});
     for i = 1:5
         I = rep.image(S3.sample, 'double/sparse');
         assert(issparse(I));
@@ -49,7 +49,7 @@ function test_pauli_group_is_unitary_1_design
 % Pauli group from presentation
     G = replab.AbstractGroup.fromPresentation('< x,y,z,i | i^4 = x^2 = y^2 = z^2 = 1, x i = i x, y i = i y, z i = i z, x y = i z, y z = i x, z x = i y>');
     images = {[0 1; 1 0], [0 -1i; 1i 0], [1 0; 0 -1], 1i*[1 0; 0 1]};
-    rep = G.repByImages('C', 2, 'preimages', {'x' 'y' 'z' 'i'}, 'images', images);
+    rep = G.repByImages('C', 2, 'preimages', {'x', 'y', 'z', 'i'}, 'images', images);
     assert(rep.decomposition.nComponents == 1);
 end
 
@@ -58,7 +58,7 @@ function test_pauli_group_is_not_unitary_2_design
     G = replab.AbstractGroup.fromPresentation('< x,y,z,i | i^4 = x^2 = y^2 = z^2 = 1, x i = i x, y i = i y, z i = i z, x y = i z, y z = i x, z x = i y>');
     images = {[0 1; 1 0], [0 -1i; 1i 0], [1 0; 0 -1], 1i*[1 0; 0 1]};
     images2 = cellfun(@(I) kron(I, I), images, 'uniform', 0);
-    rep = G.repByImages('C', 4, 'preimages', {'x' 'y' 'z' 'i'}, 'images', images2);
+    rep = G.repByImages('C', 4, 'preimages', {'x', 'y', 'z', 'i'}, 'images', images2);
     assert(rep.decomposition.nComponents == 4);
 end
 
@@ -67,6 +67,6 @@ function test_cell_images
         return
     end
     G = replab.S(3);
-    rep = G.repByImages('R', 2, 'preimages', {[2 1 3] [1 3 2]}, 'images', {[1 0; 0 -1] {'-1/2' '3/4'; '1' '1/2'}});
+    rep = G.repByImages('R', 2, 'preimages', {[2 1 3], [1 3 2]}, 'images', {[1 0; 0 -1], {'-1/2' '3/4'; '1' '1/2'}});
     assert(all(all(rep.image([3 2 1], 'exact') == replab.cyclotomic({'-1/2' '-3/4'; '-1' '1/2'}))));
 end

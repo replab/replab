@@ -31,6 +31,9 @@ classdef DocTestStatement < replab.Str
         %
         % Args:
         %   fid (integer): File handle
+            if isfield(self.flags, 'cyclotomic') && self.flags.cyclotomic
+                fprintf(fid, '  if ~replab.init.cyclolab().works\n    return\n  end\n');
+            end
             if isfield(self.flags, 'slow') && self.flags.slow
                 fprintf(fid, '  if ReplabTestParameters.onlyFastTests\n    return\n  end\n');
             end

@@ -147,7 +147,7 @@ classdef Irreducible < replab.SubRep
         % Example:
         %   >>> S3 = replab.S(3);
         %   >>> rep = S3.naturalRep;
-        %   >>> dec = rep.decomposition('exact');
+        %   >>> dec = rep.decomposition('exact'); % doctest: +cyclotomic
         %   >>> dec.nComponents
         %       3
         %   >>> dec.squeeze.nComponents

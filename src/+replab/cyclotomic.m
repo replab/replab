@@ -11,7 +11,7 @@ classdef cyclotomic
 % denominator can be represented exactly.
 %
 % Example:
-%   >>> replab.cyclotomic(1/2)
+%   >>> replab.cyclotomic(1/2) % doctest: +cyclotomic
 %       1/2
 %   >>> replab.cyclotomic(1/3)
 %       6004799503160661/18014398509481984
@@ -20,7 +20,7 @@ classdef cyclotomic
 % number types.
 %
 % Example:
-%   >>> c = replab.cyclotomic(1)
+%   >>> c = replab.cyclotomic(1) % doctest: +cyclotomic
 %       1
 %   >>> replab.cyclotomic(c)
 %       1
@@ -28,14 +28,14 @@ classdef cyclotomic
 % Cyclotomics can also be constructed from vpis:
 %
 % Example:
-%   >>> c = replab.cyclotomic(vpi('100000000000000'))
+%   >>> c = replab.cyclotomic(vpi('100000000000000')) % doctest: +cyclotomic
 %       100000000000000
 %
 % They can also be constructed from strings. A vector/matrix syntax is also available, but row coefficients
 % must always be separated by commas.
 %
 % Example:
-%   >>> replab.cyclotomic('2/3')
+%   >>> replab.cyclotomic('2/3') % doctest: +cyclotomic
 %       2/3
 %   >>> replab.cyclotomic('[1, 0; 0, 1]')
 %       1  0
@@ -52,27 +52,27 @@ classdef cyclotomic
 % - sines and cosines of rational multiples of ``pi``.
 %
 % Example:
-%   >>> replab.cyclotomic('sqrt(2)')
+%   >>> replab.cyclotomic('sqrt(2)') % doctest: +cyclotomic
 %       E(8)-E(8)^3
-%   >>> replab.cyclotomic('cos(-pi/3)')
+%   >>> replab.cyclotomic('cos(-pi/3)') % doctest: +cyclotomic
 %       -1/2
-%   >>> replab.cyclotomic('(3 + 2/3)^3')
+%   >>> replab.cyclotomic('(3 + 2/3)^3') % doctest: +cyclotomic
 %       1331/27
-%   >>> replab.cyclotomic('E(3)^2')
+%   >>> replab.cyclotomic('E(3)^2') % doctest: +cyclotomic
 %       E(3)^2
 %
 % Finally, the constructor also accepts heterogenous cell arrays, where the types above can be mixed and matched
 % (except that strings must represent scalars, not matrices/vectors).
 %
 % Example:
-%   >>> replab.cyclotomic({'1' vpi(2); '1/2' 1})
+%   >>> replab.cyclotomic({'1' vpi(2); '1/2' 1}) % doctest: +cyclotomic
 %         1    2
 %        1/2   1
 %
 % A variety of static methods is available.
 %
 % Example:
-%   >>> I = replab.cyclotomic.eye(3)
+%   >>> I = replab.cyclotomic.eye(3) % doctest: +cyclotomic
 %       1  0  0
 %       0  1  0
 %       0  0  1
@@ -248,7 +248,7 @@ classdef cyclotomic
         % Constructs the simplest rational approximation within an interval, for coefficients of a matrix
         %
         % Example:
-        %   >>> replab.cyclotomic.approximate(3.141592, 3.141593)
+        %   >>> replab.cyclotomic.approximate(3.141592, 3.141593) % doctest: +cyclotomic
         %     355/113
         %
         % Args:
@@ -265,7 +265,7 @@ classdef cyclotomic
         % Constructs a cyclotomic matrix of rational numbers
         %
         % Example:
-        %   >>> replab.cyclotomic.fromRationals([1 1; 1 1], [2 3; 3 2])
+        %   >>> replab.cyclotomic.fromRationals([1 1; 1 1], [2 3; 3 2]) % doctest: +cyclotomic
         %       1/2  1/3
         %       1/3  1/2
         %
@@ -283,7 +283,7 @@ classdef cyclotomic
         % Returns the square root of a rational number
         %
         % Example:
-        %   >>> replab.cyclotomic.sqrtRational(2)
+        %   >>> replab.cyclotomic.sqrtRational(2) % doctest: +cyclotomic
         %       E(8)-E(8)^3
         %   >>> replab.cyclotomic.sqrtRational(1,2)
         %       E(8)/2-E(8)^3/2
@@ -568,7 +568,7 @@ classdef cyclotomic
         % Equivalent to ``max(size(X))`` if ``isempty(X)`` is false, otherwise ``0``.
         %
         % Example:
-        %   >>> length(replab.cyclotomic.zeros(10))
+        %   >>> length(replab.cyclotomic.zeros(10)) % doctest: +cyclotomic
         %       10
         %
         % Returns:
@@ -612,7 +612,7 @@ classdef cyclotomic
         % ``i`` is an integer scalar.
         %
         % Example:
-        %   >>> size(replab.cyclotomic.eye(2))
+        %   >>> size(replab.cyclotomic.eye(2)) % doctest: +cyclotomic
         %       2     2
         %
         % Args:
@@ -642,9 +642,25 @@ classdef cyclotomic
         end
 
         function res = eq(lhs, rhs)
-        % Equality test
+        % Equality test, returns a multidimensional array
             [lhs, rhs] = replab.cyclotomic.shape(lhs, rhs);
             res = reshape(javaMethod('eqv', 'cyclo.Lab', lhs.data, rhs.data), size(lhs));
+        end
+
+        function res = isequal(lhs, rhs)
+        % Equality test, returns a scalar
+            if ~isequal(size(lhs), size(rhs))
+                res = false;
+                return
+            end
+            res = all(javaMethod('eqv', 'cyclo.Lab', lhs.data, rhs.data));
+        end
+
+        function res = isequaln(lhs, rhs)
+        % Equality test, returns a scalar
+        %
+        % Same as isequal as we do not have NaN
+            res = isequal(lhs, rhs);
         end
 
         function res = galois(self, ord)
@@ -838,7 +854,7 @@ classdef cyclotomic
         % Computes the null space of a cyclotomic matrix
         %
         % Example:
-        %   >>> M = replab.cyclotomic([1 3 0; -2 -6 0; 3 9 6]);
+        %   >>> M = replab.cyclotomic([1 3 0; -2 -6 0; 3 9 6]); % doctest: +cyclotomic
         %   >>> null(M)'
         %       -3  1  0
         %
@@ -1001,12 +1017,16 @@ classdef cyclotomic
         % Returns a multidimensional array of hash codes
         %
         % Example:
-        %   >>> hash(replab.cyclotomic.zeros(1)) == -1579025880
+        %   >>> hash(replab.cyclotomic.zeros(1)) == -1579025880 % doctest: +cyclotomic
         %       1
         %
         % Returns:
         %   integer(...): Integer array of hash codes
-            h = arrayfun(@(c) javaMethod('hashCode', c), self.data_);
+            d = self.data_;
+            h = zeros(1, length(d));
+            for i = 1:length(d)
+                h(i) = javaMethod('hashCode', d(i));
+            end
             h = reshape(h, self.size_);
         end
 

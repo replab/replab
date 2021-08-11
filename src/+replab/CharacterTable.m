@@ -169,7 +169,7 @@ classdef CharacterTable < replab.Obj
         % Note that this method is optimized when the representation is a tensor product.
         %
         % Example:
-        %   >>> G = replab.PermutationGroup.dihedral(3);
+        %   >>> G = replab.PermutationGroup.dihedral(3); % doctest: +cyclotomic
         %   >>> ct = G.characterTable;
         %   >>> rep2 = ct.irreps{2};
         %   >>> rep3 = ct.irreps{3};
@@ -178,7 +178,7 @@ classdef CharacterTable < replab.Obj
         %       1
         %
         % Example:
-        %   >>> G = replab.S(5);
+        %   >>> G = replab.S(5); % doctest: +cyclotomic
         %   >>> ct = G.characterTable;
         %   >>> S5 = ct.group;
         %   >>> isequal(ct.multiplicities(S5.naturalRep), [1 0 1 0 0 0 0])
@@ -193,7 +193,8 @@ classdef CharacterTable < replab.Obj
             mults = zeros(1, n);
             if isa(arg, 'replab.Character')
                 for i = 1:n
-                    mults(i) = self.character(i).dot(arg);
+                    ct = self.character(i);
+                    mults(i) = double(ct.dot(arg));
                 end
             elseif isa(arg, 'replab.rep.TensorRep')
                 factorM = cellfun(@(f) self.multiplicities(f), arg.factors, 'uniform', 0);
@@ -203,7 +204,8 @@ classdef CharacterTable < replab.Obj
                 end
             elseif isa(arg, 'replab.Rep')
                 for i = 1:n
-                    mults(i) = self.character(i).dotRep(arg);
+                    ct = self.character(i);
+                    mults(i) = double(ct.dotRep(arg));
                 end
             else
                 error('Invalid argument');
@@ -315,7 +317,7 @@ classdef CharacterTable < replab.Obj
         % Maps the character table under an isomorphism
         %
         % Example:
-        %   >>> D6a = replab.PermutationGroup.of([3 2 1], [2 3 1]);
+        %   >>> D6a = replab.PermutationGroup.of([3 2 1], [2 3 1]); % doctest: +cyclotomic
         %   >>> D6b = replab.PermutationGroup.of([1 4 3 2], [1 3 4 2]);
         %   >>> f = D6a.isomorphismByImages(D6b, 'preimages', D6a.generators, 'images', D6b.generators);
         %   >>> Ca = D6a.characterTable;

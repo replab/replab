@@ -21,8 +21,10 @@ function result = replab_generate(what)
 %
 % - ``doctests`` extracts the doctests from the source code and writes them to the doctests code folder.
 %
+% - ``notebooks`` extracts the jupyter notebooks from the doc and write them to the notebooks code folder
+%
 % Args:
-%   what ({'clear', 'sphinx*', 'sphinx', 'doctests', 'all'}, optional): What to generate, default ``'all'``
+%   what ({'clear', 'sphinx*', 'sphinx', 'doctests', 'notebooks', 'all'}, optional): What to generate, default ``'all'``
 %
 % Results:
 %     logical: True unless an error was detected
@@ -41,7 +43,7 @@ function result = replab_generate(what)
     cd ..
 
     logFun = @(str) disp(str);
-    valid = {'clear' 'sphinx' 'sphinxbuild' 'sphinxsrc' 'doctests' 'all'};
+    valid = {'clear' 'sphinx' 'sphinxbuild' 'sphinxsrc' 'doctests' 'notebooks' 'all'};
     validStr = strjoin(cellfun(@(x) sprintf('''%s''', x), valid, 'uniform', 0), ', ');
     assert(ismember(what, valid), 'Argument must be one of: %s', validStr);
 
@@ -116,6 +118,23 @@ function result = replab_generate(what)
             for i = 1:length(els)
                 pb.step(i, els{i}.fullIdentifier);
                 replab.infra.doctests.writeElementDocTests(doctestRoot, els{i});
+            end
+            pb.finish;
+        end
+    end
+
+    if isequal(what, 'notebooks') || isequal(what, 'all') || isequal(what, 'clear')
+        % Generate a copy of the jupyter notebooks
+        testRoot = fullfile(rp, 'tests');
+        notebooksRoot = fullfile(rp, 'tests', 'notebooks');
+        replab.infra.mkCleanDir(testRoot, 'notebooks');
+        if ~isequal(what, 'clear')
+            logFun('Copying jupyter notebooks');
+            els = replab.infra.notebooks.listNotebooks;
+            pb = replab.infra.repl.ProgressBar(length(els));
+            for i = 1:length(els)
+                pb.step(i, els{i,3});
+                replab.infra.notebooks.writeNotebook(notebooksRoot, els(i,:));
             end
             pb.finish;
         end

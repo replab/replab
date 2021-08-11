@@ -22,7 +22,11 @@ end
 replab.init.MOcov().require;
 replab.init.MOxUnit().require;
 
-replab.init.cyclolab().require;
+if usejava('jvm')
+    replab.init.cyclolab().require;
+else
+    warning('No Java machine available, some capabilities disabled.');
+end
 
 % Default values for coset enumeration parameters
 replab.globals.cosetEnumerationMethod('R'); % try 'C' if the method doesn't work

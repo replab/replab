@@ -81,16 +81,17 @@ function result = replab_runtests(withCoverage, onlyFastTests)
         warning('No working SDP solver found, some tests will fail.');
     end
 
-    % Create doctests
-    %if ReplabTestParameters.onlyFastTests == 0 && ~replab.compat.isOctave
-        % Disable doc tests as they are not stable yet
     replab_generate('doctests');
-        %    else
-        %rp = replab.globals.replabPath;
-        %testRoot = fullfile(rp, 'tests');
-        %doctestRoot = fullfile(rp, 'tests', 'doctest');
-        %replab.infra.mkCleanDir(testRoot, 'doctest');
-        %end
+
+    % Create tests for notebooks
+    if ReplabTestParameters.onlyFastTests == 0
+        replab_generate('notebooks');
+    else
+        rp = replab.globals.replabPath;
+        testRoot = fullfile(rp, 'tests');
+        doctestRoot = fullfile(rp, 'tests', 'notebooks');
+        replab.infra.mkCleanDir(testRoot, 'notebooks');
+    end
 
     % calls the relevant test suite
     if ReplabTestParameters.withCoverage == 1

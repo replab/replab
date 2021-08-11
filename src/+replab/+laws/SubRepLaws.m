@@ -24,7 +24,7 @@ classdef SubRepLaws < replab.laws.RepLaws
             % || rho piA - piA rho ||_F = || rho D - D rho ||_F
             % where D = piA - piE, piA is self.rep.projector and piE is the exact one
             % then || rho D - D rho ||_F <= ||rho||2 ||D||F + ||D||F ||rho||2
-            tol = 2*self.rep.projectorErrorBound*self.rep.parent.conditionNumberEstimate;
+            tol = 2*self.rep.projectorErrorBound*self.rep.parent.conditionNumberEstimate + 1e-15;
             self.assertApproxEqual(piA*img, img*piA, tol);
         end
 
