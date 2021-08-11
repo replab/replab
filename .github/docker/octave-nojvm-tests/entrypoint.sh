@@ -24,8 +24,10 @@ echo "TEST_COMMAND=$TEST_COMMAND";
 # Check what octave packages we have installed
 octave -q --eval "ver"
 
-# Check that octave cannot access java
+# To check that octave cannot access java
+echo "The following line should give an error ---"
 octave --eval "b = javaMethod('valueOf', 'java.math.BigInteger', 2)"
+echo "--- end of the expected error"
 
 # Remove any cached results files from previous build, if present
 rm -f testresults.xml;
