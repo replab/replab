@@ -92,6 +92,16 @@ function result = replab_runtests(withCoverage, onlyFastTests)
         replab.infra.mkCleanDir(testRoot, 'doctest');
     end
 
+    % Create doctests
+    if ReplabTestParameters.onlyFastTests == 0
+        replab_generate('notebooks');
+    else
+        rp = replab.globals.replabPath;
+        testRoot = fullfile(rp, 'tests');
+        doctestRoot = fullfile(rp, 'tests', 'notebooks');
+        replab.infra.mkCleanDir(testRoot, 'notebooks');
+    end
+    
     % calls the relevant test suite
     if ReplabTestParameters.withCoverage == 1
         % Here are the files patterns we don't want to include in the
