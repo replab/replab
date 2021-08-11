@@ -80,6 +80,7 @@ classdef Table < replab.Str
             % use variables if given and otherwise default settings
             s = struct(varargin{:});
             % variables with default settings
+            self.colAlign = '';
             if isfield(s, 'colAlign')
                 if length(s(1).colAlign) == self.nColumns + 1 && isfield(s, 'colName')
                     self.setAlign(1:self.nColumns, s(1).colAlign(2:end))
@@ -89,6 +90,7 @@ classdef Table < replab.Str
             else
                 self.setAlign(1:self.nColumns, repmat('c', 1, dim(2)))
             end
+            self.colSep = '';
             if isfield(s, 'colSep')
                 self.setColSep(0:self.nColumns, s(1).colSep);
             else
