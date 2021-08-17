@@ -1,5 +1,5 @@
 classdef equivar < replab.Obj
-% Describes an equivariant YALMIP matrix variable
+% Describes an equivariant YALMIP matrix variable (experimental)
 %
 % The variable is defined over an equivariant space `.equivariant`; it corresponds to a matrix ``X`` invariant
 % under the action of a representation `.repR` acting on the row space, and a representation `.repC` acting on

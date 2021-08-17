@@ -1,5 +1,5 @@
 classdef equiop < replab.Obj
-% Describes a linear or affine map between equivariant spaces
+% Describes a linear or affine map between equivariant spaces (experimental)
 %
 % Formally, in MATLAB, both scalars and vectors are matrices, with one or two dimensions equal to one.
 % Thus, `+replab..equiop` describes maps between those different types of objects.
