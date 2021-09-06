@@ -1,4 +1,4 @@
-classdef SignedPermutationIsomorphism < replab.GeneralIsomorphism
+classdef SignedPermutationIsomorphism < replab.gen.FiniteIsomorphism
 
     properties (SetAccess = true)
         domainSize % (integer): Size of the signed permutations
@@ -8,7 +8,6 @@ classdef SignedPermutationIsomorphism < replab.GeneralIsomorphism
 
         function self = SignedPermutationIsomorphism(signedSymmetricGroup)
             self.domainSize = domainSize;
-
             targetGenerators = {[2 1 3:2*domainSize]};
             if domainSize > 1
                 targetGenerators{1,end+1} = [3:2*domainSize 1 2];

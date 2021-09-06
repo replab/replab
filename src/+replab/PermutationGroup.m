@@ -41,7 +41,7 @@ classdef PermutationGroup < replab.FiniteGroup
             if nargin < 2
                 type = [];
             end
-            type = replab.PermutationGroupType(chain.n);
+            type = replab.PermutationGroupType.make(chain.n);
             pg = replab.PermutationGroup(type, chain.strongGenerators, 'order', chain.order, 'chain', chain);
         end
 

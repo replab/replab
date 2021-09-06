@@ -80,10 +80,9 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
         %   generatorNames (cell(1,\*) of charstring): Names of the generators
         %   order (vpi or integer): Group order
         %   relators (cell(1,\*) of charstring): Relators
-            self.type = type;
-            self.generators = generators;
+            self@replab.FiniteSet(type, type.identity);
             self.identity = type.identity;
-            self.representative = type.identity;
+            self.generators = generators;
             args = struct('generatorNames', {cell(1, 0)}, 'order', {0}, 'relators', {'none'}, 'abelianInvariants', {'none'}, ...
                           'realCharacterTable', {'none'}, 'complexCharacterTable', {'none'});
             args = replab.util.populateStruct(args, varargin);

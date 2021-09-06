@@ -1,11 +1,35 @@
 classdef PermutationGroupType < replab.FiniteGroupType
 % The group type for permutation over a given domain size
 
+    methods (Static)
+
+        function G = make(n)
+        % Constructs the permutation group type for a given domain size
+        %
+        % This static method keeps the constructed copies in cache.
+        %
+        % Args:
+        %   domainSize (integer): Domain size, must be > 0
+        %
+        % Returns:
+        %   `.PermutationGroupType`: The constructed or cached permutation group type
+            persistent cache
+            if isempty(cache)
+                cache = cell(1, 0);
+            end
+            if n+1 > length(cache) || isempty(cache{n+1})
+                cache{1,n+1} = replab.PermutationGroupType(n);
+            end
+            G = cache{n+1};
+        end
+
+    end
+
     properties (SetAccess = protected)
         domainSize % integer: The integer ``d``, as this group acts on ``{1, ..., d}``
     end
 
-    methods % Constructor
+    methods (Access = protected) % Constructor
 
         function self = PermutationGroupType(domainSize)
         % Constructs a permutation group type

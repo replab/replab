@@ -1,27 +1,15 @@
-classdef FiniteSet < replab.Domain
-% Describes a subset of a finite group
-%
-% Examples of finite subsets include:
-%
-% - left cosets (`.LeftCoset`),
-% - right cosets (`.RightCoset`),
-% - normal cosets (`.NormalCoset`),
-% - double cosets (`.DoubleCoset`),
-% - conjugacy classes (`.ConjugacyClass`),
-% - finite groups (`.FiniteGroup`).
-%
-% If the finite set is not empty (`.nElements` is nonzero), the set has a distinguished `.representative` element.
-% For permutation groups, this representative element is the minimal element under lexicographic ordering.
+classdef FiniteSet < replab.FiniteSet
+% Describes a subset of a finite group using a group isomorphism
 
     properties (SetAccess = protected)
-        type % (`.FiniteGroupType`): Type of the contained elements
-        representative % (element of `.type`): Minimal member of this set under lexicographic ordering. If the set is empty, value is undefined.
+        generic % (`+replab.FiniteSet`): Generic object
+        genericIsomorphism % (`+replab.FiniteIsomorphism`): Isomorphism to an object where computations are outsourced
     end
 
     methods (Access = protected)
 
-        function E = computeElementsSequence(self)
-        % See `.elementsSequence`
+        function E = computeElements(self)
+        % See `.elements`
             error('Abstract');
         end
 
@@ -29,9 +17,9 @@ classdef FiniteSet < replab.Domain
 
     methods
 
-        function self = FiniteSet(type, representative)
+        function self = FiniteSet(type, generic, genericIsomorphism)
             self.type = type;
-            self.representative = representative;
+            self.representative = genericIsomorphism.preimageElement(generic.representative);
         end
 
         function b = contains(self, el)
@@ -47,25 +35,12 @@ classdef FiniteSet < replab.Domain
             error('Abstract');
         end
 
-        function E = elementsSequence(self)
-        % Returns a sequence corresponding to this set
-        %
-        % Returns:
-        %   `.Sequence`: An enumeration of the set elements
-            E = self.cached('elementsSequence', @() self.computeElementsSequence);
-        end
-
         function E = elements(self)
-        % Returns a cell array containing all the elements of this set
-        %
-        % Note: if the number of elements is bigger than `+replab.globals.maxElements`, an error is thrown.
+        % Returns an indexed family corresponding to this set
         %
         % Returns:
-        %   cell(1,\*) of finite set elements: Elements
-            if self.nElements > replab.globals.maxElements
-                error('replab:tooBig', 'Number of elements %s too big > %d', num2str(self.nElements), replab.globals.maxElements);
-            end
-            E = self.elementsSequence.toCell;
+        %   `.IndexedFamily`: An enumeration of the set elements
+            E = self.cached('elements', @() self.computeElements);
         end
 
         function s = nElements(self)

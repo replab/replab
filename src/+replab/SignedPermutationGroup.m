@@ -1,4 +1,4 @@
-classdef SignedPermutationGroup < replab.GenericFiniteGroup
+classdef SignedPermutationGroup < replab.gen.FiniteGroup
 % A base class for all signed permutation groups
 
     properties (SetAccess = protected)

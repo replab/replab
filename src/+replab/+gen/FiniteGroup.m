@@ -1,16 +1,16 @@
-classdef GenericFiniteGroup < replab.FiniteGroup
+classdef FiniteGroup < replab.FiniteGroup
 % A generic finite group
 
-
     properties (SetAccess = protected)
-        genericIsomorphism % (`+replab.GenericIsomorphism`): Isomorphism to a group where computations can be delegated
+        genericMorphism % (`+replab.gen.FiniteIsomorphism`): Isomorphism of a supergroup of this group to a group where computations can be delegated
     end
 
     methods
 
-        function self = GenericFiniteGroup(type, generators, genericIsomorphism, varargin)
+        function self = FiniteGroup(type, generators, genericIsomorphism, varargin)
         % Constructs a nice finite group
-            assert(isa(type, 'replab.GenericFiniteGroupType'));
+            assert(isa(type, 'replab.gen.FiniteGroupType'));
+            assert(isa(genericIsomorphism, 'replab.gen.FiniteIsomorphism'));
             self@replab.FiniteGroup(type, generators, varargin{:});
             self.genericIsomorphism = genericIsomorphism;
         end

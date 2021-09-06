@@ -10,26 +10,19 @@ classdef ConjugacyClass < replab.FiniteSet
 
     properties (SetAccess = protected)
         group % (`+replab.FiniteGroup`): Group containing this conjugacy class
+        representativeCentralizer % (`+replab.FiniteGroup`): Centralizer of `.representative` in `.group`
     end
 
     methods
 
-        function self = ConjugacyClass(group, representative, varargin)
-            args = struct('representativeCentralizer', []);
-            args = replab.util.populateStruct(args, varargin);
-            self@replab.FiniteSet(group.type, representative);
+        function self = ConjugacyClass(group, representative, representativeCentralizer)
+            self.type = group.type;
             self.group = group;
-            if ~isempty(args.representativeCentralizer)
-                self.cache('representativeCentralizer', args.representativeCentralizer);
+            self.representative = representative;
+            if nargin < 3 || isempty(representativeCentralizer)
+                representativeCentralizer = self.group.centralizer(representative);
             end
-        end
-
-        function G = representativeCentralizer(self)
-        % Returns the centralizer of `.representative` in `.group`
-        %
-        % Returns:
-        %   `.FiniteGroup`: Representative centralizer
-            G = self.cached('representativeCentralizer', @() self.computeRepresentativeCentralizer);
+            self.representativeCentralizer = representativeCentralizer;
         end
 
     end
@@ -52,51 +45,47 @@ classdef ConjugacyClass < replab.FiniteSet
             o = self.cached('elementOrder', @() self.computeElementOrder);
         end
 
-% $$$         function c1 = imap(self, f)
-% $$$         % Maps this conjugacy class under an isomorphism
-% $$$         %
-% $$$         % Args:
-% $$$         %   f (`.FiniteIsomorphism`): Isomorphism with ``self.group.isSubgroupOf(f.source)``
-% $$$         %
-% $$$         % Returns:
-% $$$         %   `.ConjugacyClass`: The conjugacy class mapped under ``f``, expressed as a subset of ``f.image``
-% $$$             if self.group.order < f.source.order
-% $$$                 f = f.restrictedSource(self.group);
-% $$$             end
-% $$$             c1 = replab.ConjugacyClass.make(f.target, f.imageElement(self.representative), f.imageGroup(self.representativeCentralizer));
-% $$$         end
+        function c1 = imap(self, f)
+        % Maps this conjugacy class under an isomorphism
+        %
+        % Args:
+        %   f (`.FiniteIsomorphism`): Isomorphism with ``self.group.isSubgroupOf(f.source)``
+        %
+        % Returns:
+        %   `.ConjugacyClass`: The conjugacy class mapped under ``f``, expressed as a subset of ``f.image``
+            if self.group.order < f.source.order
+                f = f.restrictedSource(self.group);
+            end
+            c1 = replab.ConjugacyClass.make(f.target, f.imageElement(self.representative), f.imageGroup(self.representativeCentralizer));
+        end
 
     end
 
-% $$$     methods (Static)
-% $$$
-% $$$         function c = make(group, element, elementCentralizer)
-% $$$             if nargin < 3
-% $$$                 elementCentralizer = group.centralizer(element);
-% $$$             end
-% $$$             prmGroup = group.permutationGroup;
-% $$$             prmElement = group.permutationIsomorphism.imageElement(element);
-% $$$             [h1 g] = replab.bsgs.ConjugacyClasses.representative(prmGroup, prmElement);
-% $$$             representative = group.permutationIsomorphism.preimageElement(h1);
-% $$$             representativeCentralizer = elementCentralizer.leftConjugateGroup(group.permutationIsomorphism.preimageElement(g));
-% $$$             c = replab.ConjugacyClass(group, representative, representativeCentralizer);
-% $$$         end
-% $$$
-% $$$     end
+    methods (Static)
+
+        function c = make(group, element, elementCentralizer)
+            if nargin < 3
+                elementCentralizer = group.centralizer(element);
+            end
+            prmGroup = group.permutationGroup;
+            prmElement = group.permutationIsomorphism.imageElement(element);
+            [h1 g] = replab.bsgs.ConjugacyClasses.representative(prmGroup, prmElement);
+            representative = group.permutationIsomorphism.preimageElement(h1);
+            representativeCentralizer = elementCentralizer.leftConjugateGroup(group.permutationIsomorphism.preimageElement(g));
+            c = replab.ConjugacyClass(group, representative, representativeCentralizer);
+        end
+
+    end
 
     methods (Access = protected)
 
-        function E = computeElementsSequence(self)
+        function E = computeElements(self)
             T = self.group.leftCosetsOf(self.representativeCentralizer).transversal;
             E = cellfun(@(t) self.group.leftConjugate(t, self.representative), T, 'uniform', 0);
         end
 
         function n = computeNElements(self)
             n = self.group.order / self.representativeCentralizer.order;
-        end
-
-        function G = computeRepresentativeCentralizer(self)
-            G = self.group.centralizer(self.representative);
         end
 
     end
@@ -138,11 +127,7 @@ classdef ConjugacyClass < replab.FiniteSet
         %   t (element of `.group`): Group element
         %
         % Returns:
-        %   logical: True if ``t`` is a member of this conjugacy class
-            if ~self.group.contains(t)
-                b = false;
-                return
-            end
+        %   logical: True if ``t`` is a member of this conjugacy classx
             s = self.representative;
             sCentralizer = self.representativeCentralizer;
             % We want to solve ``t == b s b^-1`` with ``s`` the representative

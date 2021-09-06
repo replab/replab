@@ -24,27 +24,23 @@ classdef SymmetricGroup < replab.PermutationGroup
                 cache = cell(1, 0);
             end
             if n+1 > length(cache) || isempty(cache{n+1})
-                cache{1,n+1} = replab.SymmetricGroup(n, true);
+                cache{1,n+1} = replab.SymmetricGroup(n);
             end
             G = cache{n+1};
         end
 
     end
 
-    methods
-        % TODO: after deprecation period (Access = protected)
+    methods (Access = protected) % Constructor
 
-        function self = SymmetricGroup(domainSize, fromMake)
+        function self = SymmetricGroup(domainSize)
         % Constructs the symmetric over a given domain size
         %
         % Instead of the constructor, use `.make`, which caches the constructed group.
         %
         % Args:
         %   domainSize (integer): Domain size, must be >= 0
-            if nargin < 2 || isempty(fromMake) || ~fromMake
-                % TODO: remove deprecation warning
-                warning('Direct constructor call is deprecated. Please call replab.S(n) instead of replab.SymmetricGroup(n)');
-            end
+            type = replab.PermutationGroupType.make(domainSize);
             if domainSize < 2
                 generators = cell(1, 0);
             elseif domainSize == 2
@@ -52,7 +48,7 @@ classdef SymmetricGroup < replab.PermutationGroup
             else
                 generators = {[2:domainSize 1] [2 1 3:domainSize]};
             end
-            self@replab.PermutationGroup(domainSize, generators, 'type', 'self');
+            self@replab.PermutationGroup(type, generators);
         end
 
     end

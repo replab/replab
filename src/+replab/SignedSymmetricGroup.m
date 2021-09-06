@@ -3,23 +3,17 @@ classdef SignedSymmetricGroup < replab.SignedPermutationGroup
 
     methods
 
-        function self = SignedSymmetricGroup(domainSize)
+        function self = SignedSymmetricGroup(domainSize, genericIsomorphism)
         % Constructs the group of all signed permutations over a given domain size
         %
         % Args:
         %   domainSize (integer): Domain size, must be > 0
-            switch domainSize
-              case 0
-                generators = cell(1, 0);
-              case 1
-                generators = {[-1]};
-              case 2
-                generators = {[2 1] [-1 2]};
-              otherwise
-                shift = [2:domainSize 1];
-                trans = [2 1 3:domainSize];
-                flip = [-1 2:domainSize];
-                generators = {shift trans flip};
+            generators = {[-1 2:domainSize]};
+            if domainSize > 1
+                generators{1,end+1} = [2:domainSize 1];
+            end
+            if domainSize > 2
+                generators{1,end+1} = [2 1 3:domainSize];
             end
             type = 'self';
             self@replab.SignedPermutationGroup(domainSize, generators, 'type', type);

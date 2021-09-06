@@ -1,4 +1,4 @@
-classdef GenericFiniteGroupType < replab.FiniteGroupType
+classdef FiniteGroupType < replab.FiniteGroupType
 
     methods
 
@@ -17,7 +17,7 @@ classdef GenericFiniteGroupType < replab.FiniteGroupType
 
         function G = groupWithGenerators(self, generators, varargin)
             iso = self.genericIsomorphism(generators{:});
-            G = replab.GenericFiniteGroup(generators, self, iso, varargin{:});
+            G = replab.gen.FiniteGroup(generators, self, iso, varargin{:});
         end
 
     end
