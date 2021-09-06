@@ -38,7 +38,7 @@ classdef LeftCoset < replab.Coset
 
     methods (Access = protected)
 
-        function E = computeElements(self)
+        function E = computeElementsSequence(self)
         % Returns an indexed family of the elements of this coset
         %
         % Returns:
@@ -49,7 +49,7 @@ classdef LeftCoset < replab.Coset
                 g = self.isomorphism.imageElement(g);
             end
             matrix = sortrows(g(H'))';
-            E = replab.indf.FiniteGroupSequence(matrix, self.isomorphism);
+            E = replab.seq.FiniteGroupSequence(matrix, self.isomorphism);
         end
 
         function s = computeSetProduct(self)

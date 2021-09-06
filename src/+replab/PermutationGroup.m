@@ -101,7 +101,7 @@ classdef PermutationGroup < replab.FiniteGroup
             o = self.chain.order;
         end
 
-        function E = computeElements(self)
+        function E = computeElementsSequence(self)
             basis = replab.util.MixedRadix(self.lexChain.orbitSizes, true, false);
             atFun = @(ind) self.lexChain.elementFromIndices(basis.ind2sub(ind));
             findFun = @(el) basis.sub2ind(self.lexChain.indicesFromElement(el));
@@ -555,7 +555,7 @@ classdef PermutationGroup < replab.FiniteGroup
             assert(o < 1e6);
             o = double(o);
             perms = cell(1, self.nGenerators);
-            E = self.elements;
+            E = self.elementsSequence;
             for i = 1:self.nGenerators
                 g = self.generator(i);
                 img = zeros(1, o);

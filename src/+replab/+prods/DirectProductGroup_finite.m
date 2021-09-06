@@ -52,24 +52,24 @@ classdef DirectProductGroup_finite < replab.DirectProductGroup & replab.NiceFini
     methods (Access = protected) % Implementations
 
         function g = atFun(self, ind)
-        % See comments in self.elements
+        % See comments in self.elementsSequence
             g = self.identity;
             ind = ind - 1;
             for i = self.nFactors:-1:1
                 f = self.factor(i);
                 this = mod(ind, f.order);
                 ind = (ind - this)/f.order;
-                g{i} = f.elements.at(this + 1);
+                g{i} = f.elementsSequence.at(this + 1);
             end
         end
 
         function ind = findFun(self, g)
-        % See comments in self.elements
+        % See comments in self.elementsSequence
             ind = vpi(0);
             for i = 1:self.nFactors
                 f = self.factor(i);
                 ind = ind * f.order;
-                ind = ind + f.elements.find(g{i}) - 1;
+                ind = ind + f.elementsSequence.find(g{i}) - 1;
             end
             ind = ind + 1;
         end
@@ -93,7 +93,7 @@ classdef DirectProductGroup_finite < replab.DirectProductGroup & replab.NiceFini
             c = replab.ConjugacyClasses(self, cellfun(@(r) self.conjugacyClass(r), reps, 'uniform', 0));
         end
 
-        function e = computeElements(self)
+        function e = computeElementsSequence(self)
             e = replab.Sequence.lambda(self.order, ...
                                        @(ind) self.atFun(ind), ...
                                        @(g) self.findFun(g));

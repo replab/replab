@@ -22,7 +22,7 @@ classdef Equivariant_forFiniteGroup_explicitSum < replab.Equivariant
     methods (Access = protected) % Implementations
 
         function E = groupElements(self)
-            E = self.cached('groupElements', @() self.group.elements.toCell);
+            E = self.cached('groupElements', @() self.group.elements);
         end
 
         function X1 = project_exact(self, X)

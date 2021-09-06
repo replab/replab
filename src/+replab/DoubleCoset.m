@@ -80,7 +80,7 @@ classdef DoubleCoset < replab.FiniteSet
 
     methods (Access = protected)
 
-        function E = computeElements(self)
+        function E = computeElementsSequence(self)
         % Returns an indexed family of the elements of this double coset
         %
         % Returns:
@@ -106,7 +106,7 @@ classdef DoubleCoset < replab.FiniteSet
                 end
             end
             S.sort;
-            E = replab.indf.FiniteGroupSequence(S.matrix, self.isomorphism);
+            E = replab.seq.FiniteGroupSequence(S.matrix, self.isomorphism);
         end
 
         function s = computeSetProduct(self)

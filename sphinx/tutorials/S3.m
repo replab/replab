@@ -100,7 +100,7 @@ parRep.image(S3.compose(element1, element2))
 %
 % Clearly, this representation carries some information about the group, namely the parity, but some elements have the same image:
 
-allElements = S3.elements.toCell;
+allElements = S3.elements;
 for i = 1:length(allElements)
     disp(['Image of [', num2str(allElements{i}), '] : ', num2str(parRep.image(allElements{i}))]);
 end

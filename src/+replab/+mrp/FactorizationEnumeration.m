@@ -38,7 +38,7 @@ classdef FactorizationEnumeration < replab.mrp.Factorization
         %     Word expressed in letters
         %   r: group element
         %     Chosen coset representative
-            leftCosetElements = leftCoset.elements.toCell;
+            leftCosetElements = leftCoset.elements;
             % go through coset representatives one by one
             bestR = leftCosetElements{1};
             bestL = self.factorize(bestR);

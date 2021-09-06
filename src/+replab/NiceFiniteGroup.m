@@ -82,9 +82,9 @@ classdef NiceFiniteGroup < replab.FiniteGroup
             res = self.niceGroup.isSimple;
         end
 
-        function E = computeElements(self)
-            atFun = @(ind) self.niceMorphism.preimageElement(self.niceGroup.elements.at(ind));
-            findFun = @(el) self.niceGroup.elements.find(self.niceImage(el));
+        function E = computeElementsSequence(self)
+            atFun = @(ind) self.niceMorphism.preimageElement(self.niceGroup.elementsSequence.at(ind));
+            findFun = @(el) self.niceGroup.elementsSequence.find(self.niceImage(el));
             E = replab.Sequence.lambda(self.order, atFun, findFun);
         end
 

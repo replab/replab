@@ -60,7 +60,7 @@ classdef SignedSymmetricGroup < replab.SignedPermutationGroup
             % faster than o = factorial(vpi(domainSize))*vpi(2)^domainSize;
         end
 
-% $$$         function E = computeElements(self)
+% $$$         function E = computeElementsSequence(self)
 % $$$             E = replab.Sequence.lambda(self.order, ...
 % $$$                                             @(ind) self.enumeratorAt(ind), ...
 % $$$                                             @(el) self.enumeratorFind(el));

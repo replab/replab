@@ -14,8 +14,8 @@ classdef FiniteSet < replab.Domain
 
     methods (Access = protected)
 
-        function E = computeElements(self)
-        % See `.elements`
+        function E = computeElementsSequence(self)
+        % See `.elementsSequence`
             error('Abstract');
         end
 
@@ -36,12 +36,25 @@ classdef FiniteSet < replab.Domain
             error('Abstract');
         end
 
-        function E = elements(self)
+        function E = elementsSequence(self)
         % Returns a sequence corresponding to this set
         %
         % Returns:
         %   `.Sequence`: An enumeration of the set elements
-            E = self.cached('elements', @() self.computeElements);
+            E = self.cached('elementsSequence', @() self.computeElementsSequence);
+        end
+
+        function E = elements(self)
+        % Returns a cell array containing all the elements of this set
+        %
+        % Note: if the number of elements is bigger than `+replab.globals.maxElements`, an error is thrown.
+        %
+        % Returns:
+        %   cell(1,\*) of finite set elements: Elements
+            if self.nElements > replab.globals.maxElements
+                error('replab:tooBig', 'Number of elements %s too big > %d', num2str(self.nElements), replab.globals.maxElements);
+            end
+            E = self.elementsSequence.toCell;
         end
 
         function s = nElements(self)

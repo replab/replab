@@ -38,7 +38,7 @@ classdef RightCoset < replab.Coset
 
     methods (Access = protected)
 
-        function E = computeElements(self)
+        function E = computeElementsSequence(self)
         % Returns an indexed family of the elements of this coset
         %
         % Returns:
@@ -53,7 +53,7 @@ classdef RightCoset < replab.Coset
                 matrix(:,i) = H(g,i);
             end
             matrix = sortrows(matrix')';
-            E = replab.indf.FiniteGroupSequence(matrix, self.isomorphism);
+            E = replab.seq.FiniteGroupSequence(matrix, self.isomorphism);
         end
 
         function s = computeSetProduct(self)

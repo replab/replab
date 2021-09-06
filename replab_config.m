@@ -33,6 +33,9 @@ replab.globals.cosetEnumerationMethod('R'); % try 'C' if the method doesn't work
 replab.globals.maxCosets(2^22);
 replab.globals.maxDeductions(100);
 
+% Default values for elements computation
+replab.globals.maxElements(2^20);
+
 % Default values for group recognition
 replab.globals.fastChainDomainSize(1000); % only attempt for permutation realizations of domain size <= value
 replab.globals.fastChainOrder(10000); % only attempt for groups of order <= value

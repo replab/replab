@@ -28,8 +28,8 @@ classdef NormalCoset < replab.LeftCoset & replab.RightCoset
 
     methods (Access = protected)
 
-        function E = computeElements(self)
-            E = computeElements@replab.LeftCoset(self);
+        function E = computeElementsSequence(self)
+            E = computeElementsSequence@replab.LeftCoset(self);
         end
 
         function s = computeSetProduct(self)

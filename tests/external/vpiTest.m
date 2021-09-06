@@ -12,6 +12,6 @@ function test_vpiLongNumbers
         return;
     end
     S100 = replab.S(100);
-    replab.longStr(S100.elements);
+    replab.longStr(S100.elementsSequence);
     % used to throw because num2str of @vpi split numbers into lines
 end

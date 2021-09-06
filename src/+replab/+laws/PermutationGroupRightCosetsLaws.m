@@ -23,7 +23,7 @@ classdef PermutationGroupRightCosetsLaws < replab.laws.RightCosetsLaws
 
         function law_representative_is_minimal_(self)
             T = self.R.transversalAsMatrix;
-            Hels = self.R.subgroup.elements.toCell;
+            Hels = self.R.subgroup.elements;
             for t = 1:size(T, 1)
                 C = [];
                 tel = T(t,:);
@@ -39,7 +39,7 @@ classdef PermutationGroupRightCosetsLaws < replab.laws.RightCosetsLaws
         function law_transversal_is_complete_(self)
             n = self.R.group.domainSize;
             T = self.R.transversalAsMatrix;
-            Hels = self.R.subgroup.elements.toCell;
+            Hels = self.R.subgroup.elements;
             els = zeros(0, n);
             for t = 1:size(T, 1)
                 tel = T(t,:);

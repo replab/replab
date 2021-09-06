@@ -38,7 +38,7 @@ classdef FiniteGroupLaws < replab.laws.GroupLaws
 
         function law_order_elements_(self)
         % Checks that the number of elements corresponds to the group order
-            self.assert(self.T.elements.nElements == self.T.order);
+            self.assert(self.T.elementsSequence.nElements == self.T.order);
         end
 
         function law_generators_(self)
@@ -48,14 +48,14 @@ classdef FiniteGroupLaws < replab.laws.GroupLaws
                 g = T.generator(i);
                 ginv = T.generatorInverse(i);
                 T.assertEqv(T.identity, T.compose(g, ginv)); % generator consistent with its inverse
-                self.assert(T.elements.find(g) > 0); % generator is part of elements
-                self.assert(T.elements.find(ginv) > 0); % generator inverse is part of elements
+                self.assert(T.elementsSequence.find(g) > 0); % generator is part of elements
+                self.assert(T.elementsSequence.find(ginv) > 0); % generator inverse is part of elements
             end
         end
 
-        function elementsLaws = laws_elements(self)
+        function elementsLaws = laws_elementsSequence(self)
         % Tests the group elements as an indexed family
-            elementsLaws = self.T.elements.laws;
+            elementsLaws = self.T.elementsSequence.laws;
         end
 
         function law_setProduct_size_(self)

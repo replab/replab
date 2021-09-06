@@ -30,12 +30,12 @@ classdef SemidirectProductGroup_finite < replab.SemidirectProductGroup & replab.
             ind = ind - 1;
             indN = mod(ind, self.N.order);
             indH = (ind - indN)/self.N.order;
-            g = {self.H.elements.at(indH + 1) self.N.elements.at(indN + 1)};
+            g = {self.H.elementsSequence.at(indH + 1) self.N.elementsSequence.at(indN + 1)};
         end
 
         function ind = findFun(self, g)
-            indH = self.H.elements.find(g{1});
-            indN = self.N.elements.find(g{2});
+            indH = self.H.elementsSequence.find(g{1});
+            indN = self.N.elementsSequence.find(g{2});
             ind = (indH - 1)*self.N.order + indN;
         end
 
@@ -90,7 +90,7 @@ classdef SemidirectProductGroup_finite < replab.SemidirectProductGroup & replab.
             o = self.H.order * self.N.order;
         end
 
-        function e = computeElements(self)
+        function e = computeElementsSequence(self)
             e = replab.Sequence.lambda(self.order, ...
                                        @(ind) self.atFun(ind), ...
                                        @(g) self.findFun(g));

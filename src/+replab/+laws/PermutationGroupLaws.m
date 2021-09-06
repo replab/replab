@@ -35,7 +35,7 @@ classdef PermutationGroupLaws < replab.laws.FiniteGroupLaws
 
         function law_elements_are_ordered_(self)
             if self.T.order < 200
-                E = self.T.elements.toCell;
+                E = self.T.elements;
                 M = zeros(length(E), self.T.domainSize);
                 for i = 1:length(E)
                     M(i,:) = E{i};

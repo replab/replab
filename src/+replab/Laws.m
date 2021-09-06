@@ -17,8 +17,9 @@ classdef Laws < replab.Str
 %   Note that a law that does not require any arguments corresponds to a method name ending with an underscore.
 %
 % - Methods that start with a ``laws_`` prefix must return another `.Laws` instance (see also `+replab.+laws.Collection`).
-%   It enables delegation of checks when a tested object has subparts (for example, a `.FiniteGroup` has a `~+replab.FiniteGroup.elements`
-%   method of type `.Sequence` that is conveniently checked by `+replab.+laws.SequenceLaws`, see `+replab.+laws.FiniteGroupLaws`).
+%   It enables delegation of checks when a tested object has subparts.
+%   For example, a `.FiniteGroup` has a `~+replab.FiniteGroup.elementsSequence` method of type `.Sequence`,
+%   that is conveniently checked by `+replab.+laws.SequenceLaws`, see `+replab.+laws.FiniteGroupLaws`).
 %
 % Example:
 %    >>> % We build a group from scratch, using function handles,

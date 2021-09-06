@@ -97,7 +97,7 @@ classdef SymmetricGroup < replab.PermutationGroup
             o = replab.util.multiplyIntegers(1:self.domainSize);
         end
 
-        function E = computeElements(self)
+        function E = computeElementsSequence(self)
             E = replab.Sequence.lambda(self.order, ...
                                        @(ind) self.enumeratorAt(ind), ...
                                        @(el) self.enumeratorFind(el));

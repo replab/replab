@@ -9,6 +9,6 @@ end
 
 function test_display
     G = replab.S(60);
-    description = replab.shortStr(G.elements);
+    description = replab.shortStr(G.elementsSequence);
     assert(~isempty(description));
 end

@@ -59,10 +59,10 @@ classdef SetProduct < replab.Domain
                 identityFirst = false;
             end
             c = double(finiteSet.nElements);
-            S = finiteSet.elements.toCell;
+            S = finiteSet.elements;
             group = finiteSet.type;
             if identityFirst
-                ind = double(finiteSet.elements.find(group.identity));
+                ind = double(finiteSet.elementsSequence.find(group.identity));
                 if ind > 0 && ind ~= 1
                     S([1 ind]) = S([ind 1]);
                 end

@@ -83,7 +83,7 @@ classdef ConjugacyClass < replab.FiniteSet
 
     methods (Access = protected)
 
-        function E = computeElements(self)
+        function E = computeElementsSequence(self)
             T = self.group.leftCosetsOf(self.representativeCentralizer).transversal;
             E = cellfun(@(t) self.group.leftConjugate(t, self.representative), T, 'uniform', 0);
         end
