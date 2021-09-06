@@ -42,14 +42,14 @@ classdef LeftCoset < replab.Coset
         % Returns an indexed family of the elements of this coset
         %
         % Returns:
-        %   `+replab.IndexedFamily`: Elements
+        %   `+replab.Sequence`: Elements
             H = self.groupChain.allElements;
             g = self.representative;
             if ~isempty(self.isomorphism)
                 g = self.isomorphism.imageElement(g);
             end
             matrix = sortrows(g(H'))';
-            E = replab.indf.FiniteGroupIndexedFamily(matrix, self.isomorphism);
+            E = replab.indf.FiniteGroupSequence(matrix, self.isomorphism);
         end
 
         function s = computeSetProduct(self)

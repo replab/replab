@@ -105,7 +105,7 @@ classdef PermutationGroup < replab.FiniteGroup
             basis = replab.util.MixedRadix(self.lexChain.orbitSizes, true, false);
             atFun = @(ind) self.lexChain.elementFromIndices(basis.ind2sub(ind));
             findFun = @(el) basis.sub2ind(self.lexChain.indicesFromElement(el));
-            E = replab.IndexedFamily.lambda(self.order, atFun, findFun);
+            E = replab.Sequence.lambda(self.order, atFun, findFun);
         end
 
         function classes = computeConjugacyClasses(self)

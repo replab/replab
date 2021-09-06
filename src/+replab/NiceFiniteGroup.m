@@ -9,7 +9,7 @@ classdef NiceFiniteGroup < replab.FiniteGroup
 % translated back and forth between this group and a permutation group.
 %
 % In particular, the decomposition of the finite group in a product of sets (`.SetProduct`),
-% the enumeration of elements using a `.IndexedFamily`, the construction of subgroups is all handled
+% the enumeration of elements using a `.Sequence`, the construction of subgroups is all handled
 % by permutation group algorithms.
 %
 % Note that the `.niceImage` method of this group should be valid for all elements of the parent as well,
@@ -85,7 +85,7 @@ classdef NiceFiniteGroup < replab.FiniteGroup
         function E = computeElements(self)
             atFun = @(ind) self.niceMorphism.preimageElement(self.niceGroup.elements.at(ind));
             findFun = @(el) self.niceGroup.elements.find(self.niceImage(el));
-            E = replab.IndexedFamily.lambda(self.order, atFun, findFun);
+            E = replab.Sequence.lambda(self.order, atFun, findFun);
         end
 
         function dec = computeSetProduct(self)

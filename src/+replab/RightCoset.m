@@ -42,7 +42,7 @@ classdef RightCoset < replab.Coset
         % Returns an indexed family of the elements of this coset
         %
         % Returns:
-        %   `+replab.IndexedFamily`: Elements
+        %   `+replab.Sequence`: Elements
             H = self.groupChain.allElements;
             g = self.representative;
             if ~isempty(self.isomorphism)
@@ -53,7 +53,7 @@ classdef RightCoset < replab.Coset
                 matrix(:,i) = H(g,i);
             end
             matrix = sortrows(matrix')';
-            E = replab.indf.FiniteGroupIndexedFamily(matrix, self.isomorphism);
+            E = replab.indf.FiniteGroupSequence(matrix, self.isomorphism);
         end
 
         function s = computeSetProduct(self)

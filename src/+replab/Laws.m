@@ -18,7 +18,7 @@ classdef Laws < replab.Str
 %
 % - Methods that start with a ``laws_`` prefix must return another `.Laws` instance (see also `+replab.+laws.Collection`).
 %   It enables delegation of checks when a tested object has subparts (for example, a `.FiniteGroup` has a `~+replab.FiniteGroup.elements`
-%   method of type `.IndexedFamily` that is conveniently checked by `+replab.+laws.IndexedFamilyLaws`, see `+replab.+laws.FiniteGroupLaws`).
+%   method of type `.Sequence` that is conveniently checked by `+replab.+laws.SequenceLaws`, see `+replab.+laws.FiniteGroupLaws`).
 %
 % Example:
 %    >>> % We build a group from scratch, using function handles,

@@ -84,7 +84,7 @@ classdef DoubleCoset < replab.FiniteSet
         % Returns an indexed family of the elements of this double coset
         %
         % Returns:
-        %   `+replab.IndexedFamily`: Elements
+        %   `+replab.Sequence`: Elements
             S = replab.perm.Set(self.Hprmgrp.domainSize);
             Kmat = self.Kprmgrp.chain.allElements;
             g = self.representative';
@@ -106,7 +106,7 @@ classdef DoubleCoset < replab.FiniteSet
                 end
             end
             S.sort;
-            E = replab.indf.FiniteGroupIndexedFamily(S.matrix, self.isomorphism);
+            E = replab.indf.FiniteGroupSequence(S.matrix, self.isomorphism);
         end
 
         function s = computeSetProduct(self)

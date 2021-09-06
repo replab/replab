@@ -37,10 +37,10 @@ classdef FiniteSet < replab.Domain
         end
 
         function E = elements(self)
-        % Returns an indexed family corresponding to this set
+        % Returns a sequence corresponding to this set
         %
         % Returns:
-        %   `.IndexedFamily`: An enumeration of the set elements
+        %   `.Sequence`: An enumeration of the set elements
             E = self.cached('elements', @() self.computeElements);
         end
 

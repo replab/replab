@@ -1,10 +1,9 @@
-classdef IndexedFamily < replab.Domain
-% Describes an indexed family of elements
+classdef Sequence < replab.Domain
+% Describes a sequence of elements
 %
-% See https://en.wikipedia.org/wiki/Indexed_family , and our indices are
-% (bounded) integers, represented by ``vpi`` instances.
+% See `<https://en.wikipedia.org/wiki/Sequence>`_ . Our indices are (bounded) integers, represented by ``vpi`` instances.
 %
-% The family supports element indexing and searching for elements.
+% The sequence supports element indexing and searching for elements.
 
     properties (SetAccess = protected)
         nElements % (vpi): Number of elements contained in this enumerator
@@ -68,7 +67,7 @@ classdef IndexedFamily < replab.Domain
         % Str
 
         function s = shortStr(self, maxColumns)
-            s = sprintf('Indexed family of %s elements', replab.shortStr(self.nElements, maxColumns));
+            s = sprintf('Sequence of %s elements', replab.shortStr(self.nElements, maxColumns));
         end
 
         function lines = longStr(self, maxRows, maxColumns)
@@ -111,7 +110,7 @@ classdef IndexedFamily < replab.Domain
         % Obj
 
         function l = laws(self)
-            l = replab.laws.IndexedFamilyLaws(self);
+            l = replab.laws.SequenceLaws(self);
         end
 
         % Domain
@@ -128,7 +127,7 @@ classdef IndexedFamily < replab.Domain
 
     end
 
-    methods (Static) % IndexedFamily construction
+    methods (Static) % Sequence construction
 
         function family = lambda(nElements, atFun, findFun)
         % Constructs an indexed family from function handles
@@ -141,8 +140,8 @@ classdef IndexedFamily < replab.Domain
         %   findFun (function_handle): Handle that implements the ``find`` method
         %
         % Returns:
-        %   `.IndexedFamily`: The constructed indexed family
-            family = replab.lambda.IndexedFamily(nElements, atFun, findFun);
+        %   `.Sequence`: The constructed indexed family
+            family = replab.lambda.Sequence(nElements, atFun, findFun);
         end
 
     end

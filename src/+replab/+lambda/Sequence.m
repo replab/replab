@@ -1,14 +1,14 @@
-classdef IndexedFamily < replab.IndexedFamily
-% An implementation of an indexed family defined by image functions
+classdef Sequence < replab.Sequence
+% An implementation of a sequence defined by image functions
 
     properties (SetAccess = protected)
-        atFun % (function_handle): Handle that implements `+replab.IndexedFamily.at`
-        findFun % (function_handle): Handle that implements `+replab.IndexedFamily.find`
+        atFun % (function_handle): Handle that implements `+replab.Sequence.at`
+        findFun % (function_handle): Handle that implements `+replab.Sequence.find`
     end
 
     methods
 
-        function self = IndexedFamily(nElements, atFun, findFun)
+        function self = Sequence(nElements, atFun, findFun)
             if isa(nElements, 'vpi')
                 self.nElements = nElements;
             else
@@ -20,7 +20,7 @@ classdef IndexedFamily < replab.IndexedFamily
 
         function names = hiddenFields(self)
             names = replab.str.uniqueNames( ...
-                hiddenFields@replab.IndexedFamily(self), ...
+                hiddenFields@replab.Sequence(self), ...
                 {'atFun' 'sampleFun'} ...
                 );
         end

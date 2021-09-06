@@ -1,5 +1,5 @@
-classdef FiniteGroupIndexedFamily < replab.IndexedFamily
-% Describes an indexed family of permutations, where the permutations are stored explicitly in a matrix
+classdef FiniteGroupSequence < replab.Sequence
+% Describes a sequence of permutations, where the permutations are stored explicitly in a matrix
 %
 % The permutations are hashed with a simple scheme to faciliate fast retrieval.
 
@@ -10,7 +10,7 @@ classdef FiniteGroupIndexedFamily < replab.IndexedFamily
 
     methods
 
-        function self = FiniteGroupIndexedFamily(matrix, isomorphism)
+        function self = FiniteGroupSequence(matrix, isomorphism)
         % Constructs an indexed family of finite group elements
         %
         % Args:
