@@ -132,5 +132,10 @@ coverage_html
 tests/doctest
 tests/notebooks
 
+##---------------------------------------------------
+# notebook tests .gitignore
+##---------------------------------------------------
+tests/notebooks
+
 ## Jupyter checkpoints
 .ipynb_checkpoints
