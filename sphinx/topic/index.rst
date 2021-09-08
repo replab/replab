@@ -18,4 +18,6 @@ at the heart of **RepLAB** and how the library works.
 - `"RepLAB: a computational/numerical approach to representation theory" <https://arxiv.org/abs/1911.09154>`_
   presents a concise overview of the approach used by **RepLAB**
 - `"Certifying Numerical Decompositions of Compact Group Representations" <https://arxiv.org/abs/2101.12244>`_ presents how **RepLAB**'s numerical decompositions can be certified
-- An introduction to representation theory: `Linear Representations of Finite Groups <https://link.springer.com/book/10.1007/978-1-4684-9458-7>`_ by Jean-Pierre Serre
+- An introduction to representation theory: `Linear Representations of Finite Groups <https://link.springer.com/book/10.1007/978-1-4684-9458-7>`_ by Jean-Pierre Serre, see :cite:t:`Serre1977`
+
+.. bibliography::
