@@ -20,7 +20,7 @@ import os
 # -- Project information -----------------------------------------------------
 
 project = 'RepLAB'
-copyright = '2018-2020, Denis Rosset, Jean-Daniel Bancal and collaborators'
+copyright = '2018-2021, Denis Rosset, Jean-Daniel Bancal and collaborators'
 author = 'Denis Rosset, Jean-Daniel Bancal and collaborators'
 
 from pathlib import Path
