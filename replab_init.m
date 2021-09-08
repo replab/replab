@@ -133,6 +133,8 @@ function replab_init(varargin)
         allGood = true;
     end
 
+    disp('replab_init: Initialization done.');
+
 end
 
 
