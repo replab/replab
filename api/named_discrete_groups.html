@@ -15,7 +15,7 @@
   <link rel="stylesheet" type="text/css" href="../_static/css/bootstrap-theme.min.css" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-    <title>Named discrete groups &#8212; RepLAB 0.9.2 documentation</title>
+    <title>Named discrete groups &#8212; RepLAB 0.9.5-SNAP documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/guzzle.css" />
     <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
@@ -28,6 +28,8 @@
     <script src="../_static/togglebutton.js"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "document", "processHtmlClass": "math|output_area"}}</script>
     <script src="../_static/js/collapse_helper.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -77,7 +79,7 @@
         <li class="right" >
           <a href="permutation_groups.html" title="Permutation groups"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.9.2 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.9.5-SNAP documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">Technical Reference</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">Named discrete groups</a></li> 
       </ul>
@@ -92,7 +94,7 @@
   <a href="
     ../index.html">RepLAB</a>&nbsp;&nbsp;
   <a href="https://github.com/replab/replab"><i class="fab fa-github"></i></a>&nbsp;
-  <a href="https://github.com/replab/replab/archive/v0.9.2.zip"><i class="fa fa-download"></i></a>&nbsp;
+  <a href="https://github.com/replab/replab/archive/v0.9.5-SNAP.zip"><i class="fa fa-download"></i></a>&nbsp;
   <a href="https://gitter.im/replab/replab"><i class="fab fa-gitter"></i></a>&nbsp;
   <a href="https://travis-ci.com/replab/replab"><i class="fas fa-sync-alt"></i></a>&nbsp;
   <a href="https://codecov.io/gh/replab/replab"><i class="fas fa-umbrella"></i></a>
@@ -211,7 +213,7 @@
 <p class="admonition-title">Class members list</p>
 <p><strong>Properties</strong></p>
 <ul class="simple">
-<li><p><a class="reference internal" href="#+replab.SymmetricGroup.domainSize" title="+replab.SymmetricGroup.domainSize"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">domainSize</span></code></a> – integer: The integer <code class="docutils literal notranslate"><span class="pre">d</span></code>, as this group acts on <code class="docutils literal notranslate"><span class="pre">{1,</span> <span class="pre">...,</span> <span class="pre">d}</span></code></p></li>
+<li><p><a class="reference internal" href="#+replab.SymmetricGroup.domainSize" title="+replab.SymmetricGroup.domainSize"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">domainSize</span></code></a> – The integer <span class="math notranslate nohighlight">\(d\)</span>, as this group acts on <span class="math notranslate nohighlight">\(\{1, .., d\}\)</span></p></li>
 <li><p><a class="reference internal" href="#+replab.SymmetricGroup.generatorNames" title="+replab.SymmetricGroup.generatorNames"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">generatorNames</span></code></a> – Generator names</p></li>
 <li><p><a class="reference internal" href="#+replab.SymmetricGroup.generators" title="+replab.SymmetricGroup.generators"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">generators</span></code></a> – Group generators</p></li>
 <li><p><a class="reference internal" href="#+replab.SymmetricGroup.identity" title="+replab.SymmetricGroup.identity"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">identity</span></code></a> – Monoid identity element</p></li>
@@ -301,7 +303,8 @@
 <li><p><a class="reference internal" href="#+replab.SymmetricGroup.SymmetricGroup" title="+replab.SymmetricGroup.SymmetricGroup"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">SymmetricGroup</span></code></a> – Constructs the symmetric over a given domain size</p></li>
 <li><p><a class="reference internal" href="#+replab.SymmetricGroup.checkNormalizes" title="+replab.SymmetricGroup.checkNormalizes"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">checkNormalizes</span></code></a> –</p></li>
 <li><p><a class="reference internal" href="#+replab.SymmetricGroup.defaultGeneratorNames" title="+replab.SymmetricGroup.defaultGeneratorNames"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">defaultGeneratorNames</span></code></a> – Returns default generator names</p></li>
-<li><p><a class="reference internal" href="#+replab.SymmetricGroup.elements" title="+replab.SymmetricGroup.elements"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">elements</span></code></a> – Returns an indexed family corresponding to this set</p></li>
+<li><p><a class="reference internal" href="#+replab.SymmetricGroup.elements" title="+replab.SymmetricGroup.elements"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">elements</span></code></a> – Returns a cell array containing all the elements of this set</p></li>
+<li><p><a class="reference internal" href="#+replab.SymmetricGroup.elementsSequence" title="+replab.SymmetricGroup.elementsSequence"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">elementsSequence</span></code></a> – Returns a sequence corresponding to this set</p></li>
 <li><p><a class="reference internal" href="#+replab.SymmetricGroup.fromChain" title="+replab.SymmetricGroup.fromChain"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">fromChain</span></code></a> –</p></li>
 <li><p><a class="reference internal" href="#+replab.SymmetricGroup.isequal" title="+replab.SymmetricGroup.isequal"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">isequal</span></code></a> –</p></li>
 <li><p><a class="reference internal" href="#+replab.SymmetricGroup.make" title="+replab.SymmetricGroup.make"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">make</span></code></a> – Constructs the symmetric over a given domain size</p></li>
@@ -752,6 +755,12 @@
 <dt class="sig sig-object mat" id="+replab.SymmetricGroup.elements">
 <span class="sig-name descname"><span class="pre">elements</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.SymmetricGroup.elements" title="Permalink to this definition">¶</a></dt>
 <dd><p>Documentation in <a class="reference internal" href="group_subsets.html#+replab.FiniteSet.elements" title="+replab.FiniteSet.elements"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.FiniteSet.elements()</span></code></a></p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.SymmetricGroup.elementsSequence">
+<span class="sig-name descname"><span class="pre">elementsSequence</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.SymmetricGroup.elementsSequence" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="group_subsets.html#+replab.FiniteSet.elementsSequence" title="+replab.FiniteSet.elementsSequence"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.FiniteSet.elementsSequence()</span></code></a></p>
 </dd></dl>
 
 <dl class="mat method">
@@ -1498,7 +1507,7 @@
 <span class="sig-name descname"><span class="pre">irrep</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">partition</span></em>, <em class="sig-param"><span class="pre">form</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.SymmetricGroup.irrep" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the irreducible representation of this symmetric group corresponding the given Young Diagram</p>
 <p class="rubric">Example</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">S5</span> <span class="o">=</span> <span class="n">replab</span><span class="o">.</span><span class="n">S</span><span class="p">(</span><span class="mi">5</span><span class="p">);</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">S5</span> <span class="o">=</span> <span class="n">replab</span><span class="o">.</span><span class="n">S</span><span class="p">(</span><span class="mi">5</span><span class="p">);</span> <span class="o">%</span> <span class="n">doctest</span><span class="p">:</span> <span class="o">+</span><span class="n">cyclotomic</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">rep</span> <span class="o">=</span> <span class="n">S5</span><span class="o">.</span><span class="n">irrep</span><span class="p">([</span><span class="mi">3</span> <span class="mi">2</span><span class="p">],</span> <span class="s1">&#39;specht&#39;</span><span class="p">);</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">rep</span><span class="o">.</span><span class="n">dimension</span>
 <span class="go">      5</span>
@@ -1610,7 +1619,7 @@ in decreasing order (e.g <code class="docutils literal notranslate"><span class=
 <p class="admonition-title">Class members list</p>
 <p><strong>Properties</strong></p>
 <ul class="simple">
-<li><p><a class="reference internal" href="#+replab.SignedSymmetricGroup.domainSize" title="+replab.SignedSymmetricGroup.domainSize"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">domainSize</span></code></a> – d when this group acts on {-d..-1, 1..d}</p></li>
+<li><p><a class="reference internal" href="#+replab.SignedSymmetricGroup.domainSize" title="+replab.SignedSymmetricGroup.domainSize"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">domainSize</span></code></a> – The integer <span class="math notranslate nohighlight">\(d\)</span> when this group acts on <span class="math notranslate nohighlight">\(\{-d, .., -1, 1, .., d\}\)</span></p></li>
 <li><p><a class="reference internal" href="#+replab.SignedSymmetricGroup.generatorNames" title="+replab.SignedSymmetricGroup.generatorNames"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">generatorNames</span></code></a> – Generator names</p></li>
 <li><p><a class="reference internal" href="#+replab.SignedSymmetricGroup.generators" title="+replab.SignedSymmetricGroup.generators"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">generators</span></code></a> – Group generators</p></li>
 <li><p><a class="reference internal" href="#+replab.SignedSymmetricGroup.identity" title="+replab.SignedSymmetricGroup.identity"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">identity</span></code></a> – Monoid identity element</p></li>
@@ -1702,18 +1711,13 @@ in decreasing order (e.g <code class="docutils literal notranslate"><span class=
 <li><p><a class="reference internal" href="#+replab.SignedSymmetricGroup.SignedSymmetricGroup" title="+replab.SignedSymmetricGroup.SignedSymmetricGroup"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">SignedSymmetricGroup</span></code></a> – Constructs the group of all signed permutations over a given domain size</p></li>
 <li><p><a class="reference internal" href="#+replab.SignedSymmetricGroup.checkNormalizes" title="+replab.SignedSymmetricGroup.checkNormalizes"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">checkNormalizes</span></code></a> –</p></li>
 <li><p><a class="reference internal" href="#+replab.SignedSymmetricGroup.defaultGeneratorNames" title="+replab.SignedSymmetricGroup.defaultGeneratorNames"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">defaultGeneratorNames</span></code></a> – Returns default generator names</p></li>
-<li><p><a class="reference internal" href="#+replab.SignedSymmetricGroup.elementPermutationPart" title="+replab.SignedSymmetricGroup.elementPermutationPart"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">elementPermutationPart</span></code></a> – Returns the permutation part of a signed permutation, by taking image absolute values</p></li>
-<li><p><a class="reference internal" href="#+replab.SignedSymmetricGroup.elements" title="+replab.SignedSymmetricGroup.elements"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">elements</span></code></a> – Returns an indexed family corresponding to this set</p></li>
+<li><p><a class="reference internal" href="#+replab.SignedSymmetricGroup.elements" title="+replab.SignedSymmetricGroup.elements"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">elements</span></code></a> – Returns a cell array containing all the elements of this set</p></li>
+<li><p><a class="reference internal" href="#+replab.SignedSymmetricGroup.elementsSequence" title="+replab.SignedSymmetricGroup.elementsSequence"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">elementsSequence</span></code></a> – Returns a sequence corresponding to this set</p></li>
 <li><p><a class="reference internal" href="#+replab.SignedSymmetricGroup.isequal" title="+replab.SignedSymmetricGroup.isequal"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">isequal</span></code></a> –</p></li>
-<li><p><a class="reference internal" href="#+replab.SignedSymmetricGroup.matrixAction" title="+replab.SignedSymmetricGroup.matrixAction"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">matrixAction</span></code></a> – Returns the action of elements of this group on d x d matrices</p></li>
 <li><p><a class="reference internal" href="#+replab.SignedSymmetricGroup.mtimes" title="+replab.SignedSymmetricGroup.mtimes"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">mtimes</span></code></a> –</p></li>
 <li><p><a class="reference internal" href="#+replab.SignedSymmetricGroup.multiply" title="+replab.SignedSymmetricGroup.multiply"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">multiply</span></code></a> –</p></li>
-<li><p><a class="reference internal" href="#+replab.SignedSymmetricGroup.naturalAction" title="+replab.SignedSymmetricGroup.naturalAction"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">naturalAction</span></code></a> – Returns the action of elements of this group on {-d..-1 1..d}</p></li>
-<li><p><a class="reference internal" href="#+replab.SignedSymmetricGroup.naturalRep" title="+replab.SignedSymmetricGroup.naturalRep"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">naturalRep</span></code></a> – Natural representation on R^d of signed permutations on integers -d..-1, 1..d</p></li>
 <li><p><a class="reference internal" href="#+replab.SignedSymmetricGroup.of" title="+replab.SignedSymmetricGroup.of"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">of</span></code></a> – Constructs a nontrivial signed permutation group from the given generators</p></li>
-<li><p><a class="reference internal" href="#+replab.SignedSymmetricGroup.permutationPart" title="+replab.SignedSymmetricGroup.permutationPart"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">permutationPart</span></code></a> – Returns the permutation part of the current group</p></li>
 <li><p><a class="reference internal" href="#+replab.SignedSymmetricGroup.shortType" title="+replab.SignedSymmetricGroup.shortType"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">shortType</span></code></a> –</p></li>
-<li><p><a class="reference internal" href="#+replab.SignedSymmetricGroup.vectorAction" title="+replab.SignedSymmetricGroup.vectorAction"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">vectorAction</span></code></a> – Returns the action of elements of this group on vectors</p></li>
 </ul>
 <p><strong>Relations to other sets</strong></p>
 <ul class="simple">
@@ -1822,6 +1826,21 @@ in decreasing order (e.g <code class="docutils literal notranslate"><span class=
 <li><p><a class="reference internal" href="#+replab.SignedSymmetricGroup.niceImage" title="+replab.SignedSymmetricGroup.niceImage"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">niceImage</span></code></a> – Returns a permutation image of the given group element</p></li>
 <li><p><a class="reference internal" href="#+replab.SignedSymmetricGroup.nicePreimage" title="+replab.SignedSymmetricGroup.nicePreimage"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">nicePreimage</span></code></a> – Default implementation of chain</p></li>
 <li><p><a class="reference internal" href="#+replab.SignedSymmetricGroup.niceSubgroup" title="+replab.SignedSymmetricGroup.niceSubgroup"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">niceSubgroup</span></code></a> – Constructs a permutation subgroup from its generators</p></li>
+</ul>
+<p><strong>Signed permutation methods</strong></p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#+replab.SignedSymmetricGroup.elementPermutationPart" title="+replab.SignedSymmetricGroup.elementPermutationPart"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">elementPermutationPart</span></code></a> – Returns the permutation part of a signed permutation, by taking image absolute values</p></li>
+<li><p><a class="reference internal" href="#+replab.SignedSymmetricGroup.permutationPart" title="+replab.SignedSymmetricGroup.permutationPart"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">permutationPart</span></code></a> – Returns the permutation part of the current group</p></li>
+</ul>
+<p><strong>Actions</strong></p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#+replab.SignedSymmetricGroup.matrixAction" title="+replab.SignedSymmetricGroup.matrixAction"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">matrixAction</span></code></a> – Returns the action of elements of this group on d x d matrices</p></li>
+<li><p><a class="reference internal" href="#+replab.SignedSymmetricGroup.naturalAction" title="+replab.SignedSymmetricGroup.naturalAction"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">naturalAction</span></code></a> – Returns the action of elements of this group on {-d..-1 1..d}</p></li>
+<li><p><a class="reference internal" href="#+replab.SignedSymmetricGroup.vectorAction" title="+replab.SignedSymmetricGroup.vectorAction"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">vectorAction</span></code></a> – Returns the action of elements of this group on vectors</p></li>
+</ul>
+<p><strong>Representation construction</strong></p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#+replab.SignedSymmetricGroup.naturalRep" title="+replab.SignedSymmetricGroup.naturalRep"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">naturalRep</span></code></a> – Natural representation on R^d of signed permutations on integers -d..-1, 1..d</p></li>
 </ul>
 </div>
 <div class="dropdown admonition">
@@ -2100,6 +2119,12 @@ in decreasing order (e.g <code class="docutils literal notranslate"><span class=
 <dt class="sig sig-object mat" id="+replab.SignedSymmetricGroup.elements">
 <span class="sig-name descname"><span class="pre">elements</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.SignedSymmetricGroup.elements" title="Permalink to this definition">¶</a></dt>
 <dd><p>Documentation in <a class="reference internal" href="group_subsets.html#+replab.FiniteSet.elements" title="+replab.FiniteSet.elements"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.FiniteSet.elements()</span></code></a></p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.SignedSymmetricGroup.elementsSequence">
+<span class="sig-name descname"><span class="pre">elementsSequence</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.SignedSymmetricGroup.elementsSequence" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="group_subsets.html#+replab.FiniteSet.elementsSequence" title="+replab.FiniteSet.elementsSequence"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.FiniteSet.elementsSequence()</span></code></a></p>
 </dd></dl>
 
 <dl class="mat method">
@@ -2846,7 +2871,7 @@ in decreasing order (e.g <code class="docutils literal notranslate"><span class=
         <li class="right" >
           <a href="permutation_groups.html" title="Permutation groups"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.9.2 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.9.5-SNAP documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="index.html" >Technical Reference</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">Named discrete groups</a></li> 
       </ul>

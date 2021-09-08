@@ -15,7 +15,7 @@
   <link rel="stylesheet" type="text/css" href="../_static/css/bootstrap-theme.min.css" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-    <title>Permutation groups &#8212; RepLAB 0.9.2 documentation</title>
+    <title>Permutation groups &#8212; RepLAB 0.9.5-SNAP documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/guzzle.css" />
     <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
@@ -79,7 +79,7 @@
         <li class="right" >
           <a href="continuous_groups.html" title="Continuous groups"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.9.2 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.9.5-SNAP documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">Technical Reference</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">Permutation groups</a></li> 
       </ul>
@@ -94,7 +94,7 @@
   <a href="
     ../index.html">RepLAB</a>&nbsp;&nbsp;
   <a href="https://github.com/replab/replab"><i class="fab fa-github"></i></a>&nbsp;
-  <a href="https://github.com/replab/replab/archive/v0.9.2.zip"><i class="fa fa-download"></i></a>&nbsp;
+  <a href="https://github.com/replab/replab/archive/v0.9.5-SNAP.zip"><i class="fa fa-download"></i></a>&nbsp;
   <a href="https://gitter.im/replab/replab"><i class="fab fa-gitter"></i></a>&nbsp;
   <a href="https://travis-ci.com/replab/replab"><i class="fas fa-sync-alt"></i></a>&nbsp;
   <a href="https://codecov.io/gh/replab/replab"><i class="fas fa-umbrella"></i></a>
@@ -445,7 +445,7 @@ I.e. for <code class="docutils literal notranslate"><span class="pre">Sn</span> 
 <p class="admonition-title">Class members list</p>
 <p><strong>Properties</strong></p>
 <ul class="simple">
-<li><p><a class="reference internal" href="#+replab.PermutationGroup.domainSize" title="+replab.PermutationGroup.domainSize"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">domainSize</span></code></a> – integer: The integer <code class="docutils literal notranslate"><span class="pre">d</span></code>, as this group acts on <code class="docutils literal notranslate"><span class="pre">{1,</span> <span class="pre">...,</span> <span class="pre">d}</span></code></p></li>
+<li><p><a class="reference internal" href="#+replab.PermutationGroup.domainSize" title="+replab.PermutationGroup.domainSize"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">domainSize</span></code></a> – The integer <span class="math notranslate nohighlight">\(d\)</span>, as this group acts on <span class="math notranslate nohighlight">\(\{1, .., d\}\)</span></p></li>
 <li><p><a class="reference internal" href="#+replab.PermutationGroup.generatorNames" title="+replab.PermutationGroup.generatorNames"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">generatorNames</span></code></a> – Generator names</p></li>
 <li><p><a class="reference internal" href="#+replab.PermutationGroup.generators" title="+replab.PermutationGroup.generators"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">generators</span></code></a> – Group generators</p></li>
 <li><p><a class="reference internal" href="#+replab.PermutationGroup.identity" title="+replab.PermutationGroup.identity"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">identity</span></code></a> – Monoid identity element</p></li>
@@ -534,7 +534,8 @@ I.e. for <code class="docutils literal notranslate"><span class="pre">Sn</span> 
 <li><p><a class="reference internal" href="#+replab.PermutationGroup.FiniteGroup" title="+replab.PermutationGroup.FiniteGroup"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">FiniteGroup</span></code></a> – Constructs a finite group</p></li>
 <li><p><a class="reference internal" href="#+replab.PermutationGroup.checkNormalizes" title="+replab.PermutationGroup.checkNormalizes"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">checkNormalizes</span></code></a> –</p></li>
 <li><p><a class="reference internal" href="#+replab.PermutationGroup.defaultGeneratorNames" title="+replab.PermutationGroup.defaultGeneratorNames"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">defaultGeneratorNames</span></code></a> – Returns default generator names</p></li>
-<li><p><a class="reference internal" href="#+replab.PermutationGroup.elements" title="+replab.PermutationGroup.elements"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">elements</span></code></a> – Returns an indexed family corresponding to this set</p></li>
+<li><p><a class="reference internal" href="#+replab.PermutationGroup.elements" title="+replab.PermutationGroup.elements"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">elements</span></code></a> – Returns a cell array containing all the elements of this set</p></li>
+<li><p><a class="reference internal" href="#+replab.PermutationGroup.elementsSequence" title="+replab.PermutationGroup.elementsSequence"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">elementsSequence</span></code></a> – Returns a sequence corresponding to this set</p></li>
 <li><p><a class="reference internal" href="#+replab.PermutationGroup.fromChain" title="+replab.PermutationGroup.fromChain"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">fromChain</span></code></a> –</p></li>
 <li><p><a class="reference internal" href="#+replab.PermutationGroup.isequal" title="+replab.PermutationGroup.isequal"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">isequal</span></code></a> –</p></li>
 <li><p><a class="reference internal" href="#+replab.PermutationGroup.mtimes" title="+replab.PermutationGroup.mtimes"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">mtimes</span></code></a> –</p></li>
@@ -940,6 +941,12 @@ I.e. for <code class="docutils literal notranslate"><span class="pre">Sn</span> 
 <dt class="sig sig-object mat" id="+replab.PermutationGroup.elements">
 <span class="sig-name descname"><span class="pre">elements</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.PermutationGroup.elements" title="Permalink to this definition">¶</a></dt>
 <dd><p>Documentation in <a class="reference internal" href="group_subsets.html#+replab.FiniteSet.elements" title="+replab.FiniteSet.elements"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.FiniteSet.elements()</span></code></a></p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.PermutationGroup.elementsSequence">
+<span class="sig-name descname"><span class="pre">elementsSequence</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.PermutationGroup.elementsSequence" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="group_subsets.html#+replab.FiniteSet.elementsSequence" title="+replab.FiniteSet.elementsSequence"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.FiniteSet.elementsSequence()</span></code></a></p>
 </dd></dl>
 
 <dl class="mat method">
@@ -1480,7 +1487,12 @@ I.e. for <code class="docutils literal notranslate"><span class="pre">Sn</span> 
 <h3>Own members</h3><dl class="mat attribute">
 <dt class="sig sig-object mat" id="+replab.PermutationGroup.domainSize">
 <span class="sig-name descname"><span class="pre">domainSize</span></span><a class="headerlink" href="#+replab.PermutationGroup.domainSize" title="Permalink to this definition">¶</a></dt>
-<dd><p>integer: The integer <code class="docutils literal notranslate"><span class="pre">d</span></code>, as this group acts on <code class="docutils literal notranslate"><span class="pre">{1,</span> <span class="pre">...,</span> <span class="pre">d}</span></code></p>
+<dd><p>The integer <span class="math notranslate nohighlight">\(d\)</span>, as this group acts on <span class="math notranslate nohighlight">\(\{1, .., d\}\)</span></p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>integer</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="mat method">
@@ -1831,12 +1843,29 @@ where ir = indexRange, by permuting the indices.</p>
 <dt class="sig sig-object mat" id="+replab.PermutationGroup.of">
 <em class="property"><span class="pre">static</span> </em><span class="sig-name descname"><span class="pre">of</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">varargin</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.PermutationGroup.of" title="Permalink to this definition">¶</a></dt>
 <dd><p>Constructs a nontrivial permutation group from the given generators</p>
-<p>If you do not know the number of generators in advance, and would like to handle the
-case of a trivial group, use <code class="docutils literal notranslate"><span class="pre">Sn</span> <span class="pre">=</span> <span class="pre">replab.S(n);</span> <span class="pre">Sn.subgroup(generators)</span></code> instead.</p>
 <p class="rubric">Example</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">G</span> <span class="o">=</span> <span class="n">replab</span><span class="o">.</span><span class="n">PermutationGroup</span><span class="o">.</span><span class="n">of</span><span class="p">([</span><span class="mi">2</span> <span class="mi">3</span> <span class="mi">4</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">4</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span><span class="p">]);</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">G</span><span class="o">.</span><span class="n">order</span>
 <span class="go">  8</span>
+</pre></div>
+</div>
+<p>The generators of the group can be named by preceding them all by a charstring:</p>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">G</span> <span class="o">=</span> <span class="n">replab</span><span class="o">.</span><span class="n">PermutationGroup</span><span class="o">.</span><span class="n">of</span><span class="p">(</span><span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="p">[</span><span class="mi">2</span> <span class="mi">3</span> <span class="mi">4</span> <span class="mi">1</span><span class="p">],</span> <span class="s1">&#39;s&#39;</span><span class="p">,</span> <span class="p">[</span><span class="mi">4</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span><span class="p">]);</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">G</span><span class="o">.</span><span class="n">order</span>
+<span class="go">    8</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">G</span><span class="o">.</span><span class="n">factorizeWord</span><span class="p">([</span><span class="mi">3</span> <span class="mi">4</span> <span class="mi">1</span> <span class="mi">2</span><span class="p">])</span>
+<span class="go">    &#39;r^2&#39;</span>
+</pre></div>
+</div>
+<p>This method cannot construct trivial groups without any generators.
+In that case, use the constructor:</p>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">generators</span> <span class="o">=</span> <span class="p">{};</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">domainSize</span> <span class="o">=</span> <span class="mi">4</span><span class="p">;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">G</span> <span class="o">=</span> <span class="n">replab</span><span class="o">.</span><span class="n">PermutationGroup</span><span class="p">(</span><span class="n">domainSize</span><span class="p">,</span> <span class="n">generators</span><span class="p">);</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">G</span><span class="o">.</span><span class="n">order</span>
+<span class="go">    1</span>
 </pre></div>
 </div>
 <dl class="field-list simple">
@@ -1847,7 +1876,7 @@ case of a trivial group, use <code class="docutils literal notranslate"><span cl
 <dd class="field-even"><p>The permutation group given as the closure of the generators</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="#+replab.PermutationGroup" title="+replab.PermutationGroup"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">replab.PermutationGroup</span></code></a></p>
+<dd class="field-odd"><p><a class="reference internal" href="#+replab.PermutationGroup.PermutationGroup" title="+replab.PermutationGroup.PermutationGroup"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">PermutationGroup</span></code></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1952,14 +1981,14 @@ domain elements.</p>
 <dd><p>Returns the subgroup that stabilizes the given set as a set</p>
 <p>i.e. for this group <code class="docutils literal notranslate"><span class="pre">G</span></code>, it returns <code class="docutils literal notranslate"><span class="pre">H</span> <span class="pre">=</span> <span class="pre">{g</span> <span class="pre">\in</span> <span class="pre">G</span> <span class="pre">:</span> <span class="pre">g(set)</span> <span class="pre">=</span> <span class="pre">set}</span></code></p>
 <p class="rubric">Example</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">G</span> <span class="o">=</span> <span class="n">replab</span><span class="o">.</span><span class="n">S</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span><span class="o">.</span><span class="n">subgroup</span><span class="p">({[</span><span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">4</span><span class="p">]</span> <span class="p">[</span><span class="mi">1</span> <span class="mi">4</span> <span class="mi">2</span> <span class="mi">3</span><span class="p">]});</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">G</span> <span class="o">=</span> <span class="n">replab</span><span class="o">.</span><span class="n">PermutationGroup</span><span class="o">.</span><span class="n">of</span><span class="p">([</span><span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">4</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span> <span class="mi">4</span> <span class="mi">2</span> <span class="mi">3</span><span class="p">]);</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">H</span> <span class="o">=</span> <span class="n">G</span><span class="o">.</span><span class="n">setwiseStabilizer</span><span class="p">([</span><span class="mi">1</span> <span class="mi">2</span><span class="p">]);</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">H</span> <span class="o">==</span> <span class="n">replab</span><span class="o">.</span><span class="n">S</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span><span class="o">.</span><span class="n">subgroup</span><span class="p">({[</span><span class="mi">2</span> <span class="mi">1</span> <span class="mi">4</span> <span class="mi">3</span><span class="p">]})</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">H</span> <span class="o">==</span> <span class="n">replab</span><span class="o">.</span><span class="n">PermutationGroup</span><span class="o">.</span><span class="n">of</span><span class="p">([</span><span class="mi">2</span> <span class="mi">1</span> <span class="mi">4</span> <span class="mi">3</span><span class="p">])</span>
 <span class="go">    1</span>
 </pre></div>
 </div>
 <p class="rubric">Example</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">G</span> <span class="o">=</span> <span class="n">replab</span><span class="o">.</span><span class="n">S</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span><span class="o">.</span><span class="n">subgroup</span><span class="p">({[</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">9</span><span class="p">,</span><span class="mi">8</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">7</span><span class="p">,</span><span class="mi">4</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">7</span><span class="p">,</span><span class="mi">8</span><span class="p">,</span><span class="mi">9</span><span class="p">,</span><span class="mi">10</span><span class="p">]});</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">G</span> <span class="o">=</span> <span class="n">replab</span><span class="o">.</span><span class="n">PermutationGroup</span><span class="o">.</span><span class="n">of</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">9</span><span class="p">,</span><span class="mi">8</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">7</span><span class="p">,</span><span class="mi">4</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">7</span><span class="p">,</span><span class="mi">8</span><span class="p">,</span><span class="mi">9</span><span class="p">,</span><span class="mi">10</span><span class="p">]);</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">H</span> <span class="o">=</span> <span class="n">G</span><span class="o">.</span><span class="n">setwiseStabilizer</span><span class="p">([</span><span class="mi">2</span> <span class="mi">3</span><span class="p">]);</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">H</span><span class="o">.</span><span class="n">order</span>
 <span class="go">    10</span>
@@ -2311,7 +2340,7 @@ where S = SignedPermutations(domainSize)</p>
 <p class="admonition-title">Class members list</p>
 <p><strong>Properties</strong></p>
 <ul class="simple">
-<li><p><a class="reference internal" href="#+replab.SignedPermutationGroup.domainSize" title="+replab.SignedPermutationGroup.domainSize"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">domainSize</span></code></a> – d when this group acts on {-d..-1, 1..d}</p></li>
+<li><p><a class="reference internal" href="#+replab.SignedPermutationGroup.domainSize" title="+replab.SignedPermutationGroup.domainSize"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">domainSize</span></code></a> – The integer <span class="math notranslate nohighlight">\(d\)</span> when this group acts on <span class="math notranslate nohighlight">\(\{-d, .., -1, 1, .., d\}\)</span></p></li>
 <li><p><a class="reference internal" href="#+replab.SignedPermutationGroup.generatorNames" title="+replab.SignedPermutationGroup.generatorNames"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">generatorNames</span></code></a> – Generator names</p></li>
 <li><p><a class="reference internal" href="#+replab.SignedPermutationGroup.generators" title="+replab.SignedPermutationGroup.generators"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">generators</span></code></a> – Group generators</p></li>
 <li><p><a class="reference internal" href="#+replab.SignedPermutationGroup.identity" title="+replab.SignedPermutationGroup.identity"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">identity</span></code></a> – Monoid identity element</p></li>
@@ -2402,18 +2431,13 @@ where S = SignedPermutations(domainSize)</p>
 <li><p><a class="reference internal" href="#+replab.SignedPermutationGroup.SignedPermutationGroup" title="+replab.SignedPermutationGroup.SignedPermutationGroup"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">SignedPermutationGroup</span></code></a> – Constructs a signed permutation group</p></li>
 <li><p><a class="reference internal" href="#+replab.SignedPermutationGroup.checkNormalizes" title="+replab.SignedPermutationGroup.checkNormalizes"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">checkNormalizes</span></code></a> –</p></li>
 <li><p><a class="reference internal" href="#+replab.SignedPermutationGroup.defaultGeneratorNames" title="+replab.SignedPermutationGroup.defaultGeneratorNames"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">defaultGeneratorNames</span></code></a> – Returns default generator names</p></li>
-<li><p><a class="reference internal" href="#+replab.SignedPermutationGroup.elementPermutationPart" title="+replab.SignedPermutationGroup.elementPermutationPart"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">elementPermutationPart</span></code></a> – Returns the permutation part of a signed permutation, by taking image absolute values</p></li>
-<li><p><a class="reference internal" href="#+replab.SignedPermutationGroup.elements" title="+replab.SignedPermutationGroup.elements"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">elements</span></code></a> – Returns an indexed family corresponding to this set</p></li>
+<li><p><a class="reference internal" href="#+replab.SignedPermutationGroup.elements" title="+replab.SignedPermutationGroup.elements"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">elements</span></code></a> – Returns a cell array containing all the elements of this set</p></li>
+<li><p><a class="reference internal" href="#+replab.SignedPermutationGroup.elementsSequence" title="+replab.SignedPermutationGroup.elementsSequence"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">elementsSequence</span></code></a> – Returns a sequence corresponding to this set</p></li>
 <li><p><a class="reference internal" href="#+replab.SignedPermutationGroup.isequal" title="+replab.SignedPermutationGroup.isequal"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">isequal</span></code></a> –</p></li>
-<li><p><a class="reference internal" href="#+replab.SignedPermutationGroup.matrixAction" title="+replab.SignedPermutationGroup.matrixAction"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">matrixAction</span></code></a> – Returns the action of elements of this group on d x d matrices</p></li>
 <li><p><a class="reference internal" href="#+replab.SignedPermutationGroup.mtimes" title="+replab.SignedPermutationGroup.mtimes"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">mtimes</span></code></a> –</p></li>
 <li><p><a class="reference internal" href="#+replab.SignedPermutationGroup.multiply" title="+replab.SignedPermutationGroup.multiply"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">multiply</span></code></a> –</p></li>
-<li><p><a class="reference internal" href="#+replab.SignedPermutationGroup.naturalAction" title="+replab.SignedPermutationGroup.naturalAction"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">naturalAction</span></code></a> – Returns the action of elements of this group on {-d..-1 1..d}</p></li>
-<li><p><a class="reference internal" href="#+replab.SignedPermutationGroup.naturalRep" title="+replab.SignedPermutationGroup.naturalRep"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">naturalRep</span></code></a> – Natural representation on R^d of signed permutations on integers -d..-1, 1..d</p></li>
 <li><p><a class="reference internal" href="#+replab.SignedPermutationGroup.of" title="+replab.SignedPermutationGroup.of"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">of</span></code></a> – Constructs a nontrivial signed permutation group from the given generators</p></li>
-<li><p><a class="reference internal" href="#+replab.SignedPermutationGroup.permutationPart" title="+replab.SignedPermutationGroup.permutationPart"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">permutationPart</span></code></a> – Returns the permutation part of the current group</p></li>
 <li><p><a class="reference internal" href="#+replab.SignedPermutationGroup.shortType" title="+replab.SignedPermutationGroup.shortType"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">shortType</span></code></a> –</p></li>
-<li><p><a class="reference internal" href="#+replab.SignedPermutationGroup.vectorAction" title="+replab.SignedPermutationGroup.vectorAction"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">vectorAction</span></code></a> – Returns the action of elements of this group on vectors</p></li>
 </ul>
 <p><strong>Relations to other sets</strong></p>
 <ul class="simple">
@@ -2522,6 +2546,21 @@ where S = SignedPermutations(domainSize)</p>
 <li><p><a class="reference internal" href="#+replab.SignedPermutationGroup.niceImage" title="+replab.SignedPermutationGroup.niceImage"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">niceImage</span></code></a> – Returns a permutation image of the given group element</p></li>
 <li><p><a class="reference internal" href="#+replab.SignedPermutationGroup.nicePreimage" title="+replab.SignedPermutationGroup.nicePreimage"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">nicePreimage</span></code></a> – Default implementation of chain</p></li>
 <li><p><a class="reference internal" href="#+replab.SignedPermutationGroup.niceSubgroup" title="+replab.SignedPermutationGroup.niceSubgroup"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">niceSubgroup</span></code></a> – Constructs a permutation subgroup from its generators</p></li>
+</ul>
+<p><strong>Signed permutation methods</strong></p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#+replab.SignedPermutationGroup.elementPermutationPart" title="+replab.SignedPermutationGroup.elementPermutationPart"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">elementPermutationPart</span></code></a> – Returns the permutation part of a signed permutation, by taking image absolute values</p></li>
+<li><p><a class="reference internal" href="#+replab.SignedPermutationGroup.permutationPart" title="+replab.SignedPermutationGroup.permutationPart"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">permutationPart</span></code></a> – Returns the permutation part of the current group</p></li>
+</ul>
+<p><strong>Actions</strong></p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#+replab.SignedPermutationGroup.matrixAction" title="+replab.SignedPermutationGroup.matrixAction"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">matrixAction</span></code></a> – Returns the action of elements of this group on d x d matrices</p></li>
+<li><p><a class="reference internal" href="#+replab.SignedPermutationGroup.naturalAction" title="+replab.SignedPermutationGroup.naturalAction"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">naturalAction</span></code></a> – Returns the action of elements of this group on {-d..-1 1..d}</p></li>
+<li><p><a class="reference internal" href="#+replab.SignedPermutationGroup.vectorAction" title="+replab.SignedPermutationGroup.vectorAction"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">vectorAction</span></code></a> – Returns the action of elements of this group on vectors</p></li>
+</ul>
+<p><strong>Representation construction</strong></p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#+replab.SignedPermutationGroup.naturalRep" title="+replab.SignedPermutationGroup.naturalRep"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">naturalRep</span></code></a> – Natural representation on R^d of signed permutations on integers -d..-1, 1..d</p></li>
 </ul>
 </div>
 <div class="dropdown admonition">
@@ -2782,6 +2821,12 @@ where S = SignedPermutations(domainSize)</p>
 <dt class="sig sig-object mat" id="+replab.SignedPermutationGroup.elements">
 <span class="sig-name descname"><span class="pre">elements</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.SignedPermutationGroup.elements" title="Permalink to this definition">¶</a></dt>
 <dd><p>Documentation in <a class="reference internal" href="group_subsets.html#+replab.FiniteSet.elements" title="+replab.FiniteSet.elements"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.FiniteSet.elements()</span></code></a></p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.SignedPermutationGroup.elementsSequence">
+<span class="sig-name descname"><span class="pre">elementsSequence</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.SignedPermutationGroup.elementsSequence" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="group_subsets.html#+replab.FiniteSet.elementsSequence" title="+replab.FiniteSet.elementsSequence"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.FiniteSet.elementsSequence()</span></code></a></p>
 </dd></dl>
 
 <dl class="mat method">
@@ -3340,7 +3385,12 @@ where S = SignedPermutations(domainSize)</p>
 <h3>Own members</h3><dl class="mat attribute">
 <dt class="sig sig-object mat" id="+replab.SignedPermutationGroup.domainSize">
 <span class="sig-name descname"><span class="pre">domainSize</span></span><a class="headerlink" href="#+replab.SignedPermutationGroup.domainSize" title="Permalink to this definition">¶</a></dt>
-<dd><p>d when this group acts on {-d..-1, 1..d}</p>
+<dd><p>The integer <span class="math notranslate nohighlight">\(d\)</span> when this group acts on <span class="math notranslate nohighlight">\(\{-d, .., -1, 1, .., d\}\)</span></p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>integer</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="mat method">
@@ -3426,23 +3476,44 @@ rows and columns and flipping their signs</p>
 <dt class="sig sig-object mat" id="+replab.SignedPermutationGroup.of">
 <em class="property"><span class="pre">static</span> </em><span class="sig-name descname"><span class="pre">of</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">varargin</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.SignedPermutationGroup.of" title="Permalink to this definition">¶</a></dt>
 <dd><p>Constructs a nontrivial signed permutation group from the given generators</p>
-<p>If you do not know the number of generators in advance, and would like to handle the
-case of a trivial group, use <code class="docutils literal notranslate"><span class="pre">H</span> <span class="pre">=</span> <span class="pre">replab.SignedSymmetricGroup(n);</span> <span class="pre">H.subgroup(generators)</span></code> instead.</p>
 <p class="rubric">Example</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">G</span> <span class="o">=</span> <span class="n">replab</span><span class="o">.</span><span class="n">SignedPermutationGroup</span><span class="o">.</span><span class="n">of</span><span class="p">([</span><span class="mi">2</span> <span class="mi">3</span> <span class="mi">4</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">4</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span><span class="p">]);</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">G</span><span class="o">.</span><span class="n">order</span> <span class="o">==</span> <span class="mi">8</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">s</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mi">1</span> <span class="o">-</span><span class="mi">2</span> <span class="o">-</span><span class="mi">3</span> <span class="o">-</span><span class="mi">4</span><span class="p">];</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">i</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span> <span class="o">-</span><span class="mi">1</span> <span class="mi">4</span> <span class="o">-</span><span class="mi">3</span><span class="p">];</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">j</span> <span class="o">=</span> <span class="p">[</span><span class="mi">3</span> <span class="o">-</span><span class="mi">4</span> <span class="o">-</span><span class="mi">1</span> <span class="mi">2</span><span class="p">];</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Q</span> <span class="o">=</span> <span class="n">replab</span><span class="o">.</span><span class="n">SignedPermutationGroup</span><span class="o">.</span><span class="n">of</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">);</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Q</span><span class="o">.</span><span class="n">order</span> <span class="o">==</span> <span class="mi">8</span>
 <span class="go">  1</span>
+</pre></div>
+</div>
+<p>The generators of the group can be named by preceding them all by a charstring:</p>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">s</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mi">1</span> <span class="o">-</span><span class="mi">2</span> <span class="o">-</span><span class="mi">3</span> <span class="o">-</span><span class="mi">4</span><span class="p">];</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">i</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span> <span class="o">-</span><span class="mi">1</span> <span class="mi">4</span> <span class="o">-</span><span class="mi">3</span><span class="p">];</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">j</span> <span class="o">=</span> <span class="p">[</span><span class="mi">3</span> <span class="o">-</span><span class="mi">4</span> <span class="o">-</span><span class="mi">1</span> <span class="mi">2</span><span class="p">];</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Q</span> <span class="o">=</span> <span class="n">replab</span><span class="o">.</span><span class="n">SignedPermutationGroup</span><span class="o">.</span><span class="n">of</span><span class="p">(</span><span class="s1">&#39;s&#39;</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span> <span class="s1">&#39;i&#39;</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="s1">&#39;j&#39;</span><span class="p">,</span> <span class="n">j</span><span class="p">);</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Q</span><span class="o">.</span><span class="n">order</span> <span class="o">==</span> <span class="mi">8</span>
+<span class="go">  1</span>
+</pre></div>
+</div>
+<p>This method cannot construct trivial groups without any generators.
+In that case, use the constructor:</p>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">generators</span> <span class="o">=</span> <span class="p">{};</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">domainSize</span> <span class="o">=</span> <span class="mi">4</span><span class="p">;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">G</span> <span class="o">=</span> <span class="n">replab</span><span class="o">.</span><span class="n">SignedPermutationGroup</span><span class="p">(</span><span class="n">domainSize</span><span class="p">,</span> <span class="n">generators</span><span class="p">);</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">G</span><span class="o">.</span><span class="n">order</span>
+<span class="go">    1</span>
 </pre></div>
 </div>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>varargin</strong> (<span><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">cell(1,*)</span> <span class="pre">of</span> <span class="pre">permutation</span></code></span>) – Group generators</p>
+<dd class="field-odd"><p><strong>varargin</strong> (<span><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">cell(1,*)</span> <span class="pre">of</span> <span class="pre">signed</span> <span class="pre">permutations</span></code></span>) – Group generators, pos</p>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>The permutation group given as the closure of the generators</p>
+<dd class="field-even"><p>The signed permutation group given as the closure of the generators</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="#+replab.SignedPermutationGroup" title="+replab.SignedPermutationGroup"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">replab.SignedPermutationGroup</span></code></a></p>
+<dd class="field-odd"><p><a class="reference internal" href="#+replab.SignedPermutationGroup.SignedPermutationGroup" title="+replab.SignedPermutationGroup.SignedPermutationGroup"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">SignedPermutationGroup</span></code></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -3510,7 +3581,7 @@ case of a trivial group, use <code class="docutils literal notranslate"><span cl
         <li class="right" >
           <a href="continuous_groups.html" title="Continuous groups"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.9.2 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.9.5-SNAP documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="index.html" >Technical Reference</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">Permutation groups</a></li> 
       </ul>

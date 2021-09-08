@@ -1,7 +1,9 @@
 Commands
 ========
 
-.. module::
+The commands below do not belong to a package (although they are listed with the prefix `root.`). They can be found either in the RepLAB `root` or `src` folders.
+
+.. module:: root
 
 replab_Version
 ++++++++++++++

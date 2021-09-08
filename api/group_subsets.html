@@ -15,7 +15,7 @@
   <link rel="stylesheet" type="text/css" href="../_static/css/bootstrap-theme.min.css" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-    <title>Group subsets &#8212; RepLAB 0.9.2 documentation</title>
+    <title>Group subsets &#8212; RepLAB 0.9.5-SNAP documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/guzzle.css" />
     <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
@@ -79,7 +79,7 @@
         <li class="right" >
           <a href="group_products.html" title="Group product constructions"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.9.2 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.9.5-SNAP documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">Technical Reference</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">Group subsets</a></li> 
       </ul>
@@ -94,7 +94,7 @@
   <a href="
     ../index.html">RepLAB</a>&nbsp;&nbsp;
   <a href="https://github.com/replab/replab"><i class="fab fa-github"></i></a>&nbsp;
-  <a href="https://github.com/replab/replab/archive/v0.9.2.zip"><i class="fa fa-download"></i></a>&nbsp;
+  <a href="https://github.com/replab/replab/archive/v0.9.5-SNAP.zip"><i class="fa fa-download"></i></a>&nbsp;
   <a href="https://gitter.im/replab/replab"><i class="fab fa-gitter"></i></a>&nbsp;
   <a href="https://travis-ci.com/replab/replab"><i class="fas fa-sync-alt"></i></a>&nbsp;
   <a href="https://codecov.io/gh/replab/replab"><i class="fas fa-umbrella"></i></a>
@@ -274,7 +274,8 @@ entire structure on demand.</p>
 <ul class="simple">
 <li><p><a class="reference internal" href="#+replab.FiniteSet.checkNormalizes" title="+replab.FiniteSet.checkNormalizes"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">checkNormalizes</span></code></a> –</p></li>
 <li><p><a class="reference internal" href="#+replab.FiniteSet.contains" title="+replab.FiniteSet.contains"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">contains</span></code></a> – Tests whether this set contains the given element</p></li>
-<li><p><a class="reference internal" href="#+replab.FiniteSet.elements" title="+replab.FiniteSet.elements"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">elements</span></code></a> – Returns an indexed family corresponding to this set</p></li>
+<li><p><a class="reference internal" href="#+replab.FiniteSet.elements" title="+replab.FiniteSet.elements"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">elements</span></code></a> – Returns a cell array containing all the elements of this set</p></li>
+<li><p><a class="reference internal" href="#+replab.FiniteSet.elementsSequence" title="+replab.FiniteSet.elementsSequence"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">elementsSequence</span></code></a> – Returns a sequence corresponding to this set</p></li>
 <li><p><a class="reference internal" href="#+replab.FiniteSet.mtimes" title="+replab.FiniteSet.mtimes"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">mtimes</span></code></a> –</p></li>
 <li><p><a class="reference internal" href="#+replab.FiniteSet.multiply" title="+replab.FiniteSet.multiply"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">multiply</span></code></a> –</p></li>
 <li><p><a class="reference internal" href="#+replab.FiniteSet.nElements" title="+replab.FiniteSet.nElements"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">nElements</span></code></a> – Returns the size of this set</p></li>
@@ -482,13 +483,28 @@ entire structure on demand.</p>
 <dl class="mat method">
 <dt class="sig sig-object mat" id="+replab.FiniteSet.elements">
 <span class="sig-name descname"><span class="pre">elements</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.FiniteSet.elements" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns an indexed family corresponding to this set</p>
+<dd><p>Returns a cell array containing all the elements of this set</p>
+<p>Note: if the number of elements is bigger than <code class="xref mat mat-obj docutils literal notranslate"><span class="pre">replab.globals.maxElements</span></code>, an error is thrown.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Elements</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>cell(1,*) of finite set elements</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.FiniteSet.elementsSequence">
+<span class="sig-name descname"><span class="pre">elementsSequence</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.FiniteSet.elementsSequence" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a sequence corresponding to this set</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>An enumeration of the set elements</p>
 </dd>
 <dt class="field-even">Return type</dt>
-<dd class="field-even"><p><a class="reference internal" href="misc.html#+replab.IndexedFamily" title="+replab.IndexedFamily"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">IndexedFamily</span></code></a></p>
+<dd class="field-even"><p><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">Sequence</span></code></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1332,7 +1348,8 @@ the elements of the conjugacy class.</p>
 <li><p><a class="reference internal" href="#+replab.ConjugacyClass.checkNormalizes" title="+replab.ConjugacyClass.checkNormalizes"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">checkNormalizes</span></code></a> –</p></li>
 <li><p><a class="reference internal" href="#+replab.ConjugacyClass.contains" title="+replab.ConjugacyClass.contains"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">contains</span></code></a> – Returns whether the given element is part of this conjugacy class</p></li>
 <li><p><a class="reference internal" href="#+replab.ConjugacyClass.elementOrder" title="+replab.ConjugacyClass.elementOrder"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">elementOrder</span></code></a> – Returns the order of the elements in this conjugacy class</p></li>
-<li><p><a class="reference internal" href="#+replab.ConjugacyClass.elements" title="+replab.ConjugacyClass.elements"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">elements</span></code></a> – Returns an indexed family corresponding to this set</p></li>
+<li><p><a class="reference internal" href="#+replab.ConjugacyClass.elements" title="+replab.ConjugacyClass.elements"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">elements</span></code></a> – Returns a cell array containing all the elements of this set</p></li>
+<li><p><a class="reference internal" href="#+replab.ConjugacyClass.elementsSequence" title="+replab.ConjugacyClass.elementsSequence"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">elementsSequence</span></code></a> – Returns a sequence corresponding to this set</p></li>
 <li><p><a class="reference internal" href="#+replab.ConjugacyClass.imap" title="+replab.ConjugacyClass.imap"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">imap</span></code></a> – Maps this conjugacy class under an isomorphism</p></li>
 <li><p><a class="reference internal" href="#+replab.ConjugacyClass.make" title="+replab.ConjugacyClass.make"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">make</span></code></a> –</p></li>
 <li><p><a class="reference internal" href="#+replab.ConjugacyClass.mtimes" title="+replab.ConjugacyClass.mtimes"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">mtimes</span></code></a> –</p></li>
@@ -1418,6 +1435,12 @@ the elements of the conjugacy class.</p>
 <dt class="sig sig-object mat" id="+replab.ConjugacyClass.elements">
 <span class="sig-name descname"><span class="pre">elements</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.ConjugacyClass.elements" title="Permalink to this definition">¶</a></dt>
 <dd><p>Documentation in <a class="reference internal" href="#+replab.FiniteSet.elements" title="+replab.FiniteSet.elements"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.FiniteSet.elements()</span></code></a></p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.ConjugacyClass.elementsSequence">
+<span class="sig-name descname"><span class="pre">elementsSequence</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.ConjugacyClass.elementsSequence" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="#+replab.FiniteSet.elementsSequence" title="+replab.FiniteSet.elementsSequence"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.FiniteSet.elementsSequence()</span></code></a></p>
 </dd></dl>
 
 <dl class="mat method">
@@ -1895,7 +1918,8 @@ the elements of the conjugacy class.</p>
 <ul class="simple">
 <li><p><a class="reference internal" href="#+replab.Coset.checkNormalizes" title="+replab.Coset.checkNormalizes"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">checkNormalizes</span></code></a> –</p></li>
 <li><p><a class="reference internal" href="#+replab.Coset.contains" title="+replab.Coset.contains"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">contains</span></code></a> – Tests whether this set contains the given element</p></li>
-<li><p><a class="reference internal" href="#+replab.Coset.elements" title="+replab.Coset.elements"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">elements</span></code></a> – Returns an indexed family corresponding to this set</p></li>
+<li><p><a class="reference internal" href="#+replab.Coset.elements" title="+replab.Coset.elements"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">elements</span></code></a> – Returns a cell array containing all the elements of this set</p></li>
+<li><p><a class="reference internal" href="#+replab.Coset.elementsSequence" title="+replab.Coset.elementsSequence"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">elementsSequence</span></code></a> – Returns a sequence corresponding to this set</p></li>
 <li><p><a class="reference internal" href="#+replab.Coset.factorizeShortRepresentativeLetters" title="+replab.Coset.factorizeShortRepresentativeLetters"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">factorizeShortRepresentativeLetters</span></code></a> – Returns a tentatively short word corresponding to an element of this coset</p></li>
 <li><p><a class="reference internal" href="#+replab.Coset.factorizeShortRepresentativeWord" title="+replab.Coset.factorizeShortRepresentativeWord"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">factorizeShortRepresentativeWord</span></code></a> – Returns a tentatively short word corresponding to an element of this coset</p></li>
 <li><p><a class="reference internal" href="#+replab.Coset.mtimes" title="+replab.Coset.mtimes"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">mtimes</span></code></a> –</p></li>
@@ -1981,6 +2005,12 @@ the elements of the conjugacy class.</p>
 <dt class="sig sig-object mat" id="+replab.Coset.elements">
 <span class="sig-name descname"><span class="pre">elements</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.Coset.elements" title="Permalink to this definition">¶</a></dt>
 <dd><p>Documentation in <a class="reference internal" href="#+replab.FiniteSet.elements" title="+replab.FiniteSet.elements"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.FiniteSet.elements()</span></code></a></p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.Coset.elementsSequence">
+<span class="sig-name descname"><span class="pre">elementsSequence</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.Coset.elementsSequence" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="#+replab.FiniteSet.elementsSequence" title="+replab.FiniteSet.elementsSequence"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.FiniteSet.elementsSequence()</span></code></a></p>
 </dd></dl>
 
 <dl class="mat method">
@@ -3279,7 +3309,8 @@ Because the subgroup is normal, we have <span class="math notranslate nohighligh
 <li><p><a class="reference internal" href="#+replab.LeftCoset.LeftCoset" title="+replab.LeftCoset.LeftCoset"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">LeftCoset</span></code></a> –</p></li>
 <li><p><a class="reference internal" href="#+replab.LeftCoset.checkNormalizes" title="+replab.LeftCoset.checkNormalizes"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">checkNormalizes</span></code></a> –</p></li>
 <li><p><a class="reference internal" href="#+replab.LeftCoset.contains" title="+replab.LeftCoset.contains"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">contains</span></code></a> – Returns if this coset contains the given element</p></li>
-<li><p><a class="reference internal" href="#+replab.LeftCoset.elements" title="+replab.LeftCoset.elements"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">elements</span></code></a> – Returns an indexed family corresponding to this set</p></li>
+<li><p><a class="reference internal" href="#+replab.LeftCoset.elements" title="+replab.LeftCoset.elements"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">elements</span></code></a> – Returns a cell array containing all the elements of this set</p></li>
+<li><p><a class="reference internal" href="#+replab.LeftCoset.elementsSequence" title="+replab.LeftCoset.elementsSequence"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">elementsSequence</span></code></a> – Returns a sequence corresponding to this set</p></li>
 <li><p><a class="reference internal" href="#+replab.LeftCoset.factorizeShortRepresentativeLetters" title="+replab.LeftCoset.factorizeShortRepresentativeLetters"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">factorizeShortRepresentativeLetters</span></code></a> – Returns a tentatively short word corresponding to an element of this coset</p></li>
 <li><p><a class="reference internal" href="#+replab.LeftCoset.factorizeShortRepresentativeWord" title="+replab.LeftCoset.factorizeShortRepresentativeWord"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">factorizeShortRepresentativeWord</span></code></a> – Returns a tentatively short word corresponding to an element of this coset</p></li>
 <li><p><a class="reference internal" href="#+replab.LeftCoset.make" title="+replab.LeftCoset.make"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">make</span></code></a> –</p></li>
@@ -3366,6 +3397,12 @@ Because the subgroup is normal, we have <span class="math notranslate nohighligh
 <dt class="sig sig-object mat" id="+replab.LeftCoset.elements">
 <span class="sig-name descname"><span class="pre">elements</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.LeftCoset.elements" title="Permalink to this definition">¶</a></dt>
 <dd><p>Documentation in <a class="reference internal" href="#+replab.FiniteSet.elements" title="+replab.FiniteSet.elements"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.FiniteSet.elements()</span></code></a></p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.LeftCoset.elementsSequence">
+<span class="sig-name descname"><span class="pre">elementsSequence</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.LeftCoset.elementsSequence" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="#+replab.FiniteSet.elementsSequence" title="+replab.FiniteSet.elementsSequence"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.FiniteSet.elementsSequence()</span></code></a></p>
 </dd></dl>
 
 <dl class="mat method">
@@ -3639,7 +3676,8 @@ Because the subgroup is normal, we have <span class="math notranslate nohighligh
 <li><p><a class="reference internal" href="#+replab.RightCoset.RightCoset" title="+replab.RightCoset.RightCoset"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">RightCoset</span></code></a> –</p></li>
 <li><p><a class="reference internal" href="#+replab.RightCoset.checkNormalizes" title="+replab.RightCoset.checkNormalizes"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">checkNormalizes</span></code></a> –</p></li>
 <li><p><a class="reference internal" href="#+replab.RightCoset.contains" title="+replab.RightCoset.contains"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">contains</span></code></a> – Returns if this coset contains the given element</p></li>
-<li><p><a class="reference internal" href="#+replab.RightCoset.elements" title="+replab.RightCoset.elements"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">elements</span></code></a> – Returns an indexed family corresponding to this set</p></li>
+<li><p><a class="reference internal" href="#+replab.RightCoset.elements" title="+replab.RightCoset.elements"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">elements</span></code></a> – Returns a cell array containing all the elements of this set</p></li>
+<li><p><a class="reference internal" href="#+replab.RightCoset.elementsSequence" title="+replab.RightCoset.elementsSequence"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">elementsSequence</span></code></a> – Returns a sequence corresponding to this set</p></li>
 <li><p><a class="reference internal" href="#+replab.RightCoset.factorizeShortRepresentativeLetters" title="+replab.RightCoset.factorizeShortRepresentativeLetters"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">factorizeShortRepresentativeLetters</span></code></a> – Returns a tentatively short word corresponding to an element of this coset</p></li>
 <li><p><a class="reference internal" href="#+replab.RightCoset.factorizeShortRepresentativeWord" title="+replab.RightCoset.factorizeShortRepresentativeWord"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">factorizeShortRepresentativeWord</span></code></a> – Returns a tentatively short word corresponding to an element of this coset</p></li>
 <li><p><a class="reference internal" href="#+replab.RightCoset.make" title="+replab.RightCoset.make"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">make</span></code></a> –</p></li>
@@ -3726,6 +3764,12 @@ Because the subgroup is normal, we have <span class="math notranslate nohighligh
 <dt class="sig sig-object mat" id="+replab.RightCoset.elements">
 <span class="sig-name descname"><span class="pre">elements</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.RightCoset.elements" title="Permalink to this definition">¶</a></dt>
 <dd><p>Documentation in <a class="reference internal" href="#+replab.FiniteSet.elements" title="+replab.FiniteSet.elements"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.FiniteSet.elements()</span></code></a></p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.RightCoset.elementsSequence">
+<span class="sig-name descname"><span class="pre">elementsSequence</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.RightCoset.elementsSequence" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="#+replab.FiniteSet.elementsSequence" title="+replab.FiniteSet.elementsSequence"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.FiniteSet.elementsSequence()</span></code></a></p>
 </dd></dl>
 
 <dl class="mat method">
@@ -3997,7 +4041,8 @@ Because the subgroup is normal, we have <span class="math notranslate nohighligh
 <li><p><a class="reference internal" href="#+replab.NormalCoset.RightCoset" title="+replab.NormalCoset.RightCoset"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">RightCoset</span></code></a> –</p></li>
 <li><p><a class="reference internal" href="#+replab.NormalCoset.checkNormalizes" title="+replab.NormalCoset.checkNormalizes"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">checkNormalizes</span></code></a> –</p></li>
 <li><p><a class="reference internal" href="#+replab.NormalCoset.contains" title="+replab.NormalCoset.contains"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">contains</span></code></a> – Returns if this coset contains the given element</p></li>
-<li><p><a class="reference internal" href="#+replab.NormalCoset.elements" title="+replab.NormalCoset.elements"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">elements</span></code></a> – Returns an indexed family corresponding to this set</p></li>
+<li><p><a class="reference internal" href="#+replab.NormalCoset.elements" title="+replab.NormalCoset.elements"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">elements</span></code></a> – Returns a cell array containing all the elements of this set</p></li>
+<li><p><a class="reference internal" href="#+replab.NormalCoset.elementsSequence" title="+replab.NormalCoset.elementsSequence"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">elementsSequence</span></code></a> – Returns a sequence corresponding to this set</p></li>
 <li><p><a class="reference internal" href="#+replab.NormalCoset.factorizeShortRepresentativeLetters" title="+replab.NormalCoset.factorizeShortRepresentativeLetters"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">factorizeShortRepresentativeLetters</span></code></a> – Returns a tentatively short word corresponding to an element of this coset</p></li>
 <li><p><a class="reference internal" href="#+replab.NormalCoset.factorizeShortRepresentativeWord" title="+replab.NormalCoset.factorizeShortRepresentativeWord"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">factorizeShortRepresentativeWord</span></code></a> – Returns a tentatively short word corresponding to an element of this coset</p></li>
 <li><p><a class="reference internal" href="#+replab.NormalCoset.make" title="+replab.NormalCoset.make"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">make</span></code></a> –</p></li>
@@ -4102,6 +4147,12 @@ Because the subgroup is normal, we have <span class="math notranslate nohighligh
 <dt class="sig sig-object mat" id="+replab.NormalCoset.elements">
 <span class="sig-name descname"><span class="pre">elements</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.NormalCoset.elements" title="Permalink to this definition">¶</a></dt>
 <dd><p>Documentation in <a class="reference internal" href="#+replab.FiniteSet.elements" title="+replab.FiniteSet.elements"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.FiniteSet.elements()</span></code></a></p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.NormalCoset.elementsSequence">
+<span class="sig-name descname"><span class="pre">elementsSequence</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.NormalCoset.elementsSequence" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="#+replab.FiniteSet.elementsSequence" title="+replab.FiniteSet.elementsSequence"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.FiniteSet.elementsSequence()</span></code></a></p>
 </dd></dl>
 
 <dl class="mat method">
@@ -4648,7 +4699,8 @@ Because the subgroup is normal, we have <span class="math notranslate nohighligh
 <li><p><a class="reference internal" href="#+replab.DoubleCoset.DoubleCoset" title="+replab.DoubleCoset.DoubleCoset"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">DoubleCoset</span></code></a> –</p></li>
 <li><p><a class="reference internal" href="#+replab.DoubleCoset.checkNormalizes" title="+replab.DoubleCoset.checkNormalizes"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">checkNormalizes</span></code></a> –</p></li>
 <li><p><a class="reference internal" href="#+replab.DoubleCoset.contains" title="+replab.DoubleCoset.contains"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">contains</span></code></a> – Returns if this double coset contains the given element</p></li>
-<li><p><a class="reference internal" href="#+replab.DoubleCoset.elements" title="+replab.DoubleCoset.elements"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">elements</span></code></a> – Returns an indexed family corresponding to this set</p></li>
+<li><p><a class="reference internal" href="#+replab.DoubleCoset.elements" title="+replab.DoubleCoset.elements"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">elements</span></code></a> – Returns a cell array containing all the elements of this set</p></li>
+<li><p><a class="reference internal" href="#+replab.DoubleCoset.elementsSequence" title="+replab.DoubleCoset.elementsSequence"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">elementsSequence</span></code></a> – Returns a sequence corresponding to this set</p></li>
 <li><p><a class="reference internal" href="#+replab.DoubleCoset.lexCompare" title="+replab.DoubleCoset.lexCompare"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">lexCompare</span></code></a> – Returns the comparison of two permutations by lexicographic order</p></li>
 <li><p><a class="reference internal" href="#+replab.DoubleCoset.make" title="+replab.DoubleCoset.make"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">make</span></code></a> –</p></li>
 <li><p><a class="reference internal" href="#+replab.DoubleCoset.mtimes" title="+replab.DoubleCoset.mtimes"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">mtimes</span></code></a> –</p></li>
@@ -4735,6 +4787,12 @@ Because the subgroup is normal, we have <span class="math notranslate nohighligh
 <dt class="sig sig-object mat" id="+replab.DoubleCoset.elements">
 <span class="sig-name descname"><span class="pre">elements</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.DoubleCoset.elements" title="Permalink to this definition">¶</a></dt>
 <dd><p>Documentation in <a class="reference internal" href="#+replab.FiniteSet.elements" title="+replab.FiniteSet.elements"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.FiniteSet.elements()</span></code></a></p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.DoubleCoset.elementsSequence">
+<span class="sig-name descname"><span class="pre">elementsSequence</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.DoubleCoset.elementsSequence" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="#+replab.FiniteSet.elementsSequence" title="+replab.FiniteSet.elementsSequence"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.FiniteSet.elementsSequence()</span></code></a></p>
 </dd></dl>
 
 <dl class="mat method">
@@ -5022,7 +5080,7 @@ Because the subgroup is normal, we have <span class="math notranslate nohighligh
         <li class="right" >
           <a href="group_products.html" title="Group product constructions"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.9.2 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.9.5-SNAP documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="index.html" >Technical Reference</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">Group subsets</a></li> 
       </ul>

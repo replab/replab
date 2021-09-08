@@ -15,7 +15,7 @@
   <link rel="stylesheet" type="text/css" href="../_static/css/bootstrap-theme.min.css" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-    <title>Characters &#8212; RepLAB 0.9.2 documentation</title>
+    <title>Characters &#8212; RepLAB 0.9.5-SNAP documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/guzzle.css" />
     <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
@@ -79,7 +79,7 @@
         <li class="right" >
           <a href="equivariant.html" title="Equivariant spaces"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.9.2 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.9.5-SNAP documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">Technical Reference</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">Characters</a></li> 
       </ul>
@@ -94,7 +94,7 @@
   <a href="
     ../index.html">RepLAB</a>&nbsp;&nbsp;
   <a href="https://github.com/replab/replab"><i class="fab fa-github"></i></a>&nbsp;
-  <a href="https://github.com/replab/replab/archive/v0.9.2.zip"><i class="fa fa-download"></i></a>&nbsp;
+  <a href="https://github.com/replab/replab/archive/v0.9.5-SNAP.zip"><i class="fa fa-download"></i></a>&nbsp;
   <a href="https://gitter.im/replab/replab"><i class="fab fa-gitter"></i></a>&nbsp;
   <a href="https://travis-ci.com/replab/replab"><i class="fas fa-sync-alt"></i></a>&nbsp;
   <a href="https://codecov.io/gh/replab/replab"><i class="fas fa-umbrella"></i></a>
@@ -192,7 +192,7 @@
 <dd><p>Bases: <a class="reference internal" href="base.html#+replab.Obj" title="+replab.Obj"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">replab.Obj</span></code></a></p>
 <p>Describes a character</p>
 <p class="rubric">Example</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">D</span> <span class="o">=</span> <span class="n">replab</span><span class="o">.</span><span class="n">PermutationGroup</span><span class="o">.</span><span class="n">dihedral</span><span class="p">(</span><span class="mi">6</span><span class="p">);</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">D</span> <span class="o">=</span> <span class="n">replab</span><span class="o">.</span><span class="n">PermutationGroup</span><span class="o">.</span><span class="n">dihedral</span><span class="p">(</span><span class="mi">6</span><span class="p">);</span> <span class="o">%</span> <span class="n">doctest</span><span class="p">:</span> <span class="o">+</span><span class="n">cyclotomic</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">rep</span> <span class="o">=</span> <span class="n">D</span><span class="o">.</span><span class="n">repByImages</span><span class="p">(</span><span class="s1">&#39;R&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;preimages&#39;</span><span class="p">,</span> <span class="p">{[</span><span class="mi">6</span> <span class="mi">5</span> <span class="mi">4</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">2</span> <span class="mi">3</span> <span class="mi">4</span> <span class="mi">5</span> <span class="mi">6</span> <span class="mi">1</span><span class="p">]},</span> <span class="s1">&#39;images&#39;</span><span class="p">,</span> <span class="p">{</span><span class="mi">1</span> <span class="o">-</span><span class="mi">1</span><span class="p">});</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">c</span> <span class="o">=</span> <span class="n">replab</span><span class="o">.</span><span class="n">Character</span><span class="o">.</span><span class="n">fromRep</span><span class="p">(</span><span class="n">rep</span><span class="p">);</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">g</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span> <span class="mi">3</span> <span class="mi">4</span> <span class="mi">5</span> <span class="mi">6</span> <span class="mi">1</span><span class="p">];</span>
@@ -984,7 +984,7 @@ requested and the computed value is cached.</p>
 <span class="sig-name descname"><span class="pre">imap</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">f</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.CharacterTable.imap" title="Permalink to this definition">¶</a></dt>
 <dd><p>Maps the character table under an isomorphism</p>
 <p class="rubric">Example</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">D6a</span> <span class="o">=</span> <span class="n">replab</span><span class="o">.</span><span class="n">PermutationGroup</span><span class="o">.</span><span class="n">of</span><span class="p">([</span><span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">2</span> <span class="mi">3</span> <span class="mi">1</span><span class="p">]);</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">D6a</span> <span class="o">=</span> <span class="n">replab</span><span class="o">.</span><span class="n">PermutationGroup</span><span class="o">.</span><span class="n">of</span><span class="p">([</span><span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">2</span> <span class="mi">3</span> <span class="mi">1</span><span class="p">]);</span> <span class="o">%</span> <span class="n">doctest</span><span class="p">:</span> <span class="o">+</span><span class="n">cyclotomic</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">D6b</span> <span class="o">=</span> <span class="n">replab</span><span class="o">.</span><span class="n">PermutationGroup</span><span class="o">.</span><span class="n">of</span><span class="p">([</span><span class="mi">1</span> <span class="mi">4</span> <span class="mi">3</span> <span class="mi">2</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span> <span class="mi">3</span> <span class="mi">4</span> <span class="mi">2</span><span class="p">]);</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">f</span> <span class="o">=</span> <span class="n">D6a</span><span class="o">.</span><span class="n">isomorphismByImages</span><span class="p">(</span><span class="n">D6b</span><span class="p">,</span> <span class="s1">&#39;preimages&#39;</span><span class="p">,</span> <span class="n">D6a</span><span class="o">.</span><span class="n">generators</span><span class="p">,</span> <span class="s1">&#39;images&#39;</span><span class="p">,</span> <span class="n">D6b</span><span class="o">.</span><span class="n">generators</span><span class="p">);</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">Ca</span> <span class="o">=</span> <span class="n">D6a</span><span class="o">.</span><span class="n">characterTable</span><span class="p">;</span>
@@ -1074,7 +1074,7 @@ the product of the <span class="math notranslate nohighlight">\(j\)</span>-th an
 <p>The ordering of coefficients corresponds to the order of irreducible representations in this character table.</p>
 <p>Note that this method is optimized when the representation is a tensor product.</p>
 <p class="rubric">Example</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">G</span> <span class="o">=</span> <span class="n">replab</span><span class="o">.</span><span class="n">PermutationGroup</span><span class="o">.</span><span class="n">dihedral</span><span class="p">(</span><span class="mi">3</span><span class="p">);</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">G</span> <span class="o">=</span> <span class="n">replab</span><span class="o">.</span><span class="n">PermutationGroup</span><span class="o">.</span><span class="n">dihedral</span><span class="p">(</span><span class="mi">3</span><span class="p">);</span> <span class="o">%</span> <span class="n">doctest</span><span class="p">:</span> <span class="o">+</span><span class="n">cyclotomic</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">ct</span> <span class="o">=</span> <span class="n">G</span><span class="o">.</span><span class="n">characterTable</span><span class="p">;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">rep2</span> <span class="o">=</span> <span class="n">ct</span><span class="o">.</span><span class="n">irreps</span><span class="p">{</span><span class="mi">2</span><span class="p">};</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">rep3</span> <span class="o">=</span> <span class="n">ct</span><span class="o">.</span><span class="n">irreps</span><span class="p">{</span><span class="mi">3</span><span class="p">};</span>
@@ -1084,7 +1084,7 @@ the product of the <span class="math notranslate nohighlight">\(j\)</span>-th an
 </pre></div>
 </div>
 <p class="rubric">Example</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">G</span> <span class="o">=</span> <span class="n">replab</span><span class="o">.</span><span class="n">S</span><span class="p">(</span><span class="mi">5</span><span class="p">);</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">G</span> <span class="o">=</span> <span class="n">replab</span><span class="o">.</span><span class="n">S</span><span class="p">(</span><span class="mi">5</span><span class="p">);</span> <span class="o">%</span> <span class="n">doctest</span><span class="p">:</span> <span class="o">+</span><span class="n">cyclotomic</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">ct</span> <span class="o">=</span> <span class="n">G</span><span class="o">.</span><span class="n">characterTable</span><span class="p">;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">S5</span> <span class="o">=</span> <span class="n">ct</span><span class="o">.</span><span class="n">group</span><span class="p">;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">isequal</span><span class="p">(</span><span class="n">ct</span><span class="o">.</span><span class="n">multiplicities</span><span class="p">(</span><span class="n">S5</span><span class="o">.</span><span class="n">naturalRep</span><span class="p">),</span> <span class="p">[</span><span class="mi">1</span> <span class="mi">0</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">0</span> <span class="mi">0</span> <span class="mi">0</span><span class="p">])</span>
@@ -1183,7 +1183,7 @@ the product of the <span class="math notranslate nohighlight">\(j\)</span>-th an
 <dd><p>Bases: <a class="reference internal" href="#+replab.CharacterTable" title="+replab.CharacterTable"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">replab.CharacterTable</span></code></a></p>
 <p>Describes the standard character table of a group</p>
 <p class="rubric">Example</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">G</span> <span class="o">=</span> <span class="n">replab</span><span class="o">.</span><span class="n">PermutationGroup</span><span class="o">.</span><span class="n">dihedral</span><span class="p">(</span><span class="mi">3</span><span class="p">);</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">G</span> <span class="o">=</span> <span class="n">replab</span><span class="o">.</span><span class="n">PermutationGroup</span><span class="o">.</span><span class="n">dihedral</span><span class="p">(</span><span class="mi">3</span><span class="p">);</span> <span class="o">%</span> <span class="n">doctest</span><span class="p">:</span> <span class="o">+</span><span class="n">cyclotomic</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">G</span><span class="o">.</span><span class="n">characterTable</span>
 <span class="go">    Class  1a   3a   2a</span>
 <span class="go">     Size   1    2    3</span>
@@ -1622,7 +1622,7 @@ though that fact is not checked by this method.</p>
 <span class="sig-name descname"><span class="pre">imap</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">f</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.ComplexCharacterTable.imap" title="Permalink to this definition">¶</a></dt>
 <dd><p>Maps the character table under an isomorphism</p>
 <p class="rubric">Example</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">D6a</span> <span class="o">=</span> <span class="n">replab</span><span class="o">.</span><span class="n">PermutationGroup</span><span class="o">.</span><span class="n">of</span><span class="p">([</span><span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">2</span> <span class="mi">3</span> <span class="mi">1</span><span class="p">]);</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">D6a</span> <span class="o">=</span> <span class="n">replab</span><span class="o">.</span><span class="n">PermutationGroup</span><span class="o">.</span><span class="n">of</span><span class="p">([</span><span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">2</span> <span class="mi">3</span> <span class="mi">1</span><span class="p">]);</span> <span class="o">%</span> <span class="n">doctest</span><span class="p">:</span> <span class="o">+</span><span class="n">cyclotomic</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">D6b</span> <span class="o">=</span> <span class="n">replab</span><span class="o">.</span><span class="n">PermutationGroup</span><span class="o">.</span><span class="n">of</span><span class="p">([</span><span class="mi">1</span> <span class="mi">4</span> <span class="mi">3</span> <span class="mi">2</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span> <span class="mi">3</span> <span class="mi">4</span> <span class="mi">2</span><span class="p">]);</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">f</span> <span class="o">=</span> <span class="n">D6a</span><span class="o">.</span><span class="n">isomorphismByImages</span><span class="p">(</span><span class="n">D6b</span><span class="p">,</span> <span class="s1">&#39;preimages&#39;</span><span class="p">,</span> <span class="n">D6a</span><span class="o">.</span><span class="n">generators</span><span class="p">,</span> <span class="s1">&#39;images&#39;</span><span class="p">,</span> <span class="n">D6b</span><span class="o">.</span><span class="n">generators</span><span class="p">);</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">Ca</span> <span class="o">=</span> <span class="n">D6a</span><span class="o">.</span><span class="n">characterTable</span><span class="p">;</span>
@@ -2067,7 +2067,7 @@ external libraries and a Java Virtual Machine available.</p>
         <li class="right" >
           <a href="equivariant.html" title="Equivariant spaces"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.9.2 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.9.5-SNAP documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="index.html" >Technical Reference</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">Characters</a></li> 
       </ul>

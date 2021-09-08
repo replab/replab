@@ -15,7 +15,7 @@
   <link rel="stylesheet" type="text/css" href="../_static/css/bootstrap-theme.min.css" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-    <title>Representations &#8212; RepLAB 0.9.2 documentation</title>
+    <title>Representations &#8212; RepLAB 0.9.5-SNAP documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/guzzle.css" />
     <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
@@ -79,7 +79,7 @@
         <li class="right" >
           <a href="group_morphisms.html" title="Group morphisms"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.9.2 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.9.5-SNAP documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">Technical Reference</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">Representations</a></li> 
       </ul>
@@ -94,7 +94,7 @@
   <a href="
     ../index.html">RepLAB</a>&nbsp;&nbsp;
   <a href="https://github.com/replab/replab"><i class="fab fa-github"></i></a>&nbsp;
-  <a href="https://github.com/replab/replab/archive/v0.9.2.zip"><i class="fa fa-download"></i></a>&nbsp;
+  <a href="https://github.com/replab/replab/archive/v0.9.5-SNAP.zip"><i class="fa fa-download"></i></a>&nbsp;
   <a href="https://gitter.im/replab/replab"><i class="fab fa-gitter"></i></a>&nbsp;
   <a href="https://travis-ci.com/replab/replab"><i class="fas fa-sync-alt"></i></a>&nbsp;
   <a href="https://codecov.io/gh/replab/replab"><i class="fas fa-umbrella"></i></a>
@@ -2884,9 +2884,9 @@ store a measure of the error associated with those maps in <a class="reference i
 <li><p><a class="reference internal" href="#+replab.SubRep.identical" title="+replab.SubRep.identical"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">identical</span></code></a> – Creates a full subrepresentation of the given representation, with identity projection/injection maps</p></li>
 <li><p><a class="reference internal" href="#+replab.SubRep.injection" title="+replab.SubRep.injection"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">injection</span></code></a> – Returns the injection from the subrepresentation to the parent representation</p></li>
 <li><p><a class="reference internal" href="#+replab.SubRep.injectionConditionNumberEstimate" title="+replab.SubRep.injectionConditionNumberEstimate"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">injectionConditionNumberEstimate</span></code></a> – Returns an upper bound on the condition number of both the injection and the projection map</p></li>
+<li><p><a class="reference internal" href="#+replab.SubRep.injectionIsExact" title="+replab.SubRep.injectionIsExact"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">injectionIsExact</span></code></a> – Returns whether the injection map is written either with cyclotomics or integer coefficients</p></li>
 <li><p><a class="reference internal" href="#+replab.SubRep.mapsAreExact" title="+replab.SubRep.mapsAreExact"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">mapsAreExact</span></code></a> – Returns whether both the injection map and the projection map are written either with cyclotomics or integer coefficients</p></li>
 <li><p><a class="reference internal" href="#+replab.SubRep.mapsAreIntegerValued" title="+replab.SubRep.mapsAreIntegerValued"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">mapsAreIntegerValued</span></code></a> – Returns whether both the injection map and the projection map are expressed with Gaussian integer coefficients</p></li>
-<li><p><a class="reference internal" href="#+replab.SubRep.mapsArePermutationMatrices" title="+replab.SubRep.mapsArePermutationMatrices"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">mapsArePermutationMatrices</span></code></a> –</p></li>
 <li><p><a class="reference internal" href="#+replab.SubRep.nice" title="+replab.SubRep.nice"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">nice</span></code></a> – Returns a representation similar to the current subrepresentation, with a nicer basis (EXPERIMENTAL)</p></li>
 <li><p><a class="reference internal" href="#+replab.SubRep.projection" title="+replab.SubRep.projection"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">projection</span></code></a> – Returns the projection from the parent representation to the subrepresentation</p></li>
 <li><p><a class="reference internal" href="#+replab.SubRep.projector" title="+replab.SubRep.projector"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">projector</span></code></a> – Returns the projector on this subrepresentation</p></li>
@@ -3318,12 +3318,6 @@ store a measure of the error associated with those maps in <a class="reference i
 </dd></dl>
 
 <dl class="mat method">
-<dt class="sig sig-object mat" id="+replab.SubRep.mapsArePermutationMatrices">
-<span class="sig-name descname"><span class="pre">mapsArePermutationMatrices</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#+replab.SubRep.mapsArePermutationMatrices" title="Permalink to this definition">¶</a></dt>
-<dd><p>No documentation</p>
-</dd></dl>
-
-<dl class="mat method">
 <dt class="sig sig-object mat" id="+replab.SubRep.maschke">
 <span class="sig-name descname"><span class="pre">maschke</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">sub1</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.SubRep.maschke" title="Permalink to this definition">¶</a></dt>
 <dd><p>Documentation in <a class="reference internal" href="#+replab.Rep.maschke" title="+replab.Rep.maschke"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Rep.maschke()</span></code></a></p>
@@ -3690,6 +3684,20 @@ the <a class="reference internal" href="#+replab.SubRep.isUnitary" title="+repla
 </dd>
 <dt class="field-even">Return type</dt>
 <dd class="field-even"><p>double</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.SubRep.injectionIsExact">
+<span class="sig-name descname"><span class="pre">injectionIsExact</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.SubRep.injectionIsExact" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns whether the injection map is written either with cyclotomics or integer coefficients</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>True if that is the case</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>logical</p>
 </dd>
 </dl>
 </dd></dl>
@@ -4069,12 +4077,12 @@ irreps:</p>
 <li><p><a class="reference internal" href="#+replab.Isotypic.identical" title="+replab.Isotypic.identical"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">identical</span></code></a> – Creates a full subrepresentation of the given representation, with identity projection/injection maps</p></li>
 <li><p><a class="reference internal" href="#+replab.Isotypic.injection" title="+replab.Isotypic.injection"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">injection</span></code></a> – Returns the injection from the subrepresentation to the parent representation</p></li>
 <li><p><a class="reference internal" href="#+replab.Isotypic.injectionConditionNumberEstimate" title="+replab.Isotypic.injectionConditionNumberEstimate"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">injectionConditionNumberEstimate</span></code></a> – Returns an upper bound on the condition number of both the injection and the projection map</p></li>
+<li><p><a class="reference internal" href="#+replab.Isotypic.injectionIsExact" title="+replab.Isotypic.injectionIsExact"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">injectionIsExact</span></code></a> – Returns whether the injection map is written either with cyclotomics or integer coefficients</p></li>
 <li><p><a class="reference internal" href="#+replab.Isotypic.irrep" title="+replab.Isotypic.irrep"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">irrep</span></code></a> – Returns the i-th copy of the irreducible representation</p></li>
 <li><p><a class="reference internal" href="#+replab.Isotypic.irrepDimension" title="+replab.Isotypic.irrepDimension"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">irrepDimension</span></code></a> – Returns the dimension of a single irreducible representation contained in this component</p></li>
 <li><p><a class="reference internal" href="#+replab.Isotypic.irrepRange" title="+replab.Isotypic.irrepRange"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">irrepRange</span></code></a> – Returns the coefficient range where the i-th irrep lies</p></li>
 <li><p><a class="reference internal" href="#+replab.Isotypic.mapsAreExact" title="+replab.Isotypic.mapsAreExact"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">mapsAreExact</span></code></a> – Returns whether both the injection map and the projection map are written either with cyclotomics or integer coefficients</p></li>
 <li><p><a class="reference internal" href="#+replab.Isotypic.mapsAreIntegerValued" title="+replab.Isotypic.mapsAreIntegerValued"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">mapsAreIntegerValued</span></code></a> – Returns whether both the injection map and the projection map are expressed with Gaussian integer coefficients</p></li>
-<li><p><a class="reference internal" href="#+replab.Isotypic.mapsArePermutationMatrices" title="+replab.Isotypic.mapsArePermutationMatrices"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">mapsArePermutationMatrices</span></code></a> –</p></li>
 <li><p><a class="reference internal" href="#+replab.Isotypic.multiplicity" title="+replab.Isotypic.multiplicity"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">multiplicity</span></code></a> – Number of equivalent irreducible representations in this isotypic component</p></li>
 <li><p><a class="reference internal" href="#+replab.Isotypic.nIrreps" title="+replab.Isotypic.nIrreps"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">nIrreps</span></code></a> – Returns the number of irreps in this isotypic component, which is their multiplicity</p></li>
 <li><p><a class="reference internal" href="#+replab.Isotypic.nice" title="+replab.Isotypic.nice"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">nice</span></code></a> – Returns a representation similar to the current subrepresentation, with a nicer basis (EXPERIMENTAL)</p></li>
@@ -4479,6 +4487,12 @@ irreps:</p>
 <dd><p>Documentation in <a class="reference internal" href="#+replab.SubRep.injectionConditionNumberEstimate" title="+replab.SubRep.injectionConditionNumberEstimate"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.SubRep.injectionConditionNumberEstimate()</span></code></a></p>
 </dd></dl>
 
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.Isotypic.injectionIsExact">
+<span class="sig-name descname"><span class="pre">injectionIsExact</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.Isotypic.injectionIsExact" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="#+replab.SubRep.injectionIsExact" title="+replab.SubRep.injectionIsExact"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.SubRep.injectionIsExact()</span></code></a></p>
+</dd></dl>
+
 <dl class="mat attribute">
 <dt class="sig sig-object mat" id="+replab.Isotypic.injection_internal">
 <span class="sig-name descname"><span class="pre">injection_internal</span></span><a class="headerlink" href="#+replab.Isotypic.injection_internal" title="Permalink to this definition">¶</a></dt>
@@ -4585,12 +4599,6 @@ irreps:</p>
 <dt class="sig sig-object mat" id="+replab.Isotypic.mapsAreIntegerValued">
 <span class="sig-name descname"><span class="pre">mapsAreIntegerValued</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.Isotypic.mapsAreIntegerValued" title="Permalink to this definition">¶</a></dt>
 <dd><p>Documentation in <a class="reference internal" href="#+replab.SubRep.mapsAreIntegerValued" title="+replab.SubRep.mapsAreIntegerValued"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.SubRep.mapsAreIntegerValued()</span></code></a></p>
-</dd></dl>
-
-<dl class="mat method">
-<dt class="sig sig-object mat" id="+replab.Isotypic.mapsArePermutationMatrices">
-<span class="sig-name descname"><span class="pre">mapsArePermutationMatrices</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#+replab.Isotypic.mapsArePermutationMatrices" title="Permalink to this definition">¶</a></dt>
-<dd><p>No documentation</p>
 </dd></dl>
 
 <dl class="mat method">
@@ -5153,10 +5161,10 @@ Those empty components can be stripped using the <a class="reference internal" h
 <li><p><a class="reference internal" href="#+replab.Irreducible.import" title="+replab.Irreducible.import"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">import</span></code></a> – Reconstruct an irreducible decomposition from exported data</p></li>
 <li><p><a class="reference internal" href="#+replab.Irreducible.injection" title="+replab.Irreducible.injection"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">injection</span></code></a> – Returns the injection from the subrepresentation to the parent representation</p></li>
 <li><p><a class="reference internal" href="#+replab.Irreducible.injectionConditionNumberEstimate" title="+replab.Irreducible.injectionConditionNumberEstimate"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">injectionConditionNumberEstimate</span></code></a> – Returns an upper bound on the condition number of both the injection and the projection map</p></li>
+<li><p><a class="reference internal" href="#+replab.Irreducible.injectionIsExact" title="+replab.Irreducible.injectionIsExact"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">injectionIsExact</span></code></a> – Returns whether the injection map is written either with cyclotomics or integer coefficients</p></li>
 <li><p><a class="reference internal" href="#+replab.Irreducible.irrep" title="+replab.Irreducible.irrep"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">irrep</span></code></a> – Returns a subrepresentation in the irreducible decomposition</p></li>
 <li><p><a class="reference internal" href="#+replab.Irreducible.mapsAreExact" title="+replab.Irreducible.mapsAreExact"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">mapsAreExact</span></code></a> – Returns whether both the injection map and the projection map are written either with cyclotomics or integer coefficients</p></li>
 <li><p><a class="reference internal" href="#+replab.Irreducible.mapsAreIntegerValued" title="+replab.Irreducible.mapsAreIntegerValued"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">mapsAreIntegerValued</span></code></a> – Returns whether both the injection map and the projection map are expressed with Gaussian integer coefficients</p></li>
-<li><p><a class="reference internal" href="#+replab.Irreducible.mapsArePermutationMatrices" title="+replab.Irreducible.mapsArePermutationMatrices"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">mapsArePermutationMatrices</span></code></a> –</p></li>
 <li><p><a class="reference internal" href="#+replab.Irreducible.nComponents" title="+replab.Irreducible.nComponents"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">nComponents</span></code></a> – Returns the number of isotypic components in the decomposition</p></li>
 <li><p><a class="reference internal" href="#+replab.Irreducible.nice" title="+replab.Irreducible.nice"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">nice</span></code></a> – Returns a representation similar to the current subrepresentation, with a nicer basis (EXPERIMENTAL)</p></li>
 <li><p><a class="reference internal" href="#+replab.Irreducible.projection" title="+replab.Irreducible.projection"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">projection</span></code></a> – Returns the projection from the parent representation to the subrepresentation</p></li>
@@ -5568,6 +5576,12 @@ Those empty components can be stripped using the <a class="reference internal" h
 <dd><p>Documentation in <a class="reference internal" href="#+replab.SubRep.injectionConditionNumberEstimate" title="+replab.SubRep.injectionConditionNumberEstimate"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.SubRep.injectionConditionNumberEstimate()</span></code></a></p>
 </dd></dl>
 
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.Irreducible.injectionIsExact">
+<span class="sig-name descname"><span class="pre">injectionIsExact</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.Irreducible.injectionIsExact" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="#+replab.SubRep.injectionIsExact" title="+replab.SubRep.injectionIsExact"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.SubRep.injectionIsExact()</span></code></a></p>
+</dd></dl>
+
 <dl class="mat attribute">
 <dt class="sig sig-object mat" id="+replab.Irreducible.injection_internal">
 <span class="sig-name descname"><span class="pre">injection_internal</span></span><a class="headerlink" href="#+replab.Irreducible.injection_internal" title="Permalink to this definition">¶</a></dt>
@@ -5674,12 +5688,6 @@ Those empty components can be stripped using the <a class="reference internal" h
 <dt class="sig sig-object mat" id="+replab.Irreducible.mapsAreIntegerValued">
 <span class="sig-name descname"><span class="pre">mapsAreIntegerValued</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.Irreducible.mapsAreIntegerValued" title="Permalink to this definition">¶</a></dt>
 <dd><p>Documentation in <a class="reference internal" href="#+replab.SubRep.mapsAreIntegerValued" title="+replab.SubRep.mapsAreIntegerValued"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.SubRep.mapsAreIntegerValued()</span></code></a></p>
-</dd></dl>
-
-<dl class="mat method">
-<dt class="sig sig-object mat" id="+replab.Irreducible.mapsArePermutationMatrices">
-<span class="sig-name descname"><span class="pre">mapsArePermutationMatrices</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#+replab.Irreducible.mapsArePermutationMatrices" title="Permalink to this definition">¶</a></dt>
-<dd><p>No documentation</p>
 </dd></dl>
 
 <dl class="mat method">
@@ -6080,7 +6088,7 @@ decomposed representation.</p>
 <p class="rubric">Example</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">S3</span> <span class="o">=</span> <span class="n">replab</span><span class="o">.</span><span class="n">S</span><span class="p">(</span><span class="mi">3</span><span class="p">);</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">rep</span> <span class="o">=</span> <span class="n">S3</span><span class="o">.</span><span class="n">naturalRep</span><span class="p">;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">dec</span> <span class="o">=</span> <span class="n">rep</span><span class="o">.</span><span class="n">decomposition</span><span class="p">(</span><span class="s1">&#39;exact&#39;</span><span class="p">);</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dec</span> <span class="o">=</span> <span class="n">rep</span><span class="o">.</span><span class="n">decomposition</span><span class="p">(</span><span class="s1">&#39;exact&#39;</span><span class="p">);</span> <span class="o">%</span> <span class="n">doctest</span><span class="p">:</span> <span class="o">+</span><span class="n">cyclotomic</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">dec</span><span class="o">.</span><span class="n">nComponents</span>
 <span class="go">    3</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">dec</span><span class="o">.</span><span class="n">squeeze</span><span class="o">.</span><span class="n">nComponents</span>
@@ -6158,7 +6166,7 @@ not look as clean as this <a class="reference internal" href="#+replab.Irreducib
         <li class="right" >
           <a href="group_morphisms.html" title="Group morphisms"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.9.2 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.9.5-SNAP documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="index.html" >Technical Reference</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">Representations</a></li> 
       </ul>

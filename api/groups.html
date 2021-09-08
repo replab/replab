@@ -15,7 +15,7 @@
   <link rel="stylesheet" type="text/css" href="../_static/css/bootstrap-theme.min.css" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-    <title>Base group structures &#8212; RepLAB 0.9.2 documentation</title>
+    <title>Base group structures &#8212; RepLAB 0.9.5-SNAP documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/guzzle.css" />
     <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
@@ -77,7 +77,7 @@
         <li class="right" >
           <a href="numerics.html" title="Numerics"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.9.2 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.9.5-SNAP documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">Technical Reference</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">Base group structures</a></li> 
       </ul>
@@ -92,7 +92,7 @@
   <a href="
     ../index.html">RepLAB</a>&nbsp;&nbsp;
   <a href="https://github.com/replab/replab"><i class="fab fa-github"></i></a>&nbsp;
-  <a href="https://github.com/replab/replab/archive/v0.9.2.zip"><i class="fa fa-download"></i></a>&nbsp;
+  <a href="https://github.com/replab/replab/archive/v0.9.5-SNAP.zip"><i class="fa fa-download"></i></a>&nbsp;
   <a href="https://gitter.im/replab/replab"><i class="fab fa-gitter"></i></a>&nbsp;
   <a href="https://travis-ci.com/replab/replab"><i class="fas fa-sync-alt"></i></a>&nbsp;
   <a href="https://codecov.io/gh/replab/replab"><i class="fas fa-umbrella"></i></a>
@@ -1624,7 +1624,8 @@ default names <a class="reference internal" href="#+replab.FiniteGroup.generator
 <li><p><a class="reference internal" href="#+replab.FiniteGroup.FiniteGroup" title="+replab.FiniteGroup.FiniteGroup"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">FiniteGroup</span></code></a> – Constructs a finite group</p></li>
 <li><p><a class="reference internal" href="#+replab.FiniteGroup.checkNormalizes" title="+replab.FiniteGroup.checkNormalizes"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">checkNormalizes</span></code></a> –</p></li>
 <li><p><a class="reference internal" href="#+replab.FiniteGroup.defaultGeneratorNames" title="+replab.FiniteGroup.defaultGeneratorNames"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">defaultGeneratorNames</span></code></a> – Returns default generator names</p></li>
-<li><p><a class="reference internal" href="#+replab.FiniteGroup.elements" title="+replab.FiniteGroup.elements"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">elements</span></code></a> – Returns an indexed family corresponding to this set</p></li>
+<li><p><a class="reference internal" href="#+replab.FiniteGroup.elements" title="+replab.FiniteGroup.elements"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">elements</span></code></a> – Returns a cell array containing all the elements of this set</p></li>
+<li><p><a class="reference internal" href="#+replab.FiniteGroup.elementsSequence" title="+replab.FiniteGroup.elementsSequence"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">elementsSequence</span></code></a> – Returns a sequence corresponding to this set</p></li>
 <li><p><a class="reference internal" href="#+replab.FiniteGroup.isequal" title="+replab.FiniteGroup.isequal"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">isequal</span></code></a> –</p></li>
 <li><p><a class="reference internal" href="#+replab.FiniteGroup.mtimes" title="+replab.FiniteGroup.mtimes"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">mtimes</span></code></a> –</p></li>
 <li><p><a class="reference internal" href="#+replab.FiniteGroup.multiply" title="+replab.FiniteGroup.multiply"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">multiply</span></code></a> –</p></li>
@@ -1883,6 +1884,12 @@ default names <a class="reference internal" href="#+replab.FiniteGroup.generator
 <dt class="sig sig-object mat" id="+replab.FiniteGroup.elements">
 <span class="sig-name descname"><span class="pre">elements</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.FiniteGroup.elements" title="Permalink to this definition">¶</a></dt>
 <dd><p>Documentation in <a class="reference internal" href="group_subsets.html#+replab.FiniteSet.elements" title="+replab.FiniteSet.elements"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.FiniteSet.elements()</span></code></a></p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.FiniteGroup.elementsSequence">
+<span class="sig-name descname"><span class="pre">elementsSequence</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.FiniteGroup.elementsSequence" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="group_subsets.html#+replab.FiniteSet.elementsSequence" title="+replab.FiniteSet.elementsSequence"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.FiniteSet.elementsSequence()</span></code></a></p>
 </dd></dl>
 
 <dl class="mat method">
@@ -2209,14 +2216,14 @@ default names <a class="reference internal" href="#+replab.FiniteGroup.generator
 <p class="rubric">Example</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">G</span> <span class="o">=</span> <span class="n">replab</span><span class="o">.</span><span class="n">S</span><span class="p">(</span><span class="mi">4</span><span class="p">);</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">C</span> <span class="o">=</span> <span class="n">G</span><span class="o">.</span><span class="n">centralizer</span><span class="p">([</span><span class="mi">2</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">4</span><span class="p">]);</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">C</span> <span class="o">==</span> <span class="n">replab</span><span class="o">.</span><span class="n">S</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span><span class="o">.</span><span class="n">subgroup</span><span class="p">({[</span><span class="mi">2</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">4</span><span class="p">]})</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">C</span> <span class="o">==</span> <span class="n">replab</span><span class="o">.</span><span class="n">PermutationGroup</span><span class="o">.</span><span class="n">of</span><span class="p">([</span><span class="mi">2</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">4</span><span class="p">])</span>
 <span class="go">  1</span>
 </pre></div>
 </div>
 <p class="rubric">Example</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">G</span> <span class="o">=</span> <span class="n">replab</span><span class="o">.</span><span class="n">S</span><span class="p">(</span><span class="mi">4</span><span class="p">);</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">C</span> <span class="o">=</span> <span class="n">G</span><span class="o">.</span><span class="n">centralizer</span><span class="p">(</span><span class="n">G</span><span class="o">.</span><span class="n">subgroup</span><span class="p">({[</span><span class="mi">2</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">4</span><span class="p">]}));</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">C</span> <span class="o">==</span> <span class="n">replab</span><span class="o">.</span><span class="n">S</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span><span class="o">.</span><span class="n">subgroup</span><span class="p">({[</span><span class="mi">2</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">4</span><span class="p">]})</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">C</span> <span class="o">==</span> <span class="n">replab</span><span class="o">.</span><span class="n">PermutationGroup</span><span class="o">.</span><span class="n">of</span><span class="p">([</span><span class="mi">2</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">4</span><span class="p">])</span>
 <span class="go">  1</span>
 </pre></div>
 </div>
@@ -2746,10 +2753,10 @@ method may not be deterministic.</p>
 <span class="sig-name descname"><span class="pre">intersection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">G</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.FiniteGroup.intersection" title="Permalink to this definition">¶</a></dt>
 <dd><p>Computes the intersection of two groups</p>
 <p class="rubric">Example</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">D12</span> <span class="o">=</span> <span class="n">replab</span><span class="o">.</span><span class="n">S</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span><span class="o">.</span><span class="n">subgroup</span><span class="p">({[</span><span class="mi">1</span> <span class="mi">6</span> <span class="mi">5</span> <span class="mi">4</span> <span class="mi">3</span> <span class="mi">2</span><span class="p">],</span> <span class="p">[</span><span class="mi">2</span> <span class="mi">1</span> <span class="mi">6</span> <span class="mi">5</span> <span class="mi">4</span> <span class="mi">3</span><span class="p">]});</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">G</span> <span class="o">=</span> <span class="n">replab</span><span class="o">.</span><span class="n">S</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span><span class="o">.</span><span class="n">subgroup</span><span class="p">({[</span><span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">4</span> <span class="mi">5</span> <span class="mi">6</span><span class="p">],</span> <span class="p">[</span><span class="mi">2</span> <span class="mi">3</span> <span class="mi">4</span> <span class="mi">5</span> <span class="mi">1</span> <span class="mi">6</span><span class="p">]});</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">D12</span> <span class="o">=</span> <span class="n">replab</span><span class="o">.</span><span class="n">PermutationGroup</span><span class="o">.</span><span class="n">of</span><span class="p">([</span><span class="mi">1</span> <span class="mi">6</span> <span class="mi">5</span> <span class="mi">4</span> <span class="mi">3</span> <span class="mi">2</span><span class="p">],</span> <span class="p">[</span><span class="mi">2</span> <span class="mi">1</span> <span class="mi">6</span> <span class="mi">5</span> <span class="mi">4</span> <span class="mi">3</span><span class="p">]);</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">G</span> <span class="o">=</span> <span class="n">replab</span><span class="o">.</span><span class="n">PermutationGroup</span><span class="o">.</span><span class="n">of</span><span class="p">([</span><span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">4</span> <span class="mi">5</span> <span class="mi">6</span><span class="p">],</span> <span class="p">[</span><span class="mi">2</span> <span class="mi">3</span> <span class="mi">4</span> <span class="mi">5</span> <span class="mi">1</span> <span class="mi">6</span><span class="p">]);</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">I</span> <span class="o">=</span> <span class="n">D12</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="n">G</span><span class="p">);</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">I</span> <span class="o">==</span> <span class="n">replab</span><span class="o">.</span><span class="n">S</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span><span class="o">.</span><span class="n">subgroup</span><span class="p">({[</span><span class="mi">5</span> <span class="mi">4</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">6</span><span class="p">]})</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">I</span> <span class="o">==</span> <span class="n">replab</span><span class="o">.</span><span class="n">PermutationGroup</span><span class="o">.</span><span class="n">of</span><span class="p">([</span><span class="mi">5</span> <span class="mi">4</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">6</span><span class="p">])</span>
 <span class="go">    1</span>
 </pre></div>
 </div>
@@ -3629,7 +3636,7 @@ corresponding to a group element.</p>
 permutation groups can be handled by efficient BSGS algorithms, the requested computations can be
 translated back and forth between this group and a permutation group.</p>
 <p>In particular, the decomposition of the finite group in a product of sets (<a class="reference internal" href="group_subsets.html#+replab.SetProduct" title="+replab.SetProduct"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">SetProduct</span></code></a>),
-the enumeration of elements using a <a class="reference internal" href="misc.html#+replab.IndexedFamily" title="+replab.IndexedFamily"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">IndexedFamily</span></code></a>, the construction of subgroups is all handled
+the enumeration of elements using a <code class="xref mat mat-obj docutils literal notranslate"><span class="pre">Sequence</span></code>, the construction of subgroups is all handled
 by permutation group algorithms.</p>
 <p>Note that the <a class="reference internal" href="#+replab.NiceFiniteGroup.niceImage" title="+replab.NiceFiniteGroup.niceImage"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">niceImage</span></code></a> method of this group should be valid for all elements of the parent as well,
 and that groups having the same type (as verified by <a class="reference internal" href="#+replab.NiceFiniteGroup.hasSameTypeAs" title="+replab.NiceFiniteGroup.hasSameTypeAs"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">hasSameTypeAs</span></code></a>) should return the same images
@@ -3727,7 +3734,8 @@ under <a class="reference internal" href="#+replab.NiceFiniteGroup.niceImage" ti
 <li><p><a class="reference internal" href="#+replab.NiceFiniteGroup.NiceFiniteGroup" title="+replab.NiceFiniteGroup.NiceFiniteGroup"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">NiceFiniteGroup</span></code></a> – Constructs a nice finite group</p></li>
 <li><p><a class="reference internal" href="#+replab.NiceFiniteGroup.checkNormalizes" title="+replab.NiceFiniteGroup.checkNormalizes"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">checkNormalizes</span></code></a> –</p></li>
 <li><p><a class="reference internal" href="#+replab.NiceFiniteGroup.defaultGeneratorNames" title="+replab.NiceFiniteGroup.defaultGeneratorNames"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">defaultGeneratorNames</span></code></a> – Returns default generator names</p></li>
-<li><p><a class="reference internal" href="#+replab.NiceFiniteGroup.elements" title="+replab.NiceFiniteGroup.elements"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">elements</span></code></a> – Returns an indexed family corresponding to this set</p></li>
+<li><p><a class="reference internal" href="#+replab.NiceFiniteGroup.elements" title="+replab.NiceFiniteGroup.elements"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">elements</span></code></a> – Returns a cell array containing all the elements of this set</p></li>
+<li><p><a class="reference internal" href="#+replab.NiceFiniteGroup.elementsSequence" title="+replab.NiceFiniteGroup.elementsSequence"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">elementsSequence</span></code></a> – Returns a sequence corresponding to this set</p></li>
 <li><p><a class="reference internal" href="#+replab.NiceFiniteGroup.isequal" title="+replab.NiceFiniteGroup.isequal"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">isequal</span></code></a> –</p></li>
 <li><p><a class="reference internal" href="#+replab.NiceFiniteGroup.mtimes" title="+replab.NiceFiniteGroup.mtimes"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">mtimes</span></code></a> –</p></li>
 <li><p><a class="reference internal" href="#+replab.NiceFiniteGroup.multiply" title="+replab.NiceFiniteGroup.multiply"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">multiply</span></code></a> –</p></li>
@@ -4094,6 +4102,12 @@ under <a class="reference internal" href="#+replab.NiceFiniteGroup.niceImage" ti
 <dt class="sig sig-object mat" id="+replab.NiceFiniteGroup.elements">
 <span class="sig-name descname"><span class="pre">elements</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.NiceFiniteGroup.elements" title="Permalink to this definition">¶</a></dt>
 <dd><p>Documentation in <a class="reference internal" href="group_subsets.html#+replab.FiniteSet.elements" title="+replab.FiniteSet.elements"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.FiniteSet.elements()</span></code></a></p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.NiceFiniteGroup.elementsSequence">
+<span class="sig-name descname"><span class="pre">elementsSequence</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.NiceFiniteGroup.elementsSequence" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="group_subsets.html#+replab.FiniteSet.elementsSequence" title="+replab.FiniteSet.elementsSequence"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.FiniteSet.elementsSequence()</span></code></a></p>
 </dd></dl>
 
 <dl class="mat method">
@@ -5297,7 +5311,7 @@ compatible with the group composition as in</p>
         <li class="right" >
           <a href="numerics.html" title="Numerics"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.9.2 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.9.5-SNAP documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="index.html" >Technical Reference</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">Base group structures</a></li> 
       </ul>

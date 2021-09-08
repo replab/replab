@@ -14,7 +14,7 @@
   <link rel="stylesheet" type="text/css" href="_static/css/bootstrap-theme.min.css" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-    <title>Index &#8212; RepLAB 0.9.2 documentation</title>
+    <title>Index &#8212; RepLAB 0.9.5-SNAP documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="_static/guzzle.css" />
     <link rel="stylesheet" type="text/css" href="_static/togglebutton.css" />
@@ -43,7 +43,7 @@
         <li class="right" >
           <a href="mat-modindex.html" title="MATLAB Module Index"
              >matlab index</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">RepLAB 0.9.2 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="index.html">RepLAB 0.9.5-SNAP documentation</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">Index</a></li> 
       </ul>
     </div>
@@ -57,7 +57,7 @@
   <a href="
     index.html">RepLAB</a>&nbsp;&nbsp;
   <a href="https://github.com/replab/replab"><i class="fab fa-github"></i></a>&nbsp;
-  <a href="https://github.com/replab/replab/archive/v0.9.2.zip"><i class="fa fa-download"></i></a>&nbsp;
+  <a href="https://github.com/replab/replab/archive/v0.9.5-SNAP.zip"><i class="fa fa-download"></i></a>&nbsp;
   <a href="https://gitter.im/replab/replab"><i class="fab fa-gitter"></i></a>&nbsp;
   <a href="https://travis-ci.com/replab/replab"><i class="fas fa-sync-alt"></i></a>&nbsp;
   <a href="https://codecov.io/gh/replab/replab"><i class="fas fa-umbrella"></i></a>
@@ -273,8 +273,6 @@
 </li>
         <li><a href="api/chemistry.html#+replab.IdentifyPointGroup.additionalFields">(replab.IdentifyPointGroup method)</a>
 </li>
-        <li><a href="api/misc.html#+replab.IndexedFamily.additionalFields">(replab.IndexedFamily method)</a>
-</li>
         <li><a href="api/rep.html#+replab.Irreducible.additionalFields">(replab.Irreducible method)</a>
 </li>
         <li><a href="api/equivariant.html#+replab.IrreducibleEquivariant.additionalFields">(replab.IrreducibleEquivariant method)</a>
@@ -436,6 +434,8 @@
         <li><a href="api/group_products.html#+replab.WreathProductGroup.areCommuting">(replab.WreathProductGroup method)</a>
 </li>
       </ul></li>
+      <li><a href="api/commands.html#root.replab_Version.asRelease">asRelease() (root.replab_Version method)</a>
+</li>
       <li><a href="api/base.html#+replab.Laws.assert">assert() (replab.Laws method)</a>
 </li>
       <li><a href="api/base.html#+replab.Laws.assertApproxEqual">assertApproxEqual() (replab.Laws method)</a>
@@ -468,8 +468,6 @@
         <li><a href="api/group_subsets.html#+replab.FiniteSet.assertEqv">(replab.FiniteSet method)</a>
 </li>
         <li><a href="api/groups.html#+replab.Group.assertEqv">(replab.Group method)</a>
-</li>
-        <li><a href="api/misc.html#+replab.IndexedFamily.assertEqv">(replab.IndexedFamily method)</a>
 </li>
         <li><a href="api/equivariant.html#+replab.IrreducibleEquivariant.assertEqv">(replab.IrreducibleEquivariant method)</a>
 </li>
@@ -533,8 +531,6 @@
 </li>
         <li><a href="api/groups.html#+replab.Group.assertNotEqv">(replab.Group method)</a>
 </li>
-        <li><a href="api/misc.html#+replab.IndexedFamily.assertNotEqv">(replab.IndexedFamily method)</a>
-</li>
         <li><a href="api/equivariant.html#+replab.IrreducibleEquivariant.assertNotEqv">(replab.IrreducibleEquivariant method)</a>
 </li>
         <li><a href="api/equivariant.html#+replab.IsotypicEquivariant.assertNotEqv">(replab.IsotypicEquivariant method)</a>
@@ -568,9 +564,9 @@
         <li><a href="api/group_products.html#+replab.WreathProductGroup.assertNotEqv">(replab.WreathProductGroup method)</a>
 </li>
       </ul></li>
-      <li><a href="api/convex_programming.html#+replab.SedumiData.At">At (replab.SedumiData attribute)</a>
+      <li><a href="api/commands.html#root.replab_Version.asSnapshot">asSnapshot() (root.replab_Version method)</a>
 </li>
-      <li><a href="api/misc.html#+replab.IndexedFamily.at">at() (replab.IndexedFamily method)</a>
+      <li><a href="api/convex_programming.html#+replab.SedumiData.At">At (replab.SedumiData attribute)</a>
 </li>
       <li><a href="api/abstract_groups.html#+replab.Atlas">Atlas (class in replab)</a>
 </li>
@@ -728,6 +724,12 @@
       </ul></li>
       <li><a href="api/globals.html#+replab.+globals.bsgsFailureProbability">bsgsFailureProbability() (in module replab.globals)</a>
 </li>
+      <li><a href="api/commands.html#root.replab_Version.bumpMajor">bumpMajor() (root.replab_Version method)</a>
+</li>
+      <li><a href="api/commands.html#root.replab_Version.bumpMinor">bumpMinor() (root.replab_Version method)</a>
+</li>
+      <li><a href="api/commands.html#root.replab_Version.bumpPatch">bumpPatch() (root.replab_Version method)</a>
+</li>
   </ul></td>
 </tr></table>
 
@@ -794,8 +796,6 @@
         <li><a href="api/graph.html#+replab.Graph.cache">(replab.Graph method)</a>
 </li>
         <li><a href="api/groups.html#+replab.Group.cache">(replab.Group method)</a>
-</li>
-        <li><a href="api/misc.html#+replab.IndexedFamily.cache">(replab.IndexedFamily method)</a>
 </li>
         <li><a href="api/rep.html#+replab.Irreducible.cache">(replab.Irreducible method)</a>
 </li>
@@ -915,8 +915,6 @@
 </li>
         <li><a href="api/groups.html#+replab.Group.cached">(replab.Group method)</a>
 </li>
-        <li><a href="api/misc.html#+replab.IndexedFamily.cached">(replab.IndexedFamily method)</a>
-</li>
         <li><a href="api/rep.html#+replab.Irreducible.cached">(replab.Irreducible method)</a>
 </li>
         <li><a href="api/equivariant.html#+replab.IrreducibleEquivariant.cached">(replab.IrreducibleEquivariant method)</a>
@@ -1033,8 +1031,6 @@
 </li>
         <li><a href="api/groups.html#+replab.Group.cachedOrDefault">(replab.Group method)</a>
 </li>
-        <li><a href="api/misc.html#+replab.IndexedFamily.cachedOrDefault">(replab.IndexedFamily method)</a>
-</li>
         <li><a href="api/rep.html#+replab.Irreducible.cachedOrDefault">(replab.Irreducible method)</a>
 </li>
         <li><a href="api/equivariant.html#+replab.IrreducibleEquivariant.cachedOrDefault">(replab.IrreducibleEquivariant method)</a>
@@ -1150,8 +1146,6 @@
         <li><a href="api/graph.html#+replab.Graph.cachedOrEmpty">(replab.Graph method)</a>
 </li>
         <li><a href="api/groups.html#+replab.Group.cachedOrEmpty">(replab.Group method)</a>
-</li>
-        <li><a href="api/misc.html#+replab.IndexedFamily.cachedOrEmpty">(replab.IndexedFamily method)</a>
 </li>
         <li><a href="api/rep.html#+replab.Irreducible.cachedOrEmpty">(replab.Irreducible method)</a>
 </li>
@@ -1370,8 +1364,6 @@
         <li><a href="api/graph.html#+replab.Graph.check">(replab.Graph method)</a>
 </li>
         <li><a href="api/groups.html#+replab.Group.check">(replab.Group method)</a>
-</li>
-        <li><a href="api/misc.html#+replab.IndexedFamily.check">(replab.IndexedFamily method)</a>
 </li>
         <li><a href="api/rep.html#+replab.Irreducible.check">(replab.Irreducible method)</a>
 </li>
@@ -2092,6 +2084,8 @@
         <li><a href="api/numerics.html#+replab.H.ctranspose">(replab.H method)</a>
 </li>
       </ul></li>
+      <li><a href="api/commands.html#root.replab_Version.current">current() (root.replab_Version method)</a>
+</li>
       <li><a href="api/permutation_groups.html#+replab.Permutation.cycles">cycles() (replab.Permutation static method)</a>
 </li>
       <li><a href="api/permutation_groups.html#+replab.Permutation.cycleStructure">cycleStructure() (replab.Permutation static method)</a>
@@ -2473,8 +2467,6 @@
 </li>
         <li><a href="api/chemistry.html#+replab.IdentifyPointGroup.disp">(replab.IdentifyPointGroup method)</a>
 </li>
-        <li><a href="api/misc.html#+replab.IndexedFamily.disp">(replab.IndexedFamily method)</a>
-</li>
         <li><a href="api/rep.html#+replab.Irreducible.disp">(replab.Irreducible method)</a>
 </li>
         <li><a href="api/equivariant.html#+replab.IrreducibleEquivariant.disp">(replab.IrreducibleEquivariant method)</a>
@@ -2540,6 +2532,8 @@
         <li><a href="api/graph.html#+replab.UndirectedGraph.disp">(replab.UndirectedGraph method)</a>
 </li>
         <li><a href="api/group_products.html#+replab.WreathProductGroup.disp">(replab.WreathProductGroup method)</a>
+</li>
+        <li><a href="api/commands.html#root.replab_Version.disp">(root.replab_Version method)</a>
 </li>
       </ul></li>
       <li><a href="api/numerics.html#+replab.cyclotomic.display">display() (replab.cyclotomic method)</a>
@@ -2736,6 +2730,36 @@
         <li><a href="api/named_discrete_groups.html#+replab.SymmetricGroup.elements">(replab.SymmetricGroup method)</a>
 </li>
       </ul></li>
+      <li><a href="api/abstract_groups.html#+replab.AbstractGroup.elementsSequence">elementsSequence() (replab.AbstractGroup method)</a>
+
+      <ul>
+        <li><a href="api/group_subsets.html#+replab.ConjugacyClass.elementsSequence">(replab.ConjugacyClass method)</a>
+</li>
+        <li><a href="api/group_subsets.html#+replab.Coset.elementsSequence">(replab.Coset method)</a>
+</li>
+        <li><a href="api/group_subsets.html#+replab.DoubleCoset.elementsSequence">(replab.DoubleCoset method)</a>
+</li>
+        <li><a href="api/groups.html#+replab.FiniteGroup.elementsSequence">(replab.FiniteGroup method)</a>
+</li>
+        <li><a href="api/group_subsets.html#+replab.FiniteSet.elementsSequence">(replab.FiniteSet method)</a>
+</li>
+        <li><a href="api/group_subsets.html#+replab.LeftCoset.elementsSequence">(replab.LeftCoset method)</a>
+</li>
+        <li><a href="api/groups.html#+replab.NiceFiniteGroup.elementsSequence">(replab.NiceFiniteGroup method)</a>
+</li>
+        <li><a href="api/group_subsets.html#+replab.NormalCoset.elementsSequence">(replab.NormalCoset method)</a>
+</li>
+        <li><a href="api/permutation_groups.html#+replab.PermutationGroup.elementsSequence">(replab.PermutationGroup method)</a>
+</li>
+        <li><a href="api/group_subsets.html#+replab.RightCoset.elementsSequence">(replab.RightCoset method)</a>
+</li>
+        <li><a href="api/permutation_groups.html#+replab.SignedPermutationGroup.elementsSequence">(replab.SignedPermutationGroup method)</a>
+</li>
+        <li><a href="api/named_discrete_groups.html#+replab.SignedSymmetricGroup.elementsSequence">(replab.SignedSymmetricGroup method)</a>
+</li>
+        <li><a href="api/named_discrete_groups.html#+replab.SymmetricGroup.elementsSequence">(replab.SymmetricGroup method)</a>
+</li>
+      </ul></li>
       <li><a href="api/base.html#+replab.Laws.empty">empty() (replab.Laws static method)</a>
 </li>
       <li><a href="api/rep.html#+replab.DivisionAlgebra.encode">encode() (replab.DivisionAlgebra method)</a>
@@ -2816,8 +2840,6 @@
         <li><a href="api/groups.html#+replab.Group.eq">(replab.Group method)</a>
 </li>
         <li><a href="api/numerics.html#+replab.H.eq">(replab.H method)</a>
-</li>
-        <li><a href="api/misc.html#+replab.IndexedFamily.eq">(replab.IndexedFamily method)</a>
 </li>
         <li><a href="api/rep.html#+replab.Irreducible.eq">(replab.Irreducible method)</a>
 </li>
@@ -2950,8 +2972,6 @@
         <li><a href="api/group_subsets.html#+replab.FiniteSet.eqv">(replab.FiniteSet method)</a>
 </li>
         <li><a href="api/groups.html#+replab.Group.eqv">(replab.Group method)</a>
-</li>
-        <li><a href="api/misc.html#+replab.IndexedFamily.eqv">(replab.IndexedFamily method)</a>
 </li>
         <li><a href="api/equivariant.html#+replab.IrreducibleEquivariant.eqv">(replab.IrreducibleEquivariant method)</a>
 </li>
@@ -3141,11 +3161,7 @@
       <li><a href="api/abstract_groups.html#+replab.AtlasEntry.filename">filename (replab.AtlasEntry attribute)</a>
 </li>
       <li><a href="api/numerics.html#+replab.cyclotomic.find">find() (replab.cyclotomic method)</a>
-
-      <ul>
-        <li><a href="api/misc.html#+replab.IndexedFamily.find">(replab.IndexedFamily method)</a>
 </li>
-      </ul></li>
       <li><a href="api/chemistry.html#+replab.IdentifyPointGroup.findC2Axes">findC2Axes() (replab.IdentifyPointGroup method)</a>
 </li>
       <li><a href="api/chemistry.html#+replab.IdentifyPointGroup.findCharacterTable">findCharacterTable() (replab.IdentifyPointGroup static method)</a>
@@ -3202,8 +3218,6 @@
         <li><a href="api/named_discrete_groups.html#+replab.SymmetricGroup.findLeftConjugations">(replab.SymmetricGroup method)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/abstract_groups.html#+replab.AbstractGroup.findMorphisms">findMorphisms() (replab.AbstractGroup method)</a>
 
       <ul>
@@ -3220,6 +3234,8 @@
         <li><a href="api/named_discrete_groups.html#+replab.SymmetricGroup.findMorphisms">(replab.SymmetricGroup method)</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/chemistry.html#+replab.IdentifyPointGroup.findPerpendicularAxes">findPerpendicularAxes() (replab.IdentifyPointGroup method)</a>
 </li>
       <li><a href="api/chemistry.html#+replab.IdentifyPointGroup.findPointGroup">findPointGroup() (replab.IdentifyPointGroup method)</a>
@@ -3370,11 +3386,15 @@
 </li>
       <li><a href="api/convex_programming.html#+replab.CommutantVar.fromSymSdpMatrix">fromSymSdpMatrix() (replab.CommutantVar static method)</a>
 </li>
+      <li><a href="api/commands.html#root.replab_Version.fromText">fromText() (root.replab_Version static method)</a>
+</li>
       <li><a href="api/rep.html#+replab.Isotypic.fromTrivialSubRep">fromTrivialSubRep() (replab.Isotypic static method)</a>
 </li>
       <li><a href="api/graph.html#+replab.DirectedGraph.fromUndirectedGraph">fromUndirectedGraph() (replab.DirectedGraph static method)</a>
 </li>
       <li><a href="api/misc.html#+replab.Partition.fromVector">fromVector() (replab.Partition static method)</a>
+</li>
+      <li><a href="api/commands.html#root.replab_Version.fromVersionFile">fromVersionFile() (root.replab_Version static method)</a>
 </li>
       <li><a href="api/numerics.html#+replab.cyclotomic.full">full() (replab.cyclotomic method)</a>
 </li>
@@ -3747,8 +3767,6 @@
 </li>
         <li><a href="api/chemistry.html#+replab.IdentifyPointGroup.headerStr">(replab.IdentifyPointGroup method)</a>
 </li>
-        <li><a href="api/misc.html#+replab.IndexedFamily.headerStr">(replab.IndexedFamily method)</a>
-</li>
         <li><a href="api/rep.html#+replab.Irreducible.headerStr">(replab.Irreducible method)</a>
 </li>
         <li><a href="api/equivariant.html#+replab.IrreducibleEquivariant.headerStr">(replab.IrreducibleEquivariant method)</a>
@@ -3900,8 +3918,6 @@
         <li><a href="api/groups.html#+replab.Group.hiddenFields">(replab.Group method)</a>
 </li>
         <li><a href="api/chemistry.html#+replab.IdentifyPointGroup.hiddenFields">(replab.IdentifyPointGroup method)</a>
-</li>
-        <li><a href="api/misc.html#+replab.IndexedFamily.hiddenFields">(replab.IndexedFamily method)</a>
 </li>
         <li><a href="api/rep.html#+replab.Irreducible.hiddenFields">(replab.Irreducible method)</a>
 </li>
@@ -4058,8 +4074,6 @@
         <li><a href="api/graph.html#+replab.Graph.id">(replab.Graph method)</a>
 </li>
         <li><a href="api/groups.html#+replab.Group.id">(replab.Group method)</a>
-</li>
-        <li><a href="api/misc.html#+replab.IndexedFamily.id">(replab.IndexedFamily method)</a>
 </li>
         <li><a href="api/rep.html#+replab.Irreducible.id">(replab.Irreducible method)</a>
 </li>
@@ -4385,8 +4399,6 @@
 </li>
         <li><a href="api/groups.html#+replab.Group.inCache">(replab.Group method)</a>
 </li>
-        <li><a href="api/misc.html#+replab.IndexedFamily.inCache">(replab.IndexedFamily method)</a>
-</li>
         <li><a href="api/rep.html#+replab.Irreducible.inCache">(replab.Irreducible method)</a>
 </li>
         <li><a href="api/equivariant.html#+replab.IrreducibleEquivariant.inCache">(replab.IrreducibleEquivariant method)</a>
@@ -4446,7 +4458,13 @@
         <li><a href="api/group_products.html#+replab.WreathProductGroup.inCache">(replab.WreathProductGroup method)</a>
 </li>
       </ul></li>
-      <li><a href="api/misc.html#+replab.IndexedFamily">IndexedFamily (class in replab)</a>
+      <li><a href="api/commands.html#root.replab_Version.incrementedMajor">incrementedMajor() (root.replab_Version method)</a>
+</li>
+      <li><a href="api/commands.html#root.replab_Version.incrementedMinor">incrementedMinor() (root.replab_Version method)</a>
+</li>
+      <li><a href="api/commands.html#root.replab_Version.incrementedPatch">incrementedPatch() (root.replab_Version method)</a>
+</li>
+      <li><a href="api/misc.html#+replab.IndexedFamily">IndexedFamily (in module replab)</a>
 </li>
       <li><a href="api/rep.html#+replab.DivisionAlgebra.indexMatrix">indexMatrix (replab.DivisionAlgebra attribute)</a>
 </li>
@@ -4500,6 +4518,14 @@
         <li><a href="api/rep.html#+replab.Isotypic.injectionConditionNumberEstimate">(replab.Isotypic method)</a>
 </li>
         <li><a href="api/rep.html#+replab.SubRep.injectionConditionNumberEstimate">(replab.SubRep method)</a>
+</li>
+      </ul></li>
+      <li><a href="api/rep.html#+replab.Irreducible.injectionIsExact">injectionIsExact() (replab.Irreducible method)</a>
+
+      <ul>
+        <li><a href="api/rep.html#+replab.Isotypic.injectionIsExact">(replab.Isotypic method)</a>
+</li>
+        <li><a href="api/rep.html#+replab.SubRep.injectionIsExact">(replab.SubRep method)</a>
 </li>
       </ul></li>
       <li><a href="api/abstract_groups.html#+replab.AbstractGroup.innerAutomorphism">innerAutomorphism() (replab.AbstractGroup method)</a>
@@ -4719,6 +4745,8 @@
       <li><a href="api/abstract_groups.html#+replab.AbstractGroup.isequal">isequal() (replab.AbstractGroup method)</a>
 
       <ul>
+        <li><a href="api/numerics.html#+replab.cyclotomic.isequal">(replab.cyclotomic method)</a>
+</li>
         <li><a href="api/groups.html#+replab.FiniteGroup.isequal">(replab.FiniteGroup method)</a>
 </li>
         <li><a href="api/groups.html#+replab.NiceFiniteGroup.isequal">(replab.NiceFiniteGroup method)</a>
@@ -4732,6 +4760,8 @@
         <li><a href="api/named_discrete_groups.html#+replab.SymmetricGroup.isequal">(replab.SymmetricGroup method)</a>
 </li>
       </ul></li>
+      <li><a href="api/numerics.html#+replab.cyclotomic.isequaln">isequaln() (replab.cyclotomic method)</a>
+</li>
       <li><a href="api/equivariant.html#+replab.Equivariant.isExact">isExact() (replab.Equivariant method)</a>
 
       <ul>
@@ -5227,8 +5257,6 @@
 </li>
         <li><a href="api/groups.html#+replab.Group.lambda">(replab.Group static method)</a>
 </li>
-        <li><a href="api/misc.html#+replab.IndexedFamily.lambda">(replab.IndexedFamily static method)</a>
-</li>
         <li><a href="api/equivariant.html#+replab.IrreducibleEquivariant.lambda">(replab.IrreducibleEquivariant method)</a>
 </li>
         <li><a href="api/group_morphisms.html#+replab.Isomorphism.lambda">(replab.Isomorphism static method)</a>
@@ -5332,8 +5360,6 @@
         <li><a href="api/graph.html#+replab.Graph.laws">(replab.Graph method)</a>
 </li>
         <li><a href="api/groups.html#+replab.Group.laws">(replab.Group method)</a>
-</li>
-        <li><a href="api/misc.html#+replab.IndexedFamily.laws">(replab.IndexedFamily method)</a>
 </li>
         <li><a href="api/rep.html#+replab.Irreducible.laws">(replab.Irreducible method)</a>
 </li>
@@ -5619,8 +5645,6 @@
 </li>
         <li><a href="api/chemistry.html#+replab.IdentifyPointGroup.longStr">(replab.IdentifyPointGroup method)</a>
 </li>
-        <li><a href="api/misc.html#+replab.IndexedFamily.longStr">(replab.IndexedFamily method)</a>
-</li>
         <li><a href="api/rep.html#+replab.Irreducible.longStr">(replab.Irreducible method)</a>
 </li>
         <li><a href="api/equivariant.html#+replab.IrreducibleEquivariant.longStr">(replab.IrreducibleEquivariant method)</a>
@@ -5704,6 +5728,8 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/convex_programming.html#+replab.SedumiData.m">m (replab.SedumiData attribute)</a>
 </li>
+      <li><a href="api/commands.html#root.replab_Version.major">major (root.replab_Version attribute)</a>
+</li>
       <li><a href="api/group_subsets.html#+replab.ConjugacyClass.make">make() (replab.ConjugacyClass method)</a>
 
       <ul>
@@ -5762,14 +5788,6 @@
         <li><a href="api/rep.html#+replab.Isotypic.mapsAreIntegerValued">(replab.Isotypic method)</a>
 </li>
         <li><a href="api/rep.html#+replab.SubRep.mapsAreIntegerValued">(replab.SubRep method)</a>
-</li>
-      </ul></li>
-      <li><a href="api/rep.html#+replab.Irreducible.mapsArePermutationMatrices">mapsArePermutationMatrices() (replab.Irreducible method)</a>
-
-      <ul>
-        <li><a href="api/rep.html#+replab.Isotypic.mapsArePermutationMatrices">(replab.Isotypic method)</a>
-</li>
-        <li><a href="api/rep.html#+replab.SubRep.mapsArePermutationMatrices">(replab.SubRep method)</a>
 </li>
       </ul></li>
       <li><a href="api/rep.html#+replab.Irreducible.maschke">maschke() (replab.Irreducible method)</a>
@@ -5871,6 +5889,8 @@
       <li><a href="api/abstract_groups.html#+replab.AtlasEntry.md5">md5 (replab.AtlasEntry attribute)</a>
 </li>
       <li><a href="api/misc.html#+replab.Partition.meet">meet() (replab.Partition method)</a>
+</li>
+      <li><a href="api/commands.html#root.replab_Version.minor">minor (root.replab_Version attribute)</a>
 </li>
       <li><a href="api/convex_programming.html#+replab.CommutantVar.minus">minus() (replab.CommutantVar method)</a>
 
@@ -6241,8 +6261,6 @@
 </li>
         <li><a href="api/numerics.html#+replab.H.ne">(replab.H method)</a>
 </li>
-        <li><a href="api/misc.html#+replab.IndexedFamily.ne">(replab.IndexedFamily method)</a>
-</li>
         <li><a href="api/rep.html#+replab.Irreducible.ne">(replab.Irreducible method)</a>
 </li>
         <li><a href="api/equivariant.html#+replab.IrreducibleEquivariant.ne">(replab.IrreducibleEquivariant method)</a>
@@ -6304,8 +6322,6 @@
         <li><a href="api/group_products.html#+replab.WreathProductGroup.ne">(replab.WreathProductGroup method)</a>
 </li>
       </ul></li>
-      <li><a href="api/misc.html#+replab.IndexedFamily.nElements">nElements (replab.IndexedFamily attribute)</a>
-</li>
       <li><a href="api/abstract_groups.html#+replab.AbstractGroup.nElements">nElements() (replab.AbstractGroup method)</a>
 
       <ul>
@@ -6718,6 +6734,8 @@
 </li>
       <li><a href="api/numerics.html#+replab.H.partk">partk() (replab.H method)</a>
 </li>
+      <li><a href="api/commands.html#root.replab_Version.patch">patch (root.replab_Version attribute)</a>
+</li>
       <li><a href="api/permutation_groups.html#+replab.Permutation">Permutation (class in replab)</a>
 </li>
       <li><a href="api/permutation_groups.html#+replab.PermutationGroup">PermutationGroup (class in replab)</a>
@@ -6948,6 +6966,8 @@
         <li><a href="api/rep.html#+replab.SubRep.projectorErrorBound">(replab.SubRep method)</a>
 </li>
       </ul></li>
+      <li><a href="api/commands.html#root.replab_Version.prompt">prompt() (root.replab_Version method)</a>
+</li>
   </ul></td>
 </tr></table>
 
@@ -7136,8 +7156,6 @@
       </ul></li>
       <li><a href="api/rep.html#+replab.RepByImages.RepByImages">RepByImages() (replab.RepByImages method)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/permutation_groups.html#+replab.SignedPermutationGroup.repByImages">repByImages() (replab.SignedPermutationGroup method)</a>
 
       <ul>
@@ -7156,11 +7174,25 @@
         <li><a href="api/equivariant.html#+replab.SubEquivariant.repC">(replab.SubEquivariant attribute)</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/convex_programming.html#+replab.equivar.repC">repC() (replab.equivar method)</a>
 </li>
       <li><a href="api/abstract_groups.html#module-+replab">replab (module)</a>, <a href="api/base.html#module-+replab">[1]</a>, <a href="api/characters.html#module-+replab">[2]</a>, <a href="api/chemistry.html#module-+replab">[3]</a>, <a href="api/continuous_groups.html#module-+replab">[4]</a>, <a href="api/convex_programming.html#module-+replab">[5]</a>, <a href="api/equivariant.html#module-+replab">[6]</a>, <a href="api/graph.html#module-+replab">[7]</a>, <a href="api/group_morphisms.html#module-+replab">[8]</a>, <a href="api/group_products.html#module-+replab">[9]</a>, <a href="api/group_subsets.html#module-+replab">[10]</a>, <a href="api/groups.html#module-+replab">[11]</a>, <a href="api/misc.html#module-+replab">[12]</a>, <a href="api/named_discrete_groups.html#module-+replab">[13]</a>, <a href="api/numerics.html#module-+replab">[14]</a>, <a href="api/permutation_groups.html#module-+replab">[15]</a>, <a href="api/rep.html#module-+replab">[16]</a>, <a href="development/octave_bugs.html#module-+replab">[17]</a>, <a href="development/style.html#module-+replab">[18]</a>, <a href="howto/loadSave.html#module-+replab">[19]</a>
 </li>
       <li><a href="api/globals.html#module-+replab.+globals">replab.globals (module)</a>
+</li>
+      <li><a href="api/commands.html#root.replab_checkhelp">replab_checkhelp() (in module root)</a>
+</li>
+      <li><a href="api/commands.html#root.replab_generate">replab_generate() (in module root)</a>
+</li>
+      <li><a href="api/commands.html#root.replab_release">replab_release() (in module root)</a>
+</li>
+      <li><a href="api/commands.html#root.replab_runtests">replab_runtests() (in module root)</a>
+</li>
+      <li><a href="api/commands.html#root.replab_Version">replab_Version (class in root)</a>
+</li>
+      <li><a href="api/commands.html#root.replab_Version.replab_Version">replab_Version() (root.replab_Version method)</a>
 </li>
       <li><a href="api/globals.html#+replab.+globals.replabPath">replabPath() (in module replab.globals)</a>
 </li>
@@ -7306,6 +7338,8 @@
         <li><a href="api/named_discrete_groups.html#+replab.SymmetricGroup.rightCosetsOf">(replab.SymmetricGroup method)</a>
 </li>
       </ul></li>
+      <li><a href="api/commands.html#module-root">root (module)</a>
+</li>
       <li><a href="api/chemistry.html#+replab.IdentifyPointGroup.Rotation">Rotation() (replab.IdentifyPointGroup static method)</a>
 </li>
       <li><a href="api/chemistry.html#+replab.Molecule.RotationAction">RotationAction() (replab.Molecule method)</a>
@@ -7354,8 +7388,6 @@
         <li><a href="api/group_subsets.html#+replab.FiniteSet.sample">(replab.FiniteSet method)</a>
 </li>
         <li><a href="api/groups.html#+replab.Group.sample">(replab.Group method)</a>
-</li>
-        <li><a href="api/misc.html#+replab.IndexedFamily.sample">(replab.IndexedFamily method)</a>
 </li>
         <li><a href="api/rep.html#+replab.Irreducible.sample">(replab.Irreducible method)</a>
 </li>
@@ -7514,6 +7546,8 @@
       </ul></li>
       <li><a href="api/group_subsets.html#+replab.SetProduct.sets">sets (replab.SetProduct attribute)</a>
 </li>
+      <li><a href="api/commands.html#root.replab_Version.setTo">setTo() (root.replab_Version method)</a>
+</li>
       <li><a href="api/permutation_groups.html#+replab.PermutationGroup.setwiseStabilizer">setwiseStabilizer() (replab.PermutationGroup method)</a>
 
       <ul>
@@ -7589,8 +7623,6 @@
 </li>
         <li><a href="api/chemistry.html#+replab.IdentifyPointGroup.shortStr">(replab.IdentifyPointGroup method)</a>
 </li>
-        <li><a href="api/misc.html#+replab.IndexedFamily.shortStr">(replab.IndexedFamily method)</a>
-</li>
         <li><a href="api/rep.html#+replab.Irreducible.shortStr">(replab.Irreducible method)</a>
 </li>
         <li><a href="api/equivariant.html#+replab.IrreducibleEquivariant.shortStr">(replab.IrreducibleEquivariant method)</a>
@@ -7658,8 +7690,6 @@
         <li><a href="api/group_products.html#+replab.WreathProductGroup.shortStr">(replab.WreathProductGroup method)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/abstract_groups.html#+replab.AbstractGroup.shortType">shortType() (replab.AbstractGroup method)</a>
 
       <ul>
@@ -7690,6 +7720,8 @@
         <li><a href="api/named_discrete_groups.html#+replab.SymmetricGroup.shortType">(replab.SymmetricGroup method)</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/numerics.html#+replab.H.sign">sign() (replab.H method)</a>
 
       <ul>
@@ -7796,6 +7828,8 @@
         <li><a href="api/named_discrete_groups.html#+replab.SymmetricGroup.smallGeneratingSet">(replab.SymmetricGroup method)</a>
 </li>
       </ul></li>
+      <li><a href="api/commands.html#root.replab_Version.snapshot">snapshot (root.replab_Version attribute)</a>
+</li>
       <li><a href="api/continuous_groups.html#+replab.SO">SO() (in module replab)</a>
 </li>
       <li><a href="api/chemistry.html#+replab.IdentifyPointGroup.sortCoords">sortCoords() (replab.IdentifyPointGroup static method)</a>
@@ -8046,6 +8080,8 @@
 </li>
       <li><a href="api/group_subsets.html#+replab.CosetTable.table">table() (replab.CosetTable method)</a>
 </li>
+      <li><a href="api/commands.html#root.replab_Version.tag">tag() (root.replab_Version method)</a>
+</li>
       <li><a href="api/convex_programming.html#+replab.equiop.target">target (replab.equiop attribute)</a>
 
       <ul>
@@ -8110,8 +8146,6 @@
         <li><a href="api/numerics.html#+replab.H.times">(replab.H method)</a>
 </li>
       </ul></li>
-      <li><a href="api/misc.html#+replab.IndexedFamily.toCell">toCell() (replab.IndexedFamily method)</a>
-</li>
       <li><a href="api/numerics.html#+replab.cyclotomic.toCellOfStrings">toCellOfStrings() (replab.cyclotomic method)</a>
 </li>
       <li><a href="api/graph.html#+replab.UndirectedGraph.toDirectedGraph">toDirectedGraph() (replab.UndirectedGraph method)</a>
@@ -8173,6 +8207,8 @@
       <li><a href="api/numerics.html#+replab.H.toStringCell">toStringCell() (replab.H method)</a>
 </li>
       <li><a href="api/rep.html#+replab.Irreducible.toSubRep">toSubRep() (replab.Irreducible method)</a>
+</li>
+      <li><a href="api/commands.html#root.replab_Version.toText">toText() (root.replab_Version method)</a>
 </li>
       <li><a href="api/graph.html#+replab.DirectedGraph.toUndirectedGraph">toUndirectedGraph() (replab.DirectedGraph method)</a>
 </li>
@@ -8408,6 +8444,8 @@
         <li><a href="api/named_discrete_groups.html#+replab.SymmetricGroup.unorderedPartitionStabilizer">(replab.SymmetricGroup method)</a>
 </li>
       </ul></li>
+      <li><a href="api/commands.html#root.replab_Version.updateVersionFile">updateVersionFile() (root.replab_Version method)</a>
+</li>
       <li><a href="api/numerics.html#+replab.H.uplus">uplus() (replab.H method)</a>
 </li>
       <li><a href="api/globals.html#+replab.+globals.useReconstruction">useReconstruction() (in module replab.globals)</a>
@@ -8609,7 +8647,7 @@
         <li class="right" >
           <a href="mat-modindex.html" title="MATLAB Module Index"
              >matlab index</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">RepLAB 0.9.2 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="index.html">RepLAB 0.9.5-SNAP documentation</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">Index</a></li> 
       </ul>
     </div>
