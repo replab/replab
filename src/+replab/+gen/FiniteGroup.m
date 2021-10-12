@@ -1,4 +1,4 @@
-classdef FiniteGroup < replab.FiniteGroup
+classdef FiniteGroup < replab.FiniteGroup & replab.gen.FiniteSet
 % A generic finite group
 
     properties (SetAccess = protected)

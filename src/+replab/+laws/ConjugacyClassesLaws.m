@@ -13,8 +13,8 @@ classdef ConjugacyClassesLaws < replab.Laws
             self.G = C.group;
         end
 
-        function law_classIndex_G(self, g)
-            ind = self.C.classIndex(g);
+        function law_classIndexOf_G(self, g)
+            ind = self.C.classIndexOf(g);
             c = self.C.classes{ind};
             self.assert(c.contains(g));
         end

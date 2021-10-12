@@ -160,7 +160,6 @@ classdef DirectProductGroup < replab.CompactGroup
             m = self.commutingFactorMorphismsMorphism(target, morphisms);
         end
 
-
         function m = injection(self, i)
         % Returns the morphism embedding the i-th factor into the direct product
         %

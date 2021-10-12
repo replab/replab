@@ -9,7 +9,7 @@ classdef ConjugacyClasses < replab.Obj
     end
 
     properties (SetAccess = protected)
-        group % (`.FiniteGroup`): Group under study
+        group % (`.FiniteGroup`): Group whose conjugacy classes we describe
         classes % (cell(1,nC) of `.ConjugacyClass`): Conjugacy classes
     end
 
@@ -28,7 +28,7 @@ classdef ConjugacyClasses < replab.Obj
                 % compute the power map
                 m = zeros(1, self.nClasses);
                 for j = 1:self.nClasses
-                    m(j) = self.classIndex(self.group.composeN(self.classes{j}.representative, p));
+                    m(j) = self.classIndexOf(self.group.composeN(self.classes{j}.representative, p));
                 end
                 self.primePowerMap = [self.primePowerMap; m];
                 self.primes = [self.primes p];
@@ -67,17 +67,17 @@ classdef ConjugacyClasses < replab.Obj
 
     end
 
-    methods (Static)
-
-        function C = sorted(group, classes)
-            reps = cellfun(@(c) group.niceMorphism.imageElement(c.representative), classes, 'uniform', 0);
-            repMat = cellfun(@transpose, reps, 'uniform', 0);
-            repMat = [repMat{:}]';
-            [~, I] = sortrows(repMat);
-            C = replab.ConjugacyClasses(group, classes(I));
-        end
-
-    end
+% $$$     methods (Static)
+% $$$
+% $$$         function C = sorted(group, classes)
+% $$$             reps = cellfun(@(c) group.niceMorphism.imageElement(c.representative), classes, 'uniform', 0);
+% $$$             repMat = cellfun(@transpose, reps, 'uniform', 0);
+% $$$             repMat = [repMat{:}]';
+% $$$             [~, I] = sortrows(repMat);
+% $$$             C = replab.ConjugacyClasses(group, classes(I));
+% $$$         end
+% $$$
+% $$$     end
 
     methods
 
@@ -88,38 +88,9 @@ classdef ConjugacyClasses < replab.Obj
             self.primePowerMap = zeros(0, length(classes));
         end
 
-        function ind = indicesOfClasses(self, classes)
-        % Returns the indices of the given conjugacy classes in this list
-        %
-        % Args:
-        %   classes (`.ConjugacyClasses`): Conjugacy classes of `.group`
-        %
-        % Returns:
-        %   integer(1,\*): Indices of the given classes in these classes
-            n = classes.nClasses;
-            assert(self.nClasses == n);
-            ind = arrayfun(@(i) self.classIndexRepresentative(classes.classes{i}.representative), 1:n);
-        end
+    end
 
-        function n = nClasses(self)
-        % Returns the number of conjugacy classes in the group
-        %
-        % Returns:
-        %   integer: Number of classes
-            n = length(self.classes);
-        end
-
-        function G = normalSubgroupClasses(self, indices)
-        % Returns the normal subgroup consisting of the conjugacy classes whose positions are given
-        %
-        % Args:
-        %   indices (integer(1,\*)): Indices of conjugacy classes
-        %
-        % Returns:
-        %   `.FiniteGroup`: Normal subgroup representing that union
-            reps = arrayfun(@(ind) self.classes{ind}.representative, indices, 'uniform', 0);
-            G = self.group.normalClosure(self.group.subgroup(reps));
-        end
+    methods % Properties
 
         function s = centralizerSizes(self)
         % Returns the sizes of the centralizers
@@ -137,6 +108,14 @@ classdef ConjugacyClasses < replab.Obj
             s = cellfun(@(c) c.elementOrder, self.classes);
         end
 
+        function r = classRepresentatives(self)
+        % Returns the canonical representatives of the conjugacy classes
+        %
+        % Returns:
+        %   cell(1,\*) of `.ConjugacyClass`: Representatives
+            r = cellfun(@(c) c.representative, self.classes, 'uniform', 0);
+        end
+
         function s = classSizes(self)
         % Returns the sizes of the conjugacy classes
         %
@@ -146,48 +125,77 @@ classdef ConjugacyClasses < replab.Obj
             s = cellfun(@(c) c.nElements, self.classes, 'uniform', 0);
         end
 
-        function r = classRepresentatives(self)
-        % Returns the canonical representatives of the conjugacy classes
+        function n = nClasses(self)
+        % Returns the number of conjugacy classes in the group
         %
         % Returns:
-        %   cell(1,\*) of `.ConjugacyClass`: Representatives
-            r = cellfun(@(c) c.representative, self.classes, 'uniform', 0);
+        %   integer: Number of classes
+            n = length(self.classes);
         end
 
-        function ind = classIndexRepresentative(self, rep)
-        % Finds the conjugacy class where a given conjugacy class representative is located
+    end
+
+    methods
+
+        function ind = classIndexOf(self, g, varargin)
+        % Finds the conjugacy class where a given element is located
         %
         % Args:
-        %   rep (element of `.group`): Conjugacy class representative
+        %   g (element of `.group`): Group element
+        %
+        % Keyword Args:
+        %   isCanonical (logical, optional): Whether the given ``g`` is the class canonical representative, default: false
         %
         % Returns:
         %   integer: Index of the class containing ``g``
+            args = replab.util.populateStruct(struct('isCanonical', false), varargin);
+            if args.isCanonical
+                rep = g;
+            else
+                cc = self.group.conjugacyClass(g);
+                rep = cc.representative;
+            end
             for k = 1:length(self.classes)
                 if self.group.eqv(self.classes{k}.representative, rep)
                     ind = k;
                     return
                 end
             end
-            assert(self.group.contains(rep));
-            error('Error in the list of conjugacy classes');
         end
 
-        function ind = classIndex(self, g)
-        % Finds the conjugacy class where a given element is located
+        function ind = indicesOfClasses(self, classes)
+        % Returns the indices of the given conjugacy classes in this list
         %
         % Args:
-        %   g (element of `.group`): Group element
+        %   classes (`.ConjugacyClasses`): Conjugacy classes of `.group`
         %
         % Returns:
-        %   integer: Index of the class containing ``g``
-            r = replab.ConjugacyClasses.representative(self.group, g);
-            ind = self.classIndexRepresentative(r);
+        %   integer(1,\*): Indices of the given classes in these classes
+            n = classes.nClasses;
+            assert(self.nClasses == n);
+            ind = arrayfun(@(i) self.classIndexOf(classes.classes{i}.representative, 'isCanonical', true), 1:n);
         end
+
+        function G = normalSubgroupClasses(self, indices)
+        % Returns the normal subgroup consisting of the conjugacy classes whose positions are given
+        %
+        % Args:
+        %   indices (integer(1,\*)): Indices of conjugacy classes
+        %
+        % Returns:
+        %   `.FiniteGroup`: Normal subgroup representing that union
+            reps = arrayfun(@(ind) self.classes{ind}.representative, indices, 'uniform', 0);
+            G = self.group.normalClosure(self.group.subgroup(reps));
+        end
+
+    end
+
+    methods % Power maps
 
         function m = powerMap(self, n)
         % Returns the power map corresponding to the given exponent
         %
-        % We have ``m(i) = self.classIndex(self.group.composeN(self.classes{i}.representative, n))``.
+        % We have ``m(i) = self.classIndexOf(self.group.composeN(self.classes{i}.representative, n))``.
         %
         % Args:
         %   p (integer): Exponent
@@ -198,20 +206,6 @@ classdef ConjugacyClasses < replab.Obj
             for p = double(factor(n))
                 mp = self.getPrimePowerMap(p);
                 m = mp(m);
-            end
-        end
-
-        function m = powerMaps(self, exponents)
-        % Returns or computes&stores the power map corresponding to the given exponent
-        %
-        % Args:
-        %   exponents (integer): Exponents
-        %
-        % Returns:
-        %   integer(length(exponents),\*): Index of the power of each conjugacy class
-            m = zeros(length(exponents), self.nClasses);
-            for i = 1:length(exponents)
-                m(i,:) = self.powerMap(exponents(i));
             end
         end
 
@@ -236,32 +230,39 @@ classdef ConjugacyClasses < replab.Obj
             end
         end
 
-        function c1 = imap(self, f)
-        % Maps the conjugacy classes under an isomorphism
+        function m = powerMaps(self, exponents)
+        % Returns or computes&stores the power map corresponding to the given exponent
         %
         % Args:
-        %   f (`.FiniteIsomorphism`): Isomorphism with ``self.group.isSubgroupOf(f.source)``
+        %   exponents (integer(1,\*)): Exponents
         %
         % Returns:
-        %   `.ConjugacyClasses`: The conjugacy classes mapped under ``f``, expressed as a subset of ``f.image``
-            if self.group.order < f.source.order
-                f = f.restrictedSource(self.group);
+        %   integer(length(exponents),\*): Index of the power of each conjugacy class
+            m = zeros(length(exponents), self.nClasses);
+            for i = 1:length(exponents)
+                m(i,:) = self.powerMap(exponents(i));
             end
-            classes1 = cellfun(@(c) c.imap(f), self.classes, 'uniform', 0);
-            c1 = replab.ConjugacyClasses(f.target, classes1);
         end
 
     end
 
-    methods (Static)
-
-        function r = representative(group, element)
-            prmGroup = group.niceMorphism.image;
-            prmElement = group.niceMorphism.imageElement(element);
-            h = replab.bsgs.ConjugacyClasses.representative(prmGroup, prmElement);
-            r = group.niceMorphism.preimageElement(h);
-        end
-
-    end
+% $$$     methods
+% $$$
+% $$$         function c1 = imap(self, f)
+% $$$         % Maps the conjugacy classes under an isomorphism
+% $$$         %
+% $$$         % Args:
+% $$$         %   f (`.FiniteIsomorphism`): Isomorphism with ``self.group.isSubgroupOf(f.source)``
+% $$$         %
+% $$$         % Returns:
+% $$$         %   `.ConjugacyClasses`: The conjugacy classes mapped under ``f``, expressed as a subset of ``f.image``
+% $$$             if self.group.order < f.source.order
+% $$$                 f = f.restrictedSource(self.group);
+% $$$             end
+% $$$             classes1 = cellfun(@(c) c.imap(f), self.classes, 'uniform', 0);
+% $$$             c1 = replab.ConjugacyClasses(f.target, classes1);
+% $$$         end
+% $$$
+% $$$     end
 
 end

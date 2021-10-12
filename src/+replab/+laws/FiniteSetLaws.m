@@ -18,6 +18,10 @@ classdef FiniteSetLaws < replab.laws.DomainLaws
             assertTrue(self.T.contains(t));
         end
 
+        function law_representative_is_minimal_T(self, t)
+            assertTrue(self.T.type.compare(self.T.representative, t) <= 0);
+        end
+
     end
 
 end

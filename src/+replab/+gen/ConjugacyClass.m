@@ -1,4 +1,4 @@
-classdef ConjugacyClass < replab.FiniteSet
+classdef ConjugacyClass < replab.ConjugacyClass & replab.gen.FiniteSte
 % Describes a conjugacy class of a finite group
 %
 % A conjugacy class containing the representative $r \in G$ is the set $\{g r g^{-1} : g \in G \}$.
@@ -80,7 +80,7 @@ classdef ConjugacyClass < replab.FiniteSet
     methods (Access = protected)
 
         function E = computeElements(self)
-            T = self.group.leftCosetsOf(self.representativeCentralizer).transversal;
+            T = self.group.leftCosets(self.representativeCentralizer).transversal;
             E = cellfun(@(t) self.group.leftConjugate(t, self.representative), T, 'uniform', 0);
         end
 

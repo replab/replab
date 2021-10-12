@@ -1,28 +1,28 @@
-classdef ConjugacyClass < replab.FiniteSet
-% Describes a conjugacy class of a finite group
-%
-% A conjugacy class containing the representative $r \in G$ is the set $\{g r g^{-1} : g \in G \}$.
-%
-% The centralizer of $r$ in $G$ is the subgroup $C_{G}(r) = \{ g r g^{-1} == r : g \in G \}$.
-%
-% Thus, the left cosets $G/C_{G}(r) = \{ g C_{G}(r) : g \in G \}$ are in one to one correspondence with
-% the elements of the conjugacy class.
-
-    properties (SetAccess = protected)
-        group % (`+replab.FiniteGroup`): Group containing this conjugacy class
-        representativeCentralizer % (`+replab.FiniteGroup`): Centralizer of `.representative` in `.group`
-    end
+classdef ConjugacyClass < replab.ConjugacyClass & replab.PermutationFiniteSet
 
     methods
 
         function self = ConjugacyClass(group, representative, representativeCentralizer)
             self.type = group.type;
-            self.group = group;
             self.representative = representative;
-            if nargin < 3 || isempty(representativeCentralizer)
-                representativeCentralizer = self.group.centralizer(representative);
+            self.group = group;
+            if nargin >= 3 && ~isempty(representativeCentralizer)
+                self.cache('representativeCentralizer', representativeCentralizer);
             end
-            self.representativeCentralizer = representativeCentralizer;
+        end
+
+    end
+
+    methods (Static)
+
+        function c = make(group, element, elementCentralizer)
+            [representative, g] = replab.bsgs.ConjugacyClasses.representative(group, element);
+            if nargin >= 3
+                representativeCentralizer = elementCentralizer.leftConjugateGroup(g);
+                c = replab.perm.ConjugacyClass(group, representative, representativeCentralizer);
+            else
+                c = replab.perm.ConjugacyClass(group, representative);
+            end
         end
 
     end
@@ -33,59 +33,17 @@ classdef ConjugacyClass < replab.FiniteSet
             o = self.group.elementOrder(self.representative);
         end
 
-    end
-
-    methods
-
-        function o = elementOrder(self)
-        % Returns the order of the elements in this conjugacy class
-        %
-        % Returns:
-        %   integer: Element order
-            o = self.cached('elementOrder', @() self.computeElementOrder);
-        end
-
-        function c1 = imap(self, f)
-        % Maps this conjugacy class under an isomorphism
-        %
-        % Args:
-        %   f (`.FiniteIsomorphism`): Isomorphism with ``self.group.isSubgroupOf(f.source)``
-        %
-        % Returns:
-        %   `.ConjugacyClass`: The conjugacy class mapped under ``f``, expressed as a subset of ``f.image``
-            if self.group.order < f.source.order
-                f = f.restrictedSource(self.group);
-            end
-            c1 = replab.ConjugacyClass.make(f.target, f.imageElement(self.representative), f.imageGroup(self.representativeCentralizer));
-        end
-
-    end
-
-    methods (Static)
-
-        function c = make(group, element, elementCentralizer)
-            if nargin < 3
-                elementCentralizer = group.centralizer(element);
-            end
-            prmGroup = group.permutationGroup;
-            prmElement = group.permutationIsomorphism.imageElement(element);
-            [h1 g] = replab.bsgs.ConjugacyClasses.representative(prmGroup, prmElement);
-            representative = group.permutationIsomorphism.preimageElement(h1);
-            representativeCentralizer = elementCentralizer.leftConjugateGroup(group.permutationIsomorphism.preimageElement(g));
-            c = replab.ConjugacyClass(group, representative, representativeCentralizer);
-        end
-
-    end
-
-    methods (Access = protected)
-
-        function E = computeElements(self)
-            T = self.group.leftCosetsOf(self.representativeCentralizer).transversal;
-            E = cellfun(@(t) self.group.leftConjugate(t, self.representative), T, 'uniform', 0);
-        end
+% $$$         function E = computeElementsSequence(self)
+% $$$             T = self.group.leftCosets(self.representativeCentralizer).transversal;
+% $$$             E = cellfun(@(t) self.group.leftConjugate(t, self.representative), T, 'uniform', 0);
+% $$$         end
 
         function n = computeNElements(self)
             n = self.group.order / self.representativeCentralizer.order;
+        end
+
+        function G = computeRepresentativeCentralizer(self)
+            G = self.group.centralizer(self.representative);
         end
 
     end
@@ -116,10 +74,6 @@ classdef ConjugacyClass < replab.FiniteSet
 
         % FiniteSet
 
-        function s = nElements(self)
-            s = self.cached('nElements', @() self.computeNElements);
-        end
-
         function b = contains(self, t)
         % Returns whether the given element is part of this conjugacy class
         %
@@ -133,6 +87,20 @@ classdef ConjugacyClass < replab.FiniteSet
             % We want to solve ``t == b s b^-1`` with ``s`` the representative
             B = self.group.findLeftConjugations(s, t, sCentralizer);
             b = ~isempty(B);
+        end
+
+        function s = nElements(self)
+            s = self.cached('nElements', @() self.computeNElements);
+        end
+
+        % ConjugacyClass
+
+        function o = elementOrder(self)
+            o = self.cached('elementOrder', @() self.computeElementOrder);
+        end
+
+        function c = representativeCentralizer(self)
+            c = self.cached('representativeCentralizer', @() self.computeRepresentativeCentralizer);
         end
 
     end

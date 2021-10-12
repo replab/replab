@@ -15,29 +15,24 @@ classdef FiniteSet < replab.Domain
 
     properties (SetAccess = protected)
         type % (`.FiniteGroupType`): Type of the contained elements
-        representative % (element of `.type`): Minimal member of this set under lexicographic ordering. If the set is empty, value is undefined.
     end
 
-    methods (Access = protected)
-
-        function E = computeElementsSequence(self)
-        % See `.elementsSequence`
-            error('Abstract');
-        end
-
+    properties (Access = protected)
+        representative_ % (element of `.type`): Minimal member of this set under the `.type` ordering. If the set is empty, value is undefined.
     end
 
-    methods
-
-        function self = FiniteSet(type, representative)
-            self.type = type;
-            self.representative = representative;
-        end
+    methods % Elements
 
         function b = contains(self, el)
         % Tests whether this set contains the given element
         %
-        % The element must be part of ``self.parent.type``.
+        % The element must be part of `.type`, as in the example below: only permutations with the same domain size
+        % should be tested using `.contains`.
+        %
+        % Example:
+        %   >>> G = replab.PermutationGroup.of([2 3 4 1]);
+        %   >>> G.contains([4 3 2 1])
+        %       0
         %
         % Args:
         %   el (element of `.type`): Element to test for membership
@@ -50,13 +45,17 @@ classdef FiniteSet < replab.Domain
         function E = elementsSequence(self)
         % Returns a sequence corresponding to this set
         %
+        % The sequence is sorted according to the total ordering defined by `.type`.
+        %
         % Returns:
         %   `.Sequence`: An enumeration of the set elements
-            E = self.cached('elementsSequence', @() self.computeElementsSequence);
+            error('Abstract');
         end
 
         function E = elements(self)
         % Returns a cell array containing all the elements of this set
+        %
+        % The sequence is sorted according to the total ordering defined by `.type`.
         %
         % Note: if the number of elements is bigger than `+replab.globals.maxElements`, an error is thrown.
         %
@@ -74,6 +73,14 @@ classdef FiniteSet < replab.Domain
         % Returns:
         %   vpi: Set cardinality
             error('Abstract');
+        end
+
+        function r = representative(self)
+        % Returns the minimal element of this set under the type ordering
+        %
+        % Returns:
+        %   element: Canonical representative of this set
+            r = self.representative_;
         end
 
         function s = setProduct(self)
@@ -98,12 +105,35 @@ classdef FiniteSet < replab.Domain
         %
         % Returns:
         %   logical: True if the groups have compatible types
-            res = self.type.hasSameTypeAs(rhs.type); % we delegate to the types themselves
+            res = self.type.isSameTypeAs(rhs.type); % we delegate to the types themselves
         end
 
     end
 
+    % TODO
+% $$$     methods % Image under isomorphism
+% $$$
+% $$$         function res = imap(self, f)
+% $$$         % Returns the image of this finite set under an isomorphism
+% $$$         %
+% $$$         % Args:
+% $$$         %   f (`.FiniteIsomorphism`): Isomorphism such that this finite set is contained in ``f.source``
+% $$$         %
+% $$$         % Returns:
+% $$$         %   `.FiniteSet`: This finite set mapped under ``f``, expressed as a subset of ``f.image``
+% $$$             res = replab.gen.FiniteSet(f.target.type, self, f.inverse);
+% $$$         end
+% $$$
+% $$$     end
+
+
     methods % Implementations
+
+        % Domain
+
+        function b = eqv(lhs, rhs)
+            b = self.type.eqv(lhs, rhs);
+        end
 
         function res = mtimes(lhs, rhs)
             res = replab.FiniteSet.multiply(lhs, rhs);
@@ -131,10 +161,6 @@ classdef FiniteSet < replab.Domain
             else
                 t = 'E';
             end
-        end
-
-        function checkNormalizes(lhs, rhs)
-            assert(lhs.isNormalizedBy(rhs) || rhs.isNormalizedBy(lhs), 'This product requires a normalization condition');
         end
 
         function res = multiply(lhs, rhs)

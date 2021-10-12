@@ -51,50 +51,32 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
         generators % (cell(1,\*) of `.type` elements): Group generators
     end
 
-    methods (Static)
+    methods (Access = protected)
 
-        function names = defaultGeneratorNames(n)
-        % Returns default generator names
+        function populateCache(self, argumentPairs)
+        % Processes argument pairs to put in cache (helper for subclasses constructors)
         %
-        % Args:
-        %   n (integer): Number of generators
-        %
-        % Returns:
-        %   cell(1,\*) of charstring: A list of generator names starting with ``x1``, ``x2``, ...
-            names = arrayfun(@(i) ['x' num2str(i)], 1:n, 'uniform', 0);
-        end
-
-    end
-
-    methods
-
-        function self = FiniteGroup(type, generators, varargin)
-        % Constructs a finite group
-        %
-        % Args:
-        %   identity (group element): Identity element
-        %   generators (cell(1,\*) of group elements): Group generators
-        %   type (`.FiniteGroup` or 'self'): Group type
+        % Must be called after `.identity` and `.generators` has been set.
         %
         % Keyword Args:
         %   generatorNames (cell(1,\*) of charstring): Names of the generators
         %   order (vpi or integer): Group order
         %   relators (cell(1,\*) of charstring): Relators
-            self@replab.FiniteSet(type, type.identity);
-            self.identity = type.identity;
-            self.generators = generators;
+        %   abelianInvariants (cell(1,\*) of integer(1,\*)): Precomputed Abelian invariants
+        %   realCharacter (`.RealCharacterTable`): Real character table
+        %   complexCharacter (`.RealCharacterTable`): Complex character table
             args = struct('generatorNames', {cell(1, 0)}, 'order', {0}, 'relators', {'none'}, 'abelianInvariants', {'none'}, ...
                           'realCharacterTable', {'none'}, 'complexCharacterTable', {'none'});
-            args = replab.util.populateStruct(args, varargin);
+            args = replab.util.populateStruct(args, argumentPairs);
             if args.order > 0
                 self.cache('order', args.order, '==');
             end
-            if isempty(generators)
+            if isempty(self.generators)
                 self.generatorNames = cell(1, 0);
             elseif isempty(args.generatorNames)
-                self.generatorNames = self.defaultGeneratorNames(length(generators));
+                self.generatorNames = replab.fp.defaultGeneratorNames(length(self.generators));
             else
-                assert(length(args.generatorNames) == length(generators), 'Mismatch in the number of generator and names');
+                assert(length(args.generatorNames) == length(self.generators), 'Mismatch in the number of generator and names');
                 self.generatorNames = args.generatorNames;
             end
             if ~isequal(args.relators, 'none')
@@ -116,27 +98,42 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
 
     methods % Implementations
 
-        function res = ne(self, rhs)
-            res = ~(self == rhs);
-        end
-
         function res = eq(self, rhs)
+        % Test groups for equality
+        %
+        % Example:
+        %   >>> G = replab.PermutationGroup.of([2 3 1], [2 1 3]);
+        %   >>> H = replab.PermutationGroup.of([2 1 3], [1 3 2]);
+        %   >>> G == H
+        %       1
             res = isa(rhs, 'replab.FiniteGroup') && self.hasSameTypeAs(rhs) && self.isSubgroupOf(rhs) && rhs.isSubgroupOf(self);
         end
 
         function res = isequal(self, rhs)
+        % Test groups for equality
+        %
+        % Alternative syntax to `.eq`
+        %
+        % Example:
+        %   >>> G = replab.PermutationGroup.of([2 3 1], [2 1 3]);
+        %   >>> H = replab.PermutationGroup.of([2 1 3], [1 3 2]);
+        %   >>> isequal(G, H)
+        %       1
             res = self == rhs;
         end
 
-        % Str
-
-        function names = hiddenFields(self)
-            names = hiddenFields@replab.Group(self);
-            names{1, end+1} = 'generators';
-            names{1, end+1} = 'generatorNames';
-            names{1, end+1} = 'type';
-            names{1, end+1} = 'representative';
+        function res = ne(self, rhs)
+        % Test groups for non-equality
+        %
+        % Example:
+        %   >>> G = replab.PermutationGroup.of([2 3 1], [2 1 3]);
+        %   >>> H = replab.PermutationGroup.of([2 1 3]);
+        %   >>> G ~= H
+        %       1
+            res = ~(self == rhs);
         end
+
+        % Str
 
         function [names values] = additionalFields(self)
             [names values] = additionalFields@replab.Group(self);
@@ -151,6 +148,14 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
             end
         end
 
+        function names = hiddenFields(self)
+            names = hiddenFields@replab.Group(self);
+            names{1, end+1} = 'generators';
+            names{1, end+1} = 'generatorNames';
+            names{1, end+1} = 'type';
+            names{1, end+1} = 'representative';
+        end
+
         % Obj
 
         function l = laws(self)
@@ -159,47 +164,40 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
 
         % Group
 
+        function m = innerAutomorphism(self, by)
+            generatorImages = cellfun(@(g) self.leftConjugate(by, g), self.generators, 'uniform', 0);
+            m = self.isomorphismByImages(self, 'preimages', self.generators, 'images', generatorImages);
+        end
+
+        function m = isomorphismByFunctions(self, target, preimageElementFun, imageElementFun)
+            m = self.isomorphismByFunction(self, target, imageElementFun);
+        end
+
         function m = morphismByFunction(self, target, imageElementFun, torusMap)
             imgs = cellfun(imageElementFun, self.generators, 'uniform', 0);
             m = self.morphismByImages(target, 'preimages', self.generators, 'images', imgs, 'imageElementFun', imageElementFun);
         end
 
-        function m = isomorphismByFunctions(self, target, preimageElementFun, imageElementFun)
-        % Constructs a group isomorphism using preimage/image functions
-        %
-        % Args:
-        %   target (`replab.Group`): Target group
-        %   preimageElementFun (function_handle): Returns the source element for a target element
-        %   imageElementFun (function_handle): Returns the target element for a source element
-            m = self.isomorphismByFunction(self, target, imageElementFun);
-        end
-
-        function m = innerAutomorphism(self, by)
-        % Returns the morphism that corresponds to left conjugation by an element
-        %
-        % Args:
-        %   by (element of `.type`): Element to conjugate the group with
-        %
-        % Returns:
-        %   `+replab.FiniteMorphism`: Conjugation morphism
-            generatorImages = cellfun(@(g) self.leftConjugate(by, g), self.generators, 'uniform', 0);
-            m = self.isomorphismByImages(self, 'preimages', self.generators, 'images', generatorImages);
-        end
-
         % CompactGroup
-
-        function d = maximalTorusDimension(self)
-            d = 0;
-        end
 
         function b = hasReconstruction(self)
             b = true;
+        end
+
+        function d = maximalTorusDimension(self)
+            d = 0;
         end
 
         function [mu, R] = reconstruction(self)
             T = replab.T(0);
             mu = T.morphismByFunction(self, @(t) self.identity);
             R = self.setProduct;
+        end
+
+        % FiniteSet
+
+        function s = nElements(self)
+            s = self.order;
         end
 
     end
@@ -253,53 +251,6 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
             c = c.imap(r);
         end
 
-        function c = computeConjugacyClasses(self)
-        % See `.conjugacyClasses`
-            error('Abstract');
-        end
-
-        function sub = computeDerivedSubgroup(self)
-        % See `.derivedSubgroup`
-            error('Abstract');
-        end
-
-        function e = computeExponent(self)
-        % See `.exponent`
-            eo = self.conjugacyClasses.classElementOrders;
-            eo = unique(eo);
-            e = eo(1);
-            for i = 2:length(eo)
-                e = lcm(e, eo(i));
-            end
-        end
-
-        function R = computeFastRecognize(self)
-            R = [];
-            if self.permutationGroup.image.domainSize < replab.globals.fastChainDomainSize
-                c = self.permutationIsomorphism.image.partialChain;
-                if ~c.isMutable
-                    if c.order <= replab.globals.atlasMaximalOrder
-                        R = replab.Atlas.recognize(self);
-                    end
-                end
-            end
-        end
-
-        function res = computeIsCyclic(self)
-        % See `.isCyclic`
-            error('Abstract');
-        end
-
-        function res = computeIsSimple(self)
-        % See `.isSimple`
-            error('Abstract');
-        end
-
-        function o = computeOrder(self)
-        % See `.order`
-            error('Abstract');
-        end
-
         function R = computeRecognize(self)
             R = replab.Atlas.recognize(self);
         end
@@ -309,73 +260,9 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
             R = replab.fp.relatorsForPermutationGroup(self.permutationGroup);
         end
 
-        function s = computeSetProduct(self)
-        % See `.setProduct`
-            error('Abstract');
-        end
-
     end
 
-    methods % Group properties
-
-        function s = nElements(self)
-            s = self.order;
-        end
-
-        function o = order(self)
-        % Returns the group order
-        %
-        % Returns:
-        %   vpi: The group order
-            o = self.cached('order', @() self.computeOrder);
-        end
-
-        function e = exponent(self)
-        % Returns the group exponent
-        %
-        % The group exponent is the smallest integer ``e`` such that ``g^e == identity`` for all ``g`` in ``G``.
-        %
-        % Returns:
-        %   vpi: The group exponent
-            e = self.cached('exponent', @() self.computeExponent);
-        end
-
-        function a = abelianInvariants(self)
-        % Returns the group abelian invariants
-        %
-        % It computes the decomposition of the factor group of this group by its derived subgroup
-        % (which is abelian), and returns the primary decomposition of that abelian group.
-        %
-        % The abelian invariants are sorted in weakly increasing order.
-        %
-        % Example:
-        %   >>> G = replab.PermutationGroup.cyclic(100);
-        %   >>> isequal(G.abelianInvariants, [4 25])
-        %       1
-        %
-        % Returns:
-        %   integer(1,\*): Group abelian invariants
-            a = self.cached('abelianInvariants', @() self.computeAbelianInvariants);
-        end
-
-        function c = conjugacyClass(self, g)
-        % Returns the conjugacy class corresponding to the given element
-        %
-        % Args:
-        %   g (element): Arbitrary group element
-        %
-        % Returns:
-        %   `.ConjugacyClass`: The conjugacy class containing the given element
-            c = replab.ConjugacyClass.make(self, g);
-        end
-
-        function c = conjugacyClasses(self)
-        % Returns the conjugacy classes of this group
-        %
-        % Returns:
-        %   `+replab.ConjugacyClasses`: Conjugacy classes
-            c = self.cached('conjugacyClasses', @() self.computeConjugacyClasses);
-        end
+    methods % Conjugacy classes and character table
 
         function c = characterTable(self, field)
         % Returns the (real or complex) character table of this group
@@ -402,6 +289,60 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
             end
         end
 
+        function c = conjugacyClass(self, g, varargin)
+        % Returns the conjugacy class corresponding to the given element
+        %
+        % Args:
+        %   g (element): Arbitrary group element
+        %
+        % Keywords Args:
+        %   isCanonical (logical, optional): Whether the given ``g`` is the class canonical representative, default: false
+        %
+        % Returns:
+        %   `.ConjugacyClass`: The conjugacy class containing the given element
+            error('Abstract');
+        end
+
+        function c = conjugacyClasses(self)
+        % Returns the conjugacy classes of this group
+        %
+        % Returns:
+        %   `+replab.ConjugacyClasses`: Conjugacy classes
+            error('Abstract');
+        end
+
+    end
+
+    methods % Group properties
+
+        function a = abelianInvariants(self)
+        % Returns the group abelian invariants
+        %
+        % It computes the decomposition of the factor group of this group by its derived subgroup
+        % (which is abelian), and returns the primary decomposition of that abelian group.
+        %
+        % The abelian invariants are sorted in weakly increasing order.
+        %
+        % Example:
+        %   >>> G = replab.PermutationGroup.cyclic(100);
+        %   >>> isequal(G.abelianInvariants, [4 25])
+        %       1
+        %
+        % Returns:
+        %   integer(1,\*): Group abelian invariants
+            a = self.cached('abelianInvariants', @() self.computeAbelianInvariants);
+        end
+
+        function e = exponent(self)
+        % Returns the group exponent
+        %
+        % The group exponent is the smallest integer ``e`` such that ``g^e == identity`` for all ``g`` in ``G``.
+        %
+        % Returns:
+        %   vpi: The group exponent
+            error('Abstract');
+        end
+
         function R = fastRecognize(self)
         % Attempts to recognize this group in the standard atlas
         %
@@ -410,6 +351,38 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
             R = [];
             return % TODO
             R = self.cached('fastRecognize', @() self.computeFastRecognize);
+        end
+
+        function b = isTrivial(self)
+        % Tests whether this group is trivial
+        %
+        % Returns:
+        %   logical: True if this group is trivial (i.e. has only one element)
+            b = self.nGenerators == 0;
+        end
+
+        function res = isCommutative(self)
+        % Returns whether this group is commutative
+            for i = 1:self.nGenerators
+                gi = self.generator(i);
+                for j = 1:i-1
+                    gj = self.generator(j);
+                    if ~self.eqv(self.compose(gi, gj), self.compose(gj, gi))
+                        res = false;
+                        return
+                    end
+                end
+            end
+            res = true;
+            return
+        end
+
+        function o = order(self)
+        % Returns the group order
+        %
+        % Returns:
+        %   vpi: The group order
+            error('Abstract');
         end
 
         function s = presentation(self, generatorNames)
@@ -458,109 +431,19 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
             R = cellfun(@(r) self.lettersToWord(r, generatorNames), R, 'uniform', 0);
         end
 
-        function D = setProduct(self)
-        % Returns a decomposition of this group as a product of sets
-        %
-        % Returns:
-        %   `.SetProduct`: The group decomposition
-            D = self.cached('setProduct', @() self.computeSetProduct);
-        end
-
-
-        function b = isTrivial(self)
-        % Tests whether this group is trivial
-        %
-        % Returns:
-        %   logical: True if this group is trivial (i.e. has only one element)
-            b = self.nGenerators == 0;
-        end
-
-        function res = isCommutative(self)
-        % Returns whether this group is commutative
-            for i = 1:self.nGenerators
-                gi = self.generator(i);
-                for j = 1:i-1
-                    gj = self.generator(j);
-                    if ~self.eqv(self.compose(gi, gj), self.compose(gj, gi))
-                        res = false;
-                        return
-                    end
-                end
-            end
-            res = true;
-            return
-        end
-
-        function res = isCyclic(self)
-        % Returns whether this group is a cyclic group
-        %
-        % Example:
-        %   >>> C3 = replab.PermutationGroup.cyclic(3);
-        %   >>> C3.isCyclic
-        %       1
-        %   >>> C3_C3 = C3.directProduct(C3);
-        %   >>> C3_C3.isCommutative
-        %       1
-        %   >>> C3_C3.isCyclic
-        %       0
-        %
-        % Returns:
-        %   logical: True if the group is cyclic
-            res = self.cached('isCyclic', @() self.computeIsCyclic);
-        end
-
-        function res = isSimple(self)
-        % Returns whether this group is simple
-        %
-        % Example:
-        %   >>> S5 = replab.S(5);
-        %   >>> S5.isSimple
-        %       0
-        %   >>> A5 = S5.derivedSubgroup;
-        %   >>> A5.isSimple
-        %       1
-        %
-        % Returns:
-        %   logical: True if the group is simple
-            res = self.cached('isSimple', @() self.computeIsSimple);
-        end
-
     end
 
-    methods % Group elements
+    methods % Elements
 
-        function n = nGenerators(self)
-        % Returns the number of group generators
-        %
-        % Returns:
-        %   integer: Number of group generators
-            n = length(self.generators);
-        end
-
-        function p = generator(self, i)
-        % Returns the i-th group generator
+        function o = elementOrder(self, g)
+        % Returns the order of a group element
         %
         % Args:
-        %   i (integer, charstring): Generator index or name
+        %   g (element): Group element
         %
         % Returns:
-        %   element: i-th group generator
-            if isa(i, 'char')
-                [b, i] = ismember(i, self.generatorNames);
-                assert(b, 'Not a valid generator name');
-            end
-            p = self.generators{i};
-        end
-
-        function p = generatorInverse(self, i)
-        % Returns the inverse of the i-th group generator
-        %
-        % Args:
-        %   i (integer): Generator index
-        %
-        % Returns:
-        %   element: Inverse of the i-th group generator
-            p = self.inverse(self.generators{i});
+        %   vpi: The order of ``g``, i.e. the smallest ``o`` such that ``g^o == identity``
+            error('Abstract');
         end
 
         function l = factorizeLetters(self, element)
@@ -596,6 +479,32 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
             end
             l = self.factorizeLetters(element);
             w = replab.fp.Letters.print(l, generatorNames);
+        end
+
+        function p = generator(self, i)
+        % Returns the i-th group generator
+        %
+        % Args:
+        %   i (integer, charstring): Generator index or name
+        %
+        % Returns:
+        %   element: i-th group generator
+            if isa(i, 'char')
+                [b, i] = ismember(i, self.generatorNames);
+                assert(b, 'Not a valid generator name');
+            end
+            p = self.generators{i};
+        end
+
+        function p = generatorInverse(self, i)
+        % Returns the inverse of the i-th group generator
+        %
+        % Args:
+        %   i (integer): Generator index
+        %
+        % Returns:
+        %   element: Inverse of the i-th group generator
+            p = self.inverse(self.generators{i});
         end
 
         function g = imageWord(self, word, generatorNames)
@@ -651,26 +560,12 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
             w = replab.fp.Letters.print(letters, generatorNames);
         end
 
-        function b = contains(self, g)
-        % Tests whether this group contains the given element
-        %
-        % Args:
-        %   g (element of `.type`): Element to test membership of
+                function n = nGenerators(self)
+        % Returns the number of group generators
         %
         % Returns:
-        %   logical: True if this group contains ``g`` and false otherwise
-            error('Abstract');
-        end
-
-        function o = elementOrder(self, g)
-        % Returns the order of a group element
-        %
-        % Args:
-        %   g (element): Group element
-        %
-        % Returns:
-        %   vpi: The order of ``g``, i.e. the smallest ``o`` such that ``g^o == identity``
-            error('Abstract');
+        %   integer: Number of group generators
+            n = length(self.generators);
         end
 
         function gens = smallGeneratingSet(self)
@@ -711,23 +606,6 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
 
     methods % Construction of groups
 
-        function conj = leftConjugateGroup(self, by)
-        % Returns the left conjugate of the current group by the given element
-        %
-        % ``res = self.leftConjugateGroup(by)``
-        %
-        % In particular, it ensures that
-        % ``res.generator(i) = self.type.leftConjugate(by, self.generator(i))``
-        %
-        % Args:
-        %   by (element of `.type`): Element to conjugate the group with
-        %
-        % Returns:
-        %   `+replab.FiniteGroup`: The conjugated group
-            newGenerators = cellfun(@(g) self.type.leftConjugate(by, g), self.generators, 'uniform', 0);
-            conj = self.type.subgroupWithGenerators(newGenerators, self.order);
-        end
-
         function res = closure(self, obj)
         % Computes the group generated by the elements of this group and another object
         %
@@ -745,6 +623,23 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
         % Returns:
         %   `.FiniteGroup`: The closure
             error('Abstract');
+        end
+
+        function conj = leftConjugateGroup(self, by)
+        % Returns the left conjugate of the current group by the given element
+        %
+        % ``res = self.leftConjugateGroup(by)``
+        %
+        % In particular, it ensures that
+        % ``res.generator(i) = self.type.leftConjugate(by, self.generator(i))``
+        %
+        % Args:
+        %   by (element of `.type`): Element to conjugate the group with
+        %
+        % Returns:
+        %   `+replab.FiniteGroup`: The conjugated group
+            newGenerators = cellfun(@(g) self.type.leftConjugate(by, g), self.generators, 'uniform', 0);
+            conj = self.type.groupWithGenerators(newGenerators, 'order', self.order);
         end
 
         function res = normalClosure(self, obj)
@@ -787,49 +682,55 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
 
     methods % Subgroups
 
-        function sub = subgroupWithGenerators(self, generators, order)
-        % Constructs a subgroup of the current group from generators
-        %
-        % Guarantees that the constructed subgroup preserves the order of the generators. However, the
-        % given generators cannot contain the identity element.
+        function sub = centralizer(self, arg)
+        % Returns the centralizer of the given object in this group
         %
         % Example:
-        %   >>> S5 = replab.S(5);
-        %   >>> G = S5.subgroupWithGenerators({[2 3 4 5 1]});
-        %   >>> isequal(G.generators{1}, [2 3 4 5 1])
-        %       1
+        %   >>> G = replab.S(4);
+        %   >>> C = G.centralizer([2 3 1 4]);
+        %   >>> C == replab.PermutationGroup.of([2 3 1 4])
+        %     1
+        %
+        % Example:
+        %   >>> G = replab.S(4);
+        %   >>> C = G.centralizer(G.subgroup({[2 3 1 4]}));
+        %   >>> C == replab.PermutationGroup.of([2 3 1 4])
+        %     1
         %
         % Args:
-        %   generators (cell(1,\*) of elements of this group): List of generators, does not contain the identity
-        %   order (vpi or ``[]``, optional): Subgroup order
+        %   rhs (`.FiniteGroup` or group element): Element to compute the centralizer of
         %
         % Returns:
-        %   `+replab.FiniteGroup`: The subgroup generated by `.generators`
+        %   `.FiniteGroup`: The centralizer
             error('Abstract');
         end
 
-        function sub = subgroup(self, elements, order)
-        % Constructs a subgroup of the current group from elements
-        %
-        % The generators of the result are the given elements with the identity filtered out.
-        %
-        % Example:
-        %   >>> S5 = replab.S(5);
-        %   >>> G = S5.subgroup({[1 2 3 4 5]});
-        %   >>> isempty(G.generators)
-        %       1
-        %
-        % Args:
-        %   elements (cell(1,\*) of elements of this group): List of elements
-        %   order (vpi, optional): Subgroup order
+        function ser = derivedSeries(self)
+        % Returns the derived series of this group
         %
         % Returns:
-        %   `+replab.FiniteGroup`: The subgroup generated by `.generators`
-            if nargin < 3
-                order = [];
+        %   cell(1,\*) of `.FiniteGroup`:
+            D = self.derivedSubgroup;
+            if self == D
+                ser = {self};
+            else
+                ser = horzcat({self}, D.derivedSeries);
             end
-            mask = cellfun(@(e) self.isIdentity(e), elements);
-            sub = self.subgroupWithGenerators(elements(~mask), order);
+        end
+
+        function sub = derivedSubgroup(self)
+        % Computes the derived subgroup of this group
+        %
+        % Example:
+        %   >>> S4 = replab.S(4);
+        %   >>> S4.order
+        %       24
+        %   >>> D = S4.derivedSubgroup;
+        %   >>> D == replab.PermutationGroup.alternating(4)
+        %       1
+        % Returns:
+        %   `+replab.FiniteGroup`: The derived subgroup
+            sub = self.cached('derivedSubgroup', @() self.computeDerivedSubgroup);
         end
 
         function sub = randomProperSubgroup(self, nSteps)
@@ -868,36 +769,60 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
             end
         end
 
+        function sub = subgroup(self, elements, varargin)
+        % Constructs a subgroup of the current group from elements
+        %
+        % The generators of the result are the given elements with the identity filtered out.
+        %
+        % Example:
+        %   >>> S5 = replab.S(5);
+        %   >>> G = S5.subgroup({[1 2 3 4 5]});
+        %   >>> isempty(G.generators)
+        %       1
+        %
+        % Args:
+        %   elements (cell(1,\*) of elements of this group): List of elements
+        %
+        % Keyword Args:
+        %   order (vpi, optional): Subgroup order
+        %
+        % Returns:
+        %   `+replab.FiniteGroup`: The subgroup generated by `.generators`
+            mask = cellfun(@(e) self.isIdentity(e), elements);
+            sub = self.subgroupWithGenerators(elements(~mask), varargin{:});
+        end
+
+        function sub = subgroupWithGenerators(self, generators, varargin)
+        % Constructs a subgroup of the current group from generators
+        %
+        % Guarantees that the constructed subgroup preserves the order of the generators. However, the
+        % given generators cannot contain the identity element.
+        %
+        % Example:
+        %   >>> S5 = replab.S(5);
+        %   >>> G = S5.subgroupWithGenerators({[2 3 4 5 1]});
+        %   >>> isequal(G.generators{1}, [2 3 4 5 1])
+        %       1
+        %
+        % Args:
+        %   generators (cell(1,\*) of elements of this group): List of generators, does not contain the identity
+        %
+        % Keyword Args:
+        %   generatorNames (cell(1,\*) of charstring): Names of the generators
+        %   order (vpi or integer): Group order
+        %   relators (cell(1,\*) of charstring): Relators
+        %
+        % Returns:
+        %   `+replab.FiniteGroup`: The subgroup generated by `.generators`
+            sub = self.type.subgroupWithGenerators(self, generators, varargin{:});
+        end
+
         function sub = trivialSubgroup(self)
         % Returns the trivial subgroup of this group
         %
         % Returns:
         %   `+replab.FiniteGroup`: The trivial subgroup
-            sub = self.subgroup({}, vpi(1));
-        end
-
-        function sub = derivedSubgroup(self)
-        % Computes the derived subgroup of this group
-        %
-        % Example:
-        %   >>> S4 = replab.S(4);
-        %   >>> S4.order
-        %       24
-        %   >>> D = S4.derivedSubgroup;
-        %   >>> D == replab.PermutationGroup.alternating(4)
-        %       1
-        % Returns:
-        %   `+replab.FiniteGroup`: The derived subgroup
-            sub = self.cached('derivedSubgroup', @() self.computeDerivedSubgroup);
-        end
-
-        function ser = derivedSeries(self)
-            D = self.derivedSubgroup;
-            if self == D
-                ser = {self};
-            else
-                ser = horzcat({self}, D.derivedSeries);
-            end
+            sub = self.subgroupWithGenerators({}, 'order', vpi(1));
         end
 
         function sub = center(self)
@@ -906,29 +831,6 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
         % Returns:
         %   `.FiniteGroup`: The center
             sub = self.cached('center', @() self.centralizer(self));
-        end
-
-        function sub = centralizer(self, arg)
-        % Returns the centralizer of the given object in this group
-        %
-        % Example:
-        %   >>> G = replab.S(4);
-        %   >>> C = G.centralizer([2 3 1 4]);
-        %   >>> C == replab.PermutationGroup.of([2 3 1 4])
-        %     1
-        %
-        % Example:
-        %   >>> G = replab.S(4);
-        %   >>> C = G.centralizer(G.subgroup({[2 3 1 4]}));
-        %   >>> C == replab.PermutationGroup.of([2 3 1 4])
-        %     1
-        %
-        % Args:
-        %   rhs (`.FiniteGroup` or group element): Element to compute the centralizer of
-        %
-        % Returns:
-        %   `.FiniteGroup`: The centralizer
-            error('Abstract');
         end
 
         function sub = intersection(self, G)
@@ -953,10 +855,57 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
 
     methods % Cosets
 
+        function c = doubleCoset(self, element, rightSubgroup, varargin)
+        % Returns a double coset
+        %
+        % Returns the set ``self * element * rightSubgroup``.
+        %
+        % Args:
+        %   element (group element): Group element
+        %   rightSubgroup (`.FiniteGroup`): Finite group
+        %
+        % Keyword Args:
+        %   group (`.FiniteGroup`, optional): Group containing both ``self`` and ``element``, computed if omitted
+        %   isCanonical (logical, optional): Whether the given ``element`` is canonical w.r.t. to the group ordering
+        %
+        % Returns:
+        %   `+replab.DoubleCoset`: The constructed double coset
+            error('Abstract');
+        end
+
+        function c = doubleCosets(self, leftSubgroup, rightSubgroup)
+        % Returns the set of double cosets in this group by the given groups
+        %
+        %
+        % Example:
+        %   >>> n = 5;
+        %   >>> G = replab.S(n);
+        %   >>> H = G.pointwiseStabilizer(n);
+        %   >>> cosets = G.doubleCosets(H, H);
+        %   >>> cosets.nElements
+        %       2
+        %
+        % Example:
+        %   >>> G = replab.S(3);
+        %   >>> H = replab.PermutationGroup.of([2 1 3]);
+        %   >>> K = replab.PermutationGroup.of([3 2 1]);
+        %   >>> cosets = G.doubleCosets;
+        %   >>> cosets.nElements
+        %       2
+        %
+        % Args:
+        %   leftSubgroup (`+replab.FiniteGroup`): First subgroup
+        %   rightSubgroup (`+replab.FiniteGroup`): Second subgroup
+        %
+        % Returns:
+        %   `+replab.DoubleCosets`: The set of double cosets
+            error('Abstract');
+        end
+
         function l = isNormalizedBy(self, element)
         % Returns whether a given element/group normalizes this group
         %
-        % This is true when ``element * group * element^-1 == group``.
+        % This is true when ``element * group * == group * element``.
         %
         % The same definition when ``element`` is a group; then we ask that all this group elements satisfy that property.
         %
@@ -979,117 +928,24 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
             end
         end
 
-        function c = doubleCosets(self, H, K)
-        % Returns the set of double cosets in this group by the given groups
-        %
-        % Args:
-        %   H (`+replab.FiniteGroup`): First subgroup
-        %   K (`+replab.FiniteGroup`): Second subgroup
-        %
-        % Returns:
-        %   `+replab.DoubleCosets`: The set of double cosets
-            c = replab.DoubleCosets(self, H, K);
-        end
-
-        function c = doubleCoset(self, element, K, parent)
-        % Returns a double coset
-        %
-        % Returns the set ``self * element * K``.
-        %
-        % Args:
-        %   element (group element): Group element
-        %   K (`.FiniteGroup`): Finite group
-        %   parent (`.FiniteGroup`, optional): Group containing all of ``self``, ``element`` and ``K``
-        %
-        % Returns:
-        %   `+replab.DoubleCoset`: The constructed double coset
-            if nargin < 4 || isempty(parent)
-                parent = [];
-            end
-            c = replab.DoubleCoset.make(self, element, K, parent);
-        end
-
-        function c = normalCoset(self, element, parent)
-        % Returns a normal coset
-        %
-        % Returns the set ``element * self == self * element``.
-        %
-        % Args:
-        %   element (group element): Group element
-        %   parent (`.FiniteGroup`, optional): Group containing both ``self`` and ``element``
-        %
-        % Returns:
-        %   `+replab.NormalCoset`: The constructed normal coset
-            assert(self.isNormalizedBy(element), 'The given element does not define a normal coset');
-            if nargin < 3 || isempty(parent)
-                parent = [];
-            end
-            c = replab.NormalCoset.make(self, element, parent);
-        end
-
-        function c = normalCosetsOf(self, subgroup)
-        % Returns the set of normal cosets of the given subgroup in this group
-        %
-        % Args:
-        %   subgroup (`+replab.FiniteGroup`): Normal subgroup of this group
-        %
-        % Returns:
-        %   `.NormalCosets`: The set of normal cosets
-            assert(subgroup.isNormalSubgroupOf(self), 'The given subgroup must be normal in parent group');
-            c = replab.NormalCosets(self, subgroup);
-        end
-
-        function c = rightCoset(self, element, parent)
-        % Returns a right coset
-        %
-        % Returns the set ``self * element``.
-        %
-        % Args:
-        %   element (group element): Group element
-        %   parent (`.FiniteGroup`, optional): Group containing both ``self`` and ``element``
-        %
-        % Returns:
-        %   `+replab.RightCoset`: The constructed right coset
-            if nargin < 3 || isempty(parent)
-                parent = [];
-            end
-            c = replab.RightCoset.make(self, element, parent);
-        end
-
-        function c = rightCosetsOf(self, subgroup)
-        % Returns the set of right cosets of the given subgroup in this group
-        %
-        % Args:
-        %   subgroup (`+replab.FiniteGroup`): Subgroup of this group
-        %
-        % Returns:
-        %   `+replab.RightCosets`: Right cosets
-            c = replab.RightCosets(self, subgroup);
-        end
-
-        function c = mldivide(self, supergroup)
-        % Shorthand for `.rightCosetsOf`
-            c = supergroup.rightCosetsOf(self);
-        end
-
-        function c = leftCoset(self, element, parent)
+        function c = leftCoset(self, element, varargin)
         % Returns a left coset
         %
         % Returns the set ``element * self``.
         %
         % Args:
         %   element (group element): Group element
-        %   parent (`.FiniteGroup`, optional): Group containing both ``self`` and ``element``
+        %
+        % Keyword Args:
+        %   group (`.FiniteGroup`, optional): Group containing both ``self`` and ``element``, computed if omitted
+        %   isCanonical (logical, optional): Whether the given ``element`` is canonical w.r.t. to the group ordering
         %
         % Returns:
         %   `+replab.LeftCoset`: The constructed right coset
-            if nargin < 3 || isempty(parent)
-                parent = [];
-            end
-            c = replab.LeftCoset.make(self, element, parent);
+            error('Abstract');
         end
 
-        function c = leftCosetsOf(self, subgroup)
+        function c = leftCosets(self, subgroup)
         % Returns the set of left cosets of the given subgroup in this group
         %
         % Args:
@@ -1097,12 +953,76 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
         %
         % Returns:
         %   `+replab.LeftCosets`: Left cosets
-            c = replab.LeftCosets(self, subgroup);
+            error('Abstract');
+        end
+
+        function c = normalCoset(self, element, varargin)
+        % Returns a normal coset
+        %
+        % Returns the set ``element * self == self * element``.
+        %
+        % Args:
+        %   element (group element): Group element
+        %
+        % Keyword Args:
+        %   group (`.FiniteGroup`, optional): Group containing both ``self`` and ``element``, computed if omitted
+        %   isCanonical (logical, optional): Whether the given ``element`` is canonical w.r.t. to the group ordering
+        %
+        % Returns:
+        %   `+replab.NormalCoset`: The constructed normal coset
+            error('Abstract');
+        end
+
+        function c = normalCosets(self, subgroup)
+        % Returns the set of normal cosets of the given subgroup in this group
+        %
+        % Args:
+        %   subgroup (`+replab.FiniteGroup`): Normal subgroup of this group
+        %
+        % Returns:
+        %   `.NormalCosets`: The set of normal cosets
+            error('Abstract');
+            %             assert(subgroup.isNormalSubgroupOf(self), 'The given subgroup must be normal in parent group');
+            % c = replab.NormalCosets(self, subgroup);
+
+        end
+
+        function c = rightCoset(self, element, varargin)
+        % Returns a right coset
+        %
+        % Returns the set ``self * element``.
+        %
+        % Args:
+        %   element (group element): Group element
+        %
+        % Keyword Args:
+        %   group (`.FiniteGroup`, optional): Group containing both ``self`` and ``element``, computed if omitted
+        %   isCanonical (logical, optional): Whether the given ``element`` is canonical w.r.t. to the group ordering
+        %
+        % Returns:
+        %   `+replab.RightCoset`: The constructed right coset
+            error('Abstract');
+        end
+
+        function c = rightCosets(self, subgroup)
+        % Returns the set of right cosets of the given subgroup in this group
+        %
+        % Args:
+        %   subgroup (`+replab.FiniteGroup`): Subgroup of this group
+        %
+        % Returns:
+        %   `+replab.RightCosets`: Right cosets
+            error('Abstract');
+        end
+
+        function c = mldivide(self, supergroup)
+        % Shorthand for `.rightCosets`
+            c = supergroup.rightCosets(self);
         end
 
         function c = mrdivide(self, subgroup)
-        % Shorthand for `.leftCosetsOf`
-            c = self.leftCosetsOf(subgroup);
+        % Shorthand for `.leftCosets`
+            c = self.leftCosets(subgroup);
         end
 
         function B = findLeftConjugations(self, s, t, sCentralizer, tCentralizer)
@@ -1233,6 +1153,36 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
 
     methods % Morphisms
 
+        function m = abstractMorphism(self, names)
+        % Returns an isomorphism to an abstract group
+        %
+        % Example:
+        %   >>> G = replab.S(3);
+        %   >>> f = G.abstractMorphism({'s', 't'});
+        %   >>> f.imageElement([2 3 1])
+        %       's'
+        %
+        % Args:
+        %   generatorNames (cell(1,\*) of charstring, optional): Generator names to use in place of the names given at construction
+        %
+        % Returns:
+        %   `.FiniteIsomorphism`: Isomorphism to an abstract group
+            error('Abstract');
+        end
+
+        function m = conjugatingAutomorphism(self, by)
+        % Returns the morphism that corresponds to left conjugation by an element
+        %
+        % Args:
+        %   by (element of `.type`): Element to conjugate the group with
+        %
+        % Returns:
+        %   `+replab.FiniteMorphism`: Conjugating automorphism
+            generatorImages = cellfun(@(g) self.type.leftConjugate(by, g), self.generators, 'uniform', 0);
+            assert(all(cellfun(@(g) self.contains(g), generatorImages)));
+            m = self.morphismByImages(self, 'preimages', self.generators, 'images', generatorImages, 'nChecks', 0);
+        end
+
         function res = findIsomorphism(self, to)
         % Finds an isomorphism from this finite group to another finite group, if it exists
         %
@@ -1346,42 +1296,6 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
             end
         end
 
-
-        function m = conjugatingAutomorphism(self, by)
-        % Returns the morphism that corresponds to left conjugation by an element
-        %
-        % Args:
-        %   by (element of `.type`): Element to conjugate the group with
-        %
-        % Returns:
-        %   `+replab.FiniteMorphism`: Conjugating automorphism
-            generatorImages = cellfun(@(g) self.type.leftConjugate(by, g), self.generators, 'uniform', 0);
-            assert(all(cellfun(@(g) self.contains(g), generatorImages)));
-            m = self.morphismByImages(self, 'preimages', self.generators, 'images', generatorImages, 'nChecks', 0);
-        end
-
-        function f = permutationMorphism(self)
-        % Returns the isomorphism from this group to a permutation group
-            f = self.cached('permutationMorphism', @() self.computePermutationMorphism);
-        end
-
-        function m = abstractMorphism(self, names)
-        % Returns an isomorphism to an abstract group
-        %
-        % Example:
-        %   >>> G = replab.S(3);
-        %   >>> f = G.abstractMorphism({'s' 't'});
-        %   >>> f.imageElement([2 3 1])
-        %       's'
-        %
-        % Args:
-        %   generatorNames (cell(1,\*) of charstring, optional): Generator names to use in place of the names given at construction
-        %
-        % Returns:
-        %   `.FiniteIsomorphism`: Isomorphism to an abstract group
-            error('Abstract');
-        end
-
         function l = isMorphismByImages(self, target, varargin)
         % Checks whether the given images describe a group morphism
         %
@@ -1414,6 +1328,25 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
                 return
             end
             l = self.isMorphismByImages_(target, args.preimages(~preId), args.images(~preId));
+        end
+
+        function g1 = imap(self, f)
+        % Maps this finite group through an isomorphism
+        %
+        % Args:
+        %   f (`.FiniteIsomorphism`): Isomorphism with ``self.isSubgroupOf(f.source)``
+            g1 = f.imageGroup(self);
+        end
+
+        function m = isomorphismByFunction(self, target, imageElementFun)
+        % Constructs an isomorphism to a group using an image function
+            imgs = cellfun(imageElementFun, self.generators, 'uniform', 0);
+            m = self.isomorphismByImages(target, 'preimages', self.generators, 'images', imgs);
+        end
+
+        function m = isomorphismByImages(self, target, varargin)
+        % Constructs an isomorphism to a group using images of generators
+            m = self.morphismByImages(target, varargin{:}).toIsomorphism;
         end
 
         function m = morphismByImages(self, target, varargin)
@@ -1478,23 +1411,9 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
             end
         end
 
-        function m = isomorphismByImages(self, target, varargin)
-        % Constructs an isomorphism to a group using images of generators
-            m = self.morphismByImages(target, varargin{:}).toIsomorphism;
-        end
-
-        function m = isomorphismByFunction(self, target, imageElementFun)
-        % Constructs an isomorphism to a group using an image function
-            imgs = cellfun(imageElementFun, self.generators, 'uniform', 0);
-            m = self.isomorphismByImages(target, 'preimages', self.generators, 'images', imgs);
-        end
-
-        function g1 = imap(self, f)
-        % Maps this finite group through an isomorphism
-        %
-        % Args:
-        %   f (`.FiniteIsomorphism`): Isomorphism with ``self.isSubgroupOf(f.source)``
-            g1 = f.imageGroup(self);
+        function f = permutationMorphism(self)
+        % Returns the isomorphism from this group to a permutation group
+            f = self.cached('permutationMorphism', @() self.computePermutationMorphism);
         end
 
     end

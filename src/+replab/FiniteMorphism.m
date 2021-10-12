@@ -97,7 +97,7 @@ classdef FiniteMorphism < replab.Morphism
         %
         % Returns:
         %   `.FiniteSet`: Set of source elements
-            S = self.kernel.normalCoset(self.preimageRepresentative(t), self.source);
+            S = self.kernel.normalCoset(self.preimageRepresentative(t), 'group', self.source);
         end
 
         function S = preimageGroup(self, T)

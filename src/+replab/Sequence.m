@@ -1,7 +1,9 @@
 classdef Sequence < replab.Domain
 % Describes a sequence of elements
 %
-% See `<https://en.wikipedia.org/wiki/Sequence>`_ . Our indices are (bounded) integers, represented by ``vpi`` instances.
+% See `<https://en.wikipedia.org/wiki/Sequence>`_ .
+%
+% Our indices are (bounded) integers, represented by ``vpi`` instances.
 %
 % The sequence supports element indexing and searching for elements.
 
@@ -10,6 +12,14 @@ classdef Sequence < replab.Domain
     end
 
     methods
+
+        function self = Sequence(nElements)
+            if isa(nElements, 'vpi')
+                self.nElements = nElements;
+            else
+                self.nElements = vpi(nElements);
+            end
+        end
 
         function obj = at(self, ind)
         % Retrieves a element by position

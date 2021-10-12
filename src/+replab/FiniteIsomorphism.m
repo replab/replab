@@ -3,6 +3,22 @@ classdef FiniteIsomorphism < replab.Isomorphism & replab.FiniteMorphism
 %
 % Adds the guarantee that `.target`/`.image` has for generators the images of the generators of `.source`
 
+    methods
+
+        function l = preservesTypeOrder(self)
+        % Returns whether this isomorphism preserves the total order defined in `.FiniteGroupType`
+        %
+        % When true, it means that ``self.source.type.compare(x, y) == self.target.type.compare(self.imageElement(x), self.imageElement(y))``.
+        %
+        % When false, it does not necessarily mean that this order is not preserved.
+        %
+        % Returns:
+        %   logical: True if the total order is preserved
+            l = false;
+        end
+
+    end
+
     methods % Implementations
 
         % Obj

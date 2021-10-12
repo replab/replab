@@ -14,30 +14,12 @@ classdef ConjugacyClass < replab.FiniteSet
 
     methods
 
-        function self = ConjugacyClass(group, representative, varargin)
-            args = struct('representativeCentralizer', []);
-            args = replab.util.populateStruct(args, varargin);
-            self@replab.FiniteSet(group.type, representative);
-            self.group = group;
-            if ~isempty(args.representativeCentralizer)
-                self.cache('representativeCentralizer', args.representativeCentralizer);
-            end
-        end
-
         function G = representativeCentralizer(self)
         % Returns the centralizer of `.representative` in `.group`
         %
         % Returns:
         %   `.FiniteGroup`: Representative centralizer
-            G = self.cached('representativeCentralizer', @() self.computeRepresentativeCentralizer);
-        end
-
-    end
-
-    methods (Access = protected)
-
-        function o = computeElementOrder(self)
-            o = self.group.elementOrder(self.representative);
+            error('Abstract');
         end
 
     end
@@ -49,9 +31,10 @@ classdef ConjugacyClass < replab.FiniteSet
         %
         % Returns:
         %   integer: Element order
-            o = self.cached('elementOrder', @() self.computeElementOrder);
+            error('Abstract');
         end
 
+        % TODO
 % $$$         function c1 = imap(self, f)
 % $$$         % Maps this conjugacy class under an isomorphism
 % $$$         %
@@ -60,44 +43,12 @@ classdef ConjugacyClass < replab.FiniteSet
 % $$$         %
 % $$$         % Returns:
 % $$$         %   `.ConjugacyClass`: The conjugacy class mapped under ``f``, expressed as a subset of ``f.image``
+% $$$             c1 = replab.gen.Conjugacy
 % $$$             if self.group.order < f.source.order
 % $$$                 f = f.restrictedSource(self.group);
 % $$$             end
 % $$$             c1 = replab.ConjugacyClass.make(f.target, f.imageElement(self.representative), f.imageGroup(self.representativeCentralizer));
 % $$$         end
-
-    end
-
-% $$$     methods (Static)
-% $$$
-% $$$         function c = make(group, element, elementCentralizer)
-% $$$             if nargin < 3
-% $$$                 elementCentralizer = group.centralizer(element);
-% $$$             end
-% $$$             prmGroup = group.permutationGroup;
-% $$$             prmElement = group.permutationIsomorphism.imageElement(element);
-% $$$             [h1 g] = replab.bsgs.ConjugacyClasses.representative(prmGroup, prmElement);
-% $$$             representative = group.permutationIsomorphism.preimageElement(h1);
-% $$$             representativeCentralizer = elementCentralizer.leftConjugateGroup(group.permutationIsomorphism.preimageElement(g));
-% $$$             c = replab.ConjugacyClass(group, representative, representativeCentralizer);
-% $$$         end
-% $$$
-% $$$     end
-
-    methods (Access = protected)
-
-        function E = computeElementsSequence(self)
-            T = self.group.leftCosetsOf(self.representativeCentralizer).transversal;
-            E = cellfun(@(t) self.group.leftConjugate(t, self.representative), T, 'uniform', 0);
-        end
-
-        function n = computeNElements(self)
-            n = self.group.order / self.representativeCentralizer.order;
-        end
-
-        function G = computeRepresentativeCentralizer(self)
-            G = self.group.centralizer(self.representative);
-        end
 
     end
 
@@ -127,10 +78,6 @@ classdef ConjugacyClass < replab.FiniteSet
 
         % FiniteSet
 
-        function s = nElements(self)
-            s = self.cached('nElements', @() self.computeNElements);
-        end
-
         function b = contains(self, t)
         % Returns whether the given element is part of this conjugacy class
         %
@@ -148,6 +95,10 @@ classdef ConjugacyClass < replab.FiniteSet
             % We want to solve ``t == b s b^-1`` with ``s`` the representative
             B = self.group.findLeftConjugations(s, t, sCentralizer);
             b = ~isempty(B);
+        end
+
+        function s = nElements(self)
+            s = self.cached('nElements', @() self.computeNElements);
         end
 
     end

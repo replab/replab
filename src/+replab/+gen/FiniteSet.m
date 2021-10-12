@@ -6,21 +6,18 @@ classdef FiniteSet < replab.FiniteSet
         genericIsomorphism % (`+replab.FiniteIsomorphism`): Isomorphism to an object where computations are outsourced
     end
 
-    methods (Access = protected)
+    methods
 
-        function E = computeElements(self)
-        % See `.elements`
-            error('Abstract');
+        function self = FiniteSet(type, generic, genericIsomorphism)
+            self.type = type;
+            self.generic = generic;
+            self.genericIsomorphism = genericIsomorphism;
+            self.representative = genericIsomorphism.preimageElement(generic.representative);
         end
 
     end
 
     methods
-
-        function self = FiniteSet(type, generic, genericIsomorphism)
-            self.type = type;
-            self.representative = genericIsomorphism.preimageElement(generic.representative);
-        end
 
         function b = contains(self, el)
         % Tests whether this set contains the given element

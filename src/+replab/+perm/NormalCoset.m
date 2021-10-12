@@ -1,59 +1,36 @@
-classdef NormalCoset < replab.LeftCoset & replab.RightCoset
-% Describes a coset in the normal subgroup of a finite group
-%
-% It is a left and right coset at the same time.
+classdef NormalCoset < replab.NormalCoset & replab.PermutationFiniteSet
 
     methods
 
-        function self = NormalCoset(group, canonicalRepresentative, parent)
-            self@replab.LeftCoset(group, canonicalRepresentative, parent);
-            self@replab.RightCoset(group, canonicalRepresentative, parent);
+        function self = NormalCoset(representative, subgroup, group)
+            assert(group.hasSameTypeAs(subgroup));
+            self.type = group.type;
+            self.representative_ = representative;
+            self.group = group;
+            self.subgroup = subgroup;
         end
 
     end
 
-    methods (Static)
-
-        function c = make(group, element, parent)
-            if nargin < 3 || isempty(parent)
-                parent = group.closure(element);
-            end
-            chain = parent.niceMorphism.imageGroup(group).lexChain;
-            permRep = replab.bsgs.Cosets.leftRepresentative(chain, parent.niceMorphism.imageElement(element));
-            % left representative is faster
-            c = replab.NormalCoset(group, parent.niceMorphism.preimageElement(permRep), parent);
-        end
-
-    end
-
-    methods (Access = protected)
-
-        function E = computeElements(self)
-            E = computeElements@replab.LeftCoset(self);
-        end
-
-        function s = computeSetProduct(self)
-            s = computeSetProduct@replab.LeftCoset(self);
-        end
-
-    end
-
-    methods
-
-        function s = sample(self)
-            s = sample@replab.LeftCoset(self);
-        end
-
-        function s = nElements(self)
-            s = nElements@replab.LeftCoset(self);
-        end
+    methods % Implementations
 
         function b = contains(self, el)
-            b = contains@replab.LeftCoset(self, el);
+            el = replab.bsgs.Cosets.leftRepresentative(self.subgroup.lexChain, el); % same implementation as `.LeftCoset`
+            b = self.group.eqv(self.representative, el);
         end
 
+        function E = elementsSequence(self)
+            H = self.subgroup.lexChain.allElements; % same implementation as `.LeftCoset`
+            g = self.representative;
+            matrix = sortrows(g(H'))';
+            E = replab.perm.Sequence(matrix);
+        end
+
+        % Coset
+
         function [l, r] = factorizeShortRepresentativeLetters(self)
-            [l, r] = factorizeShortRepresentativeLetters@replab.LeftCoset(self);
+            [l, r] = self.group.factorization.factorizeRepresentativeOfLeftCoset(self);
+            % same implementation as `.LeftCoset`
         end
 
     end

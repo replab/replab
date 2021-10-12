@@ -1,119 +1,37 @@
-classdef LeftCoset < replab.Coset
-% Describes a left coset of a finite group
-%
-% Let $g \in G$ be a coset representative and $H \le G$ a group. The left coset is $g H = \{ g h : h \in H\}$.
-%
-% Note:
-%   This structure is implemented by referencing the permutation realizations of the group through a nice isomorphism.
+classdef LeftCoset < replab.LeftCoset & replab.PermutationFiniteSet
 
     methods
 
-        function self = LeftCoset(group, canonicalRepresentative, parent)
-            self.type = parent.type;
-            self.parent = parent;
-            self.isomorphism = parent.niceMorphism;
+        function self = LeftCoset(representative, subgroup, group)
+            assert(group.hasSameTypeAs(subgroup));
+            self.type = group.type;
+            self.representative_ = representative;
             self.group = group;
-            self.representative = canonicalRepresentative;
-            self.groupChain = parent.niceMorphism.imageGroup(group).lexChain;
-        end
-
-    end
-
-    methods (Static)
-
-        function l = make(group, element, parent)
-            if nargin < 3 || isempty(parent)
-                parent = group.closure(element);
-            end
-            if group.isNormalizedBy(element)
-                l = replab.NormalCoset.make(group, element, parent);
-                return
-            end
-            chain = parent.niceMorphism.imageGroup(group).lexChain;
-            permRep = replab.bsgs.Cosets.leftRepresentative(chain, parent.niceMorphism.imageElement(element));
-            l = replab.LeftCoset(group, parent.niceMorphism.preimageElement(permRep), parent);
-        end
-
-    end
-
-    methods (Access = protected)
-
-        function E = computeElements(self)
-        % Returns an indexed family of the elements of this coset
-        %
-        % Returns:
-        %   `+replab.IndexedFamily`: Elements
-            H = self.groupChain.allElements;
-            g = self.representative;
-            if ~isempty(self.isomorphism)
-                g = self.isomorphism.imageElement(g);
-            end
-            matrix = sortrows(g(H'))';
-            E = replab.indf.FiniteGroupIndexedFamily(matrix, self.isomorphism);
-        end
-
-        function s = computeSetProduct(self)
-            s = replab.SetProduct(self.parent, horzcat({{self.representative}}, self.group.setProduct.sets), false);
+            self.subgroup = subgroup;
         end
 
     end
 
     methods % Implementations
 
-        % Domain
-
-        function s = sample(self)
-            s = self.type.compose(self.representative, self.group.sample);
-        end
-
         % FiniteSet
 
-        function s = nElements(self)
-        % Returns the size of this coset
-        %
-        % Returns:
-        %   vpi: Coset size
-            s = self.group.order;
+        function b = contains(self, el)
+            el = replab.bsgs.Cosets.leftRepresentative(self.subgroup.lexChain, el);
+            b = self.type.eqv(self.representative, el);
         end
 
-        function b = contains(self, el)
-        % Returns if this coset contains the given element
-        %
-        % Args:
-        %   el (element of `.type`): Element to check
-        %
-        % Returns:
-        %   logical: True if this coset contains the element
-            if ~isempty(self.isomorphism)
-                el = self.isomorphism.imageElement(el);
-            end
-            el = replab.bsgs.Cosets.leftRepresentative(self.groupChain, el);
-            if ~isempty(self.isomorphism)
-                el = self.isomorphism.preimageElement(el);
-            end
-            b = self.parent.eqv(self.representative, el);
+        function E = elementsSequence(self)
+            H = self.subgroup.lexChain.allElements;
+            g = self.representative;
+            matrix = sortrows(g(H'))';
+            E = replab.perm.Sequence(matrix);
         end
 
         % Coset
 
         function [l, r] = factorizeShortRepresentativeLetters(self)
-        % Returns a tentatively short word corresponding to an element of this coset
-        %
-        % An effort is made to identify a short word, but without optimality guarantees.
-        %
-        % Returns
-        % -------
-        %   l: integer(1,\*)
-        %     Letters of the word representing an element of ``self``
-        %   r: element of `.group`
-        %     Represented coset element
-            if isa(self.group, 'replab.PermutationGroup')
-                permCoset = self;
-            else
-                permCoset = self.group.niceGroup.leftCoset(self.isomorphism.imageElement(self.representative), self.parent.niceGroup);
-            end
-            [l, r] = self.parent.niceGroup.factorization.factorizeRepresentativeOfLeftCoset(permCoset);
-            r = self.isomorphism.preimageElement(r);
+            [l, r] = self.group.factorization.factorizeRepresentativeOfLeftCoset(self);
         end
 
     end

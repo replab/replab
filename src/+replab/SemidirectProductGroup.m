@@ -59,7 +59,7 @@ classdef SemidirectProductGroup < replab.Group
 % Implementation note
 % ~~~~~~~~~~~~~~~~~~~
 %
-% As semidirect product groups are used as a base for wreath product groups,  the constructors are duplicated in subclasses
+% As semidirect product groups are used as a base for wreath product groups, the constructors are duplicated in subclasses
 % as to keep a simple hierarchy of constructor calls.
 %
 % Example:

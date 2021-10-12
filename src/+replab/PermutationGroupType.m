@@ -26,7 +26,7 @@ classdef PermutationGroupType < replab.FiniteGroupType
     end
 
     properties (SetAccess = protected)
-        domainSize % integer: The integer ``d``, as this group acts on ``{1, ..., d}``
+        domainSize % (integer): The integer ``d``, as this group acts on ``{1, ..., d}``
     end
 
     methods (Access = protected) % Constructor
@@ -47,7 +47,7 @@ classdef PermutationGroupType < replab.FiniteGroupType
         % Str
 
         function s = headerStr(self)
-            s = 'Finite group type of permutations';
+            s = sprintf('Type: Permutations acting on 1..%d', self.domainSize);
         end
 
         % Domain
@@ -87,8 +87,19 @@ classdef PermutationGroupType < replab.FiniteGroupType
 
         % FiniteGroupType
 
+        function c = compare(self, x, y)
+            v = x - y;
+            ind = find(v ~= 0, 1);
+            c = [sign(v(ind)) 0];
+            c = c(1);
+        end
+
         function G = groupWithGenerators(self, generators, varargin)
             G = replab.PermutationGroup(self, generators, varargin{:});
+        end
+
+        function l = isSameTypeAs(self, otherType)
+            l = isa(otherType, 'replab.PermutationGroupType') && self.domainSize == otherType.domainSize;
         end
 
     end

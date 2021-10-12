@@ -1090,7 +1090,7 @@ classdef Chain < replab.Str
         % If ``self.order > maxOrder`` after this function returns, the chain may be incomplete.
         %
         % Args:
-        %   maxOrder (integer or vpi or ``inf``): Order cutoff
+        %   maxOrder (integer or vpi or ``inf``, optional): Order cutoff, default: inf
             if nargin < 2 || isinf(maxOrder)
                 maxOrder = [];
             end
@@ -1104,6 +1104,9 @@ classdef Chain < replab.Str
         % Runs the randomized Schreier-Sims algorithm
         %
         % Failure probability can be tuned using replab.globals.randomizedSchreierSimsTries
+        %
+        % Args:
+        %   order (integer or vpi or ``[]``): Group order if known
             nTries = replab.globals.randomizedSchreierSimsTries;
             R = replab.bsgs.RandomBag(self.n, self.S, [], []);
             c = 0;

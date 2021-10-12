@@ -27,7 +27,7 @@ classdef FiniteGroupLaws < replab.laws.GroupLaws
 
         function law_withGeneratorNames_(self)
         % Checks that renaming generators works properly
-            G = self.T.withGeneratorNames(replab.FiniteGroup.defaultGeneratorNames(self.T.nGenerators));
+            G = self.T.withGeneratorNames(replab.fp.defaultGeneratorNames(self.T.nGenerators));
             assert(G.nGenerators == self.T.nGenerators);
         end
 
