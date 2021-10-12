@@ -362,6 +362,20 @@ classdef PermutationGroup < replab.FiniteGroup & replab.PermutationFiniteSet
             z(x) = x(y);
         end
 
+        % FiniteSet
+
+        function b = contains(self, g)
+            b = self.chain.contains(g);
+        end
+
+        function E = elementsSequence(self)
+            E = self.cached('elementsSequence', @() self.computeElementsSequence);
+        end
+
+        function D = setProduct(self)
+            D = self.cached('setProduct', @() self.computeSetProduct);
+        end
+
         % FiniteGroup
 
         function A = abstractGroup(self, generatorNames)
@@ -425,10 +439,6 @@ classdef PermutationGroup < replab.FiniteGroup & replab.PermutationFiniteSet
 
         function c = conjugacyClasses(self)
             c = self.cached('conjugacyClasses', @() self.computeConjugacyClasses);
-        end
-
-        function b = contains(self, g)
-            b = self.chain.contains(g);
         end
 
         function sub = derivedSubgroup(self)
@@ -565,10 +575,6 @@ classdef PermutationGroup < replab.FiniteGroup & replab.PermutationFiniteSet
                 perms{i} = img;
             end
             rep = self.permutationRep(o, 'preimages', self.generators, 'images', perms);
-        end
-
-        function D = setProduct(self)
-            D = self.cached('setProduct', @() self.computeSetProduct);
         end
 
         function res = withGeneratorNames(self, newNames)
