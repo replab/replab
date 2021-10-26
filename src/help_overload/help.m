@@ -28,6 +28,19 @@ function [contents, docTopic] = help(varargin)
     contents = '';
     docTopic = '';
 
+    % This function is part of replab, so it should only be called once the
+    % replab package has been initialized. We provide a warning message if
+    % this does not seem to be the case.
+    repPath = '';
+    try
+        repPath = replab.globals.replabPath;
+    catch
+    end
+    if isempty(repPath)
+        warning('A RepLAB function is being called, but it seems that the library was not initialized. Make sure that the ''replab/src/help_overload'' was not unadvertantly included in your generic matlab path.');
+    end
+    replab_init;
+    
     if nargin == 1 && isequal(varargin{1}, '--clear')
         replab.globals.codeBase([]);
         return
