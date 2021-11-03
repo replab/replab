@@ -37,9 +37,21 @@ function [contents, docTopic] = help(varargin)
     catch
     end
     if isempty(repPath)
-        warning('A RepLAB function is being called, but it seems that the library was not initialized. Make sure that the ''replab/src/help_overload'' was not unadvertantly included in your generic matlab path.');
+        pathToHelpFolder = fileparts(mfilename('fullpath'));        
+        warning(['A RepLAB function is being called, but it seems that the RepLAB library was not initialized. Make sure that the folder ', pathToHelpFolder, ' was not inadvertantly included in your matlab path.']);
     end
-    replab_init;
+    try
+        replab_init;
+    catch
+        pathToHelpFolder = fileparts(mfilename('fullpath'));
+        replabPos = strfind(lower(pathToHelpFolder), 'replab');
+        if isempty(replabPos)
+            pathToReplab = 'replab';
+        else
+            pathToReplab = pathToHelpFolder(1:replabPos+5);
+        end
+        error(['A RepLAB function is being called, but it seems that the RepLAB library cannot be initialized. Add the ', pathToReplab, ' folder in your path if you want to use this library, or make sure that the folder ', pathToHelpFolder, ' was not inadvertantly included in your matlab path.']);
+    end
     
     if nargin == 1 && isequal(varargin{1}, '--clear')
         replab.globals.codeBase([]);
