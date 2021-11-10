@@ -1,25 +1,22 @@
-function result = replab_runtests(withCoverage, onlyFastTests)
+function result = replab_runtests(varargin)
 % Tests the library functionalities.
-%
-% This function calls the `root.replab_generate` function with the ``doctests`` argument.
 %
 % See the ``patternsToExclude`` variable below to exclude files from code coverage.
 %
-% Args:
-%     withCoverage (logical): Enable code coverage (optional, default value is false)
-%     onlyFastTests (logical): Run only a selection of fast tests (optional, default value is false)
+% Keyword Args:
+%   slowtests (optional, true): Whether to include tests that can possibly
+%                               take a long time to run
+%   doctests (optional, true): Whether to include doctests
+%   notebooks (optional, true): Whether to run the notebook code
+%   withCoverage (optional, false): Whether to activate code coverage
 %
 % Results:
 %     logical: True if all tests passed.
 
-    if nargin < 1
-        withCoverage = false;
-    end
-
-    if nargin < 2
-        onlyFastTests = false;
-    end
-
+    % Parse the arguments
+    args = struct('slowtests', true, 'doctests', true, 'notebooks', true, 'withCoverage', false);
+    [args, restArgs] = replab.util.populateStruct(args, varargin);    
+    
     % Make sure we are in the current path
     initialPath = pwd;
     [pathStr, name, extension] = fileparts(which(mfilename));
@@ -31,12 +28,12 @@ function result = replab_runtests(withCoverage, onlyFastTests)
     addpath([pathStr '/../tests']);
 
     % Set test paramters
-    ReplabTestParameters.withCoverage(withCoverage);
-    ReplabTestParameters.onlyFastTests(onlyFastTests);
-    if onlyFastTests
-        replab.Laws.nRuns(1);
-    else
+    ReplabTestParameters.withCoverage(args.withCoverage);
+    ReplabTestParameters.onlyFastTests(~args.slowtests);
+    if args.slowtests
         replab.Laws.nRuns(20);
+    else
+        replab.Laws.nRuns(1);
     end
 
     % Check the presence of the MOxUnit library
@@ -51,7 +48,7 @@ function result = replab_runtests(withCoverage, onlyFastTests)
     end
 
     % Check the presence of the MOcov library if needed
-    if withCoverage == 1
+    if args.withCoverage
         MOcovInPath = false;
         try
             mocov_get_absolute_path('.');
@@ -81,20 +78,27 @@ function result = replab_runtests(withCoverage, onlyFastTests)
         warning('No working SDP solver found, some tests will fail.');
     end
 
-    replab_generate('doctests');
-
-    % Create tests for notebooks
-    if ReplabTestParameters.onlyFastTests == 0
-        replab_generate('notebooks');
+    if args.doctests
+        replab_generate('doctests');
     else
+        % We clear the doctest folder
         rp = replab.globals.replabPath;
         testRoot = fullfile(rp, 'tests');
-        doctestRoot = fullfile(rp, 'tests', 'notebooks');
+        replab.infra.mkCleanDir(testRoot, 'doctests');
+    end
+
+    % Create tests for notebooks
+    if args.notebooks
+        replab_generate('notebooks');
+    else
+        % We clear the notebook folder
+        rp = replab.globals.replabPath;
+        testRoot = fullfile(rp, 'tests');
         replab.infra.mkCleanDir(testRoot, 'notebooks');
     end
 
     % calls the relevant test suite
-    if ReplabTestParameters.withCoverage == 1
+    if args.withCoverage
         % Here are the files patterns we don't want to include in the
         % coverage monitoring. These are checked by MOcov individually in
         % each subdirectory.

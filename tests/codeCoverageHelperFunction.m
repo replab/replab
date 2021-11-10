@@ -1,6 +1,6 @@
 function test_suite = codeCoverageHelperFunction()
     % This file is a helper function for replab_runtests.m. To use it, call
-    % 'replab_runtests(1)'.
+    % 'replab_runtests('withCoverage', true)'.
     % 
     % The name of this function should not contain the string "test"
     % (otherwise, this will trigger an infinite loop of tests).
