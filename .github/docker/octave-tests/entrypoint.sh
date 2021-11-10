@@ -12,7 +12,7 @@ ls -al
 git rev-parse HEAD
 
 export ADDPATH_COMMAND="replab_init('verbose', 2);"
-export COVERING=false
+export COVERING=true
 
 if [ $COVERING == true ]; then
   TEST_COMMAND="exit(~replab_runtests(1,1));";
