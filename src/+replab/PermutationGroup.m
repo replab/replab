@@ -76,10 +76,6 @@ classdef PermutationGroup < replab.FiniteGroup & replab.PermutationFiniteSet
     % $$$
 % $$$     methods (Access = protected) % Implementations
 % $$$
-% $$$         function E = computeElementsSequence(self)
-% $$$             basis = replab.util.MixedRadix(self.lexChain.orbitSizes, 'oneBased', true, 'bigEndian', false);
-% $$$             E = replab.perm.GroupSequence(self.order, basis, self.lexChain);
-% $$$         end
 % $$$
 % $$$         function R = computeFastRecognize(self)
 % $$$         % TODO
@@ -325,7 +321,7 @@ classdef PermutationGroup < replab.FiniteGroup & replab.PermutationFiniteSet
         end
 
         function E = elementsSequence(self)
-            E = self.cached('elementsSequence', @() self.computeElementsSequence);
+            E = self.cached('elementsSequence', @() replab.perm.GroupSequence(self.order, self.lexChain));
         end
 
         function s = nElements(self)
@@ -422,7 +418,7 @@ classdef PermutationGroup < replab.FiniteGroup & replab.PermutationFiniteSet
         end
 
         function sub = derivedSubgroup(self)
-            sub = self.cached('derivedSubgroup', @() replab.perm..derivedSubgroup(self));
+            sub = self.cached('derivedSubgroup', @() replab.perm.derivedSubgroup(self));
         end
 
         function o = elementOrder(self, p)
