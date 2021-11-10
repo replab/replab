@@ -7,9 +7,9 @@ classdef GroupSequence < replab.Sequence
 
     methods
 
-        function self = GroupSequence(nElements, basis, lexChain)
+        function self = GroupSequence(nElements, lexChain)
             self@replab.Sequence(nElements);
-            self.basis = basis;
+            self.basis = replab.util.MixedRadix(lexChain.orbitSizes, 'oneBased', true, 'bigEndian', false);
             self.lexChain = lexChain;
         end
 
@@ -20,11 +20,14 @@ classdef GroupSequence < replab.Sequence
         % Sequence
 
         function el = at(self, ind)
+            if ischar(ind)
+                ind = vpi(ind);
+            end
             el = self.lexChain.elementFromIndices(self.basis.ind2sub(ind));
         end
 
         function ind = find(self, el)
-            ind = basis.sub2ind(self.lexChain.indicesFromElement(el));
+            ind = self.basis.sub2ind(self.lexChain.indicesFromElement(el));
         end
 
     end

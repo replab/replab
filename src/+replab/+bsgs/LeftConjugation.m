@@ -24,7 +24,6 @@ classdef LeftConjugation < replab.bsgs.Backtrack
             if nargin < 4 || isempty(sCentralizer)
                 sCentralizer = group.centralizer(s);
             end
-
             sOrbits = replab.bsgs.permutationOrbits(s);
             lengths = cellfun(@length, sOrbits);
             sOrbits = sOrbits(lengths > 1); % filter singletons

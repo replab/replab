@@ -117,11 +117,11 @@ classdef CosetTable < replab.Str
                 tbeta = C.transversal(beta);
                 tbetax = C.transversal(betax);
                 uhat_inG = [tbeta genIndex(x) -fliplr(tbetax)];
-                u = group.imageLetters(-fliplr(uhat_inG));
+                u = group.imageFlat(-fliplr(uhat_inG));
                 assert(subgroup.contains(u));
-                uhat_inH = -fliplr(subgroup.factorizeLetters(u)); % flip due to inverse convention
+                uhat_inH = -fliplr(subgroup.factorizeFlat(u)); % flip due to inverse convention
                 newRelator = [tbeta genIndex(x) -fliplr(tbetax) -fliplr(uhat_inH)];
-                assert(group.isIdentity(group.imageLetters(newRelator)));
+                assert(group.isIdentity(group.imageFlat(newRelator)));
                 relators{1,end+1} = newRelator;
                 rc = rc.updated({newRelator});
                 newRelatorC = Chat.lettersToColumnIndices(newRelator);

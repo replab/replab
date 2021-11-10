@@ -7,13 +7,20 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
 %
 % RepLAB implements group algorithms optimized for permutation groups using the BSGS (base and strong generating set) construction.
 %
-% Generator names
-% ~~~~~~~~~~~~~~~
+% Generators and equality
+% ~~~~~~~~~~~~~~~~~~~~~~~
 %
-% For display purposes (including the form of the words given by the factorization methods), these generators have
-% default names `.generatorNames`.
+% The generating set of a group is a property of the group, and is used, for example:
 %
-% However, groups that differ only by the default names of their generators are equal.
+% - to factor a group element as a word in the generators,
+% - as the default preimages set for representation/morphism construction,
+% - to construct an abstract form of the group (see `.relatorsWords`).
+%
+% However, groups that differ only by their generators are equal as sets. Thus, two groups that are equal under ``==``
+% can nevertheless return different values for the methods that work with the group generators.
+%
+% For display purposes, and to describe group elements as words in the generators, the group generators have
+% names `.generatorNames`. Again, groups that differ by the names of their generators are considered mathematically equal.
 %
 % The exception is `.AbstractGroup` because the generator names are used in the group elements themselves.
 %
@@ -96,11 +103,11 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
                 names{1, end+1} = sprintf('generator(%d or ''%s'')', i, self.generatorNames{i});
                 values{1, end+1} = self.generator(i);
             end
-            r = self.fastRecognize;
-            if ~isempty(r)
-                names{1,end+1} = 'recognize.source';
-                values{1,end+1} = r.source;
-            end
+% $$$             r = self.fastRecognize;
+% $$$             if ~isempty(r)
+% $$$                 names{1,end+1} = 'recognize.source';
+% $$$                 values{1,end+1} = r.source;
+% $$$             end
         end
 
         function names = hiddenFields(self)
@@ -153,209 +160,47 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
 
     methods (Access = protected)
 
-        function populateCache(self, argumentPairs)
-        % Processes argument pairs to put in cache (helper for subclasses constructors)
+        function setGeneratorNames(self, names)
+        % Sets the generator names (called during construction)
         %
-        % Must be called after `.identity` and `.generators` has been set.
+        % `.generators` must have been set before the call
         %
-        % Keyword Args:
-        %   generatorNames (cell(1,\*) of charstring): Names of the generators
-        %   order (vpi or integer): Group order
-        %   relators (cell(1,\*) of charstring): Relators
-        %   abelianInvariants (cell(1,\*) of integer(1,\*)): Precomputed Abelian invariants
-            args = struct('generatorNames', {cell(1, 0)}, 'order', {0}, 'relators', {'none'}, 'abelianInvariants', {'none'}, ...
-                          'realCharacterTable', {'none'}, 'complexCharacterTable', {'none'});
-            args = replab.util.populateStruct(args, argumentPairs);
-            if args.order > 0
-                self.cache('order', args.order, '==');
-            end
-            if isempty(self.generators)
+        % Args:
+        %   names (cell(1,\*) of charstring or ``[]``): Generator names
+            n = length(self.generators);
+            if n == 0
                 self.generatorNames = cell(1, 0);
-            elseif isempty(args.generatorNames)
-                self.generatorNames = replab.fp.defaultGeneratorNames(length(self.generators));
+            elseif isempty(names)
+                self.generatorNames = replab.fp.defaultGeneratorNames(n);
             else
-                assert(length(args.generatorNames) == length(self.generators), 'Mismatch in the number of generator and names');
-                self.generatorNames = args.generatorNames;
+                assert(length(names) == n);
+                self.generatorNames = names;
             end
-            if ~isequal(args.relators, 'none')
-                relators = cellfun(@(r) replab.fp.Letters.parse(r, self.generatorNames), args.relators, 'uniform', 0);
-                self.cache('relatorsInLetterForm', relators, 'error');
-            end
-            if ~isequal(args.abelianInvariants, 'none')
-                self.cache('abelianInvariants', args.abelianInvariants, 'error');
-            end
-        end
-
-    end
-
-
-    methods (Access = protected)
-
-        function c = computeCharacterTable(self, field)
-        % See `.characterTable`
-            r = self.recognize;
-            assert(~isempty(r), 'No character table information available for this group.');
-            c = r.source.characterTable(field);
-            assert(~isempty(c), 'No character table information available for this group.');
-            c = c.imap(r);
-        end
-
-        function R = computeRecognize(self)
-            R = replab.Atlas.recognize(self);
-        end
-
-        function R = computeRelatorsInLetterForm(self)
-        % See `.relators`
-            R = replab.fp.relatorsForPermutationGroup(self.permutationGroup);
-        end
-
-    end
-
-    methods % Cached properties management
-
-        function l = knowsAbelianInvariants(self)
-        % Returns whether the abelian invariants are already known/computed
-        %
-        % Returns:
-        %   logical: True if known, false if unknown yet and needs to be computed
-            l = self.inCache('abelianInvariants');
-        end
-
-        function l = knowsComplexCharacterTable(self)
-        % Returns whether the complex character table is already known/computed
-        %
-        % Returns:
-        %   logical: True if known, false if unknown yet and needs to be computed
-            l = self.inCache('complexCharacterTable');
-        end
-
-        function l = knowsConjugacyClasses(self)
-        % Returns whether the conjugacy classes are already known/computed
-        %
-        % Returns:
-        %   logical: True if known, false if unknown yet and needs to be computed
-            l = self.inCache('conjugacyClasses');
-        end
-
-        function l = knowsDerivedSubgroup(self)
-        % Returns whether the derived subgroup is already known/computed
-        %
-        % Returns:
-        %   logical: True if known, false if unknown yet and needs to be computed
-            error('Abstract');
-        end
-
-        function l = knowsPermutationIsomorphism(self)
-        % Returns whether the permutation isomorphism is already known/computed
-        %
-        % Returns:
-        %   logical: True if known, false if unknown yet and needs to be computed
-            error('Abstract');
-        end
-
-        function l = knowsRealCharacterTable(self)
-        % Returns whether the real character table is already known/computed
-        %
-        % Returns:
-        %   logical: True if known, false if unknown yet and needs to be computed
-            error('Abstract');
-        end
-
-        function l = knowsRelators(self)
-        % Returns whether the relators are already known/computed
-        %
-        % Returns:
-        %   logical: True if known, false if unknown yet and needs to be computed
-            error('Abstract');
-        end
-
-        function l = setAbelianInvariants(self, value)
-        % Sets the abelian invariants
-        %
-        % `.knownAbelianInvariants` must be false
-        %
-        % Args:
-        %   value (integer(1,\*)): Group abelian invariants
-            error('Abstract');
-        end
-
-        function l = setComplexCharacterTable(self, value)
-        % Sets the complex character table
-        %
-        % `.complexCharacterTable` must be false
-        %
-        % Args:
-        %   value (`.ComplexCharacterTable`): Complex character table
-            error('Abstract');
-        end
-
-        function l = setConjugacyClasses(self)
-        % Sets the conjugacy classes
-        %
-        % Args:
-        %   value (`.ConjugacyClasses`): Conjugacy classes
-            error('Abstract');
-        end
-
-        function l = setDerivedSubgroup(self)
-        % Sets the derived subgroup
-        %
-        % Args:
-        %   value (`.FiniteGroup`): Derived subgroup
-            error('Abstract');
-        end
-
-        function l = setPermutationIsomorphism(self)
-        % Sets the permutation isomorphism
-        %
-        % Args:
-        %   value (`.FiniteIsomorphism`): Derived subgroup
-            error('Abstract');
-        end
-
-        function l = setRealCharacterTable(self)
-        % Sets the real character table
-        %
-        % Args:
-        %   value (`.RealCharacterTable`): Derived subgroup
-            error('Abstract');
-        end
-
-        function l = setRelatorsInLetterForm(self)
-        % Sets the relators
-        %
-        % Args:
-        %   value (`.RealCharacterTable`): Derived subgroup
-            error('Abstract');
         end
 
     end
 
     methods % Conjugacy classes and character table
 
-        function c = characterTable(self, field)
-        % Returns the (real or complex) character table of this group
+        function c = characterTable(self)
+        % Alias for `.complexCharacterTable`
+        %
+        % Returns:
+        %   `.ComplexCharacterTable`: Complex character table
+            c = self.complexCharacterTable;
+        end
+
+        function c = complexCharacterTable(self)
+        % Returns the complex character table of this group
         %
         % The complex character table is the standard, textbook character table of the group.
         %
         % Note that randomized techniques are used to find group isomorphisms, and thus the output of this
         % method may not be deterministic.
         %
-        % Args:
-        %   field ('R', 'C', optional): Field over which to define the irreps, default 'C'
-        %
         % Returns:
-        %   `.CharacterTable`: Character table
-            if nargin < 2 || isempty(field)
-                field = 'C';
-            end
-            if strcmp(field, 'R')
-                c = self.cached('realCharacterTable', @() self.computeCharacterTable('R'));
-            elseif strcmp(field, 'C')
-                c = self.cached('complexCharacterTable', @() self.computeCharacterTable('C'));
-            else
-                error('Incorrect field');
-            end
+        %   `.ComplexCharacterTable`: Complex character table
+            error('Abstract');
         end
 
         function c = conjugacyClass(self, g, varargin)
@@ -376,11 +221,19 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
         function c = conjugacyClasses(self, varargin)
         % Returns the conjugacy classes of this group
         %
-        % Keywords Args:
-        %   classes (cell(1,\*) of `.ConjugacyClass`, optional): Conjugacy class instances
-        %
         % Returns:
         %   `+replab.ConjugacyClasses`: Conjugacy classes
+            error('Abstract');
+        end
+
+        function c = realCharacterTable(self)
+        % Returns the real character table of this group
+        %
+        % Note that randomized techniques are used to find group isomorphisms, and thus the output of this
+        % method may not be deterministic.
+        %
+        % Returns:
+        %   `.RealCharacterTable`: Real character table
             error('Abstract');
         end
 
@@ -403,7 +256,7 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
         %
         % Returns:
         %   integer(1,\*): Group abelian invariants
-            a = self.cached('abelianInvariants', @() replab.finite.abelianInvariants(self));
+            error('Abstract');
         end
 
         function e = exponent(self)
@@ -424,6 +277,40 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
             R = [];
             return % TODO
             R = self.cached('fastRecognize', @() self.computeFastRecognize);
+        end
+
+        function res = isCyclic(self)
+        % Returns whether this group is a cyclic group
+        %
+        % Example:
+        %   >>> C3 = replab.PermutationGroup.cyclic(3);
+        %   >>> C3.isCyclic
+        %       1
+        %   >>> C3_C3 = C3.directProduct(C3);
+        %   >>> C3_C3.isCommutative
+        %       1
+        %   >>> C3_C3.isCyclic
+        %       0
+        %
+        % Returns:
+        %   logical: True if the group is cyclic
+            error('Abstract');
+        end
+
+        function res = isSimple(self)
+        % Returns whether this group is simple
+        %
+        % Example:
+        %   >>> S5 = replab.S(5);
+        %   >>> S5.isSimple
+        %       0
+        %   >>> A5 = S5.derivedSubgroup;
+        %   >>> A5.isSimple
+        %       1
+        %
+        % Returns:
+        %   logical: True if the group is simple
+            error('Abstract');
         end
 
         function b = isTrivial(self)
@@ -458,23 +345,17 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
             error('Abstract');
         end
 
-        function s = presentation(self, generatorNames)
+        function s = presentation(self)
         % Returns a presentation of this group as a string
-        %
-        % Args:
-        %   generatorNames (cell(1,\*) of charstring, optional): Generator names to use in place of the names given at construction
         %
         % Returns:
         %   charstring: Presentation
-            if nargin < 2 || isempty(generatorNames)
-                generatorNames = self.generatorNames;
-            end
-            r = self.relators(generatorNames);
-            if isempty(self.relators)
+            r = self.relatorsWord;
+            if isempty(r)
                 s = '< | >'; % empty presentation
             else
-                gens = strjoin(generatorNames, ', ');
-                rels = strjoin(self.relators, ' = ');
+                gens = strjoin(self.generatorNames, ', ');
+                rels = strjoin(r, ' = ');
                 s = sprintf('< %s | %s = 1 >', gens, rels);
             end
         end
@@ -484,27 +365,39 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
 % $$$         %
 % $$$         % Returns:
 % $$$         %   `.FiniteIsomorphism` or ``[]``: A result in case the group is identified; or ``[]`` if unrecognized.
+% $$$             R = replab.Atlas.recognize(self);
 % $$$             R = self.cached('recognize', @() self.computeRecognize);
 % $$$         end
 
-% $$$         function R = relators(self, generatorNames)
-% $$$         % Returns the relators of a presentation of this finite group
-% $$$         %
-% $$$         % See `.AbstractGroup` for a description of the presentation of a finite group
-% $$$         %
-% $$$         % Args:
-% $$$         %   generatorNames (cell(1,\*) of charstring, optional): Generator names to use in place of the names given at construction
-% $$$         %
-% $$$         % Returns:
-% $$$         %   cell(1,\*) of charstring: Relators
-% $$$             if nargin < 2 || isempty(generatorNames)
-% $$$                 generatorNames = self.generatorNames;
-% $$$             end
-% $$$             R = self.cached('relatorsInLetterForm', @() self.computeRelatorsInLetterForm);
-% $$$             R = cellfun(@(r) self.lettersToWord(r, generatorNames), R, 'uniform', 0);
-% $$$         end
+    end
 
-% $$$         function relatorsInLetterForm
+    methods % Methods depending on the form of the generators
+
+        function res = knownRelators(self)
+        % Returns whether the relators of this group are known
+        %
+        % Returns:
+        %   logical: True if the relators are known already
+            error('Abstract');
+        end
+
+        function R = relatorsFlat(self)
+        % Returns the relators of a presentation of this finite group in the flat format
+        %
+        % See `.AbstractGroup` for a description of the presentation of a finite group
+        %
+        % Returns:
+        %   cell(1,\*) of integer(1,\*): Relators in flat form
+            error('Abstract');
+        end
+
+        function R = relatorsWord(self)
+        % Returns the relators of a presentation of this finite group
+        %
+        % Returns:
+        %   cell(1,\*) of charstring: Relators in word form
+            R = cellfun(@(r) self.flatToWord(r), self.relatorsFlat, 'uniform', 0);
+        end
 
     end
 
@@ -521,25 +414,23 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
             error('Abstract');
         end
 
-        function [l, r] = factorizeLetters(self, elementOrCoset)
-        % Factorizes an element or a coset as a word in the generators (returns letters)
+        function [l, r] = factorizeFlat(self, elementOrCoset)
+        % Factorizes an element or a coset as a flat sequence in the generators
+        %
+        % See `.imageFlat` for the convention.
         %
         % If a coset is given, this method tries to pick a coset element with a short factorization.
         %
         % Args:
         %   elementOrCoset (element or coset of this group): Element or coset to factorize
         %
-        % Returns
-        % -------
-        %   l: integer(1,\*)
-        %     Letters of the word in the generators
-        %   r: element
-        %     Represented element or coset element
+        % Returns:
+        %   integer(1,\*): Flat sequence of the word in the generators
             error('Abstract');
         end
 
-        function [w, r] = factorizeWord(self, elementOrCoset, generatorNames)
-        % Factorizes an element or a coset as a word in the generators (returns word)
+        function w = factorizeWord(self, elementOrCoset)
+        % Factorizes an element or a coset as a word in the generators
         %
         % If a coset is given, this method tries to pick a coset element with a short factorization.
         %
@@ -553,19 +444,22 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
         %
         % Args:
         %   elementOrCoset (element or coset of this group): Element to factorize
-        %   generatorNames (cell(1,\*) of charstring, optional): Generator names to use in place of the names given at construction
         %
-        % Returns
-        % -------
-        %   w: charstring
-        %     Word representing the element
-        %   r: element of `.group`
-        %     Represented coset element
-            if nargin < 3 || isempty(generatorNames)
-                generatorNames = self.generatorNames;
-            end
-            [l, r] = self.factorizeLetters(elementOrCoset);
-            w = replab.fp.Letters.print(l, generatorNames);
+        % Returns:
+        %   charstring: Word representing the element
+            l = self.factorizeFlat(elementOrCoset);
+            w = replab.fp.Letters.print(l, self.generatorNames);
+        end
+
+        function w = flatToWord(self, letters)
+        % Prints a word described by letters into a string
+        %
+        % Args:
+        %   letters (integer(1,\*)): Letters composing the word
+        %
+        % Returns:
+        %   charstring: Word in the generators
+            w = replab.fp.Letters.print(letters, self.generatorNames);
         end
 
         function p = generator(self, i)
@@ -594,8 +488,8 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
             p = self.inverse(self.generators{i});
         end
 
-        function g = imageLetters(self, letters)
-        % Returns the image of a word in the group generators, where the word is represented by letters
+        function g = imageFlat(self, letters)
+        % Returns the image of a flat word in the group generators
         %
         % The letters take the values ``1...nG`` which represent the group generators, and also the values
         % ``-nG...-1`` which represent the inverses of those generators.
@@ -608,7 +502,7 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
             g = self.composeLetters(self.generators, letters);
         end
 
-        function g = imageWord(self, word, generatorNames)
+        function g = imageWord(self, word)
         % Computes the image of a word in the group generators
         %
         % Example:
@@ -621,30 +515,11 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
         %
         % Args:
         %   word (charstring): Word written using mathematical notation
-        %   generatorNames (cell(1,\*) of charstring, optional): Generator names to use in place of the names given at construction
         %
         % Returns:
         %   element: Element of the group corresponding to the given word
-            if nargin < 3 || isempty(generatorNames)
-                generatorNames = self.generatorNames;
-            end
-            l = replab.fp.Letters.parse(word, generatorNames);
-            g = self.imageLetters(l);
-        end
-
-        function w = lettersToWord(self, letters, generatorNames)
-        % Prints a word described by letters into a string
-        %
-        % Args:
-        %   letters (integer(1,\*)): Letters composing the word
-        %   generatorNames (cell(1,\*) of charstring, optional): Generator names to use in place of the names given at construction
-        %
-        % Returns:
-        %   charstring: Word in the generators
-            if nargin < 3 || isempty(generatorNames)
-                generatorNames = self.generatorNames;
-            end
-            w = replab.fp.Letters.print(letters, generatorNames);
+            l = replab.fp.Letters.parse(word, self.generatorNames);
+            g = self.imageFlat(l);
         end
 
         function n = nGenerators(self)
@@ -674,19 +549,15 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
             end
         end
 
-        function l = wordToLetters(self, word, generatorNames)
+        function l = wordToFlat(self, word)
         % Parses a word into generator letters
         %
         % Args:
         %   word (charstring): Word written using mathematical notation
-        %   generatorNames (cell(1,\*) of charstring, optional): Generator names to use in place of the names given at construction
         %
         % Returns:
         %   integer(1,\*): Letters of the word
-            if nargin < 3 || isempty(generatorNames)
-                generatorNames = self.generatorNames;
-            end
-            l = replab.fp.Letters.parse(word, generatorNames);
+            l = replab.fp.Letters.parse(word, self.generatorNames);
         end
 
     end
@@ -769,6 +640,14 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
 
     methods % Subgroups
 
+        function sub = center(self)
+        % Returns the center of this group
+        %
+        % Returns:
+        %   `.FiniteGroup`: The center
+            sub = self.centralizer(self);
+        end
+
         function sub = centralizer(self, arg)
         % Returns the centralizer of the given object in this group
         %
@@ -817,7 +696,25 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
 %         %       1
         % Returns:
         %   `+replab.FiniteGroup`: The derived subgroup
-            sub = self.cached('derivedSubgroup', @() self.computeDerivedSubgroup);
+            error('Abstract');
+        end
+
+        function sub = intersection(self, G)
+        % Computes the intersection of two groups
+        %
+        % Example:
+        %   >>> D12 = replab.PermutationGroup.of([1 6 5 4 3 2], [2 1 6 5 4 3]);
+        %   >>> G = replab.PermutationGroup.of([2 1 3 4 5 6], [2 3 4 5 1 6]);
+        %   >>> I = D12.intersection(G);
+        %   >>> I == replab.PermutationGroup.of([5 4 3 2 1 6])
+        %       1
+        %
+        % Args:
+        %   G (`+replab.FiniteGroup`): Group with the same type as this group
+        %
+        % Returns:
+        %   `+replab.FiniteGroup`: Subgroup representing the intersection
+            error('Abstract');
         end
 
         function sub = randomProperSubgroup(self, nSteps)
@@ -912,32 +809,6 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
             sub = self.subgroupWithGenerators({}, 'order', vpi(1));
         end
 
-        function sub = center(self)
-        % Returns the center of this group
-        %
-        % Returns:
-        %   `.FiniteGroup`: The center
-            sub = self.centralizer(self);
-        end
-
-        function sub = intersection(self, G)
-        % Computes the intersection of two groups
-        %
-        % Example:
-        %   >>> D12 = replab.PermutationGroup.of([1 6 5 4 3 2], [2 1 6 5 4 3]);
-        %   >>> G = replab.PermutationGroup.of([2 1 3 4 5 6], [2 3 4 5 1 6]);
-        %   >>> I = D12.intersection(G);
-        %   >>> I == replab.PermutationGroup.of([5 4 3 2 1 6])
-        %       1
-        %
-        % Args:
-        %   G (`+replab.FiniteGroup`): Group with the same type as this group
-        %
-        % Returns:
-        %   `+replab.FiniteGroup`: Subgroup representing the intersection
-            error('Abstract');
-        end
-
     end
 
     methods % Cosets
@@ -989,7 +860,7 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
             error('Abstract');
         end
 
-        function B = findLeftConjugations(self, s, t, sCentralizer, tCentralizer)
+        function B = findLeftConjugations(self, s, t, varargin)
         % Returns the set of all elements that left conjugates an element to another element
         %
         % Let ``s`` and ``t`` be two elements of this group. This returns the set of all elements
@@ -1000,8 +871,10 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
         % Args:
         %   s (group element): Source element
         %   t (group element): Target element
-        %   sCentralizer (`+replab.FiniteGroup` or ``[]``, optional): Centralizer of ``s`` in this group
-        %   tCentralizer (`+replab.FiniteGroup` or ``[]``, optional): Centralizer of ``t`` in this group
+        %
+        % Keyword Args:
+        %   sCentralizer (`+replab.FiniteGroup`, optional): Centralizer of ``s`` in this group
+        %   tCentralizer (`+replab.FiniteGroup`, optional): Centralizer of ``t`` in this group
         %
         % Returns:
         %   `+replab.LeftCoset` or ``[]``: Set of all elements of this group that left conjugates ``s`` to ``t`` if it exists
@@ -1191,56 +1064,39 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
 
     end
 
-% $$$     methods (Access = protected)
-% $$$
-% $$$         function G = computePermutationGroup(self)
-% $$$         % See `.permutationGroup`
-% $$$             error('Abstract');
-% $$$         end
-% $$$
-% $$$         function m = computePermutationIsomorphism(self)
-% $$$         % See `.permutationIsomorphism`
-% $$$             error('Abstract');
-% $$$         end
-% $$$
-% $$$     end
-
     methods % Isomorphic groups
 
-% $$$         function G = permutationGroup(self)
-% $$$         % Returns the permutation group isomorphic to this finite group
-% $$$         %
-% $$$         % The generators of the permutation group must be in one-to-one correspondance with the generators of this group.
-% $$$         %
-% $$$         % This is the image of `.permutationIsomorphism`.
-% $$$         %
-% $$$         % Returns:
-% $$$         %   `+replab.PermutationGroup`: A permutation group isomorphic to this group
-% $$$             G = self.cached('permutationGroup', @() self.computePermutationGroup);
-% $$$         end
-% $$$
-% $$$         function G = abstractGroup(self, generatorNames)
-% $$$         % Returns an abstract group isomorphic to this finite gorup
-% $$$         %
-% $$$         % The generators of the abstract group must be in one-to-one correspondance with the generators of this group.
-% $$$         %
-% $$$         % This is the image of `.abstractMorphism`; and the `+replab.AbstractGroup.permutationGroup` will be the same as this group
-% $$$         % `.permutationGroup`. TODO: check relevance
-% $$$         %
-% $$$         % Args:
-% $$$         %   generatorNames (cell(1,\*) of charstring, optional): Generator names to use in place of the names given at construction
-% $$$         %
-% $$$         % Returns:
-% $$$         %   `+replab.AbstractGroup`: An abstract group isomorphic to this group
-% $$$             error('Abstract');
-% $$$         end
+        function G = abstractGroup(self)
+        % Returns an abstract group isomorphic to this finite gorup
+        %
+        % The generators of the abstract group must be in one-to-one correspondance with the generators of this group, and
+        % their names are taken from `.generatorNames`
+        %
+        % This is the image of `.abstractIsomorphism`; and the `+replab.AbstractGroup.permutationGroup` will be the same as this group
+        % `.permutationGroup`. TODO: check relevance
+        %
+        % Returns:
+        %   `+replab.AbstractGroup`: An abstract group isomorphic to this group
+            G = self.abstractIsomorphism.target;
+        end
+
+        function G = permutationGroup(self)
+        % Returns the permutation group isomorphic to this finite group
+        %
+        % The generators of the permutation group are in one-to-one correspondance with the generators of this group.
+        %
+        % This is the image of `.permutationIsomorphism`.
+        %
+        % Returns:
+        %   `+replab.PermutationGroup`: A permutation group isomorphic to this group
+            G = self.permutationIsomorphism.target;
+        end
 
     end
 
-
     methods % Morphisms
 
-        function m = abstractIsomorphism(self, names)
+        function m = abstractIsomorphism(self)
         % Returns an isomorphism to an abstract group
         %
         % Example:
@@ -1254,18 +1110,18 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
             error('Abstract');
         end
 
-% $$$         function m = conjugatingAutomorphism(self, by)
-% $$$         % Returns the morphism that corresponds to left conjugation by an element
-% $$$         %
-% $$$         % Args:
-% $$$         %   by (element of `.type`): Element to conjugate the group with
-% $$$         %
-% $$$         % Returns:
-% $$$         %   `+replab.FiniteMorphism`: Conjugating automorphism
-% $$$             generatorImages = cellfun(@(g) self.type.leftConjugate(by, g), self.generators, 'uniform', 0);
-% $$$             assert(all(cellfun(@(g) self.contains(g), generatorImages)));
-% $$$             m = self.morphismByImages(self, 'preimages', self.generators, 'images', generatorImages, 'nChecks', 0);
-% $$$         end
+        function m = conjugatingAutomorphism(self, by)
+        % Returns the morphism that corresponds to left conjugation by an element
+        %
+        % Args:
+        %   by (element of `.type`): Element to conjugate the group with
+        %
+        % Returns:
+        %   `+replab.FiniteMorphism`: Conjugating automorphism
+            generatorImages = cellfun(@(g) self.type.leftConjugate(by, g), self.generators, 'uniform', 0);
+            assert(all(cellfun(@(g) self.contains(g), generatorImages)));
+            m = self.morphismByImages(self, 'preimages', self.generators, 'images', generatorImages, 'nChecks', 0);
+        end
 
 % $$$         function res = findIsomorphism(self, to)
 % $$$         % Finds an isomorphism from this finite group to another finite group, if it exists
@@ -1380,39 +1236,39 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
 % $$$             end
 % $$$         end
 
-% $$$         function l = isMorphismByImages(self, target, varargin)
-% $$$         % Checks whether the given images describe a group morphism
-% $$$         %
-% $$$         % The calling convention of this method is the same as `.morphismByImages`, except that ``nChecks`` is missing.
-% $$$         %
-% $$$         % Args:
-% $$$         %   target (`+replab.Group`): Target group
-% $$$         %
-% $$$         % Keyword Args:
-% $$$         %   preimages (cell(1, \*) of ``self`` elements): Preimages of the morphism which generate ``self``, defaults to ``self.generators``
-% $$$         %   images (cell(1, \*) of ``target`` elements): Images of the given preimages, defaults to ``target.generators`` if ``target`` is a `.FiniteGroup`
-% $$$         %
-% $$$         % Returns:
-% $$$         %   logical: True if the given images define a morphism
-% $$$             assert(isa(target, 'replab.Group'));
-% $$$             args = struct('preimages', {self.generators});
-% $$$             if isa(target, 'replab.FiniteGroup')
-% $$$                 args.images = target.generators;
-% $$$             else
-% $$$                 args.images = [];
-% $$$             end
-% $$$             args = replab.util.populateStruct(args, varargin);
-% $$$             if isempty(args.images) && ~self.isTrivial
-% $$$                 error('Images must be provided');
-% $$$             end
-% $$$             assert(length(args.preimages) == length(args.images), 'Number of images does not match the number of preimages');
-% $$$             preId = cellfun(@(g) self.isIdentity(g), args.preimages);
-% $$$             l = cellfun(@(g) target.isIdentity(g), args.images(preId));
-% $$$             if ~all(l)
-% $$$                 return
-% $$$             end
-% $$$             l = self.isMorphismByImages_(target, args.preimages(~preId), args.images(~preId));
-% $$$         end
+        function l = isMorphismByImages(self, target, varargin)
+        % Checks whether the given images describe a group morphism
+        %
+        % The calling convention of this method is the same as `.morphismByImages`, except that ``nChecks`` is missing.
+        %
+        % Args:
+        %   target (`+replab.Group`): Target group
+        %
+        % Keyword Args:
+        %   preimages (cell(1, \*) of ``self`` elements): Preimages of the morphism which generate ``self``, defaults to ``self.generators``
+        %   images (cell(1, \*) of ``target`` elements): Images of the given preimages, defaults to ``target.generators`` if ``target`` is a `.FiniteGroup`
+        %
+        % Returns:
+        %   logical: True if the given images define a morphism
+            assert(isa(target, 'replab.Group'));
+            args = struct('preimages', {self.generators});
+            if isa(target, 'replab.FiniteGroup')
+                args.images = target.generators;
+            else
+                args.images = [];
+            end
+            args = replab.util.populateStruct(args, varargin);
+            if isempty(args.images) && ~self.isTrivial
+                error('Images must be provided');
+            end
+            assert(length(args.preimages) == length(args.images), 'Number of images does not match the number of preimages');
+            preId = cellfun(@(g) self.isIdentity(g), args.preimages);
+            l = cellfun(@(g) target.isIdentity(g), args.images(preId));
+            if ~all(l)
+                return
+            end
+            l = self.isMorphismByImages_(target, args.preimages(~preId), args.images(~preId));
+        end
 
 % $$$         function g1 = imap(self, f)
 % $$$         % Maps this finite group through an isomorphism
@@ -1422,121 +1278,121 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
 % $$$             g1 = f.imageGroup(self);
 % $$$         end
 
-% $$$         function m = isomorphismByFunction(self, target, imageElementFun)
-% $$$         % Constructs an isomorphism to a group using an image function
-% $$$             imgs = cellfun(imageElementFun, self.generators, 'uniform', 0);
-% $$$             m = self.isomorphismByImages(target, 'preimages', self.generators, 'images', imgs);
-% $$$         end
+        function m = isomorphismByFunction(self, target, imageElementFun)
+        % Constructs an isomorphism to a group using an image function
+            imgs = cellfun(imageElementFun, self.generators, 'uniform', 0);
+            m = self.isomorphismByImages(target, 'preimages', self.generators, 'images', imgs);
+        end
 
-% $$$         function m = isomorphismByImages(self, target, varargin)
-% $$$         % Constructs an isomorphism to a group using images of generators
-% $$$             m = self.morphismByImages(target, varargin{:}).toIsomorphism;
-% $$$         end
+        function m = isomorphismByImages(self, target, varargin)
+        % Constructs an isomorphism to a group using images of generators
+            m = self.morphismByImages(target, varargin{:}).toIsomorphism;
+        end
 
-% $$$         function m = morphismByImages(self, target, varargin)
-% $$$         % Constructs a morphism to a group using images of generators
-% $$$         %
-% $$$         % The type of the morphism depends on the type of ``target``:
-% $$$         %
-% $$$         % * if ``target`` is a `.FiniteGroup`, this method returns a `.FiniteMorphism`,
-% $$$         %
-% $$$         % * if ``target`` is only a `.Group`, this method returns a `.Morphism`.
-% $$$         %
-% $$$         % Example:
-% $$$         %   >>> S4 = replab.S(4);
-% $$$         %   >>> m = S4.morphismByImages(replab.S(3), 'images', {[1 3 2] [3 2 1]});
-% $$$         %   >>> m.laws.checkSilent
-% $$$         %       1
-% $$$         %
-% $$$         % Args:
-% $$$         %   target (`.Group` or `.FiniteGroup`): Target of the morphism, the morphism image is a subgroup of this
-% $$$         %
-% $$$         % Keyword Args:
-% $$$         %   preimages (cell(1, \*) of ``self`` elements): Preimages of the morphism which generate ``self``, defaults to ``self.generators``
-% $$$         %   images (cell(1, \*) of ``target`` elements): Images of the given preimages, defaults to ``target.generators`` if ``target`` is a `.FiniteGroup`
-% $$$         %   imageElementFun (function_handle or ``[]``, optional): Image function, default: ``[]``
-% $$$         %   nChecks (integer or ``inf``): Number of randomized image checks to perform, if ``inf`` computes and verifies a presentation of ``self``
-% $$$         %
-% $$$         % Returns:
-% $$$         %   `.Morphism` or `.FiniteMorphism`: The constructed morphism
-% $$$             args = struct('nChecks', replab.globals.morphismNChecks, 'preimages', {self.generators}, 'imageElementFun', []);
-% $$$             if length(varargin) == 1 && iscell(varargin{1})
-% $$$                 warning('Old call style deprecated, add a ''images'' keyword argument');
-% $$$                 args.images = varargin{1};
-% $$$             else
-% $$$                 if isa(target, 'replab.FiniteGroup')
-% $$$                     args.images = target.generators;
-% $$$                 else
-% $$$                     args.images = [];
-% $$$                 end
-% $$$                 args = replab.util.populateStruct(args, varargin);
-% $$$             end
-% $$$             if isempty(args.images) && ~self.isTrivial
-% $$$                 error('Images must be provided');
-% $$$             end
-% $$$             assert(length(args.preimages) == length(args.images), 'Number of images does not match the number of preimages');
-% $$$             preId = cellfun(@(g) self.isIdentity(g), args.preimages);
-% $$$             assert(all(cellfun(@(g) target.isIdentity(g), args.images(preId))), 'Images of identity must be identity');
-% $$$             if isinf(args.nChecks)
-% $$$                 assert(self.isMorphismByImages_(target, args.preimages, args.images), 'The given images do not define a morphism');
-% $$$             end
-% $$$             m = self.morphismByImages_(target, args.preimages(~preId), args.images(~preId), args.imageElementFun);
-% $$$             if isfinite(args.nChecks) && args.nChecks > 0
-% $$$                 for i = 1:args.nChecks
-% $$$                     s1 = self.sample;
-% $$$                     s2 = self.sample;
-% $$$                     s12 = self.compose(s1, s2);
-% $$$                     t1 = m.imageElement(s1);
-% $$$                     t2 = m.imageElement(s2);
-% $$$                     t12 = m.imageElement(s12);
-% $$$                     t1_2 = target.compose(t1, t2);
-% $$$                     assert(target.eqv(t12, t1_2), 'The given images do not define a morphism');
-% $$$                 end
-% $$$             end
-% $$$         end
+        function m = morphismByImages(self, target, varargin)
+        % Constructs a morphism to a group using images of generators
+        %
+        % The type of the morphism depends on the type of ``target``:
+        %
+        % * if ``target`` is a `.FiniteGroup`, this method returns a `.FiniteMorphism`,
+        %
+        % * if ``target`` is only a `.Group`, this method returns a `.Morphism`.
+        %
+        % Example:
+        %   >>> S4 = replab.S(4);
+        %   >>> m = S4.morphismByImages(replab.S(3), 'images', {[1 3 2] [3 2 1]});
+        %   >>> m.laws.checkSilent
+        %       1
+        %
+        % Args:
+        %   target (`.Group` or `.FiniteGroup`): Target of the morphism, the morphism image is a subgroup of this
+        %
+        % Keyword Args:
+        %   preimages (cell(1, \*) of ``self`` elements): Preimages of the morphism which generate ``self``, defaults to ``self.generators``
+        %   images (cell(1, \*) of ``target`` elements): Images of the given preimages, defaults to ``target.generators`` if ``target`` is a `.FiniteGroup`
+        %   imageElementFun (function_handle or ``[]``, optional): Image function, default: ``[]``
+        %   nChecks (integer or ``inf``): Number of randomized image checks to perform, if ``inf`` computes and verifies a presentation of ``self``
+        %
+        % Returns:
+        %   `.Morphism` or `.FiniteMorphism`: The constructed morphism
+            args = struct('nChecks', replab.globals.morphismNChecks, 'preimages', {self.generators}, 'imageElementFun', []);
+            if length(varargin) == 1 && iscell(varargin{1})
+                warning('Old call style deprecated, add a ''images'' keyword argument');
+                args.images = varargin{1};
+            else
+                if isa(target, 'replab.FiniteGroup')
+                    args.images = target.generators;
+                else
+                    args.images = [];
+                end
+                args = replab.util.populateStruct(args, varargin);
+            end
+            if isempty(args.images) && ~self.isTrivial
+                error('Images must be provided');
+            end
+            assert(length(args.preimages) == length(args.images), 'Number of images does not match the number of preimages');
+            preId = cellfun(@(g) self.isIdentity(g), args.preimages);
+            assert(all(cellfun(@(g) target.isIdentity(g), args.images(preId))), 'Images of identity must be identity');
+            if isinf(args.nChecks)
+                assert(self.isMorphismByImages_(target, args.preimages, args.images), 'The given images do not define a morphism');
+            end
+            m = self.morphismByImages_(target, args.preimages(~preId), args.images(~preId), args.imageElementFun);
+            if isfinite(args.nChecks) && args.nChecks > 0
+                for i = 1:args.nChecks
+                    s1 = self.sample;
+                    s2 = self.sample;
+                    s12 = self.compose(s1, s2);
+                    t1 = m.imageElement(s1);
+                    t2 = m.imageElement(s2);
+                    t12 = m.imageElement(s12);
+                    t1_2 = target.compose(t1, t2);
+                    assert(target.eqv(t12, t1_2), 'The given images do not define a morphism');
+                end
+            end
+        end
 
-% $$$         function f = permutationIsomorphism(self)
-% $$$         % Returns the isomorphism from this group to a permutation group
-% $$$             f = self.cached('permutationIsomorphism', @() self.computePermutationMorphism);
-% $$$         end
+        function f = permutationIsomorphism(self)
+        % Returns the isomorphism from this group to a permutation group
+            error('Abstract');
+        end
 
     end
 
     methods (Access = protected)
 
-% $$$         function m = morphismByImages_(self, target, preimages, images, imageElementFun)
-% $$$         % Implements the `.morphismByImages` method
-% $$$         %
-% $$$         % Does not perform checks; preimages must not contain the identity
-% $$$             error('Abstract');
-% $$$         end
+        % Morphisms
 
-% $$$         function l = isMorphismByImages_(self, target, preimages, images)
-% $$$         % Implements the `.isMorphismByImages` method
-% $$$         %
-% $$$         % Preimages must not contain the identity (this is not checked)
-% $$$             hasSameGenerators = length(preimages) == self.nGenerators && ...
-% $$$                 all(arrayfun(@(i) self.eqv(preimages{i}, self.generator(i)), 1:self.nGenerators));
-% $$$             if hasSameGenerators
-% $$$                 source = self;
-% $$$             else
-% $$$                 source = self.subgroupWithGenerators(preimages);
-% $$$             end
-% $$$             assert(source == self, 'The morphism preimages do not generate the source group');
-% $$$             relators = source.relators;
-% $$$             for i = 1:length(relators)
-% $$$                 r = replab.fp.Letters.parse(relators{i}, self.generatorNames);
-% $$$                 g = target.composeLetters(images, r);
-% $$$                 if ~target.isIdentity(g)
-% $$$                     l = false;
-% $$$                     return
-% $$$                 end
-% $$$             end
-% $$$             l = true;
-% $$$         end
+        function m = morphismByImages_(self, target, preimages, images, imageElementFun)
+        % Implements the `.morphismByImages` method
+        %
+        % Does not perform checks; preimages must not contain the identity
+            error('Abstract');
+        end
+
+        function l = isMorphismByImages_(self, target, preimages, images)
+        % Implements the `.isMorphismByImages` method
+        %
+        % Preimages must not contain the identity (this is not checked)
+            hasSameGenerators = length(preimages) == self.nGenerators && ...
+                all(arrayfun(@(i) self.eqv(preimages{i}, self.generator(i)), 1:self.nGenerators));
+            if hasSameGenerators
+                source = self;
+            else
+                source = self.subgroupWithGenerators(preimages);
+            end
+            assert(source == self, 'The morphism preimages do not generate the source group');
+            relators = source.relatorsFlat;
+            for i = 1:length(relators)
+                g = target.composeFlat(images, relators{i});
+                if ~target.isIdentity(g)
+                    l = false;
+                    return
+                end
+            end
+            l = true;
+        end
 
     end
-
 
     methods % Representations
 

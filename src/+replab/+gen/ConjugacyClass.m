@@ -112,7 +112,7 @@ classdef ConjugacyClass < replab.ConjugacyClass & replab.gen.FiniteSet
             s = self.representative;
             sCentralizer = self.representativeCentralizer;
             % We want to solve ``t == b s b^-1`` with ``s`` the representative
-            B = self.group.findLeftConjugations(s, t, sCentralizer);
+            B = self.group.findLeftConjugations(s, t, 'sCentralizer', sCentralizer);
             b = ~isempty(B);
         end
 

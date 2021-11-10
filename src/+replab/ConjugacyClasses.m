@@ -1,7 +1,9 @@
 classdef ConjugacyClasses < replab.Obj
 % Stores information about the conjugacy classes of a group
 %
-% In particular, it can compute power maps.
+% The conjugacy classes are sorted according to the group type ordering.
+%
+% This class can compute power maps.
 
     properties (Access = protected)
         primes % (integer(1,nP)): List of primes that divide the group order (computed as needed)
@@ -239,27 +241,27 @@ classdef ConjugacyClasses < replab.Obj
     end
 
     methods % Transformations
+% $$$
+% $$$         function c1 = imap(self, f)
+% $$$         % Maps the conjugacy classes under an isomorphism
+% $$$         %
+% $$$         % Args:
+% $$$         %   f (`.FiniteIsomorphism`): Isomorphism with ``self.group.isSubgroupOf(f.source)``
+% $$$         %
+% $$$         % Returns:
+% $$$         %   `.ConjugacyClasses`: The conjugacy classes mapped under ``f``, expressed as a subset of ``f.image``
+% $$$             classes1 = cellfun(@(c) c.imap(f), self.classes, 'uniform', 0);
+% $$$             c1 = replab.ConjugacyClasses(f.target, classes1);
+% $$$         end
 
-        function c1 = imap(self, f)
-        % Maps the conjugacy classes under an isomorphism
-        %
-        % Args:
-        %   f (`.FiniteIsomorphism`): Isomorphism with ``self.group.isSubgroupOf(f.source)``
-        %
-        % Returns:
-        %   `.ConjugacyClasses`: The conjugacy classes mapped under ``f``, expressed as a subset of ``f.image``
-            classes1 = cellfun(@(c) c.imap(f), self.classes, 'uniform', 0);
-            c1 = replab.ConjugacyClasses(f.target, classes1);
-        end
-
-        function c1 = sorted(self)
-            classes = self.classes;
-            reps = cellfun(@(c) c.representative, classes, 'uniform', 0);
-            I = self.group.type.sort(reps);
-            classes1 = classes(I);
-            c1 = replab.ConjugacyClasses(self.group, classes1);
-        end
-
+% $$$         function c1 = sorted(self)
+% $$$             classes = self.classes;
+% $$$             reps = cellfun(@(c) c.representative, classes, 'uniform', 0);
+% $$$             I = self.group.type.sort(reps);
+% $$$             classes1 = classes(I);
+% $$$             c1 = replab.ConjugacyClasses(self.group, classes1);
+% $$$         end
+% $$$
     end
 
 end

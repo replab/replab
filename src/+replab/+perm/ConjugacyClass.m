@@ -2,26 +2,23 @@ classdef ConjugacyClass < replab.ConjugacyClass & replab.PermutationFiniteSet
 
     methods
 
-        function self = ConjugacyClass(group, representative)
+        function self = ConjugacyClass(group, representative, varargin)
+        % Constructs a conjugacy class
+        %
+        % Args:
+        %   group (`+replab.PermutationGroup`): Group
+        %   representative (permutation): Conjugacy class representative
+        %
+        % Keyword Args:
+        %   representativeCentralizer (`+replab.PermutationGroup`, optional): Centralizer of the representative
+            args = struct('representativeCentralizer', []);
+            args = replab.util.populateStruct(args, varargin);
             self.type = group.type;
             self.representative_ = representative;
             self.group = group;
-        end
-
-    end
-
-    methods (Access = protected)
-
-        function o = computeElementOrder(self)
-            o = self.group.elementOrder(self.representative);
-        end
-
-        function n = computeNElements(self)
-            n = self.group.order / self.representativeCentralizer.order;
-        end
-
-        function G = computeRepresentativeCentralizer(self)
-            G = self.group.centralizer(self.representative);
+            if ~isempty(args.representativeCentralizer)
+                self.cache('representativeCentralizer', args.representativeCentralizer);
+            end
         end
 
     end
@@ -63,18 +60,18 @@ classdef ConjugacyClass < replab.ConjugacyClass & replab.PermutationFiniteSet
             s = self.representative;
             sCentralizer = self.representativeCentralizer;
             % We want to solve ``t == b s b^-1`` with ``s`` the representative
-            B = self.group.findLeftConjugations(s, t, sCentralizer);
+            B = self.group.findLeftConjugations(s, t, 'sCentralizer', sCentralizer);
             b = ~isempty(B);
         end
 
         function s = nElements(self)
-            s = self.cached('nElements', @() self.computeNElements);
+            s = self.cached('nElements', @() self.group.order / self.representativeCentralizer.order);
         end
 
         % ConjugacyClass
 
         function o = elementOrder(self)
-            o = self.cached('elementOrder', @() self.computeElementOrder);
+            o = self.cached('elementOrder', @() self.group.elementOrder(self.representative));
         end
 
         function E = elementsSequence(self)
@@ -89,7 +86,7 @@ classdef ConjugacyClass < replab.ConjugacyClass & replab.PermutationFiniteSet
         end
 
         function c = representativeCentralizer(self)
-            c = self.cached('representativeCentralizer', @() self.computeRepresentativeCentralizer);
+            c = self.cached('representativeCentralizer', @() self.group.centralizer(self.representative));
         end
 
     end
