@@ -153,38 +153,38 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
 
     methods (Access = protected)
 
-% $$$         function populateCache(self, argumentPairs)
-% $$$         % Processes argument pairs to put in cache (helper for subclasses constructors)
-% $$$         %
-% $$$         % Must be called after `.identity` and `.generators` has been set.
-% $$$         %
-% $$$         % Keyword Args:
-% $$$         %   generatorNames (cell(1,\*) of charstring): Names of the generators
-% $$$         %   order (vpi or integer): Group order
-% $$$         %   relators (cell(1,\*) of charstring): Relators
-% $$$         %   abelianInvariants (cell(1,\*) of integer(1,\*)): Precomputed Abelian invariants
-% $$$             args = struct('generatorNames', {cell(1, 0)}, 'order', {0}, 'relators', {'none'}, 'abelianInvariants', {'none'}, ...
-% $$$                           'realCharacterTable', {'none'}, 'complexCharacterTable', {'none'});
-% $$$             args = replab.util.populateStruct(args, argumentPairs);
-% $$$             if args.order > 0
-% $$$                 self.cache('order', args.order, '==');
-% $$$             end
-% $$$             if isempty(self.generators)
-% $$$                 self.generatorNames = cell(1, 0);
-% $$$             elseif isempty(args.generatorNames)
-% $$$                 self.generatorNames = replab.fp.defaultGeneratorNames(length(self.generators));
-% $$$             else
-% $$$                 assert(length(args.generatorNames) == length(self.generators), 'Mismatch in the number of generator and names');
-% $$$                 self.generatorNames = args.generatorNames;
-% $$$             end
-% $$$             if ~isequal(args.relators, 'none')
-% $$$                 relators = cellfun(@(r) replab.fp.Letters.parse(r, self.generatorNames), args.relators, 'uniform', 0);
-% $$$                 self.cache('relatorsInLetterForm', relators, 'error');
-% $$$             end
-% $$$             if ~isequal(args.abelianInvariants, 'none')
-% $$$                 self.cache('abelianInvariants', args.abelianInvariants, 'error');
-% $$$             end
-% $$$         end
+        function populateCache(self, argumentPairs)
+        % Processes argument pairs to put in cache (helper for subclasses constructors)
+        %
+        % Must be called after `.identity` and `.generators` has been set.
+        %
+        % Keyword Args:
+        %   generatorNames (cell(1,\*) of charstring): Names of the generators
+        %   order (vpi or integer): Group order
+        %   relators (cell(1,\*) of charstring): Relators
+        %   abelianInvariants (cell(1,\*) of integer(1,\*)): Precomputed Abelian invariants
+            args = struct('generatorNames', {cell(1, 0)}, 'order', {0}, 'relators', {'none'}, 'abelianInvariants', {'none'}, ...
+                          'realCharacterTable', {'none'}, 'complexCharacterTable', {'none'});
+            args = replab.util.populateStruct(args, argumentPairs);
+            if args.order > 0
+                self.cache('order', args.order, '==');
+            end
+            if isempty(self.generators)
+                self.generatorNames = cell(1, 0);
+            elseif isempty(args.generatorNames)
+                self.generatorNames = replab.fp.defaultGeneratorNames(length(self.generators));
+            else
+                assert(length(args.generatorNames) == length(self.generators), 'Mismatch in the number of generator and names');
+                self.generatorNames = args.generatorNames;
+            end
+            if ~isequal(args.relators, 'none')
+                relators = cellfun(@(r) replab.fp.Letters.parse(r, self.generatorNames), args.relators, 'uniform', 0);
+                self.cache('relatorsInLetterForm', relators, 'error');
+            end
+            if ~isequal(args.abelianInvariants, 'none')
+                self.cache('abelianInvariants', args.abelianInvariants, 'error');
+            end
+        end
 
     end
 
