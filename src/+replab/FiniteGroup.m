@@ -1110,18 +1110,18 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
             error('Abstract');
         end
 
-% $$$         function m = conjugatingAutomorphism(self, by)
-% $$$         % Returns the morphism that corresponds to left conjugation by an element
-% $$$         %
-% $$$         % Args:
-% $$$         %   by (element of `.type`): Element to conjugate the group with
-% $$$         %
-% $$$         % Returns:
-% $$$         %   `+replab.FiniteMorphism`: Conjugating automorphism
-% $$$             generatorImages = cellfun(@(g) self.type.leftConjugate(by, g), self.generators, 'uniform', 0);
-% $$$             assert(all(cellfun(@(g) self.contains(g), generatorImages)));
-% $$$             m = self.morphismByImages(self, 'preimages', self.generators, 'images', generatorImages, 'nChecks', 0);
-% $$$         end
+        function m = conjugatingAutomorphism(self, by)
+        % Returns the morphism that corresponds to left conjugation by an element
+        %
+        % Args:
+        %   by (element of `.type`): Element to conjugate the group with
+        %
+        % Returns:
+        %   `+replab.FiniteMorphism`: Conjugating automorphism
+            generatorImages = cellfun(@(g) self.type.leftConjugate(by, g), self.generators, 'uniform', 0);
+            assert(all(cellfun(@(g) self.contains(g), generatorImages)));
+            m = self.morphismByImages(self, 'preimages', self.generators, 'images', generatorImages, 'nChecks', 0);
+        end
 
 % $$$         function res = findIsomorphism(self, to)
 % $$$         % Finds an isomorphism from this finite group to another finite group, if it exists
@@ -1278,16 +1278,16 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
 % $$$             g1 = f.imageGroup(self);
 % $$$         end
 
-% $$$         function m = isomorphismByFunction(self, target, imageElementFun)
-% $$$         % Constructs an isomorphism to a group using an image function
-% $$$             imgs = cellfun(imageElementFun, self.generators, 'uniform', 0);
-% $$$             m = self.isomorphismByImages(target, 'preimages', self.generators, 'images', imgs);
-% $$$         end
+        function m = isomorphismByFunction(self, target, imageElementFun)
+        % Constructs an isomorphism to a group using an image function
+            imgs = cellfun(imageElementFun, self.generators, 'uniform', 0);
+            m = self.isomorphismByImages(target, 'preimages', self.generators, 'images', imgs);
+        end
 
-% $$$         function m = isomorphismByImages(self, target, varargin)
-% $$$         % Constructs an isomorphism to a group using images of generators
-% $$$             m = self.morphismByImages(target, varargin{:}).toIsomorphism;
-% $$$         end
+        function m = isomorphismByImages(self, target, varargin)
+        % Constructs an isomorphism to a group using images of generators
+            m = self.morphismByImages(target, varargin{:}).toIsomorphism;
+        end
 
         function m = morphismByImages(self, target, varargin)
         % Constructs a morphism to a group using images of generators

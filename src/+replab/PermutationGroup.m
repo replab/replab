@@ -86,18 +86,6 @@ classdef PermutationGroup < replab.FiniteGroup & replab.PermutationFiniteSet
 
     % end
     % $$$
-% $$$     methods (Access = protected)
-% $$$
-% $$$         function G = computePermutationGroup(self)
-% $$$             G = self;
-% $$$         end
-% $$$
-% $$$         function m = computePermutationIsomorphism(self)
-% $$$             m = replab.FiniteIsomorphism.identity(self);
-% $$$         end
-% $$$
-% $$$     end
-% $$$
 
     methods % Group internal description
 
@@ -282,20 +270,6 @@ classdef PermutationGroup < replab.FiniteGroup & replab.PermutationFiniteSet
         function a = abelianInvariants(self)
             a = self.cached('abelianInvariants', @() replab.finite.abelianInvariants(self));
         end
-
-% $$$         function A = abstractGroup(self, generatorNames)
-% $$$             if nargin < 2 || isempty(generatorNames)
-% $$$                 generatorNames = self.generatorNames;
-% $$$             end
-% $$$             A = replab.AbstractGroup(generatorNames, self.relators(generatorNames), 'permutationGenerators', self.generators);
-% $$$         end
-% $$$
-% $$$         function m = abstractMorphism(self, generatorNames)
-% $$$             if nargin < 2 || isempty(generatorNames)
-% $$$                 generatorNames = self.generatorNames;
-% $$$             end
-% $$$             m = self.abstractGroup(generatorNames).niceMorphism.inverse;
-% $$$         end
 
         function c = centralizer(self, other)
             if ~isa(other, 'replab.PermutationGroup')
@@ -597,6 +571,26 @@ classdef PermutationGroup < replab.FiniteGroup & replab.PermutationFiniteSet
 
         function C = rightCosets(self, subgroup)
             C = replab.perm.RightCosets(self, subgroup);
+        end
+
+        % FiniteGroup / Morphisms
+
+        % $$$         function A = abstractGroup(self, generatorNames)
+% $$$             if nargin < 2 || isempty(generatorNames)
+% $$$                 generatorNames = self.generatorNames;
+% $$$             end
+% $$$             A = replab.AbstractGroup(generatorNames, self.relators(generatorNames), 'permutationGenerators', self.generators);
+% $$$         end
+% $$$
+% $$$         function m = abstractMorphism(self, generatorNames)
+% $$$             if nargin < 2 || isempty(generatorNames)
+% $$$                 generatorNames = self.generatorNames;
+% $$$             end
+% $$$             m = self.abstractGroup(generatorNames).niceMorphism.inverse;
+% $$$         end
+
+        function m = permutationIsomorphism(self)
+            m = replab.FiniteIsomorphism.identity(self);
         end
 
     end
