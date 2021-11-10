@@ -172,22 +172,22 @@ classdef PermutationGroup < replab.FiniteGroup & replab.PermutationFiniteSet
 
     end
 
-% $$$     methods (Access = protected)
-% $$$
-% $$$         % Morphisms
-% $$$
-% $$$         function m = morphismByImages_(self, target, preimages, images, imageElementFun)
-% $$$             assert(length(preimages) == length(images));
-% $$$             if isa(target, 'replab.PermutationGroup')
-% $$$                 m = replab.mrp.PermToPerm(self, target, preimages, images, imageElementFun);
-% $$$             elseif isa(target, 'replab.FiniteGroup')
-% $$$                 m = replab.mrp.PermToFiniteGroup(self, target, preimages, images, imageElementFun);
-% $$$             else
-% $$$                 m = replab.mrp.PermToGroup(self, target, preimages, images, imageElementFun);
-% $$$             end
-% $$$         end
-% $$$
-% $$$     end
+    methods (Access = protected) % Implementations
+
+        % Morphisms
+
+        function m = morphismByImages_(self, target, preimages, images, imageElementFun)
+            assert(length(preimages) == length(images));
+            if isa(target, 'replab.PermutationGroup')
+                m = replab.mrp.PermToPerm(self, target, preimages, images, imageElementFun);
+            elseif isa(target, 'replab.FiniteGroup')
+                m = replab.mrp.PermToFiniteGroup(self, target, preimages, images, imageElementFun);
+            else
+                m = replab.mrp.PermToGroup(self, target, preimages, images, imageElementFun);
+            end
+        end
+
+    end
 
     methods % Implementations
 
