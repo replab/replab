@@ -109,8 +109,8 @@ function result = replab_generate(what)
     if isequal(what, 'doctests') || isequal(what, 'all') || isequal(what, 'clear')
         % Generate doctests
         testRoot = fullfile(rp, 'tests');
-        doctestRoot = fullfile(rp, 'tests', 'doctest');
-        replab.infra.mkCleanDir(testRoot, 'doctest');
+        doctestRoot = fullfile(rp, 'tests', 'doctests');
+        replab.infra.mkCleanDir(testRoot, 'doctests');
         if ~isequal(what, 'clear')
             logFun('Generating doctests');
             els = cb.allSourceElements;
