@@ -1,9 +1,33 @@
 classdef SignedSymmetricGroup < replab.SignedPermutationGroup
 % Describes the signed permutation group over {-n...-1, 1...n} where n = domainSize
 
-    methods
+    methods (Static)
 
-        function self = SignedSymmetricGroup(domainSize, genericIsomorphism)
+        function G = make(n)
+        % Constructs the group of all signed permutation over a given domain size
+        %
+        % This static method keeps the constructed copies in cache.
+        %
+        % Args:
+        %   domainSize (integer): Domain size, must be > 0
+        %
+        % Returns:
+        %   `.SignedSymmetricGroup`: The constructed or cached symmetric group
+            persistent cache
+            if isempty(cache)
+                cache = cell(1, 0);
+            end
+            if n+1 > length(cache) || isempty(cache{n+1})
+                cache{1,n+1} = replab.SignedSymmetricGroup(n);
+            end
+            G = cache{n+1};
+        end
+
+    end
+
+    methods (Access = protected)
+
+        function self = SignedSymmetricGroup(domainSize)
         % Constructs the group of all signed permutations over a given domain size
         %
         % Args:
@@ -16,6 +40,9 @@ classdef SignedSymmetricGroup < replab.SignedPermutationGroup
                 generators{1,end+1} = [2 1 3:domainSize];
             end
             type = 'self';
+            ds = self.domainSize;
+            o = replab.util.factorial(ds)*replab.util.multiplyIntegers(ones(1, ds)*2);
+            % faster than o = factorial(vpi(domainSize))*vpi(2)^domainSize;
             self@replab.SignedPermutationGroup(domainSize, generators, 'type', type);
         end
 
@@ -43,57 +70,6 @@ classdef SignedSymmetricGroup < replab.SignedPermutationGroup
             assert(all(g ~= 0) && all(abs(g) <= self.domainSize), 'Signed permutation has out of range coefficients');
             b = true;
         end
-
-    end
-
-    methods (Access = protected)
-
-        function o = computeOrder(self)
-            ds = self.domainSize;
-            o = replab.util.factorial(ds)*replab.util.multiplyIntegers(ones(1, ds)*2);
-            % faster than o = factorial(vpi(domainSize))*vpi(2)^domainSize;
-        end
-
-% $$$         function E = computeElementsSequence(self)
-% $$$             E = replab.Sequence.lambda(self.order, ...
-% $$$                                             @(ind) self.enumeratorAt(ind), ...
-% $$$                                             @(el) self.enumeratorFind(el));
-% $$$         end
-
-    end
-
-    methods
-
-% $$$         function ind = enumeratorFind(self, g)
-% $$$             n = self.domainSize;
-% $$$             ind0 = vpi(0);
-% $$$             els = [-n:-1 1:n];
-% $$$             for i = 1:n
-% $$$                 ind0 = ind0 * 2*(n - i + 1);
-% $$$                 ind0 = ind0 + (find(els == g(i)) - 1);
-% $$$                 els = setdiff(els, [g(i) -g(i)]);
-% $$$             end
-% $$$             ind = ind0 + 1;
-% $$$         end
-% $$$
-% $$$         function g = enumeratorAt(self, ind)
-% $$$             n = self.domainSize;
-% $$$             ind0 = ind - 1; % make it 0-based
-% $$$             inds = zeros(1, n);
-% $$$             for i = 1:n
-% $$$                 r = mod(ind0, 2*i);
-% $$$                 ind0 = (ind0 - r)/(2*i);
-% $$$                 inds(i) = double(r + 1);
-% $$$             end
-% $$$             inds = fliplr(inds);
-% $$$             els = [-n:-1 1:n];
-% $$$             g = zeros(1, n);
-% $$$             for i = 1:n
-% $$$                 e = els(inds(i));
-% $$$                 g(i) = e;
-% $$$                 els = setdiff(els, [e -e]);
-% $$$             end
-% $$$         end
 
     end
 

@@ -10,29 +10,24 @@ classdef SignedPermutationGroup < replab.gen.FiniteGroup
         function self = SignedPermutationGroup(domainSize, generators, varargin)
         % Constructs a signed permutation group
         %
-        % Additional keywords arguments follow the convention of `.FiniteGroup`
         %
         % Args:
-        %   domainSize (integer): Size of the (positive part of the) domain
-        %   generators (cell(1,\*) of permutation): Group generators
+        %   domainSize (integer): Domain size of this permutation group
+        %   generators (cell(1,\*) of integer(1,\*)): Group generators
         %
         % Keyword Args:
-        %   niceIsomorphism (`+replab.FiniteIsomorphism`): Used internally
-            [arg, rest] = replab.util.populateStruct(struct('type', [], 'niceIsomorphism', []), varargin);
-            if isempty(arg.type)
+        %   generatorNames (cell(1,\*) of charstring): Names of the generators
+        %   order (vpi, optional): Order of the group
+        %   relators (cell(1,\*) of charstring): Relators given either in word or letter format
+        %   type (`+replab.+signed.FiniteGroupType`): Group type
+            args = struct('type', []);
+            [args, rest] = replab.util.populateStruct(args, varargin);
+            if isempty(args.type)
                 type = replab.signed.FiniteGroupType.make(domainSize);
             else
-                type = arg.type;
+                type = args.type;
             end
-            if isempty(arg.niceIsomorphism)
-                niceIsomorphism = type.isomorphism;
-            else
-                niceIsomorphism = arg.niceIsomorphism;
-            end
-            targetGenerators = cellfun(@(g) replab.SignedPermutation.toPermutation(g), generators, 'uniform', 0);
-            targetArgs = replab.gen.NiceIsomorphism.translateKeywordArgs(varargin);
-            target = replab.PermutationGroup(2*domainSize, targetGenerators, targetArgs{:});
-            self@replab.gen.FiniteGroup(type, target, niceIsomorphism, generators);
+            self@replab.gen.FiniteGroup(type, generators, rest{:});
             self.domainSize = domainSize;
         end
 

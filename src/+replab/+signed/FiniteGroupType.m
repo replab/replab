@@ -1,4 +1,4 @@
-classdef FiniteGroupType < replab.gen.FiniteGroupType
+classdef FiniteGroupType < replab.gen.StaticFiniteGroupType
 % A type for signed permutation groups
 
     methods (Static)
@@ -27,7 +27,6 @@ classdef FiniteGroupType < replab.gen.FiniteGroupType
 
     properties (SetAccess = protected)
         domainSize % (integer): Domain size $d$ where elements act on $\{-d .. -1, 1 .. d\}$
-        isomorphism % (`+replab.signed.NiceIsomorphism`): Standard isomorphism
     end
 
     methods (Access = protected)
@@ -37,9 +36,9 @@ classdef FiniteGroupType < replab.gen.FiniteGroupType
         %
         % Args:
         %   domainSize (integer): Size of the domain
+            self.niceType = replab.PermutationGroupType.make(2*domainSize);
             self.identity = 1:domainSize;
             self.domainSize = domainSize;
-            self.isomorphism = replab.signed.NiceIsomorphism(domainSize, self);
         end
 
     end
@@ -81,6 +80,26 @@ classdef FiniteGroupType < replab.gen.FiniteGroupType
             y(xAbs) = 1:n;
             invFlip = xAbs(x < 0);
             y(invFlip) = -y(invFlip);
+        end
+
+        % StaticFiniteGroupType
+
+        function t = imageElement(self, s)
+            t = replab.SignedPermutation.toPermutation(s);
+        end
+
+        function s = preimageElement(self, t)
+            s = replab.SignedPermutation.fromPermutation(t);
+        end
+
+        function G = sourceGenerators(self)
+            G = {[-1 2:self.domainSize]};
+            if self.domainSize > 1
+                G{1,end+1} = [2:self.domainSize 1];
+            end
+            if self.domainSize > 2
+                G{1,end+1} = [2 1 3:self.domainSize];
+            end
         end
 
     end

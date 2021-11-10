@@ -3,40 +3,6 @@ classdef NiceIsomorphism < replab.FiniteIsomorphism
 %
 % In addition, the isomorphism should preserve the type order.
 
-    methods (Static)
-
-        function targetArgs = translateKeywordArgs(sourceArgs)
-        % Translates the key/value pairs given for a source group for the target (nice) group
-        %
-        % Args:
-        %   sourceArgs (cell(1,\*)): Key/value pairs
-        %
-        % Returns:
-        %   cell(1,\*): Key/value pairs
-            targetArgs = cell(1, 0);
-            i = 1;
-            while i < length(sourceArgs)
-                switch sourceArgs{i}
-                  case 'generatorNames'
-                    targetArgs{1,end+1} = 'generatorNames';
-                    targetArgs{1,end+1} = sourceArgs{i+1};
-                  case 'order'
-                    targetArgs{1,end+1} = 'order';
-                    targetArgs{1,end+1} = sourceArgs{i+1};
-                  case 'relators'
-                    targetArgs{1,end+1} = 'relators';
-                    targetArgs{1,end+1} = sourceArgs{i+1};
-                  case 'abelianInvariants'
-                    targetArgs{1,end+1} = 'abelianInvariants';
-                    targetArgs{1,end+1} = sourceArgs{i+1};
-                    % TODO: conjugacyClasses
-                end
-                i = i + 2;
-            end
-        end
-
-    end
-
     methods (Access = protected)
 
         function finishConstruction(self, sourceFun, sourceGenerators, targetType)
@@ -65,13 +31,7 @@ classdef NiceIsomorphism < replab.FiniteIsomorphism
 
     end
 
-
     methods
-
-        function t = sourceType(self)
-        % Returns the type of the finite group which is the source of this morphism
-            t = self.source.type;
-        end
 
         function l = sourceContains(self, s)
         % Returns whether the source of this morphism contains the given type element

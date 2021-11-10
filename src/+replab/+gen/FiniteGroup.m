@@ -3,8 +3,53 @@ classdef FiniteGroup < replab.FiniteGroup & replab.gen.FiniteSet
 
     methods
 
-        function self = FiniteGroup(type, nice, niceIsomorphism, generators)
+        function self = FiniteGroup(type, generators, varargin)
         % Constructs a nice finite group
+        %
+        % If ``nice`` is provided, then ``generatorNames``, ``order``, ``relators`` cannot be provided.
+        % If ``nice`` is provided, then ``niceIsomorphism`` must be provided too.
+        %
+        % Args:
+        %   type (`+replab.FiniteGroupType`): Finite group type
+        %   generators (cell(1,\*) of group elements): Generators
+        %
+        % Keyword Args:
+        %   generatorNames (cell(1,\*) of charstring, optional): Names of the generators
+        %   nice (`+replab.FiniteGroup`): Nice group on which computations are performed
+        %   niceIsomorphism (`+replab.+gen.NiceIsomorphism`): Isomorphism
+        %   order (vpi or integer, optional): Group order
+        %   relators (cell(1,\*) of charstring or integer(1,\*), optional): Relators
+            args = struct('generatorNames', [], 'nice', [], 'niceIsomorphism', [], 'order', [], 'relators', []);
+            args = replab.util.populateStruct(args, varargin);
+            if isempty(args.nice)
+                if isempty(args.niceIsomorphism)
+                    niceIsomorphism = type.constructIsomorphism(generators);
+                else
+                    niceIsomorphism = args.niceIsomorphism;
+                end
+                niceArgs = cell(1, 0);
+                if ~isempty(args.generatorNames)
+                    niceArgs{1,end+1} = 'generatorNames';
+                    niceArgs{1,end+1} = args.generatorNames;
+                end
+                if ~isempty(args.order)
+                    niceArgs{1,end+1} = 'order';
+                    niceArgs{1,end+1} = args.order;
+                end
+                if ~isempty(args.relators)
+                    niceArgs{1,end+1} = 'relators';
+                    niceArgs{1,end+1} = args.relators;
+                end
+                niceGenerators = cellfun(@(g) niceIsomorphism.imageElement(g), generators, 'uniform', 0);
+                nice = niceIsomorphism.target.type.groupWithGenerators(niceGenerators, niceArgs{:});
+            else
+                assert(~isempty(args.niceIsomorphism));
+                assert(isempty(args.generatorNames));
+                assert(isempty(args.order));
+                assert(isempty(args.relators));
+                nice = args.nice;
+                niceIsomorphism = args.niceIsomorphism;
+            end
             self@replab.gen.FiniteSet(type, nice, niceIsomorphism);
             self.identity = type.identity;
             self.representative_ = type.identity;

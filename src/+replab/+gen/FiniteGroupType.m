@@ -2,13 +2,11 @@ classdef FiniteGroupType < replab.FiniteGroupType
 
     methods
 
-        function iso = constructIsomorphism(self, varargin)
+        function iso = constructIsomorphism(self, elements)
         % Constructs a generic isomorphism for the given elements
         %
-        % Each of the argument in the variable argument list must be either:
-        %
-        % * a finite group whose type is equal to this finite group type,
-        % * an element of this finite group type.
+        % Args:
+        %   elements (cell(1,\*) of group type elements): Elements
         %
         % Returns:
         %   `.FiniteIsomorphism`: An order preserving isomorphism whose source contains all given elements
@@ -16,9 +14,11 @@ classdef FiniteGroupType < replab.FiniteGroupType
         end
 
         function G = groupWithGenerators(self, generators, varargin)
-            iso = self.constructIsomorphism(generators{:});
-            assert(isempty(varargin)); % TODO: support additional arguments
-            G = replab.gen.FiniteGroup(generators, self, iso);
+            assert(all(ismember(varargin(1:2:end), {'generatorNames', 'order', 'relators'})));
+            iso = self.constructIsomorphism(generators);
+            targetGenerators = cellfun(@(g) iso.imageElement(g), generators, 'uniform', 0);
+            nice = iso.target.subgroup(targetGenerators, varargin{:});
+            G = replab.gen.FiniteGroup(self, nice, iso, generators);
         end
 
     end

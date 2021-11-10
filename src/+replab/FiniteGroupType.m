@@ -24,9 +24,9 @@ classdef FiniteGroupType < replab.Group & replab.TotalOrder
         %   generators (cell(1,\*) of group elements): Group generators
         %
         % Keyword Args:
-        %   generatorNames (cell(1,\*) of charstring): Names of the generators
-        %   order (vpi or integer): Group order
-        %   relators (cell(1,\*) of charstring): Relators
+        %   generatorNames (cell(1,\*) of charstring, optional): Names of the generators
+        %   order (vpi or integer, optional): Group order
+        %   relators (cell(1,\*) of charstring or integer(1,\*), optional): Relators
         %
         % Returns:
         %   `.FiniteGroup`: Constructed group
@@ -54,7 +54,7 @@ classdef FiniteGroupType < replab.Group & replab.TotalOrder
         % Keyword Args:
         %   generatorNames (cell(1,\*) of charstring): Names of the generators
         %   order (vpi or integer): Group order
-        %   relators (cell(1,\*) of charstring): Relators
+        %   relators (cell(1,\*) of charstring or integer(1,\*)): Relators
         %
         % Returns:
         %   `.FiniteGroup`: Constructed group

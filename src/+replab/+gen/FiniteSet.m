@@ -25,7 +25,7 @@ classdef FiniteSet < replab.FiniteSet
     methods % Implementations
 
         function b = contains(self, el)
-            b = self.nice.contains(self.niceIsomorphism.imageElement(el));
+            b = self.niceIsomorphism.sourceContains(el) && self.nice.contains(self.niceIsomorphism.imageElement(el));
         end
 
         function E = elements(self)
@@ -41,7 +41,7 @@ classdef FiniteSet < replab.FiniteSet
         end
 
         function r = representative(self)
-            self.representative_ = niceIsomorphism.preimageElement(nice.representative);
+            r = niceIsomorphism.preimageElement(nice.representative);
         end
 
         function s = setProduct(self)
