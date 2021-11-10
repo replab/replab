@@ -283,14 +283,14 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
         % Returns whether this group is a cyclic group
         %
         % Example:
-        %   >>> C3 = replab.PermutationGroup.cyclic(3);
-        %   >>> C3.isCyclic
-        %       1
-        %   >>> C3_C3 = C3.directProduct(C3);
-        %   >>> C3_C3.isCommutative
-        %       1
-        %   >>> C3_C3.isCyclic
-        %       0
+%         %   >>> C3 = replab.PermutationGroup.cyclic(3);
+%         %   >>> C3.isCyclic
+%         %       1
+%         %   >>> C3_C3 = C3.directProduct(C3);
+%         %   >>> C3_C3.isCommutative
+%         %       1
+%         %   >>> C3_C3.isCyclic
+%         %       0
         %
         % Returns:
         %   logical: True if the group is cyclic
@@ -301,12 +301,12 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
         % Returns whether this group is simple
         %
         % Example:
-        %   >>> S5 = replab.S(5);
-        %   >>> S5.isSimple
-        %       0
-        %   >>> A5 = S5.derivedSubgroup;
-        %   >>> A5.isSimple
-        %       1
+%         %   >>> S5 = replab.S(5);
+%         %   >>> S5.isSimple
+%         %       0
+%         %   >>> A5 = S5.derivedSubgroup;
+%         %   >>> A5.isSimple
+%         %       1
         %
         % Returns:
         %   logical: True if the group is simple
