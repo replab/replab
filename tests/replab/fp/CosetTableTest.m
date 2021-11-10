@@ -111,10 +111,10 @@ function test_Mathieu_M12_Holt
     assert(size(ctR.C, 1) == 95040);
 end
 
-function test_Mathieu_M12_atlas
-    if ReplabTestParameters.onlyFastTests
-        return
-    end
-    G = replab.AbstractGroup.fromPresentation('< x, y | x^2 = y^3 = (x*y)^11 = [x,y]^6 = (x*y*x*y*x*y^-1)^6 = [x,y*x*y]^5 = 1 >');
-    assert(G.order == 95040);
-end
+% function test_Mathieu_M12_atlas
+%     if ReplabTestParameters.onlyFastTests
+%         return
+%     end
+%     G = replab.AbstractGroup.fromPresentation('< x, y | x^2 = y^3 = (x*y)^11 = [x,y]^6 = (x*y*x*y*x*y^-1)^6 = [x,y*x*y]^5 = 1 >');
+%     assert(G.order == 95040);
+% end
