@@ -34,21 +34,20 @@ classdef ConjugacyClass < replab.FiniteSet
             error('Abstract');
         end
 
-        % TODO
-% $$$         function c1 = imap(self, f)
-% $$$         % Maps this conjugacy class under an isomorphism
-% $$$         %
-% $$$         % Args:
-% $$$         %   f (`.FiniteIsomorphism`): Isomorphism with ``self.group.isSubgroupOf(f.source)``
-% $$$         %
-% $$$         % Returns:
-% $$$         %   `.ConjugacyClass`: The conjugacy class mapped under ``f``, expressed as a subset of ``f.image``
-% $$$             c1 = replab.gen.Conjugacy
-% $$$             if self.group.order < f.source.order
-% $$$                 f = f.restrictedSource(self.group);
-% $$$             end
-% $$$             c1 = replab.ConjugacyClass.make(f.target, f.imageElement(self.representative), f.imageGroup(self.representativeCentralizer));
-% $$$         end
+        function c1 = imap(self, f)
+        % Maps this conjugacy class under an isomorphism
+        %
+        % Args:
+        %   f (`.FiniteIsomorphism`): Isomorphism with ``self.group.isSubgroupOf(f.source)``
+        %
+        % Returns:
+        %   `.ConjugacyClass`: The conjugacy class mapped under ``f``, expressed as a subset of ``f.image``
+            c1 = replab.gen.Conjugacy
+            if self.group.order < f.source.order
+                f = f.restrictedSource(self.group);
+            end
+            c1 = replab.ConjugacyClass.make(f.target, f.imageElement(self.representative), f.imageGroup(self.representativeCentralizer));
+        end
 
     end
 

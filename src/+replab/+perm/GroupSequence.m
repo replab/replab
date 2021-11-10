@@ -1,4 +1,4 @@
-classdef Sequence < replab.Sequence
+classdef GroupSequence < replab.Sequence
 
     properties (SetAccess = protected)
         basis % (`+replab.+util.MixedRadix`): Basis to enumerate coset representatives
@@ -7,7 +7,7 @@ classdef Sequence < replab.Sequence
 
     methods
 
-        function self = Sequence(nElements, basis, lexChain)
+        function self = GroupSequence(nElements, basis, lexChain)
             self@replab.Sequence(nElements);
             self.basis = basis;
             self.lexChain = lexChain;
@@ -24,7 +24,7 @@ classdef Sequence < replab.Sequence
         end
 
         function ind = find(self, el)
-            ind = basis.sub2ind(self.lexChain.indicesFromElement(el)
+            ind = basis.sub2ind(self.lexChain.indicesFromElement(el));
         end
 
     end

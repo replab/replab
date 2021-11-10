@@ -40,7 +40,6 @@ classdef SymmetricGroup < replab.PermutationGroup
         %
         % Args:
         %   domainSize (integer): Domain size, must be >= 0
-            type = replab.PermutationGroupType.make(domainSize);
             if domainSize < 2
                 generators = cell(1, 0);
             elseif domainSize == 2
@@ -48,7 +47,7 @@ classdef SymmetricGroup < replab.PermutationGroup
             else
                 generators = {[2:domainSize 1] [2 1 3:domainSize]};
             end
-            self@replab.PermutationGroup(type, generators);
+            self@replab.PermutationGroup(domainSize, generators);
         end
 
     end

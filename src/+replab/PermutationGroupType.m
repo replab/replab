@@ -3,7 +3,7 @@ classdef PermutationGroupType < replab.FiniteGroupType
 
     methods (Static)
 
-        function G = make(n)
+        function G = make(domainSize)
         % Constructs the permutation group type for a given domain size
         %
         % This static method keeps the constructed copies in cache.
@@ -17,10 +17,10 @@ classdef PermutationGroupType < replab.FiniteGroupType
             if isempty(cache)
                 cache = cell(1, 0);
             end
-            if n+1 > length(cache) || isempty(cache{n+1})
-                cache{1,n+1} = replab.PermutationGroupType(n);
+            if domainSize+1 > length(cache) || isempty(cache{domainSize+1})
+                cache{1,domainSize+1} = replab.PermutationGroupType(domainSize);
             end
-            G = cache{n+1};
+            G = cache{domainSize+1};
         end
 
     end
@@ -95,7 +95,7 @@ classdef PermutationGroupType < replab.FiniteGroupType
         end
 
         function G = groupWithGenerators(self, generators, varargin)
-            G = replab.PermutationGroup(self, generators, varargin{:});
+            G = replab.PermutationGroup(self.domainSize, generators, varargin{:});
         end
 
         function l = isSameTypeAs(self, otherType)

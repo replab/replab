@@ -3,11 +3,11 @@ classdef PermutationGroup < replab.FiniteGroup & replab.PermutationFiniteSet
 
     methods % Constructor
 
-        function self = PermutationGroup(type, generators, varargin)
+        function self = PermutationGroup(domainSize, generators, varargin)
         % Constructs a permutation group
         %
         % Args:
-        %   type (`+replab.PermutationGroupType`): Type of this permutation group
+        %   domainSize (integer): Domain size of this permutation group
         %   generators (cell(1,\*) of permutation): Group generators
         %
         % Keyword Args:
@@ -15,7 +15,8 @@ classdef PermutationGroup < replab.FiniteGroup & replab.PermutationFiniteSet
         %   order (vpi, optional): Order of the group
         %   relators (cell(1,\*) of charstring): Relators
         %   chain (`+replab.+bsgs.Chain`): BSGS chain describing the group
-            identity = 1:type.domainSize;
+            type = replab.PermutationGroupType.make(domainSize);
+            identity = 1:domainSize;
             for i = 1:length(generators)
                 assert(~all(generators{i} == identity), 'Generators cannot contain the identity');
             end
@@ -36,12 +37,8 @@ classdef PermutationGroup < replab.FiniteGroup & replab.PermutationFiniteSet
 
     methods (Static)
 
-        function pg = fromChain(chain, type)
-            if nargin < 2
-                type = [];
-            end
-            type = replab.PermutationGroupType.make(chain.n);
-            pg = replab.PermutationGroup(type, chain.strongGenerators, 'order', chain.order, 'chain', chain);
+        function pg = fromChain(chain)
+            pg = replab.PermutationGroup(chain.n, chain.strongGenerators, 'order', chain.order, 'chain', chain);
         end
 
     end
@@ -148,7 +145,7 @@ classdef PermutationGroup < replab.FiniteGroup & replab.PermutationFiniteSet
 
         function E = computeElementsSequence(self)
             basis = replab.util.MixedRadix(self.lexChain.orbitSizes, 'oneBased', true, 'bigEndian', false);
-            E = replab.perm.Sequence(self.order, basis, self.lexChain);
+            E = replab.perm.GroupSequence(self.order, basis, self.lexChain);
         end
 
         function e = computeExponent(self)
@@ -372,6 +369,10 @@ classdef PermutationGroup < replab.FiniteGroup & replab.PermutationFiniteSet
             E = self.cached('elementsSequence', @() self.computeElementsSequence);
         end
 
+        function s = nElements(self)
+            s = self.order;
+        end
+
         function D = setProduct(self)
             D = self.cached('setProduct', @() self.computeSetProduct);
         end
@@ -430,15 +431,35 @@ classdef PermutationGroup < replab.FiniteGroup & replab.PermutationFiniteSet
                 end
             end
             c.makeImmutable;
-            res = replab.PermutationGroup.fromChain(c, self.type);
+            res = replab.PermutationGroup.fromChain(c);
         end
 
-        function c = conjugacyClass(self, g)
-            c = replab.perm.ConjugacyClass.make(self, g);
+        function c = conjugacyClass(self, el, varargin)
+            args = struct('isCanonical', false, 'centralizer', []);
+            args = replab.util.populateStruct(args, varargin);
+            if args.isCanonical
+                c = replab.perm.ConjugacyClass(self, el);
+                if ~isempty(args.centralizer)
+                    c.cache('representativeCentralizer', args.centralizer);
+                end
+            else
+                [representative, g] = replab.bsgs.ConjugacyClasses.representative(self, el);
+                c = replab.perm.ConjugacyClass(self, representative);
+                if ~isempty(args.centralizer)
+                    representativeCentralizer = args.centralizer.leftConjugateGroup(g);
+                    c.cache('representativeCentralizer', representativeCentralizer);
+                end
+            end
         end
 
-        function c = conjugacyClasses(self)
-            c = self.cached('conjugacyClasses', @() self.computeConjugacyClasses);
+        function c = conjugacyClasses(self, varargin)
+            args = struct('classes', []);
+            args = replab.util.populateStruct(args, varargin);
+            if isempty(args.classes)
+                c = self.cached('conjugacyClasses', @() self.computeConjugacyClasses);
+            else
+                c = replab.ConjugacyClasses(self, classes);
+            end
         end
 
         function sub = derivedSubgroup(self)
@@ -453,8 +474,20 @@ classdef PermutationGroup < replab.FiniteGroup & replab.PermutationFiniteSet
             e = self.cached('exponent', @() self.computeExponent);
         end
 
-        function l = factorizeLetters(self, element)
-            l = self.factorization.factorize(element);
+        function [l, r] = factorizeLetters(self, cosetOrElement)
+            if isa(cosetOrElement, 'replab.DoubleCoset')
+                % TODO: better implementation
+                r = cosetOrElement.representative;
+                l = self.factorizeLetters(r);
+            elseif isa(cosetOrElement, 'replab.LeftCoset')
+                [l, r] = self.factorization.factorizeRepresentativeOfLeftCoset(cosetOrElement);
+            elseif isa(cosetOrElement, 'replab.RightCoset')
+                [linv, rinv] = self.factorizeLetters(cosetOrElement.subgroup.leftCoset(self.inverse(cosetOrElement.representative), 'group', cosetOrElement.group));
+                l = replab.fp.Letters.inverse(linv);
+                r = self.inverse(rinv);
+            else
+                l = self.factorization.factorize(cosetOrElement);
+            end
         end
 
         function c = findLeftConjugations(self, s, t, sCentralizer, tCentralizer)
@@ -471,7 +504,7 @@ classdef PermutationGroup < replab.FiniteGroup & replab.PermutationFiniteSet
             if isempty(b)
                 c = [];
             else
-                c = sCentralizer.leftCoset(b, self);
+                c = sCentralizer.leftCoset(b, 'group', self);
             end
         end
 
@@ -622,7 +655,7 @@ classdef PermutationGroup < replab.FiniteGroup & replab.PermutationFiniteSet
                 c = self.normalCoset(element, varargin{:});
                 return
             end
-            args = struct('group', [], 'isCanonical', []);
+            args = struct('group', [], 'isCanonical', false);
             args = replab.util.populateStruct(args, varargin);
             subgroup = self;
             if isempty(args.group)
@@ -632,7 +665,7 @@ classdef PermutationGroup < replab.FiniteGroup & replab.PermutationFiniteSet
             end
             if args.isCanonical
                 representative = element;
-            else % covers []
+            else
                 representative = replab.bsgs.Cosets.leftRepresentative(subgroup.lexChain, element);
             end
             c = replab.perm.LeftCoset(representative, subgroup, group);
@@ -644,7 +677,7 @@ classdef PermutationGroup < replab.FiniteGroup & replab.PermutationFiniteSet
 
         function c = normalCoset(self, element, varargin)
             assert(self.isNormalizedBy(element));
-            args = struct('group', [], 'isCanonical', []);
+            args = struct('group', [], 'isCanonical', false);
             args = replab.util.populateStruct(args, varargin);
             subgroup = self;
             if isempty(args.group)
@@ -654,7 +687,7 @@ classdef PermutationGroup < replab.FiniteGroup & replab.PermutationFiniteSet
             end
             if args.isCanonical
                 representative = element;
-            else % covers []
+            else
                 representative = replab.bsgs.Cosets.leftRepresentative(subgroup.lexChain, element);
             end
             c = replab.perm.NormalCoset(representative, subgroup, group);
@@ -665,7 +698,7 @@ classdef PermutationGroup < replab.FiniteGroup & replab.PermutationFiniteSet
                 c = self.normalCoset(element, varargin{:});
                 return
             end
-            args = struct('group', [], 'isCanonical', []);
+            args = struct('group', [], 'isCanonical', false);
             args = replab.util.populateStruct(args, varargin);
             subgroup = self;
             if isempty(args.group)
@@ -675,7 +708,7 @@ classdef PermutationGroup < replab.FiniteGroup & replab.PermutationFiniteSet
             end
             if args.isCanonical
                 representative = element;
-            else % covers []
+            else
                 representative = replab.bsgs.Cosets.rightRepresentative(subgroup.lexChain, element);
             end
             c = replab.perm.RightCoset(representative, subgroup, group);
@@ -906,7 +939,7 @@ classdef PermutationGroup < replab.FiniteGroup & replab.PermutationFiniteSet
             else
                 immutable = true;
                 c = c.chainFromLevel(l, immutable);
-                s = replab.PermutationGroup.fromChain(c, self.type);
+                s = replab.PermutationGroup.fromChain(c);
             end
         end
 
@@ -927,7 +960,7 @@ classdef PermutationGroup < replab.FiniteGroup & replab.PermutationFiniteSet
 
         function sub = stabilizer(self, p)
         % Returns the subgroup that stabilizes a given point
-            sub = replab.PermutationGroup.fromChain(self.chain.stabilizer(p), self.type);
+            sub = replab.PermutationGroup.fromChain(self.chain.stabilizer(p));
         end
 
         function w = wreathProduct(self, A)
@@ -1273,13 +1306,11 @@ classdef PermutationGroup < replab.FiniteGroup & replab.PermutationFiniteSet
                 names = varargin(1:2:end);
                 generators = varargin(2:2:end);
                 domainSize = length(generators{1});
-                type = replab.PermutationGroupType.make(domainSize);
-                G = replab.PermutationGroup(type, generators, 'generatorNames', names);
+                G = replab.PermutationGroup(domainSize, generators, 'generatorNames', names);
             else
                 generators = varargin;
                 domainSize = length(generators{1});
-                type = replab.PermutationGroupType.make(domainSize);
-                G = replab.PermutationGroup(type, generators);
+                G = replab.PermutationGroup(domainSize, generators);
             end
         end
 

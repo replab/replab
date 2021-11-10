@@ -19,6 +19,13 @@ classdef CycloSet < replab.Str
             s = self.cycloSet.size;
         end
 
+        function E = elements(self)
+            E = cell(1, self.nElements);
+            for i = 1:self.nElements
+                E{i} = self.at(i);
+            end
+        end
+
         function c = at(self, i)
         % Returns the matrix for the given index
             c = replab.cyclotomic(self.cycloSet.at(i-1), [self.nRows self.nCols]);

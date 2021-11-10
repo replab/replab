@@ -1,59 +1,9 @@
-classdef NormalCoset < replab.LeftCoset & replab.RightCoset
-% Describes a coset in the normal subgroup of a finite group
-%
-% It is a left and right coset at the same time.
+classdef NormalCoset < replab.NormalCoset & replab.gen.FiniteSet
 
     methods
 
-        function self = NormalCoset(group, canonicalRepresentative, parent)
-            self@replab.LeftCoset(group, canonicalRepresentative, parent);
-            self@replab.RightCoset(group, canonicalRepresentative, parent);
-        end
-
-    end
-
-    methods (Static)
-
-        function c = make(group, element, parent)
-            if nargin < 3 || isempty(parent)
-                parent = group.closure(element);
-            end
-            chain = parent.niceMorphism.imageGroup(group).lexChain;
-            permRep = replab.bsgs.Cosets.leftRepresentative(chain, parent.niceMorphism.imageElement(element));
-            % left representative is faster
-            c = replab.NormalCoset(group, parent.niceMorphism.preimageElement(permRep), parent);
-        end
-
-    end
-
-    methods (Access = protected)
-
-        function E = computeElements(self)
-            E = computeElements@replab.LeftCoset(self);
-        end
-
-        function s = computeSetProduct(self)
-            s = computeSetProduct@replab.LeftCoset(self);
-        end
-
-    end
-
-    methods
-
-        function s = sample(self)
-            s = sample@replab.LeftCoset(self);
-        end
-
-        function s = nElements(self)
-            s = nElements@replab.LeftCoset(self);
-        end
-
-        function b = contains(self, el)
-            b = contains@replab.LeftCoset(self, el);
-        end
-
-        function [l, r] = factorizeShortRepresentativeLetters(self)
-            [l, r] = factorizeShortRepresentativeLetters@replab.LeftCoset(self);
+        function self = NormalCoset(type, nice, niceIsomorphism)
+            self@replab.gen.FiniteSet(type, nice, niceIsomorphism);
         end
 
     end

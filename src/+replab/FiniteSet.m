@@ -42,16 +42,6 @@ classdef FiniteSet < replab.Domain
             error('Abstract');
         end
 
-        function E = elementsSequence(self)
-        % Returns a sequence corresponding to this set
-        %
-        % The sequence is sorted according to the total ordering defined by `.type`.
-        %
-        % Returns:
-        %   `.Sequence`: An enumeration of the set elements
-            error('Abstract');
-        end
-
         function E = elements(self)
         % Returns a cell array containing all the elements of this set
         %
@@ -65,6 +55,16 @@ classdef FiniteSet < replab.Domain
                 error('replab:tooBig', 'Number of elements %s too big > %d', num2str(self.nElements), replab.globals.maxElements);
             end
             E = self.elementsSequence.toCell;
+        end
+
+        function E = elementsSequence(self)
+        % Returns a sequence corresponding to this set
+        %
+        % The sequence is sorted according to the total ordering defined by `.type`.
+        %
+        % Returns:
+        %   `.Sequence`: An enumeration of the set elements
+            error('Abstract');
         end
 
         function s = nElements(self)
@@ -110,21 +110,20 @@ classdef FiniteSet < replab.Domain
 
     end
 
-    % TODO
-% $$$     methods % Image under isomorphism
-% $$$
-% $$$         function res = imap(self, f)
-% $$$         % Returns the image of this finite set under an isomorphism
-% $$$         %
-% $$$         % Args:
-% $$$         %   f (`.FiniteIsomorphism`): Isomorphism such that this finite set is contained in ``f.source``
-% $$$         %
-% $$$         % Returns:
-% $$$         %   `.FiniteSet`: This finite set mapped under ``f``, expressed as a subset of ``f.image``
-% $$$             res = replab.gen.FiniteSet(f.target.type, self, f.inverse);
-% $$$         end
-% $$$
-% $$$     end
+    methods % Image under isomorphism
+
+        function res = imap(self, f)
+        % Returns the image of this finite set under an isomorphism
+        %
+        % Args:
+        %   f (`.FiniteIsomorphism`): Isomorphism such that this finite set is contained in ``f.source``
+        %
+        % Returns:
+        %   `.FiniteSet`: This finite set mapped under ``f``, expressed as a subset of ``f.image``
+            res = replab.gen.FiniteSet(f.target.type, self, f.inverse);
+        end
+
+    end
 
 
     methods % Implementations
@@ -166,13 +165,13 @@ classdef FiniteSet < replab.Domain
         function res = multiply(lhs, rhs)
             switch [replab.FiniteSet.shortType(lhs) replab.FiniteSet.shortType(rhs)]
               case 'NG'
-                res = replab.DoubleCoset.make(lhs.group, lhs.representative, rhs);
+                res = lhs.group.doubleCoset(lhs.representative, rhs);
               case 'GN'
-                res = replab.DoubleCoset.make(lhs, rhs.representative, rhs.group);
+                res = lhs.doubleCoset(rhs.representative, rhs.group);
               case 'GL'
-                res = replab.DoubleCoset.make(lhs, rhs.representative, rhs.group);
+                res = lhs.doubleCoset(rhs.representative, rhs.group);
               case 'RG'
-                res = replab.DoubleCoset.make(lhs.group, lhs.representative, rhs);
+                res = lhs.group.doubleCoset(lhs.representative, rhs);
               case 'GE'
                 res = lhs.rightCoset(rhs);
               case 'EG'

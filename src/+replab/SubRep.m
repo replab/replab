@@ -351,7 +351,7 @@ classdef SubRep < replab.Rep
         %      A subrepresentation of ``self.parent``
         %   better: logical
         %      Whether a nicer subrepresentation has been found
-            res = replab.nice.niceSubRep(self);
+            res = replab.rep.niceSubRep(self);
             better = ~isempty(res);
             if ~better
                 res = self;

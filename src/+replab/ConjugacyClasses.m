@@ -67,18 +67,6 @@ classdef ConjugacyClasses < replab.Obj
 
     end
 
-% $$$     methods (Static)
-% $$$
-% $$$         function C = sorted(group, classes)
-% $$$             reps = cellfun(@(c) group.niceMorphism.imageElement(c.representative), classes, 'uniform', 0);
-% $$$             repMat = cellfun(@transpose, reps, 'uniform', 0);
-% $$$             repMat = [repMat{:}]';
-% $$$             [~, I] = sortrows(repMat);
-% $$$             C = replab.ConjugacyClasses(group, classes(I));
-% $$$         end
-% $$$
-% $$$     end
-
     methods
 
         function self = ConjugacyClasses(group, classes)
@@ -135,7 +123,7 @@ classdef ConjugacyClasses < replab.Obj
 
     end
 
-    methods
+    methods % Find conjugacy classes
 
         function ind = classIndexOf(self, g, varargin)
         % Finds the conjugacy class where a given element is located
@@ -175,6 +163,10 @@ classdef ConjugacyClasses < replab.Obj
             assert(self.nClasses == n);
             ind = arrayfun(@(i) self.classIndexOf(classes.classes{i}.representative, 'isCanonical', true), 1:n);
         end
+
+    end
+
+    methods % Subgroup construction
 
         function G = normalSubgroupClasses(self, indices)
         % Returns the normal subgroup consisting of the conjugacy classes whose positions are given
@@ -246,23 +238,28 @@ classdef ConjugacyClasses < replab.Obj
 
     end
 
-% $$$     methods
-% $$$
-% $$$         function c1 = imap(self, f)
-% $$$         % Maps the conjugacy classes under an isomorphism
-% $$$         %
-% $$$         % Args:
-% $$$         %   f (`.FiniteIsomorphism`): Isomorphism with ``self.group.isSubgroupOf(f.source)``
-% $$$         %
-% $$$         % Returns:
-% $$$         %   `.ConjugacyClasses`: The conjugacy classes mapped under ``f``, expressed as a subset of ``f.image``
-% $$$             if self.group.order < f.source.order
-% $$$                 f = f.restrictedSource(self.group);
-% $$$             end
-% $$$             classes1 = cellfun(@(c) c.imap(f), self.classes, 'uniform', 0);
-% $$$             c1 = replab.ConjugacyClasses(f.target, classes1);
-% $$$         end
-% $$$
-% $$$     end
+    methods % Transformations
+
+        function c1 = imap(self, f)
+        % Maps the conjugacy classes under an isomorphism
+        %
+        % Args:
+        %   f (`.FiniteIsomorphism`): Isomorphism with ``self.group.isSubgroupOf(f.source)``
+        %
+        % Returns:
+        %   `.ConjugacyClasses`: The conjugacy classes mapped under ``f``, expressed as a subset of ``f.image``
+            classes1 = cellfun(@(c) c.imap(f), self.classes, 'uniform', 0);
+            c1 = replab.ConjugacyClasses(f.target, classes1);
+        end
+
+        function c1 = sorted(self)
+            classes = self.classes;
+            reps = cellfun(@(c) c.representative, classes, 'uniform', 0);
+            I = self.group.type.sort(reps);
+            classes1 = classes(I);
+            c1 = replab.ConjugacyClasses(self.group, classes1);
+        end
+
+    end
 
 end

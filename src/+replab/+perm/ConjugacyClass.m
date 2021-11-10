@@ -2,27 +2,10 @@ classdef ConjugacyClass < replab.ConjugacyClass & replab.PermutationFiniteSet
 
     methods
 
-        function self = ConjugacyClass(group, representative, representativeCentralizer)
+        function self = ConjugacyClass(group, representative)
             self.type = group.type;
-            self.representative = representative;
+            self.representative_ = representative;
             self.group = group;
-            if nargin >= 3 && ~isempty(representativeCentralizer)
-                self.cache('representativeCentralizer', representativeCentralizer);
-            end
-        end
-
-    end
-
-    methods (Static)
-
-        function c = make(group, element, elementCentralizer)
-            [representative, g] = replab.bsgs.ConjugacyClasses.representative(group, element);
-            if nargin >= 3
-                representativeCentralizer = elementCentralizer.leftConjugateGroup(g);
-                c = replab.perm.ConjugacyClass(group, representative, representativeCentralizer);
-            else
-                c = replab.perm.ConjugacyClass(group, representative);
-            end
         end
 
     end
@@ -32,11 +15,6 @@ classdef ConjugacyClass < replab.ConjugacyClass & replab.PermutationFiniteSet
         function o = computeElementOrder(self)
             o = self.group.elementOrder(self.representative);
         end
-
-% $$$         function E = computeElementsSequence(self)
-% $$$             T = self.group.leftCosets(self.representativeCentralizer).transversal;
-% $$$             E = cellfun(@(t) self.group.leftConjugate(t, self.representative), T, 'uniform', 0);
-% $$$         end
 
         function n = computeNElements(self)
             n = self.group.order / self.representativeCentralizer.order;
@@ -97,6 +75,17 @@ classdef ConjugacyClass < replab.ConjugacyClass & replab.PermutationFiniteSet
 
         function o = elementOrder(self)
             o = self.cached('elementOrder', @() self.computeElementOrder);
+        end
+
+        function E = elementsSequence(self)
+            mat = self.group.leftCosets(self.representativeCentralizer).transversalAsMatrix;
+            y = self.representative;
+            for i = 1:size(mat, 2)
+                x = mat(:,i);
+                mat(x,i) = x(y); % x y xInv
+            end
+            mat = sortrows(mat')';
+            E = replab.perm.Sequence(mat);
         end
 
         function c = representativeCentralizer(self)

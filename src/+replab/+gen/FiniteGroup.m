@@ -1,72 +1,54 @@
 classdef FiniteGroup < replab.FiniteGroup & replab.gen.FiniteSet
 % A generic finite group
 
-    properties (SetAccess = protected)
-        genericMorphism % (`+replab.gen.FiniteIsomorphism`): Isomorphism of a supergroup of this group to a group where computations can be delegated
-    end
-
     methods
 
-        function self = FiniteGroup(type, generators, genericIsomorphism, varargin)
+        function self = FiniteGroup(type, nice, niceIsomorphism, generators)
         % Constructs a nice finite group
-            assert(isa(type, 'replab.gen.FiniteGroupType'));
-            assert(isa(genericIsomorphism, 'replab.gen.FiniteIsomorphism'));
-            self@replab.FiniteGroup(type, generators, varargin{:});
-            self.genericIsomorphism = genericIsomorphism;
-        end
-
-        function G = genericGroup(self)
-        % Returns the generic group isomorphic to this finite group
-        %
-        % The generators of the generic group must be in one-to-one correspondance with the generators of this group
-        %
-        % Returns:
-        %   `.FiniteGroup`: A finite group isomorphic to this group, where computations are delegated
-            G = self.cached('genericGroup', @() self.computeGenericGroup);
+            self@replab.gen.FiniteSet(type, nice, niceIsomorphism);
+            self.identity = type.identity;
+            self.representative_ = type.identity;
+            self.generators = generators;
         end
 
     end
 
-    methods (Access = protected) % Implementations
-
-        function C = computeConjugacyClasses(self)
-            nc = self.genericGroup.conjugacyClasses;
-            C = nc.imap(self.genericIsomorphism.inverse);
-        end
-
-        function sub = computeDerivedSubgroup(self)
-            sub = self.genericIsomorphism.preimageGroup(self.genericGroup.derivedSubgroup);
-        end
-
-        function E = computeElements(self)
-            atFun = @(ind) self.genericIsomorphism.preimageElement(self.genericGroup.elements.at(ind));
-            findFun = @(el) self.genericGroup.elements.find(self.genericIsomorphism.imageElement(el));
-            E = replab.IndexedFamily.lambda(self.order, atFun, findFun);
-        end
-
-        function G = computeGenericGroup(self)
-            G = self.genericIsomorphism.imageGroup(self);
-        end
-
-        function res = computeIsCyclic(self)
-            res = self.genericGroup.isCyclic;
-        end
-
-        function res = computeIsSimple(self)
-            res = self.genericGroup.isSimple;
-        end
-
-        function order = computeOrder(self)
-            order = self.genericGroup.order;
-        end
-
-        function dec = computeSetProduct(self)
-            prmD = self.genericGroup.setProduct;
-            sets1 = cellfun(@(T) cellfun(@(t) self.genericIsomorphism.preimageElement(t), T, 'uniform', 0), prmD.sets, 'uniform', 0);
-            dec = replab.SetProduct(self, sets1, true);
-        end
-
-    end
+% $$$     methods (Access = protected) % Implementations
+% $$$
+% $$$         function C = computeConjugacyClasses(self)
+% $$$             nc = self.genericGroup.conjugacyClasses;
+% $$$             C = nc.imap(self.genericIsomorphism.inverse);
+% $$$         end
+% $$$
+% $$$         function sub = computeDerivedSubgroup(self)
+% $$$             sub = self.genericIsomorphism.preimageGroup(self.genericGroup.derivedSubgroup);
+% $$$         end
+% $$$
+% $$$         function E = computeElements(self)
+% $$$             atFun = @(ind) self.genericIsomorphism.preimageElement(self.genericGroup.elements.at(ind));
+% $$$             findFun = @(el) self.genericGroup.elements.find(self.genericIsomorphism.imageElement(el));
+% $$$             E = replab.IndexedFamily.lambda(self.order, atFun, findFun);
+% $$$         end
+% $$$
+% $$$         function res = computeIsCyclic(self)
+% $$$             res = self.genericGroup.isCyclic;
+% $$$         end
+% $$$
+% $$$         function res = computeIsSimple(self)
+% $$$             res = self.genericGroup.isSimple;
+% $$$         end
+% $$$
+% $$$         function order = computeOrder(self)
+% $$$             order = self.genericGroup.order;
+% $$$         end
+% $$$
+% $$$         function dec = computeSetProduct(self)
+% $$$             prmD = self.genericGroup.setProduct;
+% $$$             sets1 = cellfun(@(T) cellfun(@(t) self.genericIsomorphism.preimageElement(t), T, 'uniform', 0), prmD.sets, 'uniform', 0);
+% $$$             dec = replab.SetProduct(self, sets1, true);
+% $$$         end
+% $$$
+% $$$     end
 
     methods % Implementation
 
@@ -77,43 +59,69 @@ classdef FiniteGroup < replab.FiniteGroup & replab.gen.FiniteSet
         end
 
         function g = sample(self)
-            g = self.genericIsomorphism.preimageElement(self.genericGroup.sample);
+            g = self.niceIsomorphism.preimageElement(self.nice.sample);
         end
 
         % FiniteSet
 
+        % Monoid
+
+        function z = compose(self, x, y)
+            z = self.type.compose(x, y);
+        end
+
+        % Group
+
+        function y = inverse(self, x)
+            y = self.type.inverse(x);
+        end
+
         % FiniteGroup
 
-        function A = abstractGroup(self, generatorNames)
-            if nargin < 2 || isempty(generatorNames)
-                generatorNames = self.generatorNames;
-            end
-            A = self.genericGroup.abstractGroup(generatorNames);
-        end
-
-        function m = abstractMorphism(self, generatorNames)
-            if nargin < 2 || isempty(generatorNames)
-                generatorNames = self.generatorNames;
-            end
-            m = self.genericIsomorphism.andThen(self.genericGroup.abstractMorphism(generatorNames));
-        end
+% $$$         function A = abstractGroup(self, generatorNames)
+% $$$             if nargin < 2 || isempty(generatorNames)
+% $$$                 generatorNames = self.generatorNames;
+% $$$             end
+% $$$             A = self.genericGroup.abstractGroup(generatorNames);
+% $$$         end
+% $$$
+% $$$         function m = abstractMorphism(self, generatorNames)
+% $$$             if nargin < 2 || isempty(generatorNames)
+% $$$                 generatorNames = self.generatorNames;
+% $$$             end
+% $$$             m = self.genericIsomorphism.andThen(self.genericGroup.abstractMorphism(generatorNames));
+% $$$         end
 
         % Group elements
 
         function b = contains(self, g)
-            if self.genericIsomorphism.sourceContains(g)
-                b = self.genericGroup.contains(self.genericIsomorphism.imageElement(g));
+            if self.niceIsomorphism.sourceContains(g)
+                b = self.nice.contains(self.niceIsomorphism.imageElement(g));
             else
                 b = false;
             end
         end
 
         function o = elementOrder(self, g)
-            o = self.genericGroup.elementOrder(self.genericIsomorphism.imageElement(g));
+            o = self.nice.elementOrder(self.niceIsomorphism.imageElement(g));
         end
 
         function l = factorizeLetters(self, element)
-            l = self.genericGroup.factorizeLetters(self.genericIsomorphism.imageElement(element));
+            l = self.nice.factorizeLetters(self.niceIsomorphism.imageElement(element));
+        end
+
+        % Group properties
+
+        function a = abelianInvariants(self)
+            a = self.nice.abelianInvariants;
+        end
+
+        function e = exponent(self)
+            e = self.nice.exponent;
+        end
+
+        function o = order(self)
+            o = self.nice.order;
         end
 
         % Construction of groups

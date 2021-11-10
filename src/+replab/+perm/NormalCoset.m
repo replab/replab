@@ -26,13 +26,6 @@ classdef NormalCoset < replab.NormalCoset & replab.PermutationFiniteSet
             E = replab.perm.Sequence(matrix);
         end
 
-        % Coset
-
-        function [l, r] = factorizeShortRepresentativeLetters(self)
-            [l, r] = self.group.factorization.factorizeRepresentativeOfLeftCoset(self);
-            % same implementation as `.LeftCoset`
-        end
-
     end
 
 end

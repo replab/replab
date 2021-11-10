@@ -1,6 +1,8 @@
 classdef FiniteGroupType < replab.Group & replab.TotalOrder
 % Describes a type of finite groups
 %
+% It is a possibly infinite group of which we construct finite subgroups.
+%
 % Examples of types include:
 %
 % - permutations of a given domain ``1..n`` (the set of such permutations is finite),

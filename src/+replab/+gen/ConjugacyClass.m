@@ -1,28 +1,9 @@
-classdef ConjugacyClass < replab.ConjugacyClass & replab.gen.FiniteSte
-% Describes a conjugacy class of a finite group
-%
-% A conjugacy class containing the representative $r \in G$ is the set $\{g r g^{-1} : g \in G \}$.
-%
-% The centralizer of $r$ in $G$ is the subgroup $C_{G}(r) = \{ g r g^{-1} == r : g \in G \}$.
-%
-% Thus, the left cosets $G/C_{G}(r) = \{ g C_{G}(r) : g \in G \}$ are in one to one correspondence with
-% the elements of the conjugacy class.
-
-    properties (SetAccess = protected)
-        group % (`+replab.FiniteGroup`): Group containing this conjugacy class
-        representativeCentralizer % (`+replab.FiniteGroup`): Centralizer of `.representative` in `.group`
-    end
+classdef ConjugacyClass < replab.ConjugacyClass & replab.gen.FiniteSet
 
     methods
 
-        function self = ConjugacyClass(group, representative, representativeCentralizer)
-            self.type = group.type;
-            self.group = group;
-            self.representative = representative;
-            if nargin < 3 || isempty(representativeCentralizer)
-                representativeCentralizer = self.group.centralizer(representative);
-            end
-            self.representativeCentralizer = representativeCentralizer;
+        function self = ConjugacyClass(type, nice, niceIsomorphism)
+            self@replab.gen.FiniteSet(type, nice, niceIsomorphism);
         end
 
     end

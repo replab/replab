@@ -7,15 +7,32 @@ classdef SignedPermutationGroup < replab.gen.FiniteGroup
 
     methods
 
-        function self = SignedPermutationGroup(type, generators, varargin)
+        function self = SignedPermutationGroup(domainSize, generators, varargin)
         % Constructs a signed permutation group
         %
-        % Keyword args (such as order) are passed to the `.FiniteGroup` constructor.
+        % Additional keywords arguments follow the convention of `.FiniteGroup`
         %
         % Args:
-        %   domainSize (integer): Size of the domain
+        %   domainSize (integer): Size of the (positive part of the) domain
         %   generators (cell(1,\*) of permutation): Group generators
-            self@replab.GenericFiniteGroup(type, generators, type.genericIsomorphism, varargin{:});
+        %
+        % Keyword Args:
+        %   niceIsomorphism (`+replab.FiniteIsomorphism`): Used internally
+            [arg, rest] = replab.util.populateStruct(struct('type', [], 'niceIsomorphism', []), varargin);
+            if isempty(arg.type)
+                type = replab.signed.FiniteGroupType.make(domainSize);
+            else
+                type = arg.type;
+            end
+            if isempty(arg.niceIsomorphism)
+                niceIsomorphism = type.isomorphism;
+            else
+                niceIsomorphism = arg.niceIsomorphism;
+            end
+            targetGenerators = cellfun(@(g) replab.SignedPermutation.toPermutation(g), generators, 'uniform', 0);
+            targetArgs = replab.gen.NiceIsomorphism.translateKeywordArgs(varargin);
+            target = replab.PermutationGroup(2*domainSize, targetGenerators, targetArgs{:});
+            self@replab.gen.FiniteGroup(type, target, niceIsomorphism, generators);
             self.domainSize = domainSize;
         end
 

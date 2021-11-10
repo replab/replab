@@ -139,7 +139,8 @@ classdef IntegerPartition < replab.Str
         % Returns the conjugacy class of the symmetric group with cycle structure corresponding to the integer partition
             rep = self.minLexPermutation;
             repCent = self.centralizerMinLexPermutation;
-            C = replab.ConjugacyClass(replab.S(self.n), rep, repCent);
+            Sn = replab.S(self.n);
+            C = Sn.conjugacyClass(rep, 'centralizer', repCent, 'isCanonical', true);
         end
 
         function p = minLexPermutation(self)
@@ -181,7 +182,7 @@ classdef IntegerPartition < replab.Str
             end
             order = replab.util.multiplyIntegers(orderFactors);
             % construct the group
-            G = replab.PermutationGroup(self.n, gens, 'order', order, 'type', replab.SymmetricGroup.make(self.n));
+            G = replab.PermutationGroup(self.n, gens, 'order', order);
         end
 
     end
