@@ -66,13 +66,6 @@ classdef PermutationGroup < replab.FiniteGroup & replab.PermutationFiniteSet
 
     end
 
-    methods (Access = protected)
-
-% $$$         function f = computeFactorization(self)
-% $$$             f = replab.mrp.Factorization.make(self);
-% $$$         end
-% $$$
-    end
     % $$$
 % $$$     methods (Access = protected) % Implementations
 % $$$
@@ -90,66 +83,6 @@ classdef PermutationGroup < replab.FiniteGroup & replab.PermutationFiniteSet
 % $$$             end
 % $$$         end
 % $$$
-% $$$         function res = computeIsCyclic(self)
-% $$$             if self.nGenerators <= 1
-% $$$                 res = true;
-% $$$             elseif ~self.isCommutative
-% $$$                 res = false;
-% $$$             else
-% $$$                 pds = factor(self.order);
-% $$$                 if length(pds) == 1 % group of prime order is cyclic
-% $$$                     res = true;
-% $$$                     return
-% $$$                 end
-% $$$                 assert(all(pds <= 2^53-1)); % to be sure (otherwise can a BSGS have been computed?)
-% $$$                 pds = unique(double(pds));
-% $$$                 pds = double(pds);
-% $$$                 for p = pds
-% $$$                     newGens = cellfun(@(g) self.composeN(g, p), self.generators, 'uniform', 0);
-% $$$                     newGens = newGens(~cellfun(@(g) self.isIdentity(g), newGens));
-% $$$                     if self.subgroup(newGens).order*p ~= self.order
-% $$$                         res = false;
-% $$$                         return
-% $$$                     end
-% $$$                 end
-% $$$                 res = true;
-% $$$             end
-% $$$         end
-% $$$
-% $$$         function res = computeIsSimple(self)
-% $$$             if self.isTrivial
-% $$$                 res = false;
-% $$$                 return
-% $$$             end
-% $$$             C = self.conjugacyClasses;
-% $$$             for i = 1:C.nClasses
-% $$$                 c = C.classes{i}.representative;
-% $$$                 if ~self.isIdentity(c)
-% $$$                     if self.normalClosure(self.subgroup({c})) ~= self
-% $$$                         res = false;
-% $$$                         return
-% $$$                     end
-% $$$                 end
-% $$$             end
-% $$$             res = true; % all conjugacy classes generate the full group
-% $$$         end
-% $$$
-% $$$
-% $$$         function s = computeSetProduct(self)
-% $$$             c = self.chain;
-% $$$             k = c.length;
-% $$$             T = cell(1, k);
-% $$$             for i = 1:k
-% $$$                 Ui = c.U{i};
-% $$$                 m = size(Ui, 2);
-% $$$                 Ti = cell(1, m);
-% $$$                 for j = 1:m
-% $$$                     Ti{j} = Ui(:,j)';
-% $$$                 end
-% $$$                 T{i} = Ti;
-% $$$             end
-% $$$             s = replab.SetProduct(self, T, true);
-% $$$         end
 
     % end
     % $$$
@@ -176,13 +109,13 @@ classdef PermutationGroup < replab.FiniteGroup & replab.PermutationFiniteSet
             c = self.cached('chain', @() self.computeChain);
         end
 
-% $$$         function f = factorization(self)
-% $$$         % Returns an object able to compute factorizations in the group generators
-% $$$         %
-% $$$         % Returns:
-% $$$         %   `+replab.+mrp.Factorization`: A factorization instance
-% $$$             f = self.cached('factorization', @() self.computeFactorization);
-% $$$         end
+        function f = factorization(self)
+        % Returns an object able to compute factorizations in the group generators
+        %
+        % Returns:
+        %   `+replab.+mrp.Factorization`: A factorization instance
+            f = self.cached('factorization', @() replab.mrp.Factorization.make(self));
+        end
 
         function c = lexChain(self)
         % Returns the reduced stabilizer chain corresponding to this permutation group in lexicographic order
@@ -328,8 +261,20 @@ classdef PermutationGroup < replab.FiniteGroup & replab.PermutationFiniteSet
             s = self.order;
         end
 
-        function D = setProduct(self)
-            D = self.cached('setProduct', @() self.computeSetProduct);
+        function S = setProduct(self)
+            c = self.chain;
+            k = c.length;
+            T = cell(1, k);
+            for i = 1:k
+                Ui = c.U{i};
+                m = size(Ui, 2);
+                Ti = cell(1, m);
+                for j = 1:m
+                    Ti{j} = Ui(:,j)';
+                end
+                T{i} = Ti;
+            end
+            S = replab.SetProduct(self, T, true);
         end
 
         % FiniteGroup
@@ -429,28 +374,27 @@ classdef PermutationGroup < replab.FiniteGroup & replab.PermutationFiniteSet
             e = self.cached('exponent', @() replab.numerical.integer.veclcm(self.conjugacyClasses.classElementOrders));
         end
 
-        function [l, r] = factorizeLetters(self, cosetOrElement)
+        function l = factorizeFlat(self, cosetOrElement)
             if isa(cosetOrElement, 'replab.DoubleCoset')
                 % TODO: better implementation
-                r = cosetOrElement.representative;
                 l = self.factorizeLetters(r);
             elseif isa(cosetOrElement, 'replab.LeftCoset')
-                [l, r] = self.factorization.factorizeRepresentativeOfLeftCoset(cosetOrElement);
+                l = self.factorization.factorizeRepresentativeOfLeftCoset(cosetOrElement);
             elseif isa(cosetOrElement, 'replab.RightCoset')
-                [linv, rinv] = self.factorizeLetters(cosetOrElement.subgroup.leftCoset(self.inverse(cosetOrElement.representative), 'group', cosetOrElement.group));
+                linv = self.factorizeLetters(cosetOrElement.subgroup.leftCoset(self.inverse(cosetOrElement.representative), 'group', cosetOrElement.group));
                 l = replab.fp.Letters.inverse(linv);
-                r = self.inverse(rinv);
             else
                 l = self.factorization.factorize(cosetOrElement);
             end
         end
 
-        function c = findLeftConjugations(self, s, t, sCentralizer, tCentralizer)
-            if nargin < 4 || isempty(sCentralizer)
+        function c = findLeftConjugations(self, s, t, varargin)
+            args = struct('sCentralizer', [], 'tCentralizer', []);
+            args = replab.util.populateStruct(args, varargin);
+            sCentralizer = args.sCentralizer;
+            tCentralizer = args.tCentralizer;
+            if isempty(sCentralizer)
                 sCentralizer = self.centralizer(s);
-            end
-            if nargin < 5 || isempty(tCentralizer)
-                tCentralizer = [];
             end
             b = replab.bsgs.LeftConjugation(self, s, t, sCentralizer, tCentralizer).find;
             % note that we have
@@ -485,39 +429,17 @@ classdef PermutationGroup < replab.FiniteGroup & replab.PermutationFiniteSet
             end
         end
 
-% $$$         function res = isCyclic(self)
-% $$$         % Returns whether this group is a cyclic group
-% $$$         %
-% $$$         % Example:
-% $$$         %   >>> C3 = replab.PermutationGroup.cyclic(3);
-% $$$         %   >>> C3.isCyclic
-% $$$         %       1
-% $$$         %   >>> C3_C3 = C3.directProduct(C3);
-% $$$         %   >>> C3_C3.isCommutative
-% $$$         %       1
-% $$$         %   >>> C3_C3.isCyclic
-% $$$         %       0
-% $$$         %
-% $$$         % Returns:
-% $$$         %   logical: True if the group is cyclic
-% $$$             res = self.cached('isCyclic', @() self.computeIsCyclic);
-% $$$         end
-% $$$
-% $$$         function res = isSimple(self)
-% $$$         % Returns whether this group is simple
-% $$$         %
-% $$$         % Example:
-% $$$         %   >>> S5 = replab.S(5);
-% $$$         %   >>> S5.isSimple
-% $$$         %       0
-% $$$         %   >>> A5 = S5.derivedSubgroup;
-% $$$         %   >>> A5.isSimple
-% $$$         %       1
-% $$$         %
-% $$$         % Returns:
-% $$$         %   logical: True if the group is simple
-% $$$             res = self.cached('isSimple', @() self.computeIsSimple);
-% $$$         end
+        function res = isCyclic(self)
+            res = self.cached('isCyclic', @() replab.perm.isCyclic(self));
+        end
+
+        function res = isSimple(self)
+            res = self.cached('isSimple', @() replab.perm.isSimple(self));
+        end
+
+        function res = knownRelators(self)
+            res = self.inCache('relatorsFlat');
+        end
 
         function nc = normalClosure(self, rhs)
             if isa(rhs, 'replab.FiniteGroup')

@@ -13,7 +13,7 @@ classdef ConjugacyClassesLaws < replab.Laws
             self.G = C.group;
         end
 
-        function law_classes_are_sorted_(self)
+        function law_classes_are_ordered_(self)
             I = self.G.type.sort(self.C.classRepresentatives);
             self.assert(isequal(I, 1:length(I)));
         end

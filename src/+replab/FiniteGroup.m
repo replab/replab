@@ -180,49 +180,28 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
 
     end
 
-% $$$     methods (Access = protected)
-% $$$
-% $$$         function c = computeCharacterTable(self, field)
-% $$$         % See `.characterTable`
-% $$$             r = self.recognize;
-% $$$             assert(~isempty(r), 'No character table information available for this group.');
-% $$$             c = r.source.characterTable(field);
-% $$$             assert(~isempty(c), 'No character table information available for this group.');
-% $$$             c = c.imap(r);
-% $$$         end
-% $$$
-% $$$         function R = computeRecognize(self)
-% $$$             R = replab.Atlas.recognize(self);
-% $$$         end
-% $$$
-% $$$     end
-
     methods % Conjugacy classes and character table
 
-% $$$         function c = characterTable(self, field)
-% $$$         % Returns the (real or complex) character table of this group
-% $$$         %
-% $$$         % The complex character table is the standard, textbook character table of the group.
-% $$$         %
-% $$$         % Note that randomized techniques are used to find group isomorphisms, and thus the output of this
-% $$$         % method may not be deterministic.
-% $$$         %
-% $$$         % Args:
-% $$$         %   field ('R', 'C', optional): Field over which to define the irreps, default 'C'
-% $$$         %
-% $$$         % Returns:
-% $$$         %   `.CharacterTable`: Character table
-% $$$             if nargin < 2 || isempty(field)
-% $$$                 field = 'C';
-% $$$             end
-% $$$             if strcmp(field, 'R')
-% $$$                 c = self.cached('realCharacterTable', @() self.computeCharacterTable('R'));
-% $$$             elseif strcmp(field, 'C')
-% $$$                 c = self.cached('complexCharacterTable', @() self.computeCharacterTable('C'));
-% $$$             else
-% $$$                 error('Incorrect field');
-% $$$             end
-% $$$         end
+        function c = characterTable(self)
+        % Alias for `.complexCharacterTable`
+        %
+        % Returns:
+        %   `.ComplexCharacterTable`: Complex character table
+            c = self.complexCharacterTable;
+        end
+
+        function c = complexCharacterTable(self)
+        % Returns the complex character table of this group
+        %
+        % The complex character table is the standard, textbook character table of the group.
+        %
+        % Note that randomized techniques are used to find group isomorphisms, and thus the output of this
+        % method may not be deterministic.
+        %
+        % Returns:
+        %   `.ComplexCharacterTable`: Complex character table
+            error('Abstract');
+        end
 
         function c = conjugacyClass(self, g, varargin)
         % Returns the conjugacy class corresponding to the given element
@@ -244,6 +223,17 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
         %
         % Returns:
         %   `+replab.ConjugacyClasses`: Conjugacy classes
+            error('Abstract');
+        end
+
+        function c = realCharacterTable(self)
+        % Returns the real character table of this group
+        %
+        % Note that randomized techniques are used to find group isomorphisms, and thus the output of this
+        % method may not be deterministic.
+        %
+        % Returns:
+        %   `.RealCharacterTable`: Real character table
             error('Abstract');
         end
 
@@ -287,6 +277,40 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
             R = [];
             return % TODO
             R = self.cached('fastRecognize', @() self.computeFastRecognize);
+        end
+
+        function res = isCyclic(self)
+        % Returns whether this group is a cyclic group
+        %
+        % Example:
+        %   >>> C3 = replab.PermutationGroup.cyclic(3);
+        %   >>> C3.isCyclic
+        %       1
+        %   >>> C3_C3 = C3.directProduct(C3);
+        %   >>> C3_C3.isCommutative
+        %       1
+        %   >>> C3_C3.isCyclic
+        %       0
+        %
+        % Returns:
+        %   logical: True if the group is cyclic
+            error('Abstract');
+        end
+
+        function res = isSimple(self)
+        % Returns whether this group is simple
+        %
+        % Example:
+        %   >>> S5 = replab.S(5);
+        %   >>> S5.isSimple
+        %       0
+        %   >>> A5 = S5.derivedSubgroup;
+        %   >>> A5.isSimple
+        %       1
+        %
+        % Returns:
+        %   logical: True if the group is simple
+            error('Abstract');
         end
 
         function b = isTrivial(self)
@@ -341,12 +365,21 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
 % $$$         %
 % $$$         % Returns:
 % $$$         %   `.FiniteIsomorphism` or ``[]``: A result in case the group is identified; or ``[]`` if unrecognized.
+% $$$             R = replab.Atlas.recognize(self);
 % $$$             R = self.cached('recognize', @() self.computeRecognize);
 % $$$         end
 
     end
 
     methods % Methods depending on the form of the generators
+
+        function res = knownRelators(self)
+        % Returns whether the relators of this group are known
+        %
+        % Returns:
+        %   logical: True if the relators are known already
+            error('Abstract');
+        end
 
         function R = relatorsFlat(self)
         % Returns the relators of a presentation of this finite group in the flat format
@@ -391,16 +424,12 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
         % Args:
         %   elementOrCoset (element or coset of this group): Element or coset to factorize
         %
-        % Returns
-        % -------
-        %   l: integer(1,\*)
-        %     Flat sequence of the word in the generators
-        %   r: element
-        %     Represented element or coset element
+        % Returns:
+        %   integer(1,\*): Flat sequence of the word in the generators
             error('Abstract');
         end
 
-        function [w, r] = factorizeWord(self, elementOrCoset)
+        function w = factorizeWord(self, elementOrCoset)
         % Factorizes an element or a coset as a word in the generators
         %
         % If a coset is given, this method tries to pick a coset element with a short factorization.
@@ -416,13 +445,9 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
         % Args:
         %   elementOrCoset (element or coset of this group): Element to factorize
         %
-        % Returns
-        % -------
-        %   w: charstring
-        %     Word representing the element
-        %   r: element of `.group`
-        %     Represented coset element
-            [l, r] = self.factorizeLetters(elementOrCoset);
+        % Returns:
+        %   charstring: Word representing the element
+            l = self.factorizeFlat(elementOrCoset);
             w = replab.fp.Letters.print(l, self.generatorNames);
         end
 
@@ -494,7 +519,7 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
         % Returns:
         %   element: Element of the group corresponding to the given word
             l = replab.fp.Letters.parse(word, self.generatorNames);
-            g = self.imageLetters(l);
+            g = self.imageFlat(l);
         end
 
         function n = nGenerators(self)
@@ -835,24 +860,26 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
             error('Abstract');
         end
 
-% $$$         function B = findLeftConjugations(self, s, t, sCentralizer, tCentralizer)
-% $$$         % Returns the set of all elements that left conjugates an element to another element
-% $$$         %
-% $$$         % Let ``s`` and ``t`` be two elements of this group. This returns the set of all elements
-% $$$         % ``b`` such that ``t = b s b^-1`` or ``t = leftConjugate(b, s)``.
-% $$$         %
-% $$$         % When no such ``b`` exists, this returns ``[]``.
-% $$$         %
-% $$$         % Args:
-% $$$         %   s (group element): Source element
-% $$$         %   t (group element): Target element
-% $$$         %   sCentralizer (`+replab.FiniteGroup` or ``[]``, optional): Centralizer of ``s`` in this group
-% $$$         %   tCentralizer (`+replab.FiniteGroup` or ``[]``, optional): Centralizer of ``t`` in this group
-% $$$         %
-% $$$         % Returns:
-% $$$         %   `+replab.LeftCoset` or ``[]``: Set of all elements of this group that left conjugates ``s`` to ``t`` if it exists
-% $$$             error('Abstract');
-% $$$         end
+        function B = findLeftConjugations(self, s, t, varargin)
+        % Returns the set of all elements that left conjugates an element to another element
+        %
+        % Let ``s`` and ``t`` be two elements of this group. This returns the set of all elements
+        % ``b`` such that ``t = b s b^-1`` or ``t = leftConjugate(b, s)``.
+        %
+        % When no such ``b`` exists, this returns ``[]``.
+        %
+        % Args:
+        %   s (group element): Source element
+        %   t (group element): Target element
+        %
+        % Keyword Args:
+        %   sCentralizer (`+replab.FiniteGroup`, optional): Centralizer of ``s`` in this group
+        %   tCentralizer (`+replab.FiniteGroup`, optional): Centralizer of ``t`` in this group
+        %
+        % Returns:
+        %   `+replab.LeftCoset` or ``[]``: Set of all elements of this group that left conjugates ``s`` to ``t`` if it exists
+            error('Abstract');
+        end
 
         function l = isNormalizedBy(self, element)
         % Returns whether a given element/group normalizes this group

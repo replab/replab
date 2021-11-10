@@ -22,6 +22,7 @@ classdef MixedRadix < replab.Str
         %   oneBased (logical): Whether digits start at 1 (used for 1-based indexing), default: true
         %   bigEndian (logical): Whether the digits are written with the most significant digit first, default: true
             args = struct('oneBased', true, 'bigEndian', true);
+            args = replab.util.populateStruct(args, varargin);
             self.oneBased = args.oneBased;
             self.bigEndian = args.bigEndian;
             self.base = base;

@@ -83,9 +83,9 @@ classdef FiniteGroupLaws < replab.laws.GroupLaws
             self.assert(sub.order == self.T.elementOrder(t));
         end
 
-        function law_factorizeLetters_imageLetters_T(self, t)
-            l = self.T.factorizeLetters(t);
-            t1 = self.T.imageLetters(l);
+        function law_factorizeFlat_imageFlat_T(self, t)
+            l = self.T.factorizeFlat(t);
+            t1 = self.T.imageFlat(l);
             self.T.assertEqv(t, t1);
         end
 
@@ -96,9 +96,10 @@ classdef FiniteGroupLaws < replab.laws.GroupLaws
         end
 
         function law_relators_are_satisfied_(self)
-            if self.T.inCache('relators')
-                for i = 1:length(self.T.relators)
-                    g = self.T.imageWord(self.T.relators{i});
+            if self.T.knownRelators
+                rels = self.T.relatorsFlat;
+                for i = 1:length(rels)
+                    g = self.T.imageFlat(rels{i});
                     assert(self.T.isIdentity(g));
                 end
             end
