@@ -437,7 +437,7 @@ classdef PermutationGroup < replab.FiniteGroup & replab.PermutationFiniteSet
                 end
             end
             chain.makeImmutable;
-            nc = replab.PermutationGroup(self.type, generators, 'order', chain.order, 'chain', chain);
+            nc = replab.PermutationGroup(self.domainSize, generators, 'order', chain.order, 'chain', chain);
         end
 
         function o = order(self)
@@ -477,7 +477,7 @@ classdef PermutationGroup < replab.FiniteGroup & replab.PermutationFiniteSet
             if self.inCache('chain')
                 args = horzcat(args, {'chain', self.chain});
             end
-            res = replab.PermutationGroup(self.type, self.generators, 'generatorNames', newNames, args{:});
+            res = replab.PermutationGroup(self.domainSize, self.generators, 'generatorNames', newNames, args{:});
         end
 
         % FiniteGroup/Cosets
@@ -1062,7 +1062,7 @@ classdef PermutationGroup < replab.FiniteGroup & replab.PermutationFiniteSet
             else
                 t = [2 3 1 4:n];
                 if n == 3 % special case: it is a cyclic group, one generator only
-                    G = Sn.subgroupWithGenerators({t}, Sn.order/2);
+                    G = Sn.subgroupWithGenerators({t}, 'order', Sn.order/2);
                     return
                 end
                 % generators from page 2100 of

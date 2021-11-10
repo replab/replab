@@ -99,7 +99,7 @@ classdef FiniteSet < replab.Domain
         % Returns if this finite set has the same type as the given finite set
         %
         % In particular, it means that the `.contains` method of one set can be called with elements of the other set.
-        %x
+        %
         % Args:
         %   rhs (`+replab.FiniteSet`): Other finite set
         %
