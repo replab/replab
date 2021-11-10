@@ -123,8 +123,7 @@ classdef Obj < replab.Str
         function res = cached(self, name, fun)
         % Returns the cached property if it exists, computing it if necessary
         %
-        % If the property is not known, it will call the given function handle and
-        % cache the result.
+        % If the property is not known, it will call the given function handle and cache the result.
         %
         % Args:
         %   name (charstring): Name of the property
