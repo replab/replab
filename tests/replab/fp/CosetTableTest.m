@@ -60,19 +60,19 @@ function test_holt_Exercise2
     assert(size(ctR.C, 1) == 8);
 end
 
-function test_quaternion_presentation
-    a = [2 6 1 8 7 3 4 5];
-    b = [4 7 8 6 1 5 3 2];
-    G = replab.PermutationGroup.of(a, b);
-    relators = replab.fp.relatorsForPermutationGroup(G);
-    assert(all(cellfun(@(r) G.isIdentity(G.imageLetters(r)), relators)));
-end
+% function test_quaternion_presentation
+%     a = [2 6 1 8 7 3 4 5];
+%     b = [4 7 8 6 1 5 3 2];
+%     G = replab.PermutationGroup.of(a, b);
+%     relators = replab.fp.relatorsForPermutationGroup(G);
+%     assert(all(cellfun(@(r) G.isIdentity(G.imageLetters(r)), relators)));
+% end
 
-function test_symmetric_group_presentation
-    G = replab.S(6);
-    relators = replab.fp.relatorsForPermutationGroup(G);
-    assert(all(cellfun(@(r) G.isIdentity(G.imageLetters(r)), relators)));
-end
+% function test_symmetric_group_presentation
+%     G = replab.S(6);
+%     relators = replab.fp.relatorsForPermutationGroup(G);
+%     assert(all(cellfun(@(r) G.isIdentity(G.imageLetters(r)), relators)));
+% end
 
 function test_dihedral_group_presentation
     if ReplabTestParameters.onlyFastTests

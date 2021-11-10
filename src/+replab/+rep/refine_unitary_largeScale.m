@@ -2,13 +2,13 @@ function [gen, exitFlag] = refine_unitary_largeScale(gen0, nSamples, tolerances,
 % Refines a generic unitary subrepresentation
 %
 % Example:
-%   >>> G = replab.S(3);
-%   >>> rep = G.standardRep.unitarize.collapse.withNoise(0.1);
-%   >>> rep.projectorErrorBound > 1e-3
-%       1
-%   >>> gen1 = replab.rep.refine_unitary_largeScale(replab.rep.GenSubRep.fromSubRep(rep), 5, replab.rep.Tolerances, []);
-%   >>> gen1.toSubRep.projectorErrorBound < 1e-10
-%       1
+% %   >>> G = replab.S(3);
+% %   >>> rep = G.standardRep.unitarize.collapse.withNoise(0.1);
+% %   >>> rep.projectorErrorBound > 1e-3
+% %       1
+% %   >>> gen1 = replab.rep.refine_unitary_largeScale(replab.rep.GenSubRep.fromSubRep(rep), 5, replab.rep.Tolerances, []);
+% %   >>> gen1.toSubRep.projectorErrorBound < 1e-10
+% %       1
 %
 % Args:
 %   gen0 (`+replab.+rep.GenSubRep`): Generic subrepresentation to refine

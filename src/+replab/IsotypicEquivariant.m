@@ -26,23 +26,23 @@ classdef IsotypicEquivariant < replab.SubEquivariant
 % and ``R`` has size ``[m n 0]``.
 %
 % Example:
-%   >>> S3 = replab.S(3);
-%   >>> natDec = S3.naturalRep.decomposition;
-%   >>> std1 = natDec.component(2);
-%   >>> nat2Dec = S3.naturalRep.tensorPower(2).decomposition;
-%   >>> std2 = nat2Dec.component(3);
-%   >>> E = std1.isotypicEquivariantFrom(std2);
-%   >>> X = E.sample;
-%   >>> M = E.projectAndFactor(X);
-%   >>> size(M, 3)
-%       1
-%   >>> R = E.R('double');
-%   >>> A = E.A('double');
-%   >>> tol = 1e-10;
-%   >>> norm(kron(M(:,:,1), kron(R(:,:,1), A(:,:,1))) - X, 'fro') <= tol
-%       1
-%   >>> norm(E.reconstruct(M) - X, 'fro') <= tol
-%       1
+% %   >>> S3 = replab.S(3);
+% %   >>> natDec = S3.naturalRep.decomposition;
+% %   >>> std1 = natDec.component(2);
+% %   >>> nat2Dec = S3.naturalRep.tensorPower(2).decomposition;
+% %   >>> std2 = nat2Dec.component(3);
+% %   >>> E = std1.isotypicEquivariantFrom(std2);
+% %   >>> X = E.sample;
+% %   >>> M = E.projectAndFactor(X);
+% %   >>> size(M, 3)
+% %       1
+% %   >>> R = E.R('double');
+% %   >>> A = E.A('double');
+% %   >>> tol = 1e-10;
+% %   >>> norm(kron(M(:,:,1), kron(R(:,:,1), A(:,:,1))) - X, 'fro') <= tol
+% %       1
+% %   >>> norm(E.reconstruct(M) - X, 'fro') <= tol
+% %       1
 
     properties (SetAccess = protected)
         R_internal % (double(\*,\*,\*) or `.cyclotomic`(\*,\*,\*)): Representation space basis
@@ -139,13 +139,13 @@ classdef IsotypicEquivariant < replab.SubEquivariant
         % This happens when the isotypic components `.repR` and `.repC` correspond to inequivalent irreducible representations
         %
         % Example:
-        %   >>> S3 = replab.S(3);
-        %   >>> rep = S3.naturalRep;
-        %   >>> triv = rep.decomposition.component(1);
-        %   >>> std = rep.decomposition.component(2);
-        %   >>> E = triv.isotypicEquivariantFrom(std);
-        %   >>> E.isZero
-        %       1
+%         %   >>> S3 = replab.S(3);
+%         %   >>> rep = S3.naturalRep;
+%         %   >>> triv = rep.decomposition.component(1);
+%         %   >>> std = rep.decomposition.component(2);
+%         %   >>> E = triv.isotypicEquivariantFrom(std);
+%         %   >>> E.isZero
+%         %       1
         %
         % Returns:
         %   logical: True if the equivariant space is trivial

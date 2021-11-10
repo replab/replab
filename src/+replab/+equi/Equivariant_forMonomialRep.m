@@ -2,13 +2,13 @@ classdef Equivariant_forMonomialRep < replab.Equivariant
 % Equivariant space of monomial representations of a finite group
 %
 % Example:
-%   >>> g1 = [1 -2 -3 -4 -5];
-%   >>> g2 = [1 4 5 2 3];
-%   >>> g3 = [1 3 2 4 -5];
-%   >>> G = replab.SignedPermutationGroup.of(g1,g2,g3);
-%   >>> rep = G.naturalRep;
-%   >>> isa(rep.commutant, 'replab.equi.Equivariant_forMonomialRep')
-%       1
+% %   >>> g1 = [1 -2 -3 -4 -5];
+% %   >>> g2 = [1 4 5 2 3];
+% %   >>> g3 = [1 3 2 4 -5];
+% %   >>> G = replab.SignedPermutationGroup.of(g1,g2,g3);
+% %   >>> rep = G.naturalRep;
+% %   >>> isa(rep.commutant, 'replab.equi.Equivariant_forMonomialRep')
+% %       1
 
     properties (SetAccess = protected)
         phaseOrder % (integer): Phase order

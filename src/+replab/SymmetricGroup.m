@@ -137,16 +137,16 @@ classdef SymmetricGroup < replab.PermutationGroup
         % Returns the irreducible representation of this symmetric group corresponding the given Young Diagram
         %
         % Example:
-        %   >>> S5 = replab.S(5); % doctest: +cyclotomic
-        %   >>> rep = S5.irrep([3 2], 'specht');
-        %   >>> rep.dimension
-        %         5
-        %   >>> rep = S5.irrep([3 2], 'seminormal');
-        %   >>> rep.dimension
-        %         5
-        %   >>> rep = S5.irrep([3 2], 'orthogonal');
-        %   >>> rep.dimension
-        %         5
+%         %   >>> S5 = replab.S(5); % doctest: +cyclotomic
+%         %   >>> rep = S5.irrep([3 2], 'specht');
+%         %   >>> rep.dimension
+%         %         5
+%         %   >>> rep = S5.irrep([3 2], 'seminormal');
+%         %   >>> rep.dimension
+%         %         5
+%         %   >>> rep = S5.irrep([3 2], 'orthogonal');
+%         %   >>> rep.dimension
+%         %         5
         %
         % Args:
         %   partition (integer(1,\*)): The partition corresponding the Young Diagram, with elements listed in
@@ -183,12 +183,12 @@ classdef SymmetricGroup < replab.PermutationGroup
         % Returns the dimension of the irreducible representation of a symmetric group corresponding a Young Diagram
         %
         % Example:
-        %   >>> S5 = replab.S(5);
-        %   >>> rep = S5.irrep([3 2]);
-        %   >>> rep.dimension
-        %         5
-        %   >>> S5.irrepDimension([3 2])
-        %         5
+%         %   >>> S5 = replab.S(5);
+%         %   >>> rep = S5.irrep([3 2]);
+%         %   >>> rep.dimension
+%         %         5
+%         %   >>> S5.irrepDimension([3 2])
+%         %         5
         %
         % Args:
         %   partition (integer(1,\*)): The partition corresponding the Young Diagram, with elements listed

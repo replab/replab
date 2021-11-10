@@ -529,11 +529,11 @@ classdef Rep < replab.Obj
         % This method does not guarantee that the finest partition is returned.
         %
         % Example:
-        %   >>> G = replab.SignedPermutationGroup.of([1 4 7 2 5 8 3 6 9], [1 -2 -3 -4 5 6 -7 8 9], [1 3 2 4 6 5 -7 -9 -8]);
-        %   >>> rep = G.naturalRep;
-        %   >>> p = rep.invariantBlocks;
-        %   >>> isequal(p.blocks, {[1] [2 3 4 7] [5 6 8 9]})
-        %       1
+%         %   >>> G = replab.SignedPermutationGroup.of([1 4 7 2 5 8 3 6 9], [1 -2 -3 -4 5 6 -7 8 9], [1 3 2 4 6 5 -7 -9 -8]);
+%         %   >>> rep = G.naturalRep;
+%         %   >>> p = rep.invariantBlocks;
+%         %   >>> isequal(p.blocks, {[1] [2 3 4 7] [5 6 8 9]})
+%         %       1
         %
         % Returns:
         %   `.Partition`: Partition of coarse invariant blocks
@@ -750,10 +750,10 @@ classdef Rep < replab.Obj
         %   An error if this representation is not precise enough to compute the kernel.
         %
         % Example:
-        %   >>> S3 = replab.S(3);
-        %   >>> K = S3.signRep.kernel;
-        %   >>> K == replab.PermutationGroup.alternating(3)
-        %       1
+%         %   >>> S3 = replab.S(3);
+%         %   >>> K = S3.signRep.kernel;
+%         %   >>> K == replab.PermutationGroup.alternating(3)
+%         %       1
         %
         % Returns:
         %   `+replab.FiniteGroup`: The group ``K`` such that ``rho.image(k) == id`` for all ``k`` in ``K``
@@ -1441,15 +1441,15 @@ classdef Rep < replab.Obj
         % Returns a direct sum of copies of this representation
         %
         % Example:
-        %   >>> U2 = replab.U(2);
-        %   >>> S3 = replab.S(3);
-        %   >>> G = U2.directProduct(S3);
-        %   >>> GtoU2 = G.projection(1); % morphism from G to U2
-        %   >>> GtoS3 = G.projection(2); % morphism from G to S3
-        %   >>> repU2 = GtoU2.andThen(U2.definingRep);
-        %   >>> rep = repU2.permutedDirectSumOfCopies(GtoS3);
-        %   >>> rep.dimension
-        %       6
+%         %   >>> U2 = replab.U(2);
+%         %   >>> S3 = replab.S(3);
+%         %   >>> G = U2.directProduct(S3);
+%         %   >>> GtoU2 = G.projection(1); % morphism from G to U2
+%         %   >>> GtoS3 = G.projection(2); % morphism from G to S3
+%         %   >>> repU2 = GtoU2.andThen(U2.definingRep);
+%         %   >>> rep = repU2.permutedDirectSumOfCopies(GtoS3);
+%         %   >>> rep.dimension
+%         %       6
         %
         % Args:
         %   mu (`.Morphism`): Morphism from `.group` to a `.PermutationGroup`
@@ -1490,14 +1490,14 @@ classdef Rep < replab.Obj
         % This representation must be irreducible.
         %
         % Example:
-        %   >>> Q = replab.QuaternionGroup();
-        %   >>> rep = Q.naturalRep.complexification;
-        %   >>> irreps = rep.split;
-        %   >>> assert(length(irreps) == 2); % splits in two equivalent irreps
-        %   >>> sub = irreps{1};
-        %   >>> sub1 = sub.identifyIrrep;
-        %   >>> strcmp(sub1.divisionAlgebraName, 'H->C')
-        %       1
+%         %   >>> Q = replab.QuaternionGroup();
+%         %   >>> rep = Q.naturalRep.complexification;
+%         %   >>> irreps = rep.split;
+%         %   >>> assert(length(irreps) == 2); % splits in two equivalent irreps
+%         %   >>> sub = irreps{1};
+%         %   >>> sub1 = sub.identifyIrrep;
+%         %   >>> strcmp(sub1.divisionAlgebraName, 'H->C')
+%         %       1
         %
         % Returns:
         %   `+replab.SubRep`: Similar representation with the canonical division algebra encoding
@@ -1521,14 +1521,14 @@ classdef Rep < replab.Obj
         % injection/projection maps;
         %
         % Example:
-        %   >>> S3 = replab.S(3);
-        %   >>> defRep = S3.naturalRep.complexification;
-        %   >>> C = randn(3,3) + 1i * rand(3,3);
-        %   >>> nonUnitaryRep = defRep.similarRep(C);
-        %   >>> unitaryRep = nonUnitaryRep.unitarize;
-        %   >>> U = unitaryRep.sample;
-        %   >>> norm(U*U' - eye(3)) < 1e-10
-        %       1
+%         %   >>> S3 = replab.S(3);
+%         %   >>> defRep = S3.naturalRep.complexification;
+%         %   >>> C = randn(3,3) + 1i * rand(3,3);
+%         %   >>> nonUnitaryRep = defRep.similarRep(C);
+%         %   >>> unitaryRep = nonUnitaryRep.unitarize;
+%         %   >>> U = unitaryRep.sample;
+%         %   >>> norm(U*U' - eye(3)) < 1e-10
+%         %       1
         %
         % Returns:
         %   `+replab.SubRep`: Unitary similar representation

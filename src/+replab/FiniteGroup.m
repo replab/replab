@@ -397,9 +397,9 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
         % The abelian invariants are sorted in weakly increasing order.
         %
         % Example:
-        %   >>> G = replab.PermutationGroup.cyclic(100);
-        %   >>> isequal(G.abelianInvariants, [4 25])
-        %       1
+%         %   >>> G = replab.PermutationGroup.cyclic(100);
+%         %   >>> isequal(G.abelianInvariants, [4 25])
+%         %       1
         %
         % Returns:
         %   integer(1,\*): Group abelian invariants
@@ -544,12 +544,12 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
         % If a coset is given, this method tries to pick a coset element with a short factorization.
         %
         % Example:
-        %   >>> G = replab.S(3);
-        %   >>> G.factorizeWord([2 3 1])
-        %       'x1'
-        %   >>> H = G.withGeneratorNames({'s', 't'});
-        %   >>> H.factorizeWord([2 3 1])
-        %       's'
+%         %   >>> G = replab.S(3);
+%         %   >>> G.factorizeWord([2 3 1])
+%         %       'x1'
+%         %   >>> H = G.withGeneratorNames({'s', 't'});
+%         %   >>> H.factorizeWord([2 3 1])
+%         %       's'
         %
         % Args:
         %   elementOrCoset (element or coset of this group): Element to factorize
@@ -733,18 +733,18 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
         % Computes the normal closure of an object in the closure of this group and this object
         %
         % Example:
-        %   >>> S5 = replab.S(5);
-        %   >>> S4 = S5.subgroup({[2 3 4 1 5] [2 1 3 4 5]});
-        %   >>> nc = S4.normalClosure([1 2 4 5 3]); % demonstrates both syntaxes
-        %   >>> nc = S4.normalClosure(S5.subgroup({[1 2 4 5 3]}));
-        %   >>> nc == S5.subgroup({[1 2 4 5 3] [5 2 3 1 4] [2 5 3 4 1]})
-        %       1
+%         %   >>> S5 = replab.S(5);
+%         %   >>> S4 = S5.subgroup({[2 3 4 1 5] [2 1 3 4 5]});
+%         %   >>> nc = S4.normalClosure([1 2 4 5 3]); % demonstrates both syntaxes
+%         %   >>> nc = S4.normalClosure(S5.subgroup({[1 2 4 5 3]}));
+%         %   >>> nc == S5.subgroup({[1 2 4 5 3] [5 2 3 1 4] [2 5 3 4 1]})
+%         %       1
         %
         % Example:
-        %   >>> S4 = replab.S(4);
-        %   >>> nc = S4.normalClosure(S4.subgroup({[2 3 1 4]}));
-        %   >>> nc == S4.subgroup({[2 3 1 4] [1 3 4 2]});
-        %       1
+%         %   >>> S4 = replab.S(4);
+%         %   >>> nc = S4.normalClosure(S4.subgroup({[2 3 1 4]}));
+%         %   >>> nc == S4.subgroup({[2 3 1 4] [1 3 4 2]});
+%         %       1
         %
         % Args:
         %   obj (`+replab.FiniteGroup` or group element): Element to compute the normal closure with
@@ -809,12 +809,12 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
         % Computes the derived subgroup of this group
         %
         % Example:
-        %   >>> S4 = replab.S(4);
-        %   >>> S4.order
-        %       24
-        %   >>> D = S4.derivedSubgroup;
-        %   >>> D == replab.PermutationGroup.alternating(4)
-        %       1
+%         %   >>> S4 = replab.S(4);
+%         %   >>> S4.order
+%         %       24
+%         %   >>> D = S4.derivedSubgroup;
+%         %   >>> D == replab.PermutationGroup.alternating(4)
+%         %       1
         % Returns:
         %   `+replab.FiniteGroup`: The derived subgroup
             sub = self.cached('derivedSubgroup', @() self.computeDerivedSubgroup);
@@ -965,20 +965,20 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
         %
         %
         % Example:
-        %   >>> n = 5;
-        %   >>> G = replab.S(n);
-        %   >>> H = G.pointwiseStabilizer(n);
-        %   >>> cosets = G.doubleCosets(H, H);
-        %   >>> cosets.nElements
-        %       2
+%         %   >>> n = 5;
+%         %   >>> G = replab.S(n);
+%         %   >>> H = G.pointwiseStabilizer(n);
+%         %   >>> cosets = G.doubleCosets(H, H);
+%         %   >>> cosets.nElements
+%         %       2
         %
         % Example:
-        %   >>> G = replab.S(3);
-        %   >>> H = replab.PermutationGroup.of([2 1 3]);
-        %   >>> K = replab.PermutationGroup.of([3 2 1]);
-        %   >>> cosets = G.doubleCosets;
-        %   >>> cosets.nElements
-        %       2
+%         %   >>> G = replab.S(3);
+%         %   >>> H = replab.PermutationGroup.of([2 1 3]);
+%         %   >>> K = replab.PermutationGroup.of([3 2 1]);
+%         %   >>> cosets = G.doubleCosets;
+%         %   >>> cosets.nElements
+%         %       2
         %
         % Args:
         %   leftSubgroup (`+replab.FiniteGroup`): First subgroup
@@ -1139,16 +1139,16 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
         % Returns whether this group is a normal subgroup of another group
         %
         % Example:
-        %   >>> S3 = replab.S(3);
-        %   >>> A3 = replab.PermutationGroup.alternating(3);
-        %   >>> A3.isNormalSubgroupOf(S3)
-        %       1
+%         %   >>> S3 = replab.S(3);
+%         %   >>> A3 = replab.PermutationGroup.alternating(3);
+%         %   >>> A3.isNormalSubgroupOf(S3)
+%         %       1
         %
         % Example:
-        %   >>> S3 = replab.S(3);
-        %   >>> G = S3.subgroup({[2 1 3]});
-        %   >>> G.isNormalSubgroupOf(S3)
-        %       0
+%         %   >>> S3 = replab.S(3);
+%         %   >>> G = S3.subgroup({[2 1 3]});
+%         %   >>> G.isNormalSubgroupOf(S3)
+%         %       0
         %
         % Args:
         %   rhs (`+replab.FiniteGroup`): Other group with the same type as this one
@@ -1244,10 +1244,10 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
         % Returns an isomorphism to an abstract group
         %
         % Example:
-        %   >>> G = replab.S(3);
-        %   >>> f = G.abstractIsomorphism;
-        %   >>> f.imageElement([2 3 1])
-        %       'x1'
+%         %   >>> G = replab.S(3);
+%         %   >>> f = G.abstractIsomorphism;
+%         %   >>> f.imageElement([2 3 1])
+%         %       'x1'
         %
         % Returns:
         %   `.FiniteIsomorphism`: Isomorphism to an abstract group

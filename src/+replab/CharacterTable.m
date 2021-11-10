@@ -169,20 +169,20 @@ classdef CharacterTable < replab.Obj
         % Note that this method is optimized when the representation is a tensor product.
         %
         % Example:
-        %   >>> G = replab.PermutationGroup.dihedral(3); % doctest: +cyclotomic
-        %   >>> ct = G.characterTable;
-        %   >>> rep2 = ct.irreps{2};
-        %   >>> rep3 = ct.irreps{3};
-        %   >>> rep = kron(rep2, rep3);
-        %   >>> isequal(ct.multiplicities(rep), [0 0 1])
-        %       1
+%         %   >>> G = replab.PermutationGroup.dihedral(3); % doctest: +cyclotomic
+%         %   >>> ct = G.characterTable;
+%         %   >>> rep2 = ct.irreps{2};
+%         %   >>> rep3 = ct.irreps{3};
+%         %   >>> rep = kron(rep2, rep3);
+%         %   >>> isequal(ct.multiplicities(rep), [0 0 1])
+%         %       1
         %
         % Example:
-        %   >>> G = replab.S(5); % doctest: +cyclotomic
-        %   >>> ct = G.characterTable;
-        %   >>> S5 = ct.group;
-        %   >>> isequal(ct.multiplicities(S5.naturalRep), [1 0 1 0 0 0 0])
-        %       1
+%         %   >>> G = replab.S(5); % doctest: +cyclotomic
+%         %   >>> ct = G.characterTable;
+%         %   >>> S5 = ct.group;
+%         %   >>> isequal(ct.multiplicities(S5.naturalRep), [1 0 1 0 0 0 0])
+%         %       1
         %
         % Args:
         %   arg (`.Character` or `.Rep`): Character or representation of `.group`
@@ -317,12 +317,12 @@ classdef CharacterTable < replab.Obj
         % Maps the character table under an isomorphism
         %
         % Example:
-        %   >>> D6a = replab.PermutationGroup.of([3 2 1], [2 3 1]); % doctest: +cyclotomic
-        %   >>> D6b = replab.PermutationGroup.of([1 4 3 2], [1 3 4 2]);
-        %   >>> f = D6a.isomorphismByImages(D6b, 'preimages', D6a.generators, 'images', D6b.generators);
-        %   >>> Ca = D6a.characterTable;
-        %   >>> Cb = Ca.imap(f);
-        %   >>> Cb.laws.checkSilent;
+%         %   >>> D6a = replab.PermutationGroup.of([3 2 1], [2 3 1]); % doctest: +cyclotomic
+%         %   >>> D6b = replab.PermutationGroup.of([1 4 3 2], [1 3 4 2]);
+%         %   >>> f = D6a.isomorphismByImages(D6b, 'preimages', D6a.generators, 'images', D6b.generators);
+%         %   >>> Ca = D6a.characterTable;
+%         %   >>> Cb = Ca.imap(f);
+%         %   >>> Cb.laws.checkSilent;
         %
         % Args:
         %   f (`.FiniteIsomorphism`): Isomorphism with ``self.group.isSubgroupOf(f.source)``

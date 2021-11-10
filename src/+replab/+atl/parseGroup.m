@@ -30,9 +30,9 @@ function group = parseGroup(data)
 %
 %
 % Example:
-%   >>> json = '{"relators" : [[1,1,1],[2,2,2],[1,2,1,2]],"order" : "12","generatorNames" : ["x1","x2"],"permutationGenerators" : [[4,1,3,2],[4,2,1,3]],"classes" : [[1,2,3,4],[2,1,4,3],[3,1,2,4],[4,1,3,2]],"derivedSeriesAbelianInvariants" : [[3], [2,2], []]}';
-%   >>> data = replab.util.parseJSON(json);
-%   >>> G = replab.atl.parseGroup(data);
+% %   >>> json = '{"relators" : [[1,1,1],[2,2,2],[1,2,1,2]],"order" : "12","generatorNames" : ["x1","x2"],"permutationGenerators" : [[4,1,3,2],[4,2,1,3]],"classes" : [[1,2,3,4],[2,1,4,3],[3,1,2,4],[4,1,3,2]],"derivedSeriesAbelianInvariants" : [[3], [2,2], []]}';
+% %   >>> data = replab.util.parseJSON(json);
+% %   >>> G = replab.atl.parseGroup(data);
 %
 % Args:
 %   data (struct): Struct read from a JSON file

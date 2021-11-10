@@ -2,18 +2,18 @@ classdef Character < replab.Obj
 % Describes a character
 %
 % Example:
-%   >>> D = replab.PermutationGroup.dihedral(6); % doctest: +cyclotomic
-%   >>> rep = D.repByImages('R', 1, 'preimages', {[6 5 4 3 2 1], [2 3 4 5 6 1]}, 'images', {1 -1});
-%   >>> c = replab.Character.fromRep(rep);
-%   >>> g = [2 3 4 5 6 1];
-%   >>> c.value(g)
-%       -1
-%   >>> c1 = c + c;
-%   >>> c1.value(g)
-%       -2
-%   >>> c2 = c * c;
-%   >>> c2.value(g)
-%       1
+% %   >>> D = replab.PermutationGroup.dihedral(6); % doctest: +cyclotomic
+% %   >>> rep = D.repByImages('R', 1, 'preimages', {[6 5 4 3 2 1], [2 3 4 5 6 1]}, 'images', {1 -1});
+% %   >>> c = replab.Character.fromRep(rep);
+% %   >>> g = [2 3 4 5 6 1];
+% %   >>> c.value(g)
+% %       -1
+% %   >>> c1 = c + c;
+% %   >>> c1.value(g)
+% %       -2
+% %   >>> c2 = c * c;
+% %   >>> c2.value(g)
+% %       1
 
     properties (SetAccess = protected)
         group % (`.FiniteGroup`): Group on which this class function is defined

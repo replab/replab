@@ -58,10 +58,10 @@ classdef CompactGroup < replab.Group
         % Returns the direct product of groups
         %
         % Example:
-        %   >>> S3 = replab.S(3);
-        %   >>> G = S3.directProduct(S3, S3);
-        %   >>> G.order
-        %       216
+%         %   >>> S3 = replab.S(3);
+%         %   >>> G = S3.directProduct(S3, S3);
+%         %   >>> G.order
+%         %       216
         %
         % Args:
         %   varargin: Variable number of arguments of type `+replab.CompactGroup`

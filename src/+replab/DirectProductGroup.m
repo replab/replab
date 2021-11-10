@@ -164,11 +164,11 @@ classdef DirectProductGroup < replab.CompactGroup
         % Returns the morphism embedding the i-th factor into the direct product
         %
         % Example:
-        %   >>> S2 = replab.S(2);
-        %   >>> D = S2.directProduct(S2);
-        %   >>> m = D.injection(1);
-        %   >>> D.eqv({[2 1] [1 2]}, m.imageElement([2 1]))
-        %       1
+%         %   >>> S2 = replab.S(2);
+%         %   >>> D = S2.directProduct(S2);
+%         %   >>> m = D.injection(1);
+%         %   >>> D.eqv({[2 1] [1 2]}, m.imageElement([2 1]))
+%         %       1
         %
         % Args:
         %   i (integer): Factor index
@@ -190,11 +190,11 @@ classdef DirectProductGroup < replab.CompactGroup
         % Returns the morphism projecting this group into its i-th factor
         %
         % Example:
-        %   >>> S2 = replab.S(2);
-        %   >>> D = S2.directProduct(S2);
-        %   >>> m = D.projection(1);
-        %   >>> S2.eqv([2 1], m.imageElement({[2 1] [1 2]}))
-        %       1
+%         %   >>> S2 = replab.S(2);
+%         %   >>> D = S2.directProduct(S2);
+%         %   >>> m = D.projection(1);
+%         %   >>> S2.eqv([2 1], m.imageElement({[2 1] [1 2]}))
+%         %       1
         %
         % Args:
         %   i (integer): Factor index

@@ -414,17 +414,17 @@ classdef SubRep < replab.Rep
         % ``X * repC.image(g) = self.image(g) * X``
         %
         % Example:
-        %   >>> S3 = replab.S(3);
-        %   >>> rep = S3.naturalRep;
-        %   >>> Xrep = randn(3, 3);
-        %   >>> triv = rep.subRep([1;1;1]);
-        %   >>> std = rep.maschke(triv);
-        %   >>> E = triv.subEquivariantFrom(std);
-        %   >>> Xsub = E.projectFromParent(Xrep);
-        %   >>> isequal(size(Xsub), [1 2]) % map to trivial (dim=1) from std (dim=2)
-        %       1
-        %   >>> norm(Xsub) <= 1e-15
-        %       1
+%         %   >>> S3 = replab.S(3);
+%         %   >>> rep = S3.naturalRep;
+%         %   >>> Xrep = randn(3, 3);
+%         %   >>> triv = rep.subRep([1;1;1]);
+%         %   >>> std = rep.maschke(triv);
+%         %   >>> E = triv.subEquivariantFrom(std);
+%         %   >>> Xsub = E.projectFromParent(Xrep);
+%         %   >>> isequal(size(Xsub), [1 2]) % map to trivial (dim=1) from std (dim=2)
+%         %       1
+%         %   >>> norm(Xsub) <= 1e-15
+%         %       1
         %
         % Args:
         %   repC (`+replab.SubRep`): Subrepresentation on the source/column space
@@ -447,17 +447,17 @@ classdef SubRep < replab.Rep
         % ``X * self.image(g) = repR.image(g) * X``
         %
         % Example:
-        %   >>> S3 = replab.S(3);
-        %   >>> rep = S3.naturalRep;
-        %   >>> Xrep = randn(3, 3);
-        %   >>> triv = rep.subRep([1;1;1]);
-        %   >>> std = rep.maschke(triv);
-        %   >>> E = triv.subEquivariantTo(std);
-        %   >>> Xsub = E.projectFromParent(Xrep);
-        %   >>> isequal(size(Xsub), [2 1]) % map to std (dim=1) from triv (dim=1)
-        %       1
-        %   >>> norm(Xsub) <= 1e-15
-        %       1
+%         %   >>> S3 = replab.S(3);
+%         %   >>> rep = S3.naturalRep;
+%         %   >>> Xrep = randn(3, 3);
+%         %   >>> triv = rep.subRep([1;1;1]);
+%         %   >>> std = rep.maschke(triv);
+%         %   >>> E = triv.subEquivariantTo(std);
+%         %   >>> Xsub = E.projectFromParent(Xrep);
+%         %   >>> isequal(size(Xsub), [2 1]) % map to std (dim=1) from triv (dim=1)
+%         %       1
+%         %   >>> norm(Xsub) <= 1e-15
+%         %       1
         %
         % Args:
         %   repR (`+replab.SubRep`): Subrepresentation on the target/row space

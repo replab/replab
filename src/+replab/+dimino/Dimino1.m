@@ -10,7 +10,7 @@ function elements = Dimino1(group, generators, getSize, find, insert, at)
 %   group (`+replab.Group`): group used for composition, equivalence, and identity
 %
 % Example:
-%   >>> S3 = replab.S(3)
+%   >>> S3 = replab.S(3);
 %   >>> %replab.SimpleDimino({[2,3,1],[2,1,3]}, S3) returns all elements in the S3 permutation group
 
     ind = insert(group.identity); % Add the identity

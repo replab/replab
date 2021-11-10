@@ -2,14 +2,14 @@ classdef ComplexCharacterTable < replab.CharacterTable
 % Describes the standard character table of a group
 %
 % Example:
-%   >>> G = replab.PermutationGroup.dihedral(3); % doctest: +cyclotomic
-%   >>> G.characterTable
-%       Class  1a   3a   2a
-%        Size   1    2    3
-%
-%         X.1  1    1    1
-%         X.2  1    1   -1
-%         X.3  2   -1    0
+% %   >>> G = replab.PermutationGroup.dihedral(3); % doctest: +cyclotomic
+% %   >>> G.characterTable
+% %       Class  1a   3a   2a
+% %        Size   1    2    3
+% %
+% %         X.1  1    1    1
+% %         X.2  1    1   -1
+% %         X.3  2   -1    0
 %
 % The character values are stored as elements of the cyclotomic field, using the `.cyclotomic` class which requires
 % external libraries and a Java Virtual Machine available.
@@ -164,12 +164,12 @@ classdef ComplexCharacterTable < replab.CharacterTable
         % Maps the character table under an isomorphism
         %
         % Example:
-        %   >>> D6a = replab.PermutationGroup.of([3 2 1], [2 3 1]); % doctest: +cyclotomic
-        %   >>> D6b = replab.PermutationGroup.of([1 4 3 2], [1 3 4 2]);
-        %   >>> f = D6a.isomorphismByImages(D6b, 'preimages', D6a.generators, 'images', D6b.generators);
-        %   >>> Ca = D6a.characterTable;
-        %   >>> Cb = Ca.imap(f);
-        %   >>> Cb.laws.checkSilent;
+%         %   >>> D6a = replab.PermutationGroup.of([3 2 1], [2 3 1]); % doctest: +cyclotomic
+%         %   >>> D6b = replab.PermutationGroup.of([1 4 3 2], [1 3 4 2]);
+%         %   >>> f = D6a.isomorphismByImages(D6b, 'preimages', D6a.generators, 'images', D6b.generators);
+%         %   >>> Ca = D6a.characterTable;
+%         %   >>> Cb = Ca.imap(f);
+%         %   >>> Cb.laws.checkSilent;
         %
         % Args:
         %   f (`.FiniteIsomorphism`): Isomorphism with ``self.group.isSubgroupOf(f.source)``

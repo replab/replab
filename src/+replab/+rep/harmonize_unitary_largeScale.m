@@ -2,13 +2,13 @@ function gen = harmonize_unitary_largeScale(gen0, genM, nSamples, tolerances, Ip
 % Refines a generic non-unitary subrepresentation
 %
 % Example:
-%   >>> G = replab.S(3);
-%   >>> genM = replab.rep.GenSubRep.fromSubRep(G.standardRep.unitarize.collapse);
-%   >>> gen0 = replab.rep.GenSubRep.fromSubRep(G.standardRep.withNoise(0.1, 0.1));
-%   >>> gen = replab.rep.harmonize_unitary_largeScale(gen0, genM, 5, replab.rep.Tolerances, []);
-%   >>> g = [3 2 1];
-%   >>> norm(genM.image(g) - gen.image(g)) < 1e-10
-%       1
+% %   >>> G = replab.S(3);
+% %   >>> genM = replab.rep.GenSubRep.fromSubRep(G.standardRep.unitarize.collapse);
+% %   >>> gen0 = replab.rep.GenSubRep.fromSubRep(G.standardRep.withNoise(0.1, 0.1));
+% %   >>> gen = replab.rep.harmonize_unitary_largeScale(gen0, genM, 5, replab.rep.Tolerances, []);
+% %   >>> g = [3 2 1];
+% %   >>> norm(genM.image(g) - gen.image(g)) < 1e-10
+% %       1
 %
 % Args:
 %   gen0 (`+replab.+rep.GenSubRep`): Generic subrepresentation to harmonize

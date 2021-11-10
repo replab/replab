@@ -156,10 +156,10 @@ classdef Laws < replab.Str
         % Runs the randomized tests without using MOxUnit, and returns whether all tests passed
         %
         % Example:
-        %    >>> S10 = replab.S(10);
-        %    >>> S10laws = S10.laws;
-        %    >>> S10laws.checkSilent
-        %        1
+%         %    >>> S10 = replab.S(10);
+%         %    >>> S10laws = S10.laws;
+%         %    >>> S10laws.checkSilent
+%         %        1
         %
         % Returns:
         %   logical: True if all tests successful
