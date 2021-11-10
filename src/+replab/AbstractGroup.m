@@ -1,4 +1,4 @@
-classdef AbstractGroup < replab.NiceFiniteGroup
+classdef AbstractGroup < replab.gen.NiceFiniteGroup
 % Finite group defined using a presentation: a set of generators and a set of relations among generators
 %
 % The name of generator always start with a letter (a-z or A-Z), and then contain either letters (a-z or A-Z),
@@ -120,38 +120,38 @@ classdef AbstractGroup < replab.NiceFiniteGroup
 
     methods (Access = protected)
 
-        function G = computeNiceGroup(self)
-            G = self.permutationGroup;
-        end
-
-        function m = computeNiceMorphism(self)
-            m = replab.mrp.AbstractGroupNiceIsomorphism(self);
-        end
-
-        function A = computeAbstractGroup(self)
-            A = self;
-        end
-
-        function m = computeAbstractMorphism(self)
-            m = replab.FiniteIsomorphism.identity(self);
-        end
-
-        function R = computeRecognize(self)
-            R = [];
-            if ~self.inAtlas
-                R = replab.Atlas.recognize(self);
-            end
-        end
-
-        function R = computeFastRecognize(self)
-            R = [];
-            if ~self.inAtlas
-                R = self.niceGroup.fastRecognize;
-                if ~isempty(R)
-                    R = R.andThen(self.niceMorphism.inverse);
-                end
-            end
-        end
+% $$$         function G = computeNiceGroup(self)
+% $$$             G = self.permutationGroup;
+% $$$         end
+% $$$
+% $$$         function m = computeNiceMorphism(self)
+% $$$             m = replab.mrp.AbstractGroupNiceIsomorphism(self);
+% $$$         end
+% $$$
+% $$$         function A = computeAbstractGroup(self)
+% $$$             A = self;
+% $$$         end
+% $$$
+% $$$         function m = computeAbstractMorphism(self)
+% $$$             m = replab.FiniteIsomorphism.identity(self);
+% $$$         end
+% $$$
+% $$$         function R = computeRecognize(self)
+% $$$             R = [];
+% $$$             if ~self.inAtlas
+% $$$                 R = replab.Atlas.recognize(self);
+% $$$             end
+% $$$         end
+% $$$
+% $$$         function R = computeFastRecognize(self)
+% $$$             R = [];
+% $$$             if ~self.inAtlas
+% $$$                 R = self.niceGroup.fastRecognize;
+% $$$                 if ~isempty(R)
+% $$$                     R = R.andThen(self.niceMorphism.inverse);
+% $$$                 end
+% $$$             end
+% $$$         end
 
     end
 
@@ -271,16 +271,16 @@ classdef AbstractGroup < replab.NiceFiniteGroup
             end
         end
 
-        function m = renamingMorphism(self, newNames)
-        % Returns a morphism from this abstract group with the generators renamed
-        %
-        % Args:
-        %   newNames (cell(1,\*) of charstring): New generator names
-        %
-        % Returns:
-        %   `.AbstractGroup`: Updated copy
-            m = replab.mrp.AbstractGroupRenamingIsomorphism(self, self.withGeneratorNames(newNames));
-        end
+% $$$         function m = renamingMorphism(self, newNames)
+% $$$         % Returns a morphism from this abstract group with the generators renamed
+% $$$         %
+% $$$         % Args:
+% $$$         %   newNames (cell(1,\*) of charstring): New generator names
+% $$$         %
+% $$$         % Returns:
+% $$$         %   `.AbstractGroup`: Updated copy
+% $$$             m = replab.mrp.AbstractGroupRenamingIsomorphism(self, self.withGeneratorNames(newNames));
+% $$$         end
 
     end
 
@@ -355,63 +355,63 @@ classdef AbstractGroup < replab.NiceFiniteGroup
 
         % FiniteGroup
 
-        function A1 = withGeneratorNames(self, newNames)
-        % Returns a modified copy of this abstract group with the generators renamed
-        %
-        % Note: the abstract group returned by this method is not equal to the original abstract group. This differs
-        % from the behavior of `.withGeneratorNames` called on any `.FiniteGroup` which is not an abstract group.
-        %
-        % Args:
-        %   newNames (cell(1,\*) of charstring): New generator names
-        %
-        % Returns:
-        %   `.AbstractGroup`: Updated copy
-            if isequal(self.generatorNames, newNames)
-                A1 = self;
-                return
-            end
-            rels = cellfun(@(r) replab.fp.Letters.print(self.factorizeLetters(r), newNames), self.relators, 'uniform', 0);
-            args = {};
-            if self.inCache('order')
-                args{1,end+1} = 'order';
-                args{1,end+1}=  self.order;
-            end
-            if self.inCache('permutationGroup')
-                args{1,end+1} = 'permutationGenerators';
-                args{1,end+1} = self.permutationGroup.generators;
-            end
-            A1 = replab.AbstractGroup(newNames, rels, args{:});
-        end
+% $$$         function A1 = withGeneratorNames(self, newNames)
+% $$$         % Returns a modified copy of this abstract group with the generators renamed
+% $$$         %
+% $$$         % Note: the abstract group returned by this method is not equal to the original abstract group. This differs
+% $$$         % from the behavior of `.withGeneratorNames` called on any `.FiniteGroup` which is not an abstract group.
+% $$$         %
+% $$$         % Args:
+% $$$         %   newNames (cell(1,\*) of charstring): New generator names
+% $$$         %
+% $$$         % Returns:
+% $$$         %   `.AbstractGroup`: Updated copy
+% $$$             if isequal(self.generatorNames, newNames)
+% $$$                 A1 = self;
+% $$$                 return
+% $$$             end
+% $$$             rels = cellfun(@(r) replab.fp.Letters.print(self.factorizeLetters(r), newNames), self.relators, 'uniform', 0);
+% $$$             args = {};
+% $$$             if self.inCache('order')
+% $$$                 args{1,end+1} = 'order';
+% $$$                 args{1,end+1}=  self.order;
+% $$$             end
+% $$$             if self.inCache('permutationGroup')
+% $$$                 args{1,end+1} = 'permutationGenerators';
+% $$$                 args{1,end+1} = self.permutationGroup.generators;
+% $$$             end
+% $$$             A1 = replab.AbstractGroup(newNames, rels, args{:});
+% $$$         end
 
-        function A = abstractGroup(self, generatorNames)
-            if nargin < 2 || isempty(generatorNames)
-                generatorNames = self.generatorNames;
-            end
-            A = self.withGeneratorNames(generatorNames);
-        end
+% $$$         function A = abstractGroup(self, generatorNames)
+% $$$             if nargin < 2 || isempty(generatorNames)
+% $$$                 generatorNames = self.generatorNames;
+% $$$             end
+% $$$             A = self.withGeneratorNames(generatorNames);
+% $$$         end
+% $$$
+% $$$         function m = abstractMorphism(self, generatorNames)
+% $$$             if nargin < 2 || isempty(generatorNames)
+% $$$                 generatorNames = self.generatorNames;
+% $$$             end
+% $$$             m = self.renamingMorphism(generatorNames);
+% $$$         end
 
-        function m = abstractMorphism(self, generatorNames)
-            if nargin < 2 || isempty(generatorNames)
-                generatorNames = self.generatorNames;
-            end
-            m = self.renamingMorphism(generatorNames);
-        end
-
-        % NiceFiniteGroup
-
-        function perm = niceImage(self, word)
-            letters = self.factorizeLetters(word);
-            pg = self.permutationGroup;
-            perm = pg.identity;
-            for i = 1:length(letters)
-                l = letters(i);
-                if l > 0
-                    perm = pg.compose(perm, pg.generator(l));
-                else
-                    perm = pg.composeWithInverse(perm, pg.generator(-l));
-                end
-            end
-        end
+% $$$         % NiceFiniteGroup
+% $$$
+% $$$         function perm = niceImage(self, word)
+% $$$             letters = self.factorizeLetters(word);
+% $$$             pg = self.permutationGroup;
+% $$$             perm = pg.identity;
+% $$$             for i = 1:length(letters)
+% $$$                 l = letters(i);
+% $$$                 if l > 0
+% $$$                     perm = pg.compose(perm, pg.generator(l));
+% $$$                 else
+% $$$                     perm = pg.composeWithInverse(perm, pg.generator(-l));
+% $$$                 end
+% $$$             end
+% $$$         end
 
     end
 

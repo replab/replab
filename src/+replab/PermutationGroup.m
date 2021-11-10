@@ -1,6 +1,10 @@
 classdef PermutationGroup < replab.FiniteGroup & replab.PermutationFiniteSet
 % A base class for all permutation groups
 
+    properties (Access = protected)
+        generatorNames_ % (cell(1,\*) of charstring): Generator names
+    end
+
     methods % Constructor
 
         function self = PermutationGroup(domainSize, generators, varargin)
@@ -44,6 +48,28 @@ classdef PermutationGroup < replab.FiniteGroup & replab.PermutationFiniteSet
                     end
                 end
                 self.cache('relatorsFlat', relators, 'error');
+            end
+        end
+
+    end
+
+    methods (Access = protected)
+
+        function setGeneratorNames(self, names)
+        % Sets the generator names (called during construction)
+        %
+        % `.generators` must have been set before the call
+        %
+        % Args:
+        %   names (cell(1,\*) of charstring or ``[]``): Generator names
+            n = length(self.generators);
+            if n == 0
+                self.generatorNames_ = cell(1, 0);
+            elseif isempty(names)
+                self.generatorNames_ = replab.fp.defaultGeneratorNames(n);
+            else
+                assert(length(names) == n);
+                self.generatorNames_ = names;
             end
         end
 
@@ -381,7 +407,11 @@ classdef PermutationGroup < replab.FiniteGroup & replab.PermutationFiniteSet
             end
         end
 
-        function g = imageLetters(self, letters)
+        function names = generatorNames(self)
+            names = self.generatorNames_;
+        end
+
+        function g = imageFlat(self, letters)
             g = self.identity;
             L = length(letters);
             for i = 1:L

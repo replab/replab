@@ -18,7 +18,7 @@ classdef StaticFiniteGroupType < replab.gen.FiniteGroupType
         end
 
         function mu = isomorphism(self)
-            mu = replab.gen.StaticNiceIsomorphism(self);
+            mu = self.cached('isomorphism', @() replab.gen.StaticNiceIsomorphism(self));
         end
 
         function s = preimageElement(self, t)
@@ -32,14 +32,9 @@ classdef StaticFiniteGroupType < replab.gen.FiniteGroupType
             error('Abstract');
         end
 
-        function S = source(self, generators, niceIsomorphism)
+        function S = makeSource(self, generators, niceIsomorphism)
         % Constructs the group that contains all type elements
             S = replab.gen.FiniteGroup(self, generators, 'niceIsomorphism', niceIsomorphism);
-        end
-
-        function G = sourceGenerators(self)
-        % Returns a generating set for this type
-            error('Abstract');
         end
 
     end

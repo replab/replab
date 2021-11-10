@@ -137,6 +137,16 @@ classdef FiniteGroup < replab.FiniteGroup & replab.gen.FiniteSet
 % $$$             m = self.genericIsomorphism.andThen(self.genericGroup.abstractMorphism(generatorNames));
 % $$$         end
 
+        % Generators-related methods
+
+        function l = factorizeLetters(self, element)
+            l = self.nice.factorizeLetters(self.niceIsomorphism.imageElement(element));
+        end
+
+        function names = generatorNames(self)
+            names = self.nice.generatorNames;
+        end
+
         % Group elements
 
         function b = contains(self, g)
@@ -149,10 +159,6 @@ classdef FiniteGroup < replab.FiniteGroup & replab.gen.FiniteSet
 
         function o = elementOrder(self, g)
             o = self.nice.elementOrder(self.niceIsomorphism.imageElement(g));
-        end
-
-        function l = factorizeLetters(self, element)
-            l = self.nice.factorizeLetters(self.niceIsomorphism.imageElement(element));
         end
 
         % Group properties
@@ -207,59 +213,47 @@ classdef FiniteGroup < replab.FiniteGroup & replab.gen.FiniteSet
 
         % Subgroups
 
-        function sub = subgroupWithGenerators(self, generators, order)
-            if nargin < 3
-                order = [];
-            end
-            if length(generators) == self.nGenerators && all(arrayfun(@(i) self.eqv(self.generator(i), generators{i}), 1:length(generators)))
-                sub = self;
-            else
-                niceGroup = self.niceGroup.subgroupWithGenerators(cellfun(@(g) self.niceImage(g), generators, 'uniform', 0), order);
-                sub = self.niceSubgroup(generators, order, niceGroup);
-            end
-        end
-
-        function sub1 = centralizer(self, obj)
-            if isa(obj, 'replab.FiniteGroup')
-                sub = self.niceGroup.centralizer(self.niceMorphism.imageGroup(obj));
-            else
-                sub = self.niceGroup.centralizer(self.niceImage(obj));
-            end
-            sub1 = self.niceMorphism.preimageGroup(sub);
-        end
-
-        function sub1 = intersection(self, rhs)
-            sub1 = self.niceMorphism.preimageGroup(self.niceGroup.intersection(self.niceMorphism.imageGroup(rhs)));
-        end
+% $$$         function sub1 = centralizer(self, obj)
+% $$$             if isa(obj, 'replab.FiniteGroup')
+% $$$                 sub = self.niceGroup.centralizer(self.niceMorphism.imageGroup(obj));
+% $$$             else
+% $$$                 sub = self.niceGroup.centralizer(self.niceImage(obj));
+% $$$             end
+% $$$             sub1 = self.niceMorphism.preimageGroup(sub);
+% $$$         end
+% $$$
+% $$$         function sub1 = intersection(self, rhs)
+% $$$             sub1 = self.niceMorphism.preimageGroup(self.niceGroup.intersection(self.niceMorphism.imageGroup(rhs)));
+% $$$         end
 
         % Cosets
 
-        function B = findLeftConjugations(self, s, t, sCentralizer, tCentralizer)
-            s = self.niceImage(s);
-            t = self.niceImage(t);
-            if nargin < 4 || isempty(sCentralizer)
-                sCentralizer = [];
-            else
-                sCentralizer = self.niceMorphism.imageGroup(sCentralizer);
-            end
-            if nargin < 5 || isempty(tCentralizer)
-                tCentralizer = [];
-            else
-                tCentralizer = self.niceMorphism.imageGroup(tCentralizer);
-            end
-            B = self.niceGroup.findLeftConjugations(s, t, sCentralizer, tCentralizer);
-            group = self.niceMorphism.preimageGroup(B.group);
-            canRep = self.niceMorphism.preimageElement(B.representative);
-            B = replab.LeftCoset(group, canRep, self);
-        end
+% $$$         function B = findLeftConjugations(self, s, t, sCentralizer, tCentralizer)
+% $$$             s = self.niceImage(s);
+% $$$             t = self.niceImage(t);
+% $$$             if nargin < 4 || isempty(sCentralizer)
+% $$$                 sCentralizer = [];
+% $$$             else
+% $$$                 sCentralizer = self.niceMorphism.imageGroup(sCentralizer);
+% $$$             end
+% $$$             if nargin < 5 || isempty(tCentralizer)
+% $$$                 tCentralizer = [];
+% $$$             else
+% $$$                 tCentralizer = self.niceMorphism.imageGroup(tCentralizer);
+% $$$             end
+% $$$             B = self.niceGroup.findLeftConjugations(s, t, sCentralizer, tCentralizer);
+% $$$             group = self.niceMorphism.preimageGroup(B.group);
+% $$$             canRep = self.niceMorphism.preimageElement(B.representative);
+% $$$             B = replab.LeftCoset(group, canRep, self);
+% $$$         end
 
         % Relation to other groups
 
         % Representations
 
-        function rep = regularRep(self)
-            rep = self.niceMorphism.andThen(self.niceGroup.regularRep);
-        end
+% $$$         function rep = regularRep(self)
+% $$$             rep = self.niceMorphism.andThen(self.niceGroup.regularRep);
+% $$$         end
 
     end
 
@@ -267,16 +261,16 @@ classdef FiniteGroup < replab.FiniteGroup & replab.gen.FiniteSet
 
         % Morphisms
 
-        function m = morphismByImages_(self, target, preimages, images, imageElementFun)
-            first = self.niceMorphism; % maps this to the perm group
-            preimagesNG = cellfun(@(g) self.niceMorphism.imageElement(g), preimages, 'uniform', 0);
-            second = self.niceGroup.morphismByImages(target, 'preimages', preimagesNG, 'images', images, 'nChecks', 0); % from the perm group to the images
-            if isa(second, 'replab.FiniteMorphism')
-                m = replab.mrp.FiniteComposition(second, first, imageElementFun);
-            else
-                m = replab.mrp.Composition(second, first, imageElementFun);
-            end
-        end
+% $$$         function m = morphismByImages_(self, target, preimages, images, imageElementFun)
+% $$$             first = self.niceMorphism; % maps this to the perm group
+% $$$             preimagesNG = cellfun(@(g) self.niceMorphism.imageElement(g), preimages, 'uniform', 0);
+% $$$             second = self.niceGroup.morphismByImages(target, 'preimages', preimagesNG, 'images', images, 'nChecks', 0); % from the perm group to the images
+% $$$             if isa(second, 'replab.FiniteMorphism')
+% $$$                 m = replab.mrp.FiniteComposition(second, first, imageElementFun);
+% $$$             else
+% $$$                 m = replab.mrp.Composition(second, first, imageElementFun);
+% $$$             end
+% $$$         end
 
     end
 

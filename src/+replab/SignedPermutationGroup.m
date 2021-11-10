@@ -10,6 +10,8 @@ classdef SignedPermutationGroup < replab.gen.FiniteGroup
         function self = SignedPermutationGroup(domainSize, generators, varargin)
         % Constructs a signed permutation group
         %
+        % Two additional keyword arguments (``type`` and ``niceIsomorphism``) are used internally but are not part
+        % of the public API.
         %
         % Args:
         %   domainSize (integer): Domain size of this permutation group
@@ -19,7 +21,6 @@ classdef SignedPermutationGroup < replab.gen.FiniteGroup
         %   generatorNames (cell(1,\*) of charstring): Names of the generators
         %   order (vpi, optional): Order of the group
         %   relators (cell(1,\*) of charstring): Relators given either in word or letter format
-        %   type (`+replab.+signed.FiniteGroupType`): Group type
             args = struct('type', []);
             [args, rest] = replab.util.populateStruct(args, varargin);
             if isempty(args.type)

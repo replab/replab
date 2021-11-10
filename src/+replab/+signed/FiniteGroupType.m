@@ -82,10 +82,20 @@ classdef FiniteGroupType < replab.gen.StaticFiniteGroupType
             y(invFlip) = -y(invFlip);
         end
 
+        % FiniteGroupType
+
+        function G = groupWithGenerators(self, generators, varargin)
+            G = replab.SignedPermutationGroup(self.domainSize, generators, 'type', self, varargin{:});
+        end
+
         % StaticFiniteGroupType
 
         function t = imageElement(self, s)
             t = replab.SignedPermutation.toPermutation(s);
+        end
+
+        function S = makeSource(self, generators, niceIsomorphism)
+            S = replab.signed.SymmetricGroup(self.domainSize, generators, self, niceIsomorphism);
         end
 
         function s = preimageElement(self, t)
@@ -93,12 +103,13 @@ classdef FiniteGroupType < replab.gen.StaticFiniteGroupType
         end
 
         function G = sourceGenerators(self)
-            G = {[-1 2:self.domainSize]};
-            if self.domainSize > 1
-                G{1,end+1} = [2:self.domainSize 1];
+            n = self.domainSize;
+            G = {[-1 2:n]};
+            if n > 1
+                G{1,end+1} = [2:n 1];
             end
-            if self.domainSize > 2
-                G{1,end+1} = [2 1 3:self.domainSize];
+            if n > 2
+                G{1,end+1} = [2 1 3:n];
             end
         end
 

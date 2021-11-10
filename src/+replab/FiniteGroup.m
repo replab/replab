@@ -165,28 +165,6 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
 
     end
 
-    methods (Access = protected)
-
-        function setGeneratorNames(self, names)
-        % Sets the generator names (called during construction)
-        %
-        % `.generators` must have been set before the call
-        %
-        % Args:
-        %   names (cell(1,\*) of charstring or ``[]``): Generator names
-            n = length(self.generators);
-            if n == 0
-                self.generatorNames = cell(1, 0);
-            elseif isempty(names)
-                self.generatorNames = replab.fp.defaultGeneratorNames(n);
-            else
-                assert(length(names) == n);
-                self.generatorNames = names;
-            end
-        end
-
-    end
-
     methods % Conjugacy classes and character table
 
         function c = characterTable(self)
@@ -378,48 +356,7 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
 
     end
 
-    methods % Methods depending on the form of the generators
-
-        function res = knownRelators(self)
-        % Returns whether the relators of this group are known
-        %
-        % Returns:
-        %   logical: True if the relators are known already
-            error('Abstract');
-        end
-
-        function R = relatorsFlat(self)
-        % Returns the relators of a presentation of this finite group in the flat format
-        %
-        % See `.AbstractGroup` for a description of the presentation of a finite group
-        %
-        % Returns:
-        %   cell(1,\*) of integer(1,\*): Relators in flat form
-            error('Abstract');
-        end
-
-        function R = relatorsWord(self)
-        % Returns the relators of a presentation of this finite group
-        %
-        % Returns:
-        %   cell(1,\*) of charstring: Relators in word form
-            R = cellfun(@(r) self.flatToWord(r), self.relatorsFlat, 'uniform', 0);
-        end
-
-    end
-
-    methods % Elements
-
-        function o = elementOrder(self, g)
-        % Returns the order of a group element
-        %
-        % Args:
-        %   g (element): Group element
-        %
-        % Returns:
-        %   vpi: The order of ``g``, i.e. the smallest ``o`` such that ``g^o == identity``
-            error('Abstract');
-        end
+    methods % Generators-related methods
 
         function [l, r] = factorizeFlat(self, elementOrCoset)
         % Factorizes an element or a coset as a flat sequence in the generators
@@ -495,6 +432,22 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
             p = self.inverse(self.generators{i});
         end
 
+        function names = generatorNames(self)
+        % Returns the names of the group generators
+        %
+        % Returns:
+        %   cell(1,\*) of charstring: Generator names
+            error('Abstract');
+        end
+
+        function res = knownRelators(self)
+        % Returns whether the relators of this group are known
+        %
+        % Returns:
+        %   logical: True if the relators are known already
+            error('Abstract');
+        end
+
         function g = imageFlat(self, letters)
         % Returns the image of a flat word in the group generators
         %
@@ -534,6 +487,51 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
             n = length(self.generators);
         end
 
+
+        function R = relatorsFlat(self)
+        % Returns the relators of a presentation of this finite group in the flat format
+        %
+        % See `.AbstractGroup` for a description of the presentation of a finite group
+        %
+        % Returns:
+        %   cell(1,\*) of integer(1,\*): Relators in flat form
+            error('Abstract');
+        end
+
+        function R = relatorsWord(self)
+        % Returns the relators of a presentation of this finite group
+        %
+        % Returns:
+        %   cell(1,\*) of charstring: Relators in word form
+            R = cellfun(@(r) self.flatToWord(r), self.relatorsFlat, 'uniform', 0);
+        end
+
+        function l = wordToFlat(self, word)
+        % Parses a word into generator letters
+        %
+        % Args:
+        %   word (charstring): Word written using mathematical notation
+        %
+        % Returns:
+        %   integer(1,\*): Letters of the word
+            l = replab.fp.Letters.parse(word, self.generatorNames);
+        end
+
+    end
+
+    methods % Elements
+
+        function o = elementOrder(self, g)
+        % Returns the order of a group element
+        %
+        % Args:
+        %   g (element): Group element
+        %
+        % Returns:
+        %   vpi: The order of ``g``, i.e. the smallest ``o`` such that ``g^o == identity``
+            error('Abstract');
+        end
+
         function gens = smallGeneratingSet(self)
         % Returns a small set of elements generating the group
         %
@@ -551,17 +549,6 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
                     i = i + 1;
                 end
             end
-        end
-
-        function l = wordToFlat(self, word)
-        % Parses a word into generator letters
-        %
-        % Args:
-        %   word (charstring): Word written using mathematical notation
-        %
-        % Returns:
-        %   integer(1,\*): Letters of the word
-            l = replab.fp.Letters.parse(word, self.generatorNames);
         end
 
     end

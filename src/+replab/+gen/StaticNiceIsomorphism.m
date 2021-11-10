@@ -13,7 +13,7 @@ classdef StaticNiceIsomorphism < replab.gen.NiceIsomorphism
         %   type (`.StaticFiniteGroupType`): Static group type
             self.sourceType = type;
             sourceGenerators = type.sourceGenerators;
-            sourceFun = @(iso) type.source(sourceGenerators, iso);
+            sourceFun = @(iso) type.makeSource(sourceGenerators, iso);
             self.finishConstruction(sourceFun, sourceGenerators, type.niceType);
         end
 
