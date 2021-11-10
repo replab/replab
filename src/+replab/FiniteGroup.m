@@ -509,9 +509,6 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
         %   >>> G = replab.S(3);
         %   >>> G.imageWord('x1')
         %       2 3 1
-        %   >>> names = {'s', 't'};
-        %   >>> G.imageWord('s', names)
-        %       2 3 1
         %
         % Args:
         %   word (charstring): Word written using mathematical notation
