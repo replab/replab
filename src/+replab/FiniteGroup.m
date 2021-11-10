@@ -126,19 +126,27 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
 
         % Group
 
-% $$$         function m = innerAutomorphism(self, by)
-% $$$             generatorImages = cellfun(@(g) self.leftConjugate(by, g), self.generators, 'uniform', 0);
-% $$$             m = self.isomorphismByImages(self, 'preimages', self.generators, 'images', generatorImages);
-% $$$         end
+        function m = innerAutomorphism(self, by)
+            generatorImages = cellfun(@(g) self.leftConjugate(by, g), self.generators, 'uniform', 0);
+            m = self.isomorphismByImages(self, 'preimages', self.generators, 'images', generatorImages);
+        end
 
-% $$$         function m = isomorphismByFunctions(self, target, preimageElementFun, imageElementFun)
-% $$$             m = self.isomorphismByFunction(self, target, imageElementFun);
-% $$$         end
+        function m = isomorphismByFunctions(self, target, preimageElementFun, imageElementFun)
+            if isa(target, 'replab.FiniteGroup')
+                m = self.isomorphismByFunction(self, target, imageElementFun, 'preimageElementFun', preimageElementFun);
+            else
+                m = isomorphismByFunctions@replab.Group(self, target, preimageElementFun, imageElementFun);
+            end
+        end
 
-% $$$         function m = morphismByFunction(self, target, imageElementFun, torusMap)
-% $$$             imgs = cellfun(imageElementFun, self.generators, 'uniform', 0);
-% $$$             m = self.morphismByImages(target, 'preimages', self.generators, 'images', imgs, 'imageElementFun', imageElementFun);
-% $$$         end
+        function m = morphismByFunction(self, target, imageElementFun, torusMap)
+            if isa(target, 'replab.FiniteGroup')
+                imgs = cellfun(imageElementFun, self.generators, 'uniform', 0);
+                m = self.morphismByImages(target, 'preimages', self.generators, 'images', imgs, 'imageElementFun', imageElementFun);
+            else
+                m = morphismByFunction@replab.Group(self, target, imageElementFun, torusMap);
+            end
+        end
 
         % CompactGroup
 
@@ -1278,14 +1286,37 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
 % $$$             g1 = f.imageGroup(self);
 % $$$         end
 
-        function m = isomorphismByFunction(self, target, imageElementFun)
-        % Constructs an isomorphism to a group using an image function
+        function m = isomorphismByFunction(self, target, imageElementFun, varargin)
+        % Constructs an isomorphism to a finite group using an image function
+        %
+        % Due to the additional structure on ``target``, this method returns a `.FiniteIsomorphism`,
+        % and does not need an explicit preimage function.
+        %
+        % Args:
+        %   target (`.FiniteGroup`): Finite group isomorphic to the present group
+        %   imageElementFun (function_handle): Function that computes the image of a source element
+        %
+        % Keyword Args:
+        %   preimageElementFun (function_handle, optional): Function the computes the preimage of a target element
+        %
+        % Returns:
+        %   `.FiniteIsomorphism`: The constructed isomorphism
             imgs = cellfun(imageElementFun, self.generators, 'uniform', 0);
             m = self.isomorphismByImages(target, 'preimages', self.generators, 'images', imgs);
         end
 
         function m = isomorphismByImages(self, target, varargin)
         % Constructs an isomorphism to a group using images of generators
+        %
+        % Args:
+        %   target (`.FiniteGroup`): Target of the isomorphism
+        %
+        % Keyword Args:
+        %   preimages (cell(1, \*) of ``self`` elements): Preimages of the isomorphism which generate ``self``, defaults to ``self.generators``
+        %   images (cell(1, \*) of ``target`` elements): Images of the given preimages, defaults to ``target.generators``
+        %   imageElementFun (function_handle or ``[]``, optional): Image function, default: ``[]``
+        %   nChecks (integer or ``inf``): Number of randomized image checks to perform, if ``inf`` computes and verifies a presentation of ``self``
+            assert(isa(target, 'replab.FiniteGroup'));
             m = self.morphismByImages(target, varargin{:}).toIsomorphism;
         end
 
