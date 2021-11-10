@@ -1,7 +1,5 @@
 classdef FiniteIsomorphism < replab.Isomorphism & replab.FiniteMorphism
 % Describes an isomorphism between finite groups
-%
-% Adds the guarantee that `.target`/`.image` has for generators the images of the generators of `.source`
 
     methods % Implementations
 

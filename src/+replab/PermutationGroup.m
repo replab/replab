@@ -11,7 +11,6 @@ classdef PermutationGroup < replab.FiniteGroup & replab.PermutationFiniteSet
         %   generators (cell(1,\*) of permutation): Group generators
         %
         % Keyword Args:
-        %   abelianInvariants (cell(1,\*) of integer(1,\*)): Group abelian invariants
         %   chain (`+replab.+bsgs.Chain`): BSGS chain describing the group
         %   generatorNames (cell(1,\*) of charstring): Names of the generators
         %   order (vpi, optional): Order of the group
@@ -25,7 +24,7 @@ classdef PermutationGroup < replab.FiniteGroup & replab.PermutationFiniteSet
             self.type = type;
             self.representative_ = identity;
             self.identity = identity;
-            args = struct('abelianInvariants', 'none', 'chain', [], 'generatorNames', [], 'order', 0, 'relators', 'none');
+            args = struct('chain', [], 'generatorNames', [], 'order', 0, 'relators', 'none');
             [args, restArgs] = replab.util.populateStruct(args, varargin);
             % First set structural properties
             self.setGeneratorNames(args.generatorNames);
@@ -37,9 +36,6 @@ classdef PermutationGroup < replab.FiniteGroup & replab.PermutationFiniteSet
                 self.cache('order', args.order, '==');
             end
             % Rest of arguments
-            if ~isequal(args.abelianInvariants, 'none')
-                self.cache('abelianInvariants', args.abelianInvariants, 'isequal');
-            end
             if ~isequal(args.relators, 'none')
                 relators = args.relators;
                 for i = 1:length(relators)
@@ -80,33 +76,10 @@ classdef PermutationGroup < replab.FiniteGroup & replab.PermutationFiniteSet
     % $$$
 % $$$     methods (Access = protected) % Implementations
 % $$$
-% $$$         function classes = computeConjugacyClasses(self)
-% $$$         % TODO
-% $$$             if self.order < 100000
-% $$$                 C = replab.perm.conjugacyClassesByOrbits(self);
-% $$$                 n = length(C);
-% $$$                 classes = cell(1, n);
-% $$$                 for i = 1:n
-% $$$                     cl = sortrows(C{i}');
-% $$$                     classes{i} = replab.ConjugacyClass(self, cl(1,:));
-% $$$                 end
-% $$$             else
-% $$$                 classes = replab.perm.conjugacyClassesByRandomSearch(self);
-% $$$             end
-% $$$             reps = zeros(length(classes), self.domainSize);
-% $$$             for i = 1:length(classes)
-% $$$                 reps(i,:) = classes{i}.representative;
-% $$$             end
-% $$$             [~, I] = sortrows(reps);
-% $$$             classes = replab.ConjugacyClasses(self, classes(I)); % sort by minimal representative
-% $$$         end
-% $$$
-% $$$
 % $$$         function E = computeElementsSequence(self)
 % $$$             basis = replab.util.MixedRadix(self.lexChain.orbitSizes, 'oneBased', true, 'bigEndian', false);
 % $$$             E = replab.perm.GroupSequence(self.order, basis, self.lexChain);
 % $$$         end
-% $$$
 % $$$
 % $$$         function R = computeFastRecognize(self)
 % $$$         % TODO
@@ -428,32 +401,28 @@ classdef PermutationGroup < replab.FiniteGroup & replab.PermutationFiniteSet
             args = struct('isCanonical', false, 'centralizer', []);
             args = replab.util.populateStruct(args, varargin);
             if args.isCanonical
-                c = replab.perm.ConjugacyClass(self, el);
                 if ~isempty(args.centralizer)
-                    c.cache('representativeCentralizer', args.centralizer);
+                    c = replab.perm.ConjugacyClass(self, el, 'representativeCentralizer', args.centralizer);
+                else
+                    c = replab.perm.ConjugacyClass(self, el);
                 end
             else
                 [representative, g] = replab.bsgs.ConjugacyClasses.representative(self, el);
-                c = replab.perm.ConjugacyClass(self, representative);
                 if ~isempty(args.centralizer)
                     representativeCentralizer = args.centralizer.leftConjugateGroup(g);
-                    c.cache('representativeCentralizer', representativeCentralizer);
+                    c = replab.perm.ConjugacyClass(self, representative, 'representativeCentralizer', representativeCentralizer);
+                else
+                    c = replab.perm.ConjugacyClass(self, representative);
                 end
             end
         end
 
         function c = conjugacyClasses(self, varargin)
-            args = struct('classes', []);
-            args = replab.util.populateStruct(args, varargin);
-            if isempty(args.classes)
-                c = self.cached('conjugacyClasses', @() self.computeConjugacyClasses);
-            else
-                c = replab.ConjugacyClasses(self, classes);
-            end
+            c = self.cached('conjugacyClasses', @() replab.perm.conjugacyClasses(self));
         end
 
         function sub = derivedSubgroup(self)
-            sub = self.cached('derivedSubgroup', @() self.computeDerivedSubgroup);
+            sub = self.cached('derivedSubgroup', @() replab.perm..derivedSubgroup(self));
         end
 
         function o = elementOrder(self, p)
@@ -710,45 +679,6 @@ classdef PermutationGroup < replab.FiniteGroup & replab.PermutationFiniteSet
 
         function C = rightCosets(self, subgroup)
             C = replab.perm.RightCosets(self, subgroup);
-        end
-
-    end
-
-    methods (Access = protected)
-
-        function sub = computeDerivedSubgroup(self)
-            nG = self.nGenerators;
-            n = self.domainSize;
-            chain = replab.bsgs.Chain(n);
-            generators = {};
-            for i = 1:nG
-                gi = self.generator(i);
-                for j = 1:nG
-                    gj = self.generator(j);
-                    cm = self.composeWithInverse(self.compose(gi, gj), self.compose(gj, gi));
-                    if chain.stripAndAddStrongGenerator(cm)
-                        generators{1, end+1} = cm;
-                        chain.deterministicSchreierSims;
-                    end
-                end
-            end
-            % compute the normal closure
-            toCheck = generators;
-            while ~isempty(toCheck)
-                h = toCheck{end};
-                toCheck = toCheck(1:end-1);
-                for i = 1:nG
-                    gi = self.generator(i);
-                    cm = self.leftConjugate(gi, h);
-                    if chain.stripAndAddStrongGenerator(cm)
-                        generators{1, end+1} = cm;
-                        toCheck{1, end+1} = cm;
-                        chain.deterministicSchreierSims;
-                    end
-                end
-            end
-            chain.makeImmutable;
-            sub = replab.PermutationGroup(self.domainSize, generators, 'order', chain.order, 'chain', chain);
         end
 
     end

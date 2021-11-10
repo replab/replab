@@ -178,38 +178,7 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
             end
         end
 
-% $$$         function finishConstruction(self, varargin)
-% $$$         % Processes argument pairs to put in cache (helper for subclasses constructors)
-% $$$         %
-% $$$         % Must be called after `.identity` and `.generators` has been set.
-% $$$         %
-% $$$         % Keyword Args:
-% $$$         %   abelianInvariants (cell(1,\*) of integer(1,\*)): Precomputed Abelian invariants
-% $$$         %   generatorNames (cell(1,\*) of charstring): Names of the generators
-% $$$         %   order (vpi or integer): Order of the group
-% $$$         %   relators (cell(1,\*) of charstring): Relators given either in word or flat format
-% $$$             args = struct('generatorNames', {cell(1, 0)}, 'order', {0}, 'relators', {'none'}, 'abelianInvariants', {'none'});
-% $$$             args = replab.util.populateStruct(args, varargin);
-% $$$             if args.order > 0
-% $$$                 self.cache('order', args.order, '==');
-% $$$             end
-% $$$             if isempty(self.generators)
-% $$$                 self.generatorNames = cell(1, 0);
-% $$$             elseif isempty(args.generatorNames)
-% $$$                 self.generatorNames = replab.fp.defaultGeneratorNames(length(self.generators));
-% $$$             else
-% $$$                 assert(length(args.generatorNames) == length(self.generators), 'Mismatch in the number of generator and names');
-% $$$                 self.generatorNames = args.generatorNames;
-% $$$             end
-% $$$             if ~isequal(args.relators, 'none')
-% $$$             end
-% $$$             if ~isequal(args.abelianInvariants, 'none')
-% $$$                 self.cache('abelianInvariants', args.abelianInvariants, 'error');
-% $$$             end
-% $$$         end
-
     end
-
 
 % $$$     methods (Access = protected)
 % $$$
@@ -224,36 +193,6 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
 % $$$
 % $$$         function R = computeRecognize(self)
 % $$$             R = replab.Atlas.recognize(self);
-% $$$         end
-% $$$
-% $$$     end
-
-% $$$     methods % Cached properties management
-% $$$
-% $$$         function l = setComplexCharacterTable(self, value)
-% $$$         % Sets the complex character table
-% $$$         %
-% $$$         % `.complexCharacterTable` must be false
-% $$$         %
-% $$$         % Args:
-% $$$         %   value (`.ComplexCharacterTable`): Complex character table
-% $$$             error('Abstract');
-% $$$         end
-% $$$
-% $$$         function l = setConjugacyClasses(self)
-% $$$         % Sets the conjugacy classes
-% $$$         %
-% $$$         % Args:
-% $$$         %   value (`.ConjugacyClasses`): Conjugacy classes
-% $$$             error('Abstract');
-% $$$         end
-% $$$
-% $$$         function l = setRealCharacterTable(self)
-% $$$         % Sets the real character table
-% $$$         %
-% $$$         % Args:
-% $$$         %   value (`.RealCharacterTable`): Derived subgroup
-% $$$             error('Abstract');
 % $$$         end
 % $$$
 % $$$     end
@@ -302,9 +241,6 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
 
         function c = conjugacyClasses(self, varargin)
         % Returns the conjugacy classes of this group
-        %
-        % Keywords Args:
-        %   classes (cell(1,\*) of `.ConjugacyClass`, optional): Conjugacy class instances
         %
         % Returns:
         %   `+replab.ConjugacyClasses`: Conjugacy classes
