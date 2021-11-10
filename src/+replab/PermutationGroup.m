@@ -1151,11 +1151,11 @@ classdef PermutationGroup < replab.FiniteGroup & replab.PermutationFiniteSet
         % The generators of the group can be named by preceding them all by a charstring:
         %
         % Example:
-%         %   >>> G = replab.PermutationGroup.of('r', [2 3 4 1], 's', [4 3 2 1]);
-%         %   >>> G.order
-%         %       8
-%         %   >>> G.factorizeWord([3 4 1 2])
-%         %       'r^2'
+        %   >>> G = replab.PermutationGroup.of('r', [2 3 4 1], 's', [4 3 2 1]);
+        %   >>> G.order
+        %       8
+        %   >>> G.factorizeWord([3 4 1 2])
+        %       'r^2'
         %
         % This method cannot construct trivial groups without any generators.
         % In that case, use the constructor:
