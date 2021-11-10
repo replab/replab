@@ -129,7 +129,7 @@ coverage_html
 ##---------------------------------------------------
 # doctests and notebooks generated files .gitignore
 ##---------------------------------------------------
-tests/doctest
+tests/doctests
 tests/notebooks
 
 ##---------------------------------------------------
