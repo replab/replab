@@ -47,19 +47,6 @@ function result = replab_runtests(varargin)
         error('The MOxUnit library was not found. Did you run replab_init?')
     end
 
-    % Check the presence of the MOcov library if needed
-    if args.withCoverage
-        MOcovInPath = false;
-        try
-            mocov_get_absolute_path('.');
-            MOcovInPath = true;
-        catch
-        end
-        if ~MOcovInPath
-            error('The MOcov library was not found. Did you run replab_init?')
-        end
-    end
-
     % Check the presence of a SDP solver
     decentSDPSolverInPath = false;
     try
@@ -99,20 +86,18 @@ function result = replab_runtests(varargin)
 
     % calls the relevant test suite
     if args.withCoverage
-        % Here are the files patterns we don't want to include in the
-        % coverage monitoring. These are checked by MOcov individually in
-        % each subdirectory.
-        patternsToExclude = {'replab_*.m', 'callOriginalHelp.m'};
-
-        % We define the test command
-        command = 'moxunit_runtests(''tests/codeCoverageHelperFunction.m'', ''-verbose'', ''-with_coverage'', ''-cover'', ''src'', ''-cover_json_file'', ''coverage.json'', ''-cover_xml_file'', ''coverage.xml'', ''-cover_html_dir'', ''coverage_html''';
-        for i = 1:numel(patternsToExclude)
-            command = [command, ', ''-cover_exclude'', ''', patternsToExclude{i}, ''''];
+        try
+            addpath('tests');
+            % Set parameters
+            matlabTestSuite.slowtests(args.slowtests);
+            matlabTestSuite.doctests(args.doctests);
+            matlabTestSuite.notebooks(args.notebooks);
+            % Launch tests
+            result = matlabLaunchTestCovering;
+        catch
+            result = false;
         end
-        command = [command, ')']
-
-        % and call it
-        result = eval(command);
+        rmpath('tests');
     else
         result = moxunit_runtests('tests', '-verbose', '-recursive');
     end

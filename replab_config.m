@@ -19,7 +19,6 @@ if ~replab.init.existingSdpSolver().works
 end
 
 % This can be commented out if you're not running tests
-replab.init.MOcov().require;
 replab.init.MOxUnit().require;
 
 if usejava('jvm')
