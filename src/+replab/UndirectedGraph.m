@@ -93,7 +93,7 @@ classdef UndirectedGraph < replab.graph.Graph
             % Remove duplicated edges
             if (numel(weights) > 1) && (numel(weights) == size(edges,1))
                 % We add up the weights associated to identical edges
-                [edges, IA, IC] = unique(edges, 'rows');
+                [edges, IA, IC] = unique(edges, 'rows', 'first');
                 weights = full(sparse(IC, 1, weights));
             else
                 % The edge weight remains uniform
