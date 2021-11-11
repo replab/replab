@@ -1,5 +1,5 @@
 function showUrls
-    deps = {replab.init.cyclolab replab.init.MOcov replab.init.MOxUnit replab.init.sdpt3 replab.init.YALMIP};
+    deps = {replab.init.cyclolab replab.init.MOxUnit replab.init.sdpt3 replab.init.YALMIP};
     fprintf('\nDownload and place those ZIP files in the external/ folder:\n\n');
     for i = 1:length(deps)
         dep = deps{i};
