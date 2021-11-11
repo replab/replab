@@ -29,7 +29,6 @@ function replab_init(varargin)
 %         Adding VPI to the path
 %         Adding MOxUnit to the path
 %         Adding embedded YALMIP to the path
-%         Adding MOcov to the path
 
     persistent allGood % set to true if everything is already set up previously, including running ``replab_config``
 

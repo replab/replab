@@ -82,7 +82,7 @@ initiated by `Denis Rosset <https://github.com/denisrosset>`_ and
 `Jean-Daniel Bancal <https://github.com/jdbancal>`_. The project has
 now more `contributors <https://github.com/replab/replab/graphs/contributors>`_.
 
-RepLAB references in the ``/external`` directory the following libraries: the `MOxUnit <https://github.com/MOxUnit/MOxUnit>`_ test framework by Nikolaas N. Oosterhof, the `MOcov <https://github.com/MOcov/MOcov>`_ code coverage report generator by Nikolaas N. Oosterhof, the `YALMIP <https://github.com/yalmip/YALMIP>`_ toolbox for optimization modeling by Johan Löfberg, the `SDPT3 <https://github.com/sqlp/sdpt3>`_ solver, and the `VPI <https://www.mathworks.com/matlabcentral/fileexchange/22725-variable-precision-integer-arithmetic>`_ big integer library by John D'Errico.
+RepLAB references in the ``/external`` directory the following libraries: the `MOxUnit <https://github.com/MOxUnit/MOxUnit>`_ test framework by Nikolaas N. Oosterhof, the `YALMIP <https://github.com/yalmip/YALMIP>`_ toolbox for optimization modeling by Johan Löfberg, the `SDPT3 <https://github.com/sqlp/sdpt3>`_ solver, and the `VPI <https://www.mathworks.com/matlabcentral/fileexchange/22725-variable-precision-integer-arithmetic>`_ big integer library by John D'Errico.
 
 Feedback and suggestions are always welcome. We ask participants to follow the guidelines of the `Typelevel Code of Conduct <https://typelevel.org/conduct.html>`_.
 
