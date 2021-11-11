@@ -79,7 +79,7 @@ classdef ConjugacyClasses
                     end
                 end
                 sub = stab2;
-                [candidates, I] = unique(candidates1, 'rows');
+                [candidates, I] = unique(candidates1, 'rows', 'first');
                 conjugates = conjugates1(I,:);
                 beta = beta + 1;
             end

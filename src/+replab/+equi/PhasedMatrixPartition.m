@@ -77,7 +77,7 @@ classdef PhasedMatrixPartition < replab.Obj
             po = self.phaseOrder;
             changed = false;
             % ordering of subsets: the sequence given by the first occurence of each subset index must be increasing
-            [sorted, I] = unique(self.subsetIndex(:)');
+            [sorted, I] = unique(self.subsetIndex(:)', 'first');
             if sorted(1) == 0 % we do not care about 0
                 sorted = sorted(2:end);
                 I = I(2:end);
