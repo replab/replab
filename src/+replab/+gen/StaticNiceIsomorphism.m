@@ -6,15 +6,26 @@ classdef StaticNiceIsomorphism < replab.gen.NiceIsomorphism
 
     methods
 
-        function self = StaticNiceIsomorphism(type)
+        function self = StaticNiceIsomorphism(sourceType, sourceGenerators, target)
         % Constructs a nice isomorphism for a static group type
         %
         % Args:
         %   type (`.StaticFiniteGroupType`): Static group type
-            self.sourceType = type;
-            sourceGenerators = type.sourceGenerators;
-            sourceFun = @(iso) type.makeSource(sourceGenerators, iso);
-            self.finishConstruction(sourceFun, sourceGenerators, type.niceType);
+            self.source = sourceType.makeIsomorphismSourceGroup(sourceGenerators, target, self);
+            self.target = target;
+            self.sourceType = sourceType;
+            self.torusMap = [];
+        end
+
+        function setSource(self, source)
+        % Sets the isomorphism source (internal)
+        %
+        % Hack used during construction of `+replab.AbstractGroup`, as the group is constructed
+        % before the group type.
+        %
+        % Args:
+        %   source (`+replab.FiniteGroup`): Source to set
+            self.source = source;
         end
 
     end

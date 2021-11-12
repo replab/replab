@@ -24,6 +24,16 @@ classdef FiniteSet < replab.FiniteSet
 
     methods % Implementations
 
+        % Str
+
+        function names = hiddenFields(self)
+            names = hiddenFields@replab.FiniteSet(self);
+            names{1,end+1} = 'nice';
+            names{1,end+1} = 'niceIsomorphism';
+        end
+
+        % FiniteSet
+
         function b = contains(self, el)
             b = self.niceIsomorphism.sourceContains(el) && self.nice.contains(self.niceIsomorphism.imageElement(el));
         end

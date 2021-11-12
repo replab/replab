@@ -131,7 +131,7 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
         end
 
         function m = isomorphismByFunctions(self, target, preimageElementFun, imageElementFun)
-            if isa(target, 'replab.FiniteGroup')
+            if isa(target, 'replab.FiniteGroup') || isa(target, 'replab.FiniteGroupType')
                 m = self.isomorphismByFunction(self, target, imageElementFun, 'preimageElementFun', preimageElementFun);
             else
                 m = isomorphismByFunctions@replab.Group(self, target, preimageElementFun, imageElementFun);
@@ -624,7 +624,11 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
         %
         % Returns:
         %   `.FiniteGroup`: Updated copy
-            error('Abstract');
+            if self.inCache('order')
+                res = self.type.groupWithGenerators(self.generators, 'order', self.order, 'generatorNames', newNames);
+            else
+                res = self.type.groupWithGenerators(self.generators, 'generatorNames', newNames);
+            end
         end
 
     end
@@ -1278,7 +1282,7 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
         % and does not need an explicit preimage function.
         %
         % Args:
-        %   target (`.FiniteGroup`): Finite group isomorphic to the present group
+        %   target (`.FiniteGroup` or `.FiniteGroupType`): Finite group isomorphic to the present group
         %   imageElementFun (function_handle): Function that computes the image of a source element
         %
         % Keyword Args:
@@ -1294,7 +1298,7 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
         % Constructs an isomorphism to a group using images of generators
         %
         % Args:
-        %   target (`.FiniteGroup`): Target of the isomorphism
+        %   target (`.FiniteGroup` or `.FiniteGroupType`): Target of the isomorphism
         %
         % Keyword Args:
         %   preimages (cell(1, \*) of ``self`` elements): Preimages of the isomorphism which generate ``self``, defaults to ``self.generators``
@@ -1310,7 +1314,7 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
         %
         % The type of the morphism depends on the type of ``target``:
         %
-        % * if ``target`` is a `.FiniteGroup`, this method returns a `.FiniteMorphism`,
+        % * if ``target`` is a `.FiniteGroup` or a `.FiniteGroupType`, this method returns a `.FiniteMorphism`,
         %
         % * if ``target`` is only a `.Group`, this method returns a `.Morphism`.
         %
@@ -1345,6 +1349,12 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
             end
             if isempty(args.images) && ~self.isTrivial
                 error('Images must be provided');
+            end
+            if isa(target, 'replab.gen.StaticFiniteGroupType')
+                target = target.parentGroup;
+            elseif isa(target, 'replab.FiniteGroupType')
+                isId = cellfun(@(g) target.isIdentity(g), args.images, 'uniform', 0);
+                target = target.groupWithGenerators(args.images(~isId));
             end
             assert(length(args.preimages) == length(args.images), 'Number of images does not match the number of preimages');
             preId = cellfun(@(g) self.isIdentity(g), args.preimages);
@@ -1420,120 +1430,120 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
 % $$$             error('Abstract');
 % $$$         end
 
-% $$$         function rho = repByImages(self, field, dimension, varargin)
-% $$$         % Constructs a finite dimensional representation of this group from preimages/images pairs
-% $$$         %
-% $$$         % The preimages need to generate this group. If the preimages are omitted, they default to
-% $$$         % the generators of this group.
-% $$$         %
-% $$$         % The images can either be exact, in which case they should be provided as `.cyclotomic` matrices,
-% $$$         % or as ``double`` matrices -- the latter only if they have integer entries.
-% $$$         % In the case of exact images, the keyword argument ``imagesErrorBound`` can be omitted.
-% $$$         % When images are exact, RepLAB has the freedom of performing matrix products containing an
-% $$$         % arbitrary number of factors without loss of precision, and thus a wider range of algorithm
-% $$$         % can be used. Also, the constructed representation can return exact images using ``rep.image(g, 'exact')``
-% $$$         %
-% $$$         % Otherwise, the provided images will be considered inexact. In that case, RepLAB uses a factorization
-% $$$         % algorithm to decompose group elements as short words in the preimages. The keyword argument
-% $$$         % ``imagesErrorBound`` should be given as well; it corresponds to an upper bound on the error of the
-% $$$         % matrix images in the Frobenius norm.
-% $$$         % Either a single number can be provided, as an upper bound on all images in the provided set; or an individual
-% $$$         % bound for each image. However, this error bound will be ignored for each image provided as an interval matrix.
-% $$$         % If inexact floating-point images are provided but ``imagesErrorBound`` is omitted, an ad-hoc error is
-% $$$         % estimated and a warning is emitted.
-% $$$         %
-% $$$         % If the images are exact, the ``isUnitary`` keyword parameter can be omitted.
-% $$$         %
-% $$$         % Example:
-% $$$         %   >>> S4 = replab.S(4);
-% $$$         %   >>> m = S4.repByImages('R', 1, 'images', {-1 -1});
-% $$$         %   >>> m.laws.checkSilent
-% $$$         %       1
-% $$$         %
-% $$$         % Args:
-% $$$         %   field ({'R', 'C'}): Whether the representation is real (R) or complex (C)
-% $$$         %   dimension (integer): Representation dimension
-% $$$         %
-% $$$         % Keyword Args:
-% $$$         %   preimages (cell(1,n) of ``self`` elements, optional): Preimages of the representation map which generate ``self``, defaults to ``self.generators``
-% $$$         %   images (cell(1,n) of double(d,d) or cyclotomic(d,d), may be sparse): Images of the given preimages
-% $$$         %   imagesErrorBound (double or double(1,d) or ``[]``): Error
-% $$$         %   isUnitary (logical or ``[]``, optional): Value of the constructed `.Rep.isUnitary`; a "true" value accelerates computations
-% $$$         %   isIrreducible (logical or ``[]``, optional): Value of the constructed `.Rep.isIrreducible`
-% $$$         %   trivialDimension (integer or ``[]``, optional): Value of the constructed `.Rep.trivialDimension`
-% $$$         %   frobeniusSchurIndicator (integer or ``[]``, optional): Value of the constructed `.Rep.frobeniusSchurIndicator`
-% $$$         %   divisionAlgebraName % ('R->C', 'C->R', 'H->C', 'H->R:rep', '', optional): Name of the division algebra encoding this representation respects, default ``''``
-% $$$         %
-% $$$         % Returns:
-% $$$         %   `+replab.RepByImages`: The constructed group representation
-% $$$             args = struct('preimages', {self.generators}, 'images', {{}});
-% $$$             if length(varargin) == 1 && iscell(varargin{1})
-% $$$                 warning('Deprecated call convention');
-% $$$                 rho = replab.rep.repByImages(self, field, dimension, 'images', varargin{1});
-% $$$             else
-% $$$                 rho = replab.rep.repByImages(self, field, dimension, varargin{:});
-% $$$             end
-% $$$         end
-% $$$
-% $$$         function rho = permutationRep(self, dimension, varargin)
-% $$$         % Constructs a permutation representation of this group
-% $$$         %
-% $$$         % The returned representation is real. Use `+replab.Rep.complexification` to obtain a complex representation.
-% $$$         %
-% $$$         % Example:
-% $$$         %   >>> C3 = replab.PermutationGroup.cyclic(3);
-% $$$         %   >>> rep = C3.permutationRep(3, 'preimages', {[2 3 1]}, 'images', {[3 1 2]});
-% $$$         %   >>> rep.dimension
-% $$$         %       3
-% $$$         %
-% $$$         % Args:
-% $$$         %   dimension (integer): Dimension of the representation
-% $$$         %
-% $$$         % Keyword Args:
-% $$$         %   preimages (cell(1,n) of ``self`` elements, optional): Preimages of the representation map which generate ``self``, defaults to ``self.generators``
-% $$$         %   images (cell(1,\*) of permutations): Images of the generators as permutations of size ``dimension``
-% $$$         %
-% $$$         % Returns:
-% $$$         %   `+replab.Rep`: The constructed group representation
-% $$$             args = struct('preimages', {self.generators}, 'images', {{}});
-% $$$             args = replab.util.populateStruct(args, varargin);
-% $$$             preimages = args.preimages;
-% $$$             images = cellfun(@(g) replab.Permutation.toSparseMatrix(g), args.images, 'uniform', 0);
-% $$$             assert(length(preimages) == length(images), 'Must provide as many images as preimages');
-% $$$             imageElements = cellfun(@(g) [g; zeros(1, dimension)], args.images, 'uniform', 0);
-% $$$             imageGroup = replab.perm.GeneralizedSymmetricGroup(dimension, 1);
-% $$$             rho = replab.rep.RepByImages_monomial(self, 'R', dimension, preimages, images, imageGroup, imageElements, ...
-% $$$                                                   'isIrreducible', dimension == 1);
-% $$$         end
-% $$$
-% $$$         function rho = signedPermutationRep(self, dimension, varargin)
-% $$$         % Returns a real signed permutation representation of this group
-% $$$         %
-% $$$         % The returned representation is real. Use ``rep.complexification`` to obtain a complex representation.
-% $$$         %
-% $$$         %   >>> S2 = replab.S(2);
-% $$$         %   >>> rep = S2.signedPermutationRep(1, 'preimages', {[2 1]}, 'images', {[-1]});
-% $$$         %   >>> rep.image([2 1])
-% $$$         %       -1
-% $$$         %
-% $$$         % Args:
-% $$$         %   dimension: Dimension of the representation
-% $$$         %
-% $$$         % Keyword Args:
-% $$$         %   preimages (cell(1,n) of ``self`` elements, optional): Preimages of the representation map which generate ``self``, defaults to ``self.generators``
-% $$$         %   images (cell(1,\*) of signed permutations): Images of the generators as signed permutations of size ``dimension``
-% $$$         %
-% $$$         % Returns:
-% $$$         %   `+replab.Rep`: The constructed group representation
-% $$$             args = struct('preimages', {self.generators}, 'images', {{}});
-% $$$             args = replab.util.populateStruct(args, varargin);
-% $$$             preimages = args.preimages;
-% $$$             images = cellfun(@(g) replab.SignedPermutation.toSparseMatrix(g), args.images, 'uniform', 0);
-% $$$             assert(length(preimages) == length(images), 'Must provide as many images as preimages');
-% $$$             imageElements = cellfun(@(g) [abs(g); (1-sign(g))/2], args.images, 'uniform', 0);
-% $$$             imageGroup = replab.perm.GeneralizedSymmetricGroup(dimension, 2);
-% $$$             rho = replab.rep.RepByImages_monomial(self, 'R', dimension, preimages, images, imageGroup, imageElements);
-% $$$         end
+        function rho = repByImages(self, field, dimension, varargin)
+        % Constructs a finite dimensional representation of this group from preimages/images pairs
+        %
+        % The preimages need to generate this group. If the preimages are omitted, they default to
+        % the generators of this group.
+        %
+        % The images can either be exact, in which case they should be provided as `.cyclotomic` matrices,
+        % or as ``double`` matrices -- the latter only if they have integer entries.
+        % In the case of exact images, the keyword argument ``imagesErrorBound`` can be omitted.
+        % When images are exact, RepLAB has the freedom of performing matrix products containing an
+        % arbitrary number of factors without loss of precision, and thus a wider range of algorithm
+        % can be used. Also, the constructed representation can return exact images using ``rep.image(g, 'exact')``
+        %
+        % Otherwise, the provided images will be considered inexact. In that case, RepLAB uses a factorization
+        % algorithm to decompose group elements as short words in the preimages. The keyword argument
+        % ``imagesErrorBound`` should be given as well; it corresponds to an upper bound on the error of the
+        % matrix images in the Frobenius norm.
+        % Either a single number can be provided, as an upper bound on all images in the provided set; or an individual
+        % bound for each image. However, this error bound will be ignored for each image provided as an interval matrix.
+        % If inexact floating-point images are provided but ``imagesErrorBound`` is omitted, an ad-hoc error is
+        % estimated and a warning is emitted.
+        %
+        % If the images are exact, the ``isUnitary`` keyword parameter can be omitted.
+        %
+        % Example:
+        %   >>> S4 = replab.S(4);
+        %   >>> m = S4.repByImages('R', 1, 'images', {-1 -1});
+        %   >>> m.laws.checkSilent
+        %       1
+        %
+        % Args:
+        %   field ({'R', 'C'}): Whether the representation is real (R) or complex (C)
+        %   dimension (integer): Representation dimension
+        %
+        % Keyword Args:
+        %   preimages (cell(1,n) of ``self`` elements, optional): Preimages of the representation map which generate ``self``, defaults to ``self.generators``
+        %   images (cell(1,n) of double(d,d) or cyclotomic(d,d), may be sparse): Images of the given preimages
+        %   imagesErrorBound (double or double(1,d) or ``[]``): Error
+        %   isUnitary (logical or ``[]``, optional): Value of the constructed `.Rep.isUnitary`; a "true" value accelerates computations
+        %   isIrreducible (logical or ``[]``, optional): Value of the constructed `.Rep.isIrreducible`
+        %   trivialDimension (integer or ``[]``, optional): Value of the constructed `.Rep.trivialDimension`
+        %   frobeniusSchurIndicator (integer or ``[]``, optional): Value of the constructed `.Rep.frobeniusSchurIndicator`
+        %   divisionAlgebraName % ('R->C', 'C->R', 'H->C', 'H->R:rep', '', optional): Name of the division algebra encoding this representation respects, default ``''``
+        %
+        % Returns:
+        %   `+replab.RepByImages`: The constructed group representation
+            args = struct('preimages', {self.generators}, 'images', {{}});
+            if length(varargin) == 1 && iscell(varargin{1})
+                warning('Deprecated call convention');
+                rho = replab.rep.repByImages(self, field, dimension, 'images', varargin{1});
+            else
+                rho = replab.rep.repByImages(self, field, dimension, varargin{:});
+            end
+        end
+
+        function rho = permutationRep(self, dimension, varargin)
+        % Constructs a permutation representation of this group
+        %
+        % The returned representation is real. Use `+replab.Rep.complexification` to obtain a complex representation.
+        %
+        % Example:
+        %   >>> C3 = replab.PermutationGroup.cyclic(3);
+        %   >>> rep = C3.permutationRep(3, 'preimages', {[2 3 1]}, 'images', {[3 1 2]});
+        %   >>> rep.dimension
+        %       3
+        %
+        % Args:
+        %   dimension (integer): Dimension of the representation
+        %
+        % Keyword Args:
+        %   preimages (cell(1,n) of ``self`` elements, optional): Preimages of the representation map which generate ``self``, defaults to ``self.generators``
+        %   images (cell(1,\*) of permutations): Images of the generators as permutations of size ``dimension``
+        %
+        % Returns:
+        %   `+replab.Rep`: The constructed group representation
+            args = struct('preimages', {self.generators}, 'images', {{}});
+            args = replab.util.populateStruct(args, varargin);
+            preimages = args.preimages;
+            images = cellfun(@(g) replab.Permutation.toSparseMatrix(g), args.images, 'uniform', 0);
+            assert(length(preimages) == length(images), 'Must provide as many images as preimages');
+            imageElements = cellfun(@(g) [g; zeros(1, dimension)], args.images, 'uniform', 0);
+            imageGroup = replab.perm.GeneralizedSymmetricGroup(dimension, 1);
+            rho = replab.rep.RepByImages_monomial(self, 'R', dimension, preimages, images, imageGroup, imageElements, ...
+                                                  'isIrreducible', dimension == 1);
+        end
+
+        function rho = signedPermutationRep(self, dimension, varargin)
+        % Returns a real signed permutation representation of this group
+        %
+        % The returned representation is real. Use ``rep.complexification`` to obtain a complex representation.
+        %
+        %   >>> S2 = replab.S(2);
+        %   >>> rep = S2.signedPermutationRep(1, 'preimages', {[2 1]}, 'images', {[-1]});
+        %   >>> rep.image([2 1])
+        %       -1
+        %
+        % Args:
+        %   dimension: Dimension of the representation
+        %
+        % Keyword Args:
+        %   preimages (cell(1,n) of ``self`` elements, optional): Preimages of the representation map which generate ``self``, defaults to ``self.generators``
+        %   images (cell(1,\*) of signed permutations): Images of the generators as signed permutations of size ``dimension``
+        %
+        % Returns:
+        %   `+replab.Rep`: The constructed group representation
+            args = struct('preimages', {self.generators}, 'images', {{}});
+            args = replab.util.populateStruct(args, varargin);
+            preimages = args.preimages;
+            images = cellfun(@(g) replab.SignedPermutation.toSparseMatrix(g), args.images, 'uniform', 0);
+            assert(length(preimages) == length(images), 'Must provide as many images as preimages');
+            imageElements = cellfun(@(g) [abs(g); (1-sign(g))/2], args.images, 'uniform', 0);
+            imageGroup = replab.perm.GeneralizedSymmetricGroup(dimension, 2);
+            rho = replab.rep.RepByImages_monomial(self, 'R', dimension, preimages, images, imageGroup, imageElements);
+        end
 
     end
 

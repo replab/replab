@@ -97,6 +97,14 @@ classdef FiniteGroup < replab.FiniteGroup & replab.gen.FiniteSet
 
     methods % Implementation
 
+        % Str
+
+        function names = hiddenFields(self)
+            names1 = hiddenFields@replab.gen.FiniteSet(self);
+            names2 = hiddenFields@replab.FiniteGroup(self);
+            names = union(names1, names2);
+        end
+
         % Domain
 
         function b = eqv(self, x, y)
@@ -123,6 +131,78 @@ classdef FiniteGroup < replab.FiniteGroup & replab.gen.FiniteSet
 
         % FiniteGroup
 
+        function a = abelianInvariants(self)
+            a = self.nice.abelianInvariants;
+        end
+
+        function c1 = centralizer(self, obj)
+            if isa(obj, 'replab.FiniteGroup')
+                c = self.nice.centralizer(self.niceIsomorphism.imageGroup(obj));
+            else
+                c = self.nice.centralizer(self.niceIsomorphism.imageElement(obj));
+            end
+            c1 = self.niceIsomorphism.preimageGroup(c);
+        end
+
+        function b = contains(self, g)
+            if self.niceIsomorphism.sourceContains(g)
+                b = self.nice.contains(self.niceIsomorphism.imageElement(g));
+            else
+                b = false;
+            end
+        end
+
+        function o = elementOrder(self, g)
+            o = self.nice.elementOrder(self.niceIsomorphism.imageElement(g));
+        end
+
+        function e = exponent(self)
+            e = self.nice.exponent;
+        end
+
+        function l = factorizeFlat(self, element)
+            l = self.nice.factorizeFlat(self.niceIsomorphism.imageElement(element));
+        end
+
+        function names = generatorNames(self)
+            names = self.nice.generatorNames;
+        end
+
+        function o = order(self)
+            o = self.nice.order;
+        end
+
+        function R = relatorsFlat(self)
+            R = self.nice.relatorsFlat;
+        end
+
+% $$$         function res1 = closure(self, obj)
+% $$$             if isa(obj, 'replab.FiniteGroup')
+% $$$                 % if one group contains the other
+% $$$                 if self.isSubgroupOf(obj)
+% $$$                     res1 = obj;
+% $$$                     return
+% $$$                 end
+% $$$                 if obj.isSubgroup(self)
+% $$$                     res1 = self;
+% $$$                     return
+% $$$                 end
+% $$$                 % otherwise do the computation
+% $$$                 % TODO: enlarge isomorphism if necessary
+% $$$                 res = self.nice.closure(self.niceIsomorphism.imageGroup(obj));
+% $$$             else
+% $$$                 % if the group already contains the element
+% $$$                 if self.contains(obj)
+% $$$                     res1 = self;
+% $$$                     return
+% $$$                 end
+% $$$                 % otherwise do the computation
+% $$$                 res = self.niceGroup.closure(self.type.niceImage(obj));
+% $$$             end
+% $$$             res1 = self.type.niceMorphism.preimageGroup(res);
+% $$$         end
+
+
 % $$$         function A = abstractGroup(self, generatorNames)
 % $$$             if nargin < 2 || isempty(generatorNames)
 % $$$                 generatorNames = self.generatorNames;
@@ -137,70 +217,9 @@ classdef FiniteGroup < replab.FiniteGroup & replab.gen.FiniteSet
 % $$$             m = self.genericIsomorphism.andThen(self.genericGroup.abstractMorphism(generatorNames));
 % $$$         end
 
-        % Generators-related methods
-
-        function l = factorizeLetters(self, element)
-            l = self.nice.factorizeLetters(self.niceIsomorphism.imageElement(element));
-        end
-
-        function names = generatorNames(self)
-            names = self.nice.generatorNames;
-        end
-
-        % Group elements
-
-        function b = contains(self, g)
-            if self.niceIsomorphism.sourceContains(g)
-                b = self.nice.contains(self.niceIsomorphism.imageElement(g));
-            else
-                b = false;
-            end
-        end
-
-        function o = elementOrder(self, g)
-            o = self.nice.elementOrder(self.niceIsomorphism.imageElement(g));
-        end
-
-        % Group properties
-
-        function a = abelianInvariants(self)
-            a = self.nice.abelianInvariants;
-        end
-
-        function e = exponent(self)
-            e = self.nice.exponent;
-        end
-
-        function o = order(self)
-            o = self.nice.order;
-        end
 
         % Construction of groups
 
-% $$$         function res1 = closure(self, obj)
-% $$$             if isa(obj, 'replab.FiniteGroup')
-% $$$                 % if one group contains the other
-% $$$                 if self.isSubgroupOf(obj)
-% $$$                     res1 = obj;
-% $$$                     return
-% $$$                 end
-% $$$                 if obj.isSubgroup(self)
-% $$$                     res1 = self;
-% $$$                     return
-% $$$                 end
-% $$$                 % otherwise do the computation
-% $$$                 res = self.genericGroup.closure(self.type.niceMorphism.imageGroup(obj));
-% $$$             else
-% $$$                 % if the group already contains the element
-% $$$                 if self.contains(obj)
-% $$$                     res1 = self;
-% $$$                     return
-% $$$                 end
-% $$$                 % otherwise do the computation
-% $$$                 res = self.niceGroup.closure(self.type.niceImage(obj));
-% $$$             end
-% $$$             res1 = self.type.niceMorphism.preimageGroup(res);
-% $$$         end
 % $$$
 % $$$         function res1 = normalClosure(self, obj)
 % $$$             if isa(obj, 'replab.FiniteGroup')
@@ -213,14 +232,6 @@ classdef FiniteGroup < replab.FiniteGroup & replab.gen.FiniteSet
 
         % Subgroups
 
-% $$$         function sub1 = centralizer(self, obj)
-% $$$             if isa(obj, 'replab.FiniteGroup')
-% $$$                 sub = self.niceGroup.centralizer(self.niceMorphism.imageGroup(obj));
-% $$$             else
-% $$$                 sub = self.niceGroup.centralizer(self.niceImage(obj));
-% $$$             end
-% $$$             sub1 = self.niceMorphism.preimageGroup(sub);
-% $$$         end
 % $$$
 % $$$         function sub1 = intersection(self, rhs)
 % $$$             sub1 = self.niceMorphism.preimageGroup(self.niceGroup.intersection(self.niceMorphism.imageGroup(rhs)));

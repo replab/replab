@@ -8,6 +8,10 @@ classdef FiniteGroupTypeLaws < replab.laws.GroupLaws & replab.laws.TotalOrderLaw
             self@replab.laws.TotalOrderLaws(T);
         end
 
+        function law_is_same_type_as_self_(self)
+            self.assert(self.T.isSameTypeAs(self.T));
+        end
+
     end
 
 end

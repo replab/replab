@@ -36,8 +36,8 @@ classdef PermutationGroup < replab.FiniteGroup & replab.PermutationFiniteSet
                 assert(~args.chain.isMutable);
                 self.cache('chain', args.chain, 'error');
             end
-            if args.order > 0
-                self.cache('order', args.order, '==');
+            if ~isequal(args.order, 0)
+                self.cache('order', args.order, 'error');
             end
             % Rest of arguments
             if ~isequal(args.relators, 'none')

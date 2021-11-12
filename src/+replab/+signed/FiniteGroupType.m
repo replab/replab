@@ -36,9 +36,36 @@ classdef FiniteGroupType < replab.gen.StaticFiniteGroupType
         %
         % Args:
         %   domainSize (integer): Size of the domain
-            self.niceType = replab.PermutationGroupType.make(2*domainSize);
             self.identity = 1:domainSize;
             self.domainSize = domainSize;
+            n = self.domainSize;
+            sourceGenerators = {[-1 2:n]};
+            if n > 1
+                sourceGenerators{1,end+1} = [2:n 1];
+            end
+            if n > 2
+                sourceGenerators{1,end+1} = [2 1 3:n];
+            end
+            orderFun = @() replab.util.factorial(domainSize)*replab.util.multiplyIntegers(ones(1, domainSize)*2);
+            sourceArgs = {'order', orderFun};
+            targetType = replab.PermutationGroupType.make(2*domainSize);
+            self.finishConstruction(sourceGenerators, sourceArgs, targetType);
+        end
+
+    end
+
+    methods % Implementations
+
+        function S = makeIsomorphismSourceGroup(self, generators, nice, niceIsomorphism)
+            S = replab.signed.SymmetricGroup(self, generators, nice, niceIsomorphism);
+        end
+
+    end
+
+    methods (Access = protected) % Implementations
+
+        function G = makeGenericGroup(self, generators, nice, niceIsomorphism)
+            G = replab.SignedPermutationGroup(self.domainSize, generators, 'type', self, 'nice', nice, 'niceIsomorphism', niceIsomorphism);
         end
 
     end
@@ -54,15 +81,6 @@ classdef FiniteGroupType < replab.gen.StaticFiniteGroupType
         function s = sample(self)
             n = self.domainSize;
             s = randperm(n) .* (randi([0 1], 1, n)*2-1);
-        end
-
-        % TotalOrder
-
-        function c = compare(self, x, y)
-            v = replab.SignedPermutation.toPermutation(x) - replab.SignedPermutation.toPermutation(y);
-            ind = find(v ~= 0, 1);
-            c = [sign(v(ind)) 0];
-            c = c(1);
         end
 
         % Monoid
@@ -84,8 +102,8 @@ classdef FiniteGroupType < replab.gen.StaticFiniteGroupType
 
         % FiniteGroupType
 
-        function G = groupWithGenerators(self, generators, varargin)
-            G = replab.SignedPermutationGroup(self.domainSize, generators, 'type', self, varargin{:});
+        function l = isSameTypeAs(self, otherType)
+            l = isa(otherType, 'replab.signed.FiniteGroupType') && self.domainSize == otherType.domainSize;
         end
 
         % StaticFiniteGroupType
@@ -94,23 +112,8 @@ classdef FiniteGroupType < replab.gen.StaticFiniteGroupType
             t = replab.SignedPermutation.toPermutation(s);
         end
 
-        function S = makeSource(self, generators, niceIsomorphism)
-            S = replab.signed.SymmetricGroup(self.domainSize, generators, self, niceIsomorphism);
-        end
-
         function s = preimageElement(self, t)
             s = replab.SignedPermutation.fromPermutation(t);
-        end
-
-        function G = sourceGenerators(self)
-            n = self.domainSize;
-            G = {[-1 2:n]};
-            if n > 1
-                G{1,end+1} = [2:n 1];
-            end
-            if n > 2
-                G{1,end+1} = [2 1 3:n];
-            end
         end
 
     end

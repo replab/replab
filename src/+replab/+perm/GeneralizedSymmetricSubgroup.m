@@ -1,17 +1,13 @@
-classdef GeneralizedSymmetricSubgroup < replab.NiceFiniteGroup
+classdef GeneralizedSymmetricSubgroup < replab.gen.FiniteGroup
 % Describes a subgroup of the wreath product of the symmetric group acting on copies of the cyclic group
-
-    properties (SetAccess = protected)
-        n % (integer): Number of copies of the cyclic group
-        m % (integer): Order of each cyclic group
-    end
 
     methods
 
         function self = GeneralizedSymmetricSubgroup(n, m, generators, varargin)
         % Constructs a subgroup of the generalized symmetric group
         %
-        % Additional keyword args (such as order) are passed to the `.FiniteGroup` constructor.
+        % Additional keyword arguments (``type``, ``nice`` and ``niceIsomorphism``) are used internally
+        % but are not part of the public API.
         %
         % Args:
         %   n (integer): Number of copies of the cyclic group
@@ -19,33 +15,22 @@ classdef GeneralizedSymmetricSubgroup < replab.NiceFiniteGroup
         %   generators (cell(1,\*) of group elements): Group generators
         %
         % Keyword Args:
-        %   type (`+replab.SignedPermutationGroup`): Type of this group if known, or ``'self'`` if this group is its own type
-            args = struct('type', {[]});
-            [args, restArgs] = replab.util.populateStruct(args, varargin);
-            type = args.type;
-            identity = [1:n; zeros(1, n)];
-            if isempty(type)
-                type = replab.perm.GeneralizedSymmetricGroup(n, m);
+        %   generatorNames (cell(1,\*) of charstring): Names of the generators
+        %   order (vpi, optional): Order of the group
+        %   relators (cell(1,\*) of charstring): Relators given either in word or letter format
+            args = struct('type', []);
+            [args, rest] = replab.util.populateStruct(args, varargin);
+            if isempty(args.type)
+                type = replab.perm.GeneralizedSymmetricGroupType(n, m);
+            else
+                type = args.type;
             end
-            self@replab.NiceFiniteGroup(identity, generators, type, restArgs{:});
-            self.n = n;
-            self.m = m;
+            self@replab.gen.FiniteGroup(type, generators, rest{:});
         end
 
     end
 
-    methods
-
-        function rho = naturalRep(self, field)
-        % Returns the natural representation of this group using generalized permutation matrices
-        %
-        % Args:
-        %   field ({'R', 'C'}): Whether the representation is real or complex
-        %
-        % Returns:
-        %   `+replab.Rep`: Representation
-            rho = replab.rep.GeneralizedPermutationNaturalRep(self, field);
-        end
+    methods % Matrix representation of group elements
 
         function M = toCyclotomicMatrix(self, x)
         % Returns the generalized permutation matrix corresponding to the given element
@@ -86,89 +71,6 @@ classdef GeneralizedSymmetricSubgroup < replab.NiceFiniteGroup
         % Returns:
         %   double(\*,\*): Double matrix
             M = full(self.toSparseMatrix(x));
-        end
-
-    end
-
-    methods % Implementations
-
-        % Domain
-
-        function b = eqv(self, x, y)
-            b = all(all(x == y));
-        end
-
-        % Monoid
-
-        function z = compose(self, x, y)
-            z = zeros(2, self.n);
-            z(1,:) = x(1,y(1,:));
-            z(2,:) = mod(x(2,y(1,:)) + y(2,:), self.m);
-        end
-
-        % Group
-
-        function y = inverse(self, x)
-            n = self.n;
-            m = self.m;
-            y = zeros(2, n);
-            y(1,x(1,:)) = 1:n;
-            y(2,x(1,:)) = mod(self.m - x(2,:), self.m);
-        end
-
-        % FiniteGroup
-
-        function G = withGeneratorNames(self, newNames)
-            if isequal(self.generatorNames, newNames)
-                G = self;
-                return
-            end
-            G = replab.GeneralizedSymmetricSubgroup(self.n, self.m, self.generators, 'generatorNames', newNames, 'type', self.type);
-        end
-
-        % NiceFiniteGroup
-
-        function res = hasSameTypeAs(self, rhs)
-            res = isa(rhs, 'replab.perm.GeneralizedSymmetricSubgroup') && (self.type.n == rhs.type.n) && (self.type.m == rhs.type.m);
-        end
-
-        function p = nicePreimage(self, p1)
-            p = zeros(2, self.n);
-            for i = 1:self.n
-                v = p1(self.m*(i-1)+1) - 1;
-                p(2,i) = mod(v, self.m);
-                p(1,i) = (v - p(2,i))/self.m + 1;
-            end
-        end
-
-        function p1 = niceImage(self, p)
-            p1 = zeros(self.m, self.n);
-            for i = 1:self.n
-                p1(:,i) = mod((0:self.m-1)+p(2,i), self.m) + self.m*(p(1,i)-1) + 1;
-            end
-            p1 = p1(:)';
-        end
-
-        function grp = niceSubgroup(self, generators, order, niceGroup)
-        % Constructs a permutation subgroup from its generators
-        %
-        % Args:
-        %   generators (cell(1,\*) of generalized permutations): List of generators given as a permutations in a row cell array
-        %   order (vpi, optional): Argument specifying the group order, if given can speed up computations
-        %   niceGroup (`+replab.PermutationGroup`, optional): Image of this subgroup under the nice morphism
-        %
-        % Returns:
-        %   `+replab.+perm.GeneralizedSymmetricSubgroup`: The constructed signed permutation subgroup
-            if nargin < 4
-                niceGroup = [];
-            end
-            if nargin < 3
-                order = [];
-            end
-            grp = replab.perm.GeneralizedSymmetricSubgroup(self.n, self.m, generators, 'order', order, 'type', self.type);
-            if ~isempty(niceGroup)
-                grp.cache('niceGroup', niceGroup, '==');
-            end
         end
 
     end

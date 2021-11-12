@@ -10,8 +10,8 @@ classdef SignedPermutationGroup < replab.gen.FiniteGroup
         function self = SignedPermutationGroup(domainSize, generators, varargin)
         % Constructs a signed permutation group
         %
-        % Two additional keyword arguments (``type`` and ``niceIsomorphism``) are used internally but are not part
-        % of the public API.
+        % Additional keyword arguments (``type``, ``nice`` and ``niceIsomorphism``) are used internally
+        % but are not part of the public API.
         %
         % Args:
         %   domainSize (integer): Domain size of this permutation group
@@ -65,51 +65,41 @@ classdef SignedPermutationGroup < replab.gen.FiniteGroup
             y(invFlip) = -y(invFlip);
         end
 
-        % FiniteGroup
-
-        function G = withGeneratorNames(self, newNames)
-            if isequal(self.generatorNames, newNames)
-                G = self;
-                return
-            end
-            G = replab.SignedPermutationGroup(self.domainSize, self.generators, 'generatorNames', newNames, 'type', self.type);
-        end
-
         % NiceFiniteGroup
 
         function res = hasSameTypeAs(self, rhs)
             res = isa(rhs, 'replab.SignedPermutationGroup') && (self.type.domainSize == rhs.type.domainSize);
         end
 
-        function p1 = nicePreimage(self, p)
-            p1 = replab.SignedPermutation.fromPermutation(p);
-        end
-
-        function p1 = niceImage(self, p)
-            p1 = replab.SignedPermutation.toPermutation(p);
-        end
-
-        function grp = niceSubgroup(self, generators, order, niceGroup)
-        % Constructs a permutation subgroup from its generators
-        %
-        % Args:
-        %   generators (row cell array): List of generators given as a permutations in a row cell array
-        %   order (vpi, optional): Argument specifying the group order, if given can speed up computations
-        %   niceGroup (`+replab.PermutationGroup`, optional): Image of this subgroup under the nice morphism
-        %
-        % Returns:
-        %   +replab.SignedPermutationGroup: The constructed signed permutation subgroup
-            if nargin < 4
-                niceGroup = [];
-            end
-            if nargin < 3
-                order = [];
-            end
-            grp = replab.SignedPermutationGroup(self.domainSize, generators, 'order', order, 'type', self.type);
-            if ~isempty(niceGroup)
-                grp.cache('niceGroup', niceGroup, '==');
-            end
-        end
+% $$$         function p1 = nicePreimage(self, p)
+% $$$             p1 = replab.SignedPermutation.fromPermutation(p);
+% $$$         end
+% $$$
+% $$$         function p1 = niceImage(self, p)
+% $$$             p1 = replab.SignedPermutation.toPermutation(p);
+% $$$         end
+% $$$
+% $$$         function grp = niceSubgroup(self, generators, order, niceGroup)
+% $$$         % Constructs a permutation subgroup from its generators
+% $$$         %
+% $$$         % Args:
+% $$$         %   generators (row cell array): List of generators given as a permutations in a row cell array
+% $$$         %   order (vpi, optional): Argument specifying the group order, if given can speed up computations
+% $$$         %   niceGroup (`+replab.PermutationGroup`, optional): Image of this subgroup under the nice morphism
+% $$$         %
+% $$$         % Returns:
+% $$$         %   +replab.SignedPermutationGroup: The constructed signed permutation subgroup
+% $$$             if nargin < 4
+% $$$                 niceGroup = [];
+% $$$             end
+% $$$             if nargin < 3
+% $$$                 order = [];
+% $$$             end
+% $$$             grp = replab.SignedPermutationGroup(self.domainSize, generators, 'order', order, 'type', self.type);
+% $$$             if ~isempty(niceGroup)
+% $$$                 grp.cache('niceGroup', niceGroup, '==');
+% $$$             end
+% $$$         end
 
     end
 
@@ -235,6 +225,18 @@ classdef SignedPermutationGroup < replab.gen.FiniteGroup
                 domainSize = length(generators{1});
                 G = replab.SignedPermutationGroup(domainSize, generators);
             end
+        end
+
+        function G = signedSymmetric(n)
+        % Creates the signed symmetric group of a given degree
+        %
+        % Args:
+        %   n (integer): Degree of the signed symmetric group
+        %
+        % Returns:
+        %   `.SignedPermutationGroup`: The signed symmetric group of degree ``n``
+            T = replab.signed.FiniteGroupType.make(n);
+            G = T.isomorphism.source;
         end
 
     end

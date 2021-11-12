@@ -8,14 +8,14 @@ classdef NiceIsomorphism < replab.gen.NiceIsomorphism
     properties (Access = protected)
         cycloSet % (`+replab.+numerical.CycloSet`): List of matrices in the order of enumeration
         sortedToEnum % (integer(1,\*)): Permutation from sorted to enumeration convention
-        enumToSorted % (integer(1,\*)): Permutatoin from enumeration to sorted convention
+        enumToSorted % (integer(1,\*)): Permutation from enumeration to sorted convention
     end
 
     methods
 
         function self = NiceIsomorphism(d, sourceGenerators)
-            sourceType = replab.MatrixGroupType(d);
-            d = sourceType.n;
+            sourceType = replab.matrix.FiniteGroupType(d);
+            d = sourceType.d;
             sourceGenerators = cellfun(@(g) replab.cyclotomic(g), sourceGenerators, 'uniform', 0);
             id = replab.cyclotomic.eye(d);
             cycloSet = replab.matrix.dimino(sourceGenerators, id);
@@ -35,7 +35,12 @@ classdef NiceIsomorphism < replab.gen.NiceIsomorphism
             self.cycloSet = cycloSet;
             self.sortedToEnum = sortedToEnum;
             self.enumToSorted = enumToSorted;
-            self.finishConstruction(@(niceIso) replab.gen.FiniteGroup(sourceType, niceIso.target, niceIso, sourceGenerators), sourceGenerators, targetType);
+            self.torusMap = [];
+            self.nElements = n;
+            targetGenerators = cellfun(@(g) self.imageElement(g), sourceGenerators, 'uniform', 0);
+            nice = replab.PermutationGroup(n, targetGenerators, 'order', n);
+            self.target = nice;
+            self.source = replab.MatrixGroup(d, sourceGenerators, 'nice', nice, 'niceIsomorphism', self);
         end
 
     end

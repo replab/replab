@@ -47,7 +47,11 @@ classdef SymmetricGroup < replab.PermutationGroup
             else
                 generators = {[2:domainSize 1] [2 1 3:domainSize]};
             end
-            self@replab.PermutationGroup(domainSize, generators, 'order', replab.util.factorial(domainSize));
+            self@replab.PermutationGroup(domainSize, generators, 'order', @() replab.util.factorial(domainSize));
+        end
+
+        function b = hasFastOrder(self)
+            b = true;
         end
 
     end

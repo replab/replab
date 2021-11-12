@@ -4,9 +4,8 @@ classdef SymmetricGroup < replab.SignedPermutationGroup
 
     methods
 
-        function self = SymmetricGroup(domainSize, generators, type, niceIsomorphism)
-            order = replab.util.factorial(domainSize)*replab.util.multiplyIntegers(ones(1, domainSize)*2);
-            self@replab.SignedPermutationGroup(domainSize, generators, 'niceIsomorphism', niceIsomorphism, 'type', type, 'order', order);
+        function self = SymmetricGroup(type, generators, nice, niceIsomorphism)
+            self@replab.SignedPermutationGroup(type.domainSize, generators, 'niceIsomorphism', niceIsomorphism, 'type', type, 'nice', nice);
         end
 
     end
