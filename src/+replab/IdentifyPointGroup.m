@@ -245,7 +245,7 @@ classdef IdentifyPointGroup < replab.Str
             natoms = size(coords, 2);
             [~, i1] = sort(coords(1, :));
             coords = coords(:, i1);
-            [~, v1] = unique(round(coords(1, :), ndec));
+            [~, v1] = unique(round(coords(1, :), ndec), 'first');
             degen1 = 1:natoms;
             degen1(v1) = [];
             while ~isempty(degen1)
@@ -255,7 +255,7 @@ classdef IdentifyPointGroup < replab.Str
                 i1(f1) = i1(f1(i2));
                 coords(:, f1) = coords(:, f1(i2));
 
-                [~, v2] = unique(round(coords(2, f1), ndec));
+                [~, v2] = unique(round(coords(2, f1), ndec), 'first');
                 degen2 = 1:length(f1);
                 degen2(:, v2) = [];
                 while ~isempty(degen2)

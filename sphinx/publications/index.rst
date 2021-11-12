@@ -4,7 +4,7 @@ Publications
 How to cite
 -----------
 
-Naturally, **RepLAB** must be referenced when used in published work. The reference work is
+If you use this software in your work, please cite it using the following reference:
 
     Rosset D., Montealegre-Mora F., Bancal JD., In: Paranjape M.B., MacKenzie R., Thomova Z., Winternitz P., Witczak-Krempa W. (eds) Quantum Theory and Symmetries. CRM Series in Mathematical Physics. Springer (2021).
 
@@ -22,7 +22,7 @@ For convenience, here is the BiBTeX reference:
      booktitle    = {Quantum Theory and Symmetries},
      year         = 2021,
      month        = March,
-     editor       = {Paranjape M.B. and MacKenzie R. and Thomova Z. and Winternitz P. and Witczak-Krempa W.},
+     editor       = {Paranjape, M.B. and MacKenzie, R. and Thomova, Z. and Winternitz, P. and Witczak-Krempa, W.},
      series       = {CRM Series in Mathematical Physics},
      pages        = 643-653,
      organization = {Proceedings of the 11th International Symposium, Montreal, Canada},
@@ -39,7 +39,7 @@ Below is a selection of scientific articles that use **RepLAB**. Let us know if 
 
 - `Quantum Key Distribution with Few Assumptions <https://arxiv.org/abs/2104.14574>`_
 
-- `Certifying Numerical Decompositions of Compact Group Representations" <https://arxiv.org/abs/2101.12244>`_
+- `Certifying Numerical Decompositions of Compact Group Representations <https://arxiv.org/abs/2101.12244>`_
 
 - `Bounding and simulating contextual correlations in quantum theory <https://arxiv.org/abs/2010.04751>`_
 

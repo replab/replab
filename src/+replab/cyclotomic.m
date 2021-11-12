@@ -416,21 +416,7 @@ classdef cyclotomic
         %
         % Args:
         %   array: Coefficients
-            if isa(array, 'char')
-                res = javaMethod('parseMatrix', 'cyclo.Lab', array);
-                assert(~res.isError, 'Parse error at character %d in ''%s''', res.errorIndex + 1, array);
-                d = javaMethod('data', res);
-                s = [javaMethod('nRows', res) javaMethod('nCols', res)];
-                self.data_ = d;
-                self.size_ = s;
-            elseif isa(array, 'replab.cyclotomic')
-                self.data_ = array.data;
-                self.size_ = size(array);
-            elseif isa(array, 'double') || isa(array, 'vpi') || iscell(array)
-                assert(nargin == 1, 'The two argument call is reserved when the array is of type cyclo.Cyclo[]');
-                self.data_ = replab.cyclotomic.convert(array(:));
-                self.size_ = size(array);
-            elseif isa(array, 'cyclo.Cyclo[]')
+            if isa(array, 'cyclo.Cyclo[]')
                 self.data_ = array;
                 self.size_ = size_;
             elseif isa(array, 'cyclo.Cyclo')
@@ -438,6 +424,20 @@ classdef cyclotomic
                 data(1) = array;
                 self.data_ = data;
                 self.size_ = size_;
+            elseif isa(array, 'replab.cyclotomic')
+                self.data_ = array.data;
+                self.size_ = size(array);
+            elseif isa(array, 'double') || isa(array, 'vpi') || iscell(array)
+                assert(nargin == 1, 'The two argument call is reserved when the array is of type cyclo.Cyclo[]');
+                self.data_ = replab.cyclotomic.convert(array(:));
+                self.size_ = size(array);
+            elseif ischar(array)
+                res = javaMethod('parseMatrix', 'cyclo.Lab', array);
+                assert(~res.isError, 'Parse error at character %d in ''%s''', res.errorIndex + 1, array);
+                d = javaMethod('data', res);
+                s = [javaMethod('nRows', res) javaMethod('nCols', res)];
+                self.data_ = d;
+                self.size_ = s;
             else
                 error('Incorrect constructor call');
             end
@@ -653,6 +653,8 @@ classdef cyclotomic
                 res = false;
                 return
             end
+            lhs = replab.cyclotomic(lhs);
+            rhs = replab.cyclotomic(rhs);
             res = all(javaMethod('eqv', 'cyclo.Lab', lhs.data, rhs.data));
         end
 
