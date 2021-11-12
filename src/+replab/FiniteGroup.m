@@ -605,7 +605,7 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
         % Example:
         %   >>> S4 = replab.S(4);
         %   >>> nc = S4.normalClosure(S4.subgroup({[2 3 1 4]}));
-        %   >>> nc == S4.subgroup({[2 3 1 4] [1 3 4 2]});
+        %   >>> nc == S4.subgroup({[2 3 1 4] [1 3 4 2]})
         %       1
         %
         % Args:
