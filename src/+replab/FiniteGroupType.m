@@ -1,9 +1,12 @@
 classdef FiniteGroupType < replab.Group & replab.TotalOrder
 % Describes a type of finite groups
 %
-% It is a possibly infinite group of which we construct finite subgroups.
+% It is a possibly infinite group, and this object is able to construct finite subgroups of itself.
 %
-% Examples of types include:
+% It also defines a (somewhat arbitrarily chosen) total order used, for example, to define
+% minimal canonical representatives of conjugacy classes and cosets.
+%
+% Examples of group types include:
 %
 % - permutations of a given domain ``1..n`` (the set of such permutations is finite),
 % - invertible matrices of a given size with coefficients in the cyclotomic field
@@ -11,9 +14,26 @@ classdef FiniteGroupType < replab.Group & replab.TotalOrder
 %    is finite),
 % - direct products of finite group types.
 %
-% On top of providing the group structure, this class provides methods to construct finite groups and subgroups.
-% It also defines a more or less arbitrary total order of elements, which is used to define representatives of
-% various `.FiniteSet` instances, such as conjugacy classes and cosets.
+% Note:
+%   For implementations purposes, there are several families of group types in RepLAB.
+%
+%   * The first is `+replab.PermutationGroupType` where computational group theory algorithms
+%     are implemented and used directly.
+%
+%   * The second is `+replab.+gen.FiniteGroupType`, in which the constructed objects delegate all
+%     computations to objects where the algorithms are actually implemented, through a
+%     "nice isomorphism".
+%
+%   For now, those two families are the only ones implemented. Natural extensions would be:
+%
+%   * Implementing algorithms for solvable groups through the polycyclic presentation as in
+%     e.g. GAP System.
+%
+%   * Implementing black box group algorithms, either through a naive enumeration approach
+%     (to validate existing algorithms), or through recent algorithms proposed for black box groups.
+%
+%   * Implementing matrix groups through a BSGS approach using the action of matrices on vectors;
+%     possibly also through recent algorithms based on composition trees.
 
     methods
 

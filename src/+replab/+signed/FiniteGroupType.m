@@ -56,7 +56,7 @@ classdef FiniteGroupType < replab.gen.StaticFiniteGroupType
 
     methods % Implementations
 
-        function S = makeIsomorphismSourceGroup(self, generators, nice, niceIsomorphism)
+        function S = makeParentGroup(self, generators, nice, niceIsomorphism)
             S = replab.signed.SymmetricGroup(self, generators, nice, niceIsomorphism);
         end
 

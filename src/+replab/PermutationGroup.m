@@ -441,6 +441,10 @@ classdef PermutationGroup < replab.FiniteGroup & replab.PermutationFiniteSet
             res = self.cached('isSimple', @() replab.perm.isSimple(self));
         end
 
+        function res = knownOrder(self)
+            res = self.inCache('order');
+        end
+
         function res = knownRelators(self)
             res = self.inCache('relatorsFlat');
         end

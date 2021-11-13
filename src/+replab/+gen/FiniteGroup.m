@@ -23,7 +23,7 @@ classdef FiniteGroup < replab.FiniteGroup & replab.gen.FiniteSet
             args = replab.util.populateStruct(args, varargin);
             if isempty(args.nice)
                 if isempty(args.niceIsomorphism)
-                    niceIsomorphism = type.constructIsomorphism(generators);
+                    niceIsomorphism = type.constructNiceIsomorphism(generators);
                 else
                     niceIsomorphism = args.niceIsomorphism;
                 end
@@ -60,11 +60,6 @@ classdef FiniteGroup < replab.FiniteGroup & replab.gen.FiniteSet
 
 % $$$     methods (Access = protected) % Implementations
 % $$$
-% $$$         function C = computeConjugacyClasses(self)
-% $$$             nc = self.genericGroup.conjugacyClasses;
-% $$$             C = nc.imap(self.genericIsomorphism.inverse);
-% $$$         end
-% $$$
 % $$$         function sub = computeDerivedSubgroup(self)
 % $$$             sub = self.genericIsomorphism.preimageGroup(self.genericGroup.derivedSubgroup);
 % $$$         end
@@ -95,9 +90,34 @@ classdef FiniteGroup < replab.FiniteGroup & replab.gen.FiniteSet
 % $$$
 % $$$     end
 
+    methods (Access = protected) % Implementations
+
+        % Morphisms
+
+        function m = morphismByImages_(self, target, preimages, images, imageElementFun)
+            first = self.niceIsomorphism; % maps this to the perm group
+            preimagesNG = cellfun(@(g) first.imageElement(g), preimages, 'uniform', 0);
+            second = self.nice.morphismByImages(target, 'preimages', preimagesNG, 'images', images, 'nChecks', 0); % from the perm group to the images
+            if isa(second, 'replab.FiniteMorphism')
+                m = replab.mrp.FiniteComposition(second, first, imageElementFun);
+            else
+                m = replab.mrp.Composition(second, first, imageElementFun);
+            end
+        end
+
+    end
+
     methods % Implementation
 
         % Str
+
+        function s = headerStr(self)
+            if self.knownOrder
+                s = sprintf('Finite group of order %s', strtrim(num2str(self.order));
+            else
+                s = 'Finite group';
+            end
+        end
 
         function names = hiddenFields(self)
             names1 = hiddenFields@replab.gen.FiniteSet(self);
@@ -114,8 +134,6 @@ classdef FiniteGroup < replab.FiniteGroup & replab.gen.FiniteSet
         function g = sample(self)
             g = self.niceIsomorphism.preimageElement(self.nice.sample);
         end
-
-        % FiniteSet
 
         % Monoid
 
@@ -144,37 +162,9 @@ classdef FiniteGroup < replab.FiniteGroup & replab.gen.FiniteSet
             c1 = self.niceIsomorphism.preimageGroup(c);
         end
 
-        function b = contains(self, g)
-            if self.niceIsomorphism.sourceContains(g)
-                b = self.nice.contains(self.niceIsomorphism.imageElement(g));
-            else
-                b = false;
-            end
-        end
-
-        function o = elementOrder(self, g)
-            o = self.nice.elementOrder(self.niceIsomorphism.imageElement(g));
-        end
-
-        function e = exponent(self)
-            e = self.nice.exponent;
-        end
-
-        function l = factorizeFlat(self, element)
-            l = self.nice.factorizeFlat(self.niceIsomorphism.imageElement(element));
-        end
-
-        function names = generatorNames(self)
-            names = self.nice.generatorNames;
-        end
-
-        function o = order(self)
-            o = self.nice.order;
-        end
-
-        function R = relatorsFlat(self)
-            R = self.nice.relatorsFlat;
-        end
+% $$$         function res = closure()
+% $$$             TODO
+% $$$         end
 
 % $$$         function res1 = closure(self, obj)
 % $$$             if isa(obj, 'replab.FiniteGroup')
@@ -201,6 +191,64 @@ classdef FiniteGroup < replab.FiniteGroup & replab.gen.FiniteSet
 % $$$             end
 % $$$             res1 = self.type.niceMorphism.preimageGroup(res);
 % $$$         end
+
+
+% $$$         function c = conjugacyClass(self, el, varargin)
+% $$$             TODO
+% $$$         end
+
+% $$$         function C = conjugacyClass(self, varargin)
+% $$$         % TODO
+% $$$     end
+
+        function sub = derivedSubgroup(self)
+            sub = self.niceIsomorphism.preimageGroup(self.nice.derivedSubgroup);
+        end
+
+        function o = elementOrder(self, g)
+            o = self.nice.elementOrder(self.niceIsomorphism.imageElement(g));
+        end
+
+        function e = exponent(self)
+            e = self.nice.exponent;
+        end
+
+        function l = factorizeFlat(self, element)
+            if isa(element, 'replab.FiniteSet')
+                l = self.nice.factorizeFlat(element.imap(self.niceIsomorphism));
+            else
+                l = self.nice.factorizeFlat(self.niceIsomorphism.imageElement(element));
+            end
+        end
+
+        function C = findLeftConjugations(self, s, t, varargin)
+            mapGroup = @(G) self.niceIsomorphism.imageGroup(G);
+            args1 = replab.kv.map(varargin, struct('sCentralizer', mapGroup, 'tCentralizer', mapGroup));
+            s1 = self.niceIsomorphism.imageElement(s);
+            t1 = self.niceIsomorphism.imageElement(t);
+            C1 = self.nice.findLeftConjugations(s1, t1, args{:});
+            C = C1.imap(self.niceIsomorphism.inverse);
+        end
+
+        function names = generatorNames(self)
+            names = self.nice.generatorNames;
+        end
+
+        function res = intersection(self, other)
+        end
+
+        function res = knownOrder(self)
+            res = self.nice.knownOrder;
+        end
+
+        function o = order(self)
+            o = self.nice.order;
+        end
+
+        function R = relatorsFlat(self)
+            R = self.nice.relatorsFlat;
+        end
+
 
 
 % $$$         function A = abstractGroup(self, generatorNames)
@@ -264,23 +312,6 @@ classdef FiniteGroup < replab.FiniteGroup & replab.gen.FiniteSet
 
 % $$$         function rep = regularRep(self)
 % $$$             rep = self.niceMorphism.andThen(self.niceGroup.regularRep);
-% $$$         end
-
-    end
-
-    methods (Access = protected)
-
-        % Morphisms
-
-% $$$         function m = morphismByImages_(self, target, preimages, images, imageElementFun)
-% $$$             first = self.niceMorphism; % maps this to the perm group
-% $$$             preimagesNG = cellfun(@(g) self.niceMorphism.imageElement(g), preimages, 'uniform', 0);
-% $$$             second = self.niceGroup.morphismByImages(target, 'preimages', preimagesNG, 'images', images, 'nChecks', 0); % from the perm group to the images
-% $$$             if isa(second, 'replab.FiniteMorphism')
-% $$$                 m = replab.mrp.FiniteComposition(second, first, imageElementFun);
-% $$$             else
-% $$$                 m = replab.mrp.Composition(second, first, imageElementFun);
-% $$$             end
 % $$$         end
 
     end

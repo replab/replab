@@ -1,4 +1,5 @@
 classdef StaticNiceIsomorphism < replab.gen.NiceIsomorphism
+% Default implementation of a nice isomorphism for well-behaved group types
 
     properties (SetAccess = protected)
         sourceType % (`+replab.+gen.StaticFiniteGroupType`): Source type
@@ -9,9 +10,14 @@ classdef StaticNiceIsomorphism < replab.gen.NiceIsomorphism
         function self = StaticNiceIsomorphism(sourceType, sourceGenerators, target)
         % Constructs a nice isomorphism for a static group type
         %
+        % See `+replab.+gen.StaticFiniteGroupType.finishConstruction` for an explanation
+        % of the overall mechanism.
+        %
         % Args:
-        %   type (`.StaticFiniteGroupType`): Static group type
-            self.source = sourceType.makeIsomorphismSourceGroup(sourceGenerators, target, self);
+        %   sourceType (`.StaticFiniteGroupType`): Static group type for which we construct a nice isomorphism
+        %   sourceGenerators (cell(1,\.*) of ``sourceType`` elements): Generators for this isomorphism source
+        %   target (`+replab.FiniteGroup`) : Target of this isomorphism, with generators in one-to-one correspondance with the given ``sourceGenerators``
+            self.source = sourceType.makeParentGroup(sourceGenerators, target, self);
             self.target = target;
             self.sourceType = sourceType;
             self.torusMap = [];
@@ -20,8 +26,8 @@ classdef StaticNiceIsomorphism < replab.gen.NiceIsomorphism
         function setSource(self, source)
         % Sets the isomorphism source (internal)
         %
-        % Hack used during construction of `+replab.AbstractGroup`, as the group is constructed
-        % before the group type.
+        % Hack used during construction of `+replab.AbstractGroup`, to solve a problem with
+        % circular references.
         %
         % Args:
         %   source (`+replab.FiniteGroup`): Source to set

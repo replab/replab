@@ -264,6 +264,14 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
             R = self.cached('fastRecognize', @() self.computeFastRecognize);
         end
 
+        function res = knownOrder(self)
+        % Returns whether the order of this group has already been computed
+        %
+        % Returns:
+        %   logical: True if the order is known
+            error('Abstract');
+        end
+
         function res = isCyclic(self)
         % Returns whether this group is a cyclic group
         %

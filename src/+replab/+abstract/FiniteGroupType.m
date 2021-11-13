@@ -62,8 +62,8 @@ classdef FiniteGroupType < replab.gen.StaticFiniteGroupType
             t = self.permutationGroup.imageWord(s);
         end
 
-        function S = makeIsomorphismSourceGroup(self, generators, nice, niceIsomorphism)
-            S = [];
+        function S = makeParentGroup(self, generators, nice, niceIsomorphism)
+            S = []; % will be filled up afterwards
         end
 
         function s = preimageElement(self, t)
