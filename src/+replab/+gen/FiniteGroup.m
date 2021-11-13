@@ -58,38 +58,6 @@ classdef FiniteGroup < replab.FiniteGroup & replab.gen.FiniteSet
 
     end
 
-% $$$     methods (Access = protected) % Implementations
-% $$$
-% $$$         function sub = computeDerivedSubgroup(self)
-% $$$             sub = self.genericIsomorphism.preimageGroup(self.genericGroup.derivedSubgroup);
-% $$$         end
-% $$$
-% $$$         function E = computeElements(self)
-% $$$             atFun = @(ind) self.genericIsomorphism.preimageElement(self.genericGroup.elements.at(ind));
-% $$$             findFun = @(el) self.genericGroup.elements.find(self.genericIsomorphism.imageElement(el));
-% $$$             E = replab.IndexedFamily.lambda(self.order, atFun, findFun);
-% $$$         end
-% $$$
-% $$$         function res = computeIsCyclic(self)
-% $$$             res = self.genericGroup.isCyclic;
-% $$$         end
-% $$$
-% $$$         function res = computeIsSimple(self)
-% $$$             res = self.genericGroup.isSimple;
-% $$$         end
-% $$$
-% $$$         function order = computeOrder(self)
-% $$$             order = self.genericGroup.order;
-% $$$         end
-% $$$
-% $$$         function dec = computeSetProduct(self)
-% $$$             prmD = self.genericGroup.setProduct;
-% $$$             sets1 = cellfun(@(T) cellfun(@(t) self.genericIsomorphism.preimageElement(t), T, 'uniform', 0), prmD.sets, 'uniform', 0);
-% $$$             dec = replab.SetProduct(self, sets1, true);
-% $$$         end
-% $$$
-% $$$     end
-
     methods (Access = protected) % Implementations
 
         % Morphisms
@@ -113,7 +81,7 @@ classdef FiniteGroup < replab.FiniteGroup & replab.gen.FiniteSet
 
         function s = headerStr(self)
             if self.knownOrder
-                s = sprintf('Finite group of order %s', strtrim(num2str(self.order));
+                s = sprintf('Finite group of order %s', strtrim(num2str(self.order)));
             else
                 s = 'Finite group';
             end
@@ -234,22 +202,59 @@ classdef FiniteGroup < replab.FiniteGroup & replab.gen.FiniteSet
             names = self.nice.generatorNames;
         end
 
-        function res = intersection(self, other)
+        % TODO: rhs is not necessarily contained in this group! so need to construct
+        % a larger closure group first in that case
+% $$$         function sub1 = intersection(self, rhs)
+% $$$             sub1 = self.niceMorphism.preimageGroup(self.niceGroup.intersection(self.niceMorphism.imageGroup(rhs)));
+% $$$         end
+
+        function res = isCyclic(self)
+            res = self.nice.isCyclic;
+        end
+
+        function res = isSimple(self)
+            res = self.nice.isSimple;
         end
 
         function res = knownOrder(self)
             res = self.nice.knownOrder;
         end
 
+        % TODO: enlarge the isomorphism if necessary
+% $$$         function res1 = normalClosure(self, obj)
+% $$$             if isa(obj, 'replab.FiniteGroup')
+% $$$                 res = self.niceGroup.normalClosure(self.type.niceMorphism.imageGroup(obj));
+% $$$             else
+% $$$                 res = self.niceGroup.normalClosure(self.type.niceImage(obj));
+% $$$             end
+% $$$             res1 = self.type.niceMorphism.preimageGroup(res);
+% $$$         end
+
         function o = order(self)
             o = self.nice.order;
         end
+
+
 
         function R = relatorsFlat(self)
             R = self.nice.relatorsFlat;
         end
 
+% $$$         function rep = regularRep(self)
+% $$$             rep = self.niceMorphism.andThen(self.niceGroup.regularRep);
+% $$$         end
 
+
+% $$$         function res = withGeneratorNames(self, newNames)
+% $$$         % TODO
+% $$$         end
+
+        % FiniteGroup/Cosets
+
+        % doubleCoset / doubleCosets / leftCoset / leftCosets / normalCoset / normalCosets
+        % rightCoset / rightCosets
+
+        % FiniteGroup / Morphism
 
 % $$$         function A = abstractGroup(self, generatorNames)
 % $$$             if nargin < 2 || isempty(generatorNames)
@@ -265,54 +270,13 @@ classdef FiniteGroup < replab.FiniteGroup & replab.gen.FiniteSet
 % $$$             m = self.genericIsomorphism.andThen(self.genericGroup.abstractMorphism(generatorNames));
 % $$$         end
 
-
-        % Construction of groups
-
-% $$$
-% $$$         function res1 = normalClosure(self, obj)
-% $$$             if isa(obj, 'replab.FiniteGroup')
-% $$$                 res = self.niceGroup.normalClosure(self.type.niceMorphism.imageGroup(obj));
-% $$$             else
-% $$$                 res = self.niceGroup.normalClosure(self.type.niceImage(obj));
-% $$$             end
-% $$$             res1 = self.type.niceMorphism.preimageGroup(res);
-% $$$         end
+        % permutationIsomorphism
 
         % Subgroups
 
 % $$$
-% $$$         function sub1 = intersection(self, rhs)
-% $$$             sub1 = self.niceMorphism.preimageGroup(self.niceGroup.intersection(self.niceMorphism.imageGroup(rhs)));
-% $$$         end
 
         % Cosets
-
-% $$$         function B = findLeftConjugations(self, s, t, sCentralizer, tCentralizer)
-% $$$             s = self.niceImage(s);
-% $$$             t = self.niceImage(t);
-% $$$             if nargin < 4 || isempty(sCentralizer)
-% $$$                 sCentralizer = [];
-% $$$             else
-% $$$                 sCentralizer = self.niceMorphism.imageGroup(sCentralizer);
-% $$$             end
-% $$$             if nargin < 5 || isempty(tCentralizer)
-% $$$                 tCentralizer = [];
-% $$$             else
-% $$$                 tCentralizer = self.niceMorphism.imageGroup(tCentralizer);
-% $$$             end
-% $$$             B = self.niceGroup.findLeftConjugations(s, t, sCentralizer, tCentralizer);
-% $$$             group = self.niceMorphism.preimageGroup(B.group);
-% $$$             canRep = self.niceMorphism.preimageElement(B.representative);
-% $$$             B = replab.LeftCoset(group, canRep, self);
-% $$$         end
-
-        % Relation to other groups
-
-        % Representations
-
-% $$$         function rep = regularRep(self)
-% $$$             rep = self.niceMorphism.andThen(self.niceGroup.regularRep);
-% $$$         end
 
     end
 
