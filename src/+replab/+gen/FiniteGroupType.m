@@ -41,6 +41,8 @@ classdef FiniteGroupType < replab.FiniteGroupType
         function iso = constructNiceIsomorphism(self, elements)
         % Constructs a generic isomorphism for the given elements
         %
+        % It is not guaranteed that the type of the isomorphism target is always the same.
+        %
         % Args:
         %   elements (cell(1,\*) of group type elements): Elements
         %

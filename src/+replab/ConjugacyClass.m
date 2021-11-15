@@ -14,6 +14,14 @@ classdef ConjugacyClass < replab.FiniteSet
 
     methods
 
+        function l = knownRepresentativeCentralizer(self)
+        % Returns whether the centralizer of `.representative` is known
+        %
+        % Returns:
+        %   logical: True if the centralizer has already been computed
+            error('Abstract');
+        end
+
         function G = representativeCentralizer(self)
         % Returns the centralizer of `.representative` in `.group`
         %
@@ -42,11 +50,14 @@ classdef ConjugacyClass < replab.FiniteSet
         %
         % Returns:
         %   `.ConjugacyClass`: The conjugacy class mapped under ``f``, expressed as a subset of ``f.image``
-            c1 = replab.gen.Conjugacy
-            if self.group.order < f.source.order
-                f = f.restrictedSource(self.group);
+            group1 = self.group.imap(f);
+            rep1 = f.imageElement(self.representative);
+            args = {};
+            if self.knownRepresentativeCentralizer
+                rc1 = self.representativeCentralizer.imap(f);
+                args = {'centralizer', rc1};
             end
-            c1 = replab.ConjugacyClass.make(f.target, f.imageElement(self.representative), f.imageGroup(self.representativeCentralizer));
+            c1 = group1.conjugacyClass(rep1, 'isCanonical', f.preservesTypeOrder, args{:});
         end
 
     end
@@ -73,31 +84,6 @@ classdef ConjugacyClass < replab.FiniteSet
         function s = sample(self)
             t = self.group.sample;
             s = self.group.leftConjugate(t, self.representative);
-        end
-
-        % FiniteSet
-
-        function b = contains(self, t)
-        % Returns whether the given element is part of this conjugacy class
-        %
-        % Args:
-        %   t (element of `.group`): Group element
-        %
-        % Returns:
-        %   logical: True if ``t`` is a member of this conjugacy class
-            if ~self.group.contains(t)
-                b = false;
-                return
-            end
-            s = self.representative;
-            sCentralizer = self.representativeCentralizer;
-            % We want to solve ``t == b s b^-1`` with ``s`` the representative
-            B = self.group.findLeftConjugations(s, t, 'sCentralizer', sCentralizer);
-            b = ~isempty(B);
-        end
-
-        function s = nElements(self)
-            s = self.cached('nElements', @() self.computeNElements);
         end
 
     end

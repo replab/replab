@@ -63,6 +63,7 @@ classdef NiceIsomorphism < replab.gen.NiceIsomorphism
         % NiceIsomorphism
 
         function l = sourceContains(self, s)
+            s = replab.cyclotomic(s);
             l = self.cycloSet.find(s) > 0;
         end
 

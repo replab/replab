@@ -20,6 +20,19 @@ classdef FiniteSet < replab.FiniteSet
             self.niceIsomorphism = niceIsomorphism;
         end
 
+        function l = compatibleWithNiceIsomorphism(self, iso)
+        % Returns whether the given finite isomorphism is compatible with this object isomorphism
+        %
+        % It returns whether ``self.nice`` is equal to ``self.imap(iso)``.
+        %
+        % Args:
+        %   iso (`+replab.FiniteIsomorphism`): Isomorphism to check
+        %
+        % Returns:
+        %   logical: True if both isomorphisms given the same images for the elements of this object
+            error('Abstract');
+        end
+
     end
 
     methods % Implementations
@@ -30,6 +43,7 @@ classdef FiniteSet < replab.FiniteSet
             names = hiddenFields@replab.FiniteSet(self);
             names{1,end+1} = 'nice';
             names{1,end+1} = 'niceIsomorphism';
+            names{1,end+1} = 'type';
         end
 
         % FiniteSet
@@ -51,7 +65,7 @@ classdef FiniteSet < replab.FiniteSet
         end
 
         function r = representative(self)
-            r = niceIsomorphism.preimageElement(nice.representative);
+            r = self.niceIsomorphism.preimageElement(self.nice.representative);
         end
 
         function s = setProduct(self)

@@ -29,13 +29,6 @@ classdef DoubleCoset < replab.FiniteSet
         % FiniteSet
 
         function b = contains(self, el)
-        % Returns if this double coset contains the given element
-        %
-        % Args:
-        %   el (element of `.type`): Element to check
-        %
-        % Returns:
-        %   logical: True if this coset contains the element
             if ~self.group.contains(el)
                 b = false;
                 return
@@ -44,11 +37,15 @@ classdef DoubleCoset < replab.FiniteSet
             b = self.type.eqv(self.representative, dc.representative);
         end
 
+        function C = imap(self, f)
+            group1 = self.group.imap(f);
+            leftSubgroup1 = self.leftSubgroup.imap(f);
+            rightSubgroup1 = self.rightSubgroup.imap(f);
+            rep1 = f.imageElement(self.representative);
+            C = leftSubgroup1.doubleCoset(rep1, rightSubgroup1, 'group', group1, 'isCanonical', f.preservesTypeOrder);
+        end
+
         function s = nElements(self)
-        % Returns the size of this double coset
-        %
-        % Returns:
-        %   vpi: Coset size
 
         % From Wikipedia: |left x right| = |left| |right| / |right \intersection x^-1 left x|
             leftConj = self.leftSubgroup.leftConjugateGroup(self.group.inverse(self.representative));

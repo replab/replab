@@ -241,18 +241,20 @@ classdef ConjugacyClasses < replab.Obj
     end
 
     methods % Transformations
-% $$$
-% $$$         function c1 = imap(self, f)
-% $$$         % Maps the conjugacy classes under an isomorphism
-% $$$         %
-% $$$         % Args:
-% $$$         %   f (`.FiniteIsomorphism`): Isomorphism with ``self.group.isSubgroupOf(f.source)``
-% $$$         %
-% $$$         % Returns:
-% $$$         %   `.ConjugacyClasses`: The conjugacy classes mapped under ``f``, expressed as a subset of ``f.image``
-% $$$             classes1 = cellfun(@(c) c.imap(f), self.classes, 'uniform', 0);
-% $$$             c1 = replab.ConjugacyClasses(f.target, classes1);
-% $$$         end
+
+        function c1 = imap(self, f)
+        % Maps the conjugacy classes under an isomorphism
+        %
+        % Args:
+        %   f (`.FiniteIsomorphism`): Isomorphism with ``self.group.isSubgroupOf(f.source)``
+        %
+        % Returns:
+        %   `.ConjugacyClasses`: The conjugacy classes mapped under ``f``, expressed as a subset of ``f.image``
+            classes1 = cellfun(@(c) c.imap(f), self.classes, 'uniform', 0);
+            if isa(f, 'replab.gen.NiceIsomorphism')
+            end
+            c1 = replab.ConjugacyClasses(f.target, classes1);
+        end
 
 % $$$         function c1 = sorted(self)
 % $$$             classes = self.classes;

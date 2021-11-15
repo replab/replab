@@ -1,4 +1,4 @@
-classdef RightCoset < replab.RightCoset & replab.gen.FiniteSet
+classdef RightCoset < replab.RightCoset & replab.gen.Coset
 
     methods
 

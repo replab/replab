@@ -85,6 +85,10 @@ classdef ConjugacyClass < replab.ConjugacyClass & replab.PermutationFiniteSet
             E = replab.perm.Sequence(mat);
         end
 
+        function l = knownRepresentativeCentralizer(self)
+            l = self.inCache('representativeCentralizer');
+        end
+
         function c = representativeCentralizer(self)
             c = self.cached('representativeCentralizer', @() self.group.centralizer(self.representative));
         end

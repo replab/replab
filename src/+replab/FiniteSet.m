@@ -67,7 +67,7 @@ classdef FiniteSet < replab.Domain
             error('Abstract');
         end
 
-        function s = nElements(self)
+        function n = nElements(self)
         % Returns the size of this set
         %
         % Returns:
@@ -120,7 +120,7 @@ classdef FiniteSet < replab.Domain
         %
         % Returns:
         %   `.FiniteSet`: This finite set mapped under ``f``, expressed as a subset of ``f.image``
-            res = replab.gen.FiniteSet(f.target.type, self, f.inverse);
+            error('Abstract');
         end
 
     end
@@ -130,11 +130,11 @@ classdef FiniteSet < replab.Domain
 
         % Domain
 
-        function b = eqv(lhs, rhs)
+        function b = eqv(self, lhs, rhs)
             b = self.type.eqv(lhs, rhs);
         end
 
-        function res = mtimes(lhs, rhs)
+        function res = mtimes(self, lhs, rhs)
             res = replab.FiniteSet.multiply(lhs, rhs);
         end
 

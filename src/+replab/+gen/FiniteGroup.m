@@ -115,6 +115,24 @@ classdef FiniteGroup < replab.FiniteGroup & replab.gen.FiniteSet
             y = self.type.inverse(x);
         end
 
+        % gen.FiniteSet
+
+        function l = compatibleWithNiceIsomorphism(self, iso)
+            l = false; % guilty until proven innocent
+            if ~iso.target.hasSameTypeAs(self.nice)
+                return
+            end
+            type = self.nice.type;
+            for i = 1:self.nice.nGenerators
+                imgGen = iso.imageElement(self.generator(i));
+                niceGen = self.nice.generator(i);
+                if ~type.eqv(imgGen, niceGen)
+                    return
+                end
+            end
+            l = true;
+        end
+
         % FiniteGroup
 
         function a = abelianInvariants(self)
@@ -161,13 +179,22 @@ classdef FiniteGroup < replab.FiniteGroup & replab.gen.FiniteSet
 % $$$         end
 
 
-% $$$         function c = conjugacyClass(self, el, varargin)
+% $$$         function c = conjugacyClasses(self, el, varargin)
 % $$$             TODO
 % $$$         end
 
-% $$$         function C = conjugacyClass(self, varargin)
-% $$$         % TODO
-% $$$     end
+        function C = conjugacyClass(self, g, varargin)
+            args = struct('isCanonical', false, 'centralizer', []);
+            args = replab.util.populateStruct(args, varargin);
+            g1 = self.niceIsomorphism.imageElement(g);
+            if isempty(args.centralizer)
+                cc1 = self.nice.conjugacyClass(g1, 'isCanonical', args.isCanonical);
+            else
+                c1 = args.centralizer.imap(self.niceIsomorphism);
+                cc1 = self.nice.conjugacyClass(g1, 'isCanonical', args.isCanonical, 'centralizer', c1);
+            end
+            C = replab.gen.ConjugacyClass(self.type, cc1, self.niceIsomorphism, 'group', self);
+        end
 
         function sub = derivedSubgroup(self)
             sub = self.niceIsomorphism.preimageGroup(self.nice.derivedSubgroup);

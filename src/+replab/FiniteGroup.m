@@ -163,6 +163,12 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
             R = self.setProduct;
         end
 
+        % FiniteSet
+
+        function g1 = imap(self, f)
+            g1 = f.imageGroup(self);
+        end
+
     end
 
     methods % Conjugacy classes and character table
@@ -1274,14 +1280,6 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
             end
             l = self.isMorphismByImages_(target, args.preimages(~preId), args.images(~preId));
         end
-
-% $$$         function g1 = imap(self, f)
-% $$$         % Maps this finite group through an isomorphism
-% $$$         %
-% $$$         % Args:
-% $$$         %   f (`.FiniteIsomorphism`): Isomorphism with ``self.isSubgroupOf(f.source)``
-% $$$             g1 = f.imageGroup(self);
-% $$$         end
 
         function m = isomorphismByFunction(self, target, imageElementFun, varargin)
         % Constructs an isomorphism to a finite group using an image function

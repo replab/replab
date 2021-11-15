@@ -8,4 +8,14 @@ classdef DoubleCoset < replab.DoubleCoset & replab.gen.FiniteSet
 
     end
 
+    methods % Implementations
+
+        function l = compatibleWithNiceIsomorphism(self, iso)
+            l = self.group.compatibleWithNiceIsomorphism(iso) && ...
+                self.leftSubgroup.compatibleWithNiceIsomorphism(iso) && ...
+                self.rightSubgroup.compatibleWithNiceIsomorphism(iso);
+        end
+
+    end
+
 end

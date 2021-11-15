@@ -13,6 +13,13 @@ classdef RightCoset < replab.Coset
 
         % FiniteSet
 
+        function C = imap(self, f)
+            group1 = self.group.imap(f);
+            subgroup1 = self.subgroup.imap(f);
+            rep1 = f.imageElement(self.representative);
+            C = subgroup1.leftCoset(rep1, 'group', group1, 'isCanonical', f.preservesTypeOrder);
+        end
+
         function s = setProduct(self)
             s = replab.SetProduct(self.type, horzcat(self.subgroup.setProduct.sets, {{self.representative}}), false);
         end

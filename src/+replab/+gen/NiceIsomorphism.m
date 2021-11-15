@@ -11,6 +11,25 @@ classdef NiceIsomorphism < replab.FiniteIsomorphism
             l = replab.laws.OrderPreservingFiniteIsomorphismLaws(self);
         end
 
+        % FiniteIsomorphism
+
+        function S = preimageGroup(self, T)
+            Sgens = cellfun(@(t) self.preimageElement(t), T.generators, 'uniform', 0);
+            S = replab.gen.FiniteGroup(self.source.type, Sgens, 'nice', T, 'niceIsomorphism', self);
+        end
+
+        function l = preservesTypeOrder(self)
+            l = true;
+        end
+
+        function T = imageGroup(self, S)
+            if S.compatibleWithNiceIsomorphism(self)
+                T = S.nice;
+            else
+                T = imageGroup@replab.FiniteIsomorphism.imageGroup(self, S);
+            end
+        end
+
     end
 
     methods
