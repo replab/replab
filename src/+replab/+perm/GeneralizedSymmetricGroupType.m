@@ -28,6 +28,30 @@ classdef GeneralizedSymmetricGroupType < replab.gen.StaticFiniteGroupType
             self.finishConstruction(sourceGenerators, sourceArgs, targetType);
         end
 
+        function mu = naturalMorphismTo(self, targetType)
+        % Returns the natural morphism between generalized symmetric groups
+        %
+        % Both the source (self) and the target group have the same number of copies of the cyclic
+        % subgroup (``sourceType.n == targetType.n``).
+        % The target cyclic group embeds the source cyclic group in the sense
+        % that ``sourceType.m`` divides ``targetType.m``.
+        %
+        % The method returns a morphism between ``sourceType.parentGroup`` and
+        % ``targetType.parentGroup``.
+        %
+        % Args:
+        %   targetType (`+replab.+perm.GeneralizedSymmetricGroupType`): Target type
+        %
+        % Returns:
+        %   `+replab.FiniteMorphism`: An injective morphism
+            sourceType = self;
+            assert(sourceType.n == targetType.n, 'Number of copies of the cyclic group must be the same');
+            assert(mod(targetType.m, sourceType.m) == 0, 'Cyclic orders must be compatible');
+            factor = targetType.m/sourceType.m;
+            mu = sourceType.parentGroup.morphismByFunction(targetType.parentGroup, @(g) [g(1,:); g(2,:)*factor]);
+        end
+
+
     end
 
     methods % Implementations
@@ -97,29 +121,6 @@ classdef GeneralizedSymmetricGroupType < replab.gen.StaticFiniteGroupType
 
     methods (Static)
 
-        function mu = naturalMorphism(self, sourceType, targetType)
-        % Returns the natural morphism between generalized symmetric groups
-        %
-        % Both the source and the target group have the same number of copies of the cyclic
-        % subgroup (``sourceType.n == targetType.n``).
-        % The target cyclic group embeds the source cyclic group in the sense
-        % that ``sourceType.m`` divides ``targetType.m``.
-        %
-        % The method returns a morphism between ``sourceType.parentGroup`` and
-        % ``targetType.parentGroup``.
-        %
-        % Args:
-        %   sourceType (`+replab.+perm.GeneralizedSymmetricGroupType`): Source type
-        %   targetType (`+replab.+perm.GeneralizedSymmetricGroupType`): Target type
-        %
-        % Returns:
-        %   `+replab.FiniteMorphism`: An injective morphism
-            assert(sourceType.n == targetType.n, 'Number of copies of the cyclic group must be the same');
-            assert(mod(targetType.m, sourceType.m) == 0, 'Cyclic orders must be compatible');
-            factor = targetType.m/sourceType.m;
-            mu = sourceType.parentGroup.morphismByFunction(targetType.parentGroup, @(g) [g(1,:); g(2,:)*factor]);
-        end
-
         function mu = isomorphismPermutationGroup(G)
         % Returns the isomorphism between a permutation group and a generalized symmetric group
             targetType = replab.perm.GeneralizedSymmetricGroupType(G.domainSize, 1);
@@ -181,7 +182,7 @@ classdef GeneralizedSymmetricGroupType < replab.gen.StaticFiniteGroupType
                 end
             end
             N = N.*o./D;
-            G = replab.perm.GeneralizedSymmetricGroup(n, o);
+            G = replab.perm.GeneralizedSymmetricGroupType(n, o);
             g = [I(IJ)'; N(IJ)'];
         end
 
