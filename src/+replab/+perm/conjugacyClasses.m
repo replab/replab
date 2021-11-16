@@ -12,7 +12,7 @@ function res = conjugacyClasses(group)
         classes = cell(1, n);
         for i = 1:n
             cl = sortrows(C{i}');
-            classes{i} = replab.ConjugacyClass(group, cl(1,:));
+            classes{i} = replab.perm.ConjugacyClass(group, cl(1,:));
         end
     else
         classes = replab.perm.conjugacyClassesByRandomSearch(group);
@@ -22,5 +22,5 @@ function res = conjugacyClasses(group)
         reps(i,:) = classes{i}.representative;
     end
     [~, I] = sortrows(reps);
-    res = replab.ConjugacyClasses(self, classes(I)); % sort by minimal representative
+    res = replab.ConjugacyClasses(group, classes(I)); % sort by minimal representative
 end

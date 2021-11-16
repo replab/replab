@@ -1,8 +1,6 @@
 classdef ConjugacyClasses < replab.Obj
 % Stores information about the conjugacy classes of a group
 %
-% The conjugacy classes are sorted according to the group type ordering.
-%
 % This class can compute power maps.
 
     properties (Access = protected)
@@ -256,14 +254,14 @@ classdef ConjugacyClasses < replab.Obj
             c1 = replab.ConjugacyClasses(f.target, classes1);
         end
 
-% $$$         function c1 = sorted(self)
-% $$$             classes = self.classes;
-% $$$             reps = cellfun(@(c) c.representative, classes, 'uniform', 0);
-% $$$             I = self.group.type.sort(reps);
-% $$$             classes1 = classes(I);
-% $$$             c1 = replab.ConjugacyClasses(self.group, classes1);
-% $$$         end
-% $$$
+        function c1 = sorted(self)
+            classes = self.classes;
+            reps = cellfun(@(c) c.representative, classes, 'uniform', 0);
+            I = self.group.type.sort(reps);
+            classes1 = classes(I);
+            c1 = replab.ConjugacyClasses(self.group, classes1);
+        end
+
     end
 
 end

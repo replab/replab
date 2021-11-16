@@ -42,11 +42,6 @@ classdef ConjugacyClass < replab.ConjugacyClass & replab.PermutationFiniteSet
 
         % Domain
 
-        function s = sample(self)
-            t = self.group.sample;
-            s = self.group.leftConjugate(t, self.representative);
-        end
-
         % FiniteSet
 
         function b = contains(self, t)

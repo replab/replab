@@ -11,7 +11,7 @@ classdef RepByImages_monomial < replab.RepByImages
 
     methods
 
-        function self = RepByImages_monomial(group, field, dimension, preimages, images, imageGroup, imageElements, varargin)
+        function self = RepByImages_monomial(group, field, dimension, preimages, images, imageGroupType, imageElements, varargin)
         % Constructs a representation from images of group generators
         %
         % Additional keyword arguments are passed to the `+replab.Rep` constructor.
@@ -22,13 +22,13 @@ classdef RepByImages_monomial < replab.RepByImages
         %   dimension (integer): Representation dimension
         %   preimages (cell(1,\*) of ``group`` elements): Preimages
         %   images (cell(1,\*) of double/cyclotomic(\*,\*)): User-provided images of the preimages
-        %   imageGroup (`+replab.+perm.GeneralizedSymmetricGroup`): Group of generalized permutations
+        %   imageGroupType (`+replab.+perm.GeneralizedSymmetricGroupType`): Type of generalized permutations
         %   imageElements (cell(1,\*) of ``imageGroup`` elements): Generalized permutations corresponding to the images
             [args, exists, oldValue] = replab.util.keyValuePairsUpdate(varargin, 'isUnitary', true);
             assert(~exists || isempty(oldValue) || isequal(oldValue, true), 'Monomial representations are unitary');
             imagesErrorBound = zeros(1, length(preimages));
             self@replab.RepByImages(group, field, dimension, preimages, images, imagesErrorBound, args{:});
-            self.morphism = group.morphismByImages(imageGroup, 'preimages', preimages, 'images', imageElements);
+            self.morphism = group.morphismByImages(imageGroupType, 'preimages', preimages, 'images', imageElements);
         end
 
     end

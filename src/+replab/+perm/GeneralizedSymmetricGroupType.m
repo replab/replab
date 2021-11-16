@@ -24,8 +24,8 @@ classdef GeneralizedSymmetricGroupType < replab.gen.StaticFiniteGroupType
             end
             sourceArgs = {'order', orderFun};
             targetType = replab.PermutationGroupType.make(n*m);
-            self.finishConstruction(sourceGenerators, sourceArgs, targetType);
             self.identity = [1:n; zeros(1, n)];
+            self.finishConstruction(sourceGenerators, sourceArgs, targetType);
         end
 
     end

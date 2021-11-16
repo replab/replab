@@ -179,9 +179,9 @@ classdef FiniteGroup < replab.FiniteGroup & replab.gen.FiniteSet
 % $$$         end
 
 
-% $$$         function c = conjugacyClasses(self, el, varargin)
-% $$$             TODO
-% $$$         end
+        function C = conjugacyClasses(self, el, varargin)
+            C = self.cached('conjugacyClasses', @() self.nice.conjugacyClasses.imap(self.niceIsomorphism.inverse));
+        end
 
         function C = conjugacyClass(self, g, varargin)
             args = struct('isCanonical', false, 'centralizer', []);

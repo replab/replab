@@ -26,6 +26,15 @@ classdef GeneralizedSymmetricSubgroup < replab.gen.FiniteGroup
                 type = args.type;
             end
             self@replab.gen.FiniteGroup(type, generators, rest{:});
+            assert(~isempty(self.identity));
+        end
+
+        function res = m(self)
+            res = self.type.m;
+        end
+
+        function res = n(self)
+            res = self.type.n;
         end
 
     end
