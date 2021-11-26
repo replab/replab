@@ -184,6 +184,25 @@ classdef FiniteGroup < replab.FiniteGroup & replab.gen.FiniteSet
             sub = self.niceIsomorphism.preimageGroup(self.nice.derivedSubgroup);
         end
 
+        % FiniteGroup/Cosets
+
+        % doubleCoset / doubleCosets / leftCoset / leftCosets / normalCoset / normalCosets
+        % rightCoset / rightCosets
+
+        function c = doubleCoset(self, element, rightSubgroup, varargin)
+            args = struct('group', [], 'isCanonical', false);
+            args = replab.util.populateStruct(args, varargin);
+            leftSubgroup = self;
+            group = args.group;
+            if isempty(group)
+                group = leftSubgroup.closure(rightSubgroup, element);
+            end
+            1
+            [iso, group1, leftSubgroup1, element1, rightSubgroup1] = self.type.niceImages(group, leftSubgroup, element, rightSubgroup);
+            c1 = leftSubgroup1.doubleCoset(element1, rightSubgroup1, 'group', group1, 'isCanonical', args.isCanonical);
+            c = replab.gen.DoubleCoset(self.type, c1, iso);
+        end
+
         function o = elementOrder(self, g)
             o = self.nice.elementOrder(self.niceIsomorphism.imageElement(g));
         end
@@ -262,10 +281,6 @@ classdef FiniteGroup < replab.FiniteGroup & replab.gen.FiniteSet
 % $$$         % TODO
 % $$$         end
 
-        % FiniteGroup/Cosets
-
-        % doubleCoset / doubleCosets / leftCoset / leftCosets / normalCoset / normalCosets
-        % rightCoset / rightCosets
 
         % FiniteGroup / Morphism
 

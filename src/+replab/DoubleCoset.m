@@ -28,29 +28,12 @@ classdef DoubleCoset < replab.FiniteSet
 
         % FiniteSet
 
-        function b = contains(self, el)
-            if ~self.group.contains(el)
-                b = false;
-                return
-            end
-            dc = self.leftSubgroup.doubleCoset(el, self.rightSubgroup, 'group', self.group);
-            b = self.type.eqv(self.representative, dc.representative);
-        end
-
         function C = imap(self, f)
             group1 = self.group.imap(f);
             leftSubgroup1 = self.leftSubgroup.imap(f);
             rightSubgroup1 = self.rightSubgroup.imap(f);
             rep1 = f.imageElement(self.representative);
             C = leftSubgroup1.doubleCoset(rep1, rightSubgroup1, 'group', group1, 'isCanonical', f.preservesTypeOrder);
-        end
-
-        function s = nElements(self)
-
-        % From Wikipedia: |left x right| = |left| |right| / |right \intersection x^-1 left x|
-            leftConj = self.leftSubgroup.leftConjugateGroup(self.group.inverse(self.representative));
-            inter = self.rightSubgroup.intersection(leftConj);
-            s = self.leftSubgroup.order * self.rightSubgroup.order / inter.order;
         end
 
         function s = setProduct(self)

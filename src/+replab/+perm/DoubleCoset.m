@@ -16,6 +16,15 @@ classdef DoubleCoset < replab.DoubleCoset
 
     methods % Implementations
 
+        function b = contains(self, el)
+            if ~self.group.contains(el)
+                b = false;
+                return
+            end
+            dc = self.leftSubgroup.doubleCoset(el, self.rightSubgroup, 'group', self.group);
+            b = self.type.eqv(self.representative, dc.representative);
+        end
+
         function E = elementsSequence(self)
             S = replab.perm.Set(self.leftSubgroup.domainSize);
             rightMat = self.rightSubgroup.lexChain.allElements;
@@ -41,7 +50,21 @@ classdef DoubleCoset < replab.DoubleCoset
             E = replab.perm.Sequence(S.matrix);
         end
 
+        function s = nElements(self)
+            s = self.cached('nElements', @() self.computeNElements);
+        end
+
     end
 
+    methods (Access = protected)
+
+        function s = computeNElements(self)
+        % From Wikipedia: |left x right| = |left| |right| / |right \intersection x^-1 left x|
+            leftConj = self.leftSubgroup.leftConjugateGroup(self.group.inverse(self.representative));
+            inter = self.rightSubgroup.intersection(leftConj);
+            s = self.leftSubgroup.order * self.rightSubgroup.order / inter.order;
+        end
+
+    end
 
 end

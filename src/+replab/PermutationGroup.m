@@ -362,12 +362,11 @@ classdef PermutationGroup < replab.FiniteGroup
         end
 
         function c = doubleCoset(self, element, rightSubgroup, varargin)
-            args = struct('group', [], 'isCanonical', []);
+            args = struct('group', [], 'isCanonical', false);
             args = replab.util.populateStruct(args, varargin);
             leftSubgroup = self;
             if isempty(args.group)
-                group = leftSubgroup.closure(rightSubgroup);
-                group = group.closure(element);
+                group = leftSubgroup.closure(rightSubgroup, element);
             else
                 group = args.group;
             end
