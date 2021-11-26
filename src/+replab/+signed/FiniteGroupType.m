@@ -64,7 +64,7 @@ classdef FiniteGroupType < replab.gen.StaticFiniteGroupType
 
     methods (Access = protected) % Implementations
 
-        function G = makeGenericGroup(self, generators, nice, niceIsomorphism)
+        function G = groupFromNiceImage_(self, generators, nice, niceIsomorphism)
             G = replab.SignedPermutationGroup(self.domainSize, generators, 'type', self, 'nice', nice, 'niceIsomorphism', niceIsomorphism);
         end
 

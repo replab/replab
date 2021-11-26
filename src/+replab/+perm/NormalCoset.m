@@ -1,4 +1,4 @@
-classdef NormalCoset < replab.NormalCoset & replab.PermutationFiniteSet
+classdef NormalCoset < replab.NormalCoset
 
     methods
 

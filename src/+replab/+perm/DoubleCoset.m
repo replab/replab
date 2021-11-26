@@ -1,4 +1,4 @@
-classdef DoubleCoset < replab.DoubleCoset & replab.PermutationFiniteSet
+classdef DoubleCoset < replab.DoubleCoset
 
     methods
 

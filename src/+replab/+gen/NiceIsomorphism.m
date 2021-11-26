@@ -26,7 +26,7 @@ classdef NiceIsomorphism < replab.FiniteIsomorphism
             if S.compatibleWithNiceIsomorphism(self)
                 T = S.nice;
             else
-                T = imageGroup@replab.FiniteIsomorphism.imageGroup(self, S);
+                T = imageGroup@replab.FiniteIsomorphism(self, S);
             end
         end
 

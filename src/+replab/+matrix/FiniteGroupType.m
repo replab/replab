@@ -58,7 +58,7 @@ classdef FiniteGroupType < replab.gen.FiniteGroupType
 
         % FiniteGroupType
 
-        function mu = constructNiceIsomorphism(self, elements)
+        function mu = niceIsomorphism(self, elements)
             mask = cellfun(@(g) self.isIdentity(g), elements);
             mu = replab.matrix.NiceIsomorphism(self.d, elements(~mask));
         end

@@ -113,7 +113,8 @@ classdef GeneralizedSymmetricGroupType < replab.gen.StaticFiniteGroupType
 
     methods (Access = protected)
 
-        function G = makeGenericGroup(self, generators, nice, niceIsomorphism)
+        function G = groupFromNiceImage_(self, generators, nice, niceIsomorphism)
+
             G = replab.perm.GeneralizedSymmetricSubgroup(self.n, self.m, generators, 'type', self, 'nice', nice, 'niceIsomorphism', niceIsomorphism);
         end
 

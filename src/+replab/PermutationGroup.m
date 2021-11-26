@@ -1,4 +1,4 @@
-classdef PermutationGroup < replab.FiniteGroup & replab.PermutationFiniteSet
+classdef PermutationGroup < replab.FiniteGroup
 % A base class for all permutation groups
 
     properties (Access = protected)
@@ -304,38 +304,33 @@ classdef PermutationGroup < replab.FiniteGroup & replab.PermutationFiniteSet
             c = replab.bsgs.Centralizer(self, other).subgroup;
         end
 
-        function res = closure(self, rhs)
-            if isa(rhs, 'replab.PermutationGroup')
-                % if one group contains the other
-                if self.isSubgroupOf(rhs)
-                    res = rhs;
-                    return
+        function res = closure(self, varargin)
+            if isempty(varargin)
+                res = self;
+                return
+            end
+            c = self.chain.mutableCopy;
+            changed = false;
+            for i = 1:length(varargin)
+                arg = varargin{i};
+                if isa(arg, 'replab.PermutationGroup')
+                    els = arg.generators;
+                else
+                    els = {arg};
                 end
-                if rhs.isSubgroupOf(self)
-                    res = self;
-                    return
-                end
-                % otherwise do the computation
-                c = self.chain.mutableCopy;
-                for i = 1:rhs.nGenerators
-                    if c.stripAndAddStrongGenerator(rhs.generator(i))
-                        c.randomizedSchreierSims([]);
+                for j = 1:length(els)
+                    if c.stripAndAddStrongGenerator(els{j})
+                        c.deterministicSchreierSims;
+                        changed = true;
                     end
                 end
-            else
-                % if the group already contains the element
-                if self.contains(rhs)
-                    res = self;
-                    return
-                end
-                % otherwise do the computation
-                c = self.chain.mutableCopy;
-                if c.stripAndAddStrongGenerator(rhs)
-                    c.randomizedSchreierSims([]);
-                end
             end
-            c.makeImmutable;
-            res = replab.PermutationGroup.fromChain(c);
+            if changed
+                c.makeImmutable;
+                res = replab.PermutationGroup.fromChain(c);
+            else
+                res = self;
+            end
         end
 
         function c = conjugacyClass(self, el, varargin)
@@ -497,13 +492,17 @@ classdef PermutationGroup < replab.FiniteGroup & replab.PermutationFiniteSet
             C = replab.perm.LeftCosets(self, subgroup);
         end
 
-        function nc = normalClosure(self, rhs)
+        function res = normalClosure(self, rhs)
             if isa(rhs, 'replab.FiniteGroup')
                 toCheck = rhs.generators;
+                chain = rhs.chain;
             else
                 toCheck = {rhs};
+                chain = replab.bsgs.Chain.make(length(rhs), {rhs});
             end
-            chain = replab.bsgs.Chain(self.domainSize);
+            chain = chain.mutableCopy;
+            % Algorithm, see NORMALCLOSURE, p. 75 of Derek Holt Handbook of CGT, but we do not
+            % use random elements
             generators = {};
             while ~isempty(toCheck)
                 rhsg = toCheck{end};
@@ -519,7 +518,7 @@ classdef PermutationGroup < replab.FiniteGroup & replab.PermutationFiniteSet
                 end
             end
             chain.makeImmutable;
-            nc = replab.PermutationGroup(self.domainSize, generators, 'order', chain.order, 'chain', chain);
+            res = replab.PermutationGroup(self.domainSize, generators, 'order', chain.order, 'chain', chain);
         end
 
         function c = normalCoset(self, element, varargin)
@@ -630,6 +629,10 @@ classdef PermutationGroup < replab.FiniteGroup & replab.PermutationFiniteSet
     end
 
     methods % Methods specific to permutation groups
+
+        function d = domainSize(self)
+            d = self.type.domainSize;
+        end
 
         function G = generatorsAsMatrix(self)
         % Returns the generators of this group concatenated in a matrix

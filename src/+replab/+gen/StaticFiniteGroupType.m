@@ -69,8 +69,14 @@ classdef StaticFiniteGroupType < replab.gen.FiniteGroupType
         function G = makeParentGroup(self, generators, nice, niceIsomorphism)
         % Creates the source group of the nice isomorphism (internal)
         %
-        % Has the same calling convention than `.makeGenericGroup` but can be overriden
-            G = self.makeGenericGroup(generators, nice, niceIsomorphism);
+        % Args:
+        %   generators (cell(1,\*) of elements of this type): Group generators
+        %   nice (`+replab.FiniteGroup`): Subgroup of the isomorphism target whose generators are in 1-to-1 correspondance with ``generators``
+        %   niceIsomorphism (`+replab.+gen.NiceIsomorphism`): Isomorphism whose source contains all the generators
+        %
+        % Returns:
+        %   `.FiniteGroup`: Constructed finite group
+            G = self.groupFromNiceImage(nice, niceIsomorphism, 'generators', generators);
         end
 
         function setParentGroup(self, parentGroup)
@@ -96,7 +102,7 @@ classdef StaticFiniteGroupType < replab.gen.FiniteGroupType
 
         % FiniteGroupType
 
-        function iso = constructNiceIsomorphism(self, elements)
+        function iso = niceIsomorphism(self, elements)
             iso = self.isomorphism;
         end
 

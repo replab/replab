@@ -1,4 +1,4 @@
-classdef LeftCoset < replab.LeftCoset & replab.PermutationFiniteSet
+classdef LeftCoset < replab.LeftCoset
 
     methods
 

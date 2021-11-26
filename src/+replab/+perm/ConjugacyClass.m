@@ -1,4 +1,4 @@
-classdef ConjugacyClass < replab.ConjugacyClass & replab.PermutationFiniteSet
+classdef ConjugacyClass < replab.ConjugacyClass
 
     methods
 

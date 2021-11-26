@@ -23,7 +23,7 @@ classdef FiniteGroup < replab.FiniteGroup & replab.gen.FiniteSet
             args = replab.util.populateStruct(args, varargin);
             if isempty(args.nice)
                 if isempty(args.niceIsomorphism)
-                    niceIsomorphism = type.constructNiceIsomorphism(generators);
+                    niceIsomorphism = type.niceIsomorphism(generators);
                 else
                     niceIsomorphism = args.niceIsomorphism;
                 end
@@ -124,7 +124,11 @@ classdef FiniteGroup < replab.FiniteGroup & replab.gen.FiniteSet
             end
             type = self.nice.type;
             for i = 1:self.nice.nGenerators
-                imgGen = iso.imageElement(self.generator(i));
+                g = self.generator(i);
+                if ~iso.sourceContains(g)
+                    return
+                end
+                imgGen = iso.imageElement(g);
                 niceGen = self.nice.generator(i);
                 if ~type.eqv(imgGen, niceGen)
                     return
@@ -148,36 +152,16 @@ classdef FiniteGroup < replab.FiniteGroup & replab.gen.FiniteSet
             c1 = self.niceIsomorphism.preimageGroup(c);
         end
 
-% $$$         function res = closure()
-% $$$             TODO
-% $$$         end
-
-% $$$         function res1 = closure(self, obj)
-% $$$             if isa(obj, 'replab.FiniteGroup')
-% $$$                 % if one group contains the other
-% $$$                 if self.isSubgroupOf(obj)
-% $$$                     res1 = obj;
-% $$$                     return
-% $$$                 end
-% $$$                 if obj.isSubgroup(self)
-% $$$                     res1 = self;
-% $$$                     return
-% $$$                 end
-% $$$                 % otherwise do the computation
-% $$$                 % TODO: enlarge isomorphism if necessary
-% $$$                 res = self.nice.closure(self.niceIsomorphism.imageGroup(obj));
-% $$$             else
-% $$$                 % if the group already contains the element
-% $$$                 if self.contains(obj)
-% $$$                     res1 = self;
-% $$$                     return
-% $$$                 end
-% $$$                 % otherwise do the computation
-% $$$                 res = self.niceGroup.closure(self.type.niceImage(obj));
-% $$$             end
-% $$$             res1 = self.type.niceMorphism.preimageGroup(res);
-% $$$         end
-
+        function res = closure(self, varargin)
+            if isempty(varargin)
+                res = self;
+                return
+            end
+            rest = cell(1, length(varargin));
+            [iso, selfImage, rest{:}] = self.type.niceImages(self, varargin{:});
+            nice = selfImage.closure(rest{:});
+            res = self.type.groupFromNiceImage(nice, iso);
+        end
 
         function C = conjugacyClasses(self, el, varargin)
             C = self.cached('conjugacyClasses', @() self.nice.conjugacyClasses.imap(self.niceIsomorphism.inverse));
@@ -217,23 +201,31 @@ classdef FiniteGroup < replab.FiniteGroup & replab.gen.FiniteSet
         end
 
         function C = findLeftConjugations(self, s, t, varargin)
-            mapGroup = @(G) self.niceIsomorphism.imageGroup(G);
-            args1 = replab.kv.map(varargin, struct('sCentralizer', mapGroup, 'tCentralizer', mapGroup));
-            s1 = self.niceIsomorphism.imageElement(s);
-            t1 = self.niceIsomorphism.imageElement(t);
-            C1 = self.nice.findLeftConjugations(s1, t1, args{:});
-            C = C1.imap(self.niceIsomorphism.inverse);
+            args = struct('sCentralizer', [], 'tCentralizer', []);
+            args = replab.util.populateStruct(args, varargin);
+            sCentralizer = args.sCentralizer;
+            if isempty(sCentralizer)
+                sCentralizer = self.centralizer(s);
+            end
+            if isempty(args.tCentralizer)
+                [iso, self1, s1, t1, sCentralizer1] = self.type.niceImages(self, s1, t1, sCentralizer);
+                res1 = self1.findLeftConjugations(s1, t1, 'sCentralizer', sCentralizer1);
+            else
+                [iso, self1, s1, t1, sCentralizer1, tCentralizer1] = self.type.niceImages(self, s1, t1, sCentralizer, args.tCentralizer);
+                res1 = self1.findLeftConjugations(s1, t1, 'sCentralizer', sCentralizer1, 'tCentralizer', tCentralizer1);
+            end
+            res = res1.imap(iso.inverse);
         end
 
         function names = generatorNames(self)
             names = self.nice.generatorNames;
         end
 
-        % TODO: rhs is not necessarily contained in this group! so need to construct
-        % a larger closure group first in that case
-% $$$         function sub1 = intersection(self, rhs)
-% $$$             sub1 = self.niceMorphism.preimageGroup(self.niceGroup.intersection(self.niceMorphism.imageGroup(rhs)));
-% $$$         end
+        function sub = intersection(self, rhs)
+            [iso, lhs1, rhs1] = self.type.niceImages(self, rhs);
+            sub1 = lhs1.intersection(rhs1);
+            sub = self.type.groupFromNiceImage(sub1, iso);
+        end
 
         function res = isCyclic(self)
             res = self.nice.isCyclic;
@@ -247,21 +239,15 @@ classdef FiniteGroup < replab.FiniteGroup & replab.gen.FiniteSet
             res = self.nice.knownOrder;
         end
 
-        % TODO: enlarge the isomorphism if necessary
-% $$$         function res1 = normalClosure(self, obj)
-% $$$             if isa(obj, 'replab.FiniteGroup')
-% $$$                 res = self.niceGroup.normalClosure(self.type.niceMorphism.imageGroup(obj));
-% $$$             else
-% $$$                 res = self.niceGroup.normalClosure(self.type.niceImage(obj));
-% $$$             end
-% $$$             res1 = self.type.niceMorphism.preimageGroup(res);
-% $$$         end
+        function res = normalClosure(self, obj)
+            [iso, self1, obj1] = self.type.niceImages(self, obj);
+            res1 = self1.normalClosure(obj1);
+            res = self.type.groupFromNiceImage(res1, iso);
+        end
 
         function o = order(self)
             o = self.nice.order;
         end
-
-
 
         function R = relatorsFlat(self)
             R = self.nice.relatorsFlat;

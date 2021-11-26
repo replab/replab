@@ -23,7 +23,10 @@ classdef FiniteSet < replab.FiniteSet
         function l = compatibleWithNiceIsomorphism(self, iso)
         % Returns whether the given finite isomorphism is compatible with this object isomorphism
         %
-        % It returns whether ``self.nice`` is equal to ``self.imap(iso)``.
+        % It returns false whenever:
+        %
+        % * the given isomorphism source does not contain this object,
+        % * ``self.nice`` is not equal to ``self.imap(iso)``.
         %
         % Args:
         %   iso (`+replab.FiniteIsomorphism`): Isomorphism to check
