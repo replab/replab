@@ -88,6 +88,10 @@ classdef ConjugacyClass < replab.ConjugacyClass
             c = self.cached('representativeCentralizer', @() self.group.centralizer(self.representative));
         end
 
+        function S = setProduct(self)
+            S = replab.SetProduct(self.type, {self.elements}, true);
+        end
+
     end
 
 end
