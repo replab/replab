@@ -43,6 +43,34 @@ classdef SetProduct < replab.Domain
 
     end
 
+    methods % Implementations
+
+        % Obj
+
+        function l = laws(self, finiteSet)
+            if nargin == 1
+                l = replab.laws.SetProductLaws(self);
+            else
+                l = replab.laws.SetProductLaws(self, finiteSet);
+            end
+        end
+
+        % Domain
+
+        function l = eqv(self, x, y)
+            l = self.monoid.eqv(x, y);
+        end
+
+        function s = sample(self)
+            s = self.monoid.identity;
+            for i = 1:length(self.sets)
+                S = self.sets{i};
+                s = self.monoid.compose(s, S{randi(length(S))});
+            end
+        end
+
+    end
+
     methods (Static)
 
         function P = identity(monoid)

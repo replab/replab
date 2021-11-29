@@ -2,8 +2,8 @@ classdef CosetLaws < replab.laws.FiniteSetLaws
 
     methods
 
-        function self = CosetLaws(T)
-            self@replab.laws.FiniteSetLaws(T);
+        function self = CosetLaws(S)
+            self@replab.laws.FiniteSetLaws(S);
         end
 
     end
@@ -11,10 +11,10 @@ classdef CosetLaws < replab.laws.FiniteSetLaws
     methods
 
         function law_factorize_coset_representative_(self)
-            [l, r] = self.T.factorizeShortRepresentativeLetters;
-            r1 = self.T.group.imageLetters(l);
-            self.T.type.assertEqv(r, r1);
-            assertTrue(self.T.contains(r));
+            [l, r] = self.S.factorizeShortRepresentativeLetters;
+            r1 = self.S.group.imageLetters(l);
+            self.S.type.assertEqv(r, r1);
+            assertTrue(self.S.contains(r));
         end
 
     end

@@ -3,8 +3,8 @@ classdef ConjugacyClassLaws < replab.laws.FiniteSetLaws
 
     methods
 
-        function self = ConjugacyClassLaws(T)
-            self@replab.laws.FiniteSetLaws(T);
+        function self = ConjugacyClassLaws(S)
+            self@replab.laws.FiniteSetLaws(S);
         end
 
     end

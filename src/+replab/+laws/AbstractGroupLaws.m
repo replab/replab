@@ -3,8 +3,9 @@ classdef AbstractGroupLaws < replab.laws.FiniteGroupLaws
 
     methods
 
-        function self = AbstractGroupLaws(T)
-            self@replab.laws.FiniteGroupLaws(T);
+        function self = AbstractGroupLaws(S)
+            assert(false); % TODO
+            self@replab.laws.FiniteGroupLaws(S);
         end
 
     end
@@ -12,7 +13,7 @@ classdef AbstractGroupLaws < replab.laws.FiniteGroupLaws
     methods
 
         function law_relators_are_satisfied_by_permutation_realization_(self)
-            assert(self.T.isMorphismByImages(self.T.permutationGroup, 'images', self.T.permutationGroup.generators));
+            assert(self.S.isMorphismByImages(self.S.permutationGroup, 'images', self.S.permutationGroup.generators));
         end
 
     end

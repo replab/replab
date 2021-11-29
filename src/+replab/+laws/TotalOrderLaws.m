@@ -2,17 +2,36 @@ classdef TotalOrderLaws < replab.laws.DomainLaws
 
     methods
 
-        function self = TotalOrderLaws(T)
-            self@replab.laws.DomainLaws(T);
+        function self = TotalOrderLaws(S)
+            self@replab.laws.DomainLaws(S);
         end
 
-        function law_reflexive_T(self, x)
-            self.assert(self.T.compare(x, x) == 0);
+    end
+
+    methods % Laws
+
+        % compare
+
+        function law_reflexive_S(self, x)
+            self.assert(self.S.compare(x, x) == 0);
         end
 
-        function law_transitive_TTT(self, x, y, z)
-            if self.T.compare(x, y) <= 0 && self.T.compare(y, z) <= 0
-                self.assert(self.T.compare(x, z) <= 0);
+        function law_transitive_SSS(self, x, y, z)
+            if self.S.compare(x, y) <= 0 && self.S.compare(y, z) <= 0
+                self.assert(self.S.compare(x, z) <= 0);
+            end
+        end
+
+        % sort
+
+        function law_sort_SSSS(self, s1, s2, s3, s4)
+            array = [s1 s2 s3 s4];
+            I = self.S.sort(array);
+            array = array(I);
+            for i = 1:4
+                for j = i:4
+                    self.assert(self.S.compare(array(i), array(j)) <= 0);
+                end
             end
         end
 
