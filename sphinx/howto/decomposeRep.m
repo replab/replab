@@ -16,6 +16,8 @@ S4 = replab.S(4);
 group = S4.subgroup({[2 1 3 4], [1 2 4 3]})
 rep = group.naturalRep
 
+% ## Decomposition
+%
 % The representation is decomposed with the command
 
 dec = rep.decomposition

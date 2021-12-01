@@ -17,5 +17,6 @@ They assume some :doc:`familiarity </tutorials/index>` with **RepLAB**.
    How to sample the group algebra <sampleAlgebra>
    How to sample the commutant algebra <sampleCommutant>
    How to symmetrize a matrix <symmMatrix>
+   How to average a matrix over a compact group <averageMatrix>
    How to define a semi-definite variable (SDP) that respects some symmetries <SDP>
    How to load/save RepLAB objects <loadSave>

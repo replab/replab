@@ -1,4 +1,4 @@
-% # Defining a group from a set of generators
+% # Group definition from generators
 %
 % This document illustrates how to define a group from a set of generators in *RepLAB*.
 %
