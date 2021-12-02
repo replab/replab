@@ -11,15 +11,18 @@ classdef FiniteSetLaws < replab.laws.DomainLaws
             self.T = S.type;
         end
 
-        function l = isSlow(self)
-        % Returns whether some computations on this object are particularly slow
-        %
-        % Returns true when `.S` has more than 500 elements and is
-        %
-        % * a conjugacy class, as the elements of a conjugacy class cannot be enumerated in order,
-        % * a coset, as some computations require computing all elements.
-            l = isa(self, 'replab.DoubleCoset') || isa(self, 'replab.Coset') || isa(self, 'replab.ConjugacyClass');
-            l = l && self.nElements > 500;
+        function yellow(self)
+        % Bails out the test for a law if the number of elements > 10000
+            if self.S.nElements > 10000
+                replab.Laws.skip;
+            end
+        end
+
+        function red(self)
+        % Bails out the test for a law if the number of elements > 100
+            if self.S.nElements > 100
+                replab.Laws.skip;
+            end
         end
 
     end
@@ -35,23 +38,19 @@ classdef FiniteSetLaws < replab.laws.DomainLaws
         % elements
 
         function law_elements_(self)
-            if self.S.nElements < 100
-                E = self.S.elements;
-                assertTrue(length(E) == self.S.nElements);
-                for i = 1:length(E)
-                    assertTrue(self.S.contains(E{i}));
-                end
+            self.red;
+            E = self.S.elements;
+            assertTrue(length(E) == self.S.nElements);
+            for i = 1:length(E)
+                assertTrue(self.S.contains(E{i}));
             end
         end
 
         % elementsSequence
 
         function laws = laws_elementsSequence(self)
-            if self.isSlow
-                laws = replab.Laws.empty;
-            else
-                laws = self.S.elementsSequence.laws;
-            end
+            self.red;
+            laws = self.S.elementsSequence.laws;
         end
 
         % nElements
@@ -75,24 +74,6 @@ classdef FiniteSetLaws < replab.laws.DomainLaws
         function laws = laws_setProduct(self)
             laws = self.S.setProduct.laws(self.S);
         end
-
-% $$$         function laws = laws_elementsSequence(self)
-% $$$             if isa(self.S, 'replab.ConjugacyClass') && self.S.nElements > 500
-% $$$                 return
-% $$$             end
-% $$$             laws = self.S.
-% $$$             E = self.S.elementsSequence;
-% $$$             assertTrue(E.nElements == self.S.nElements);
-% $$$             % test one representative
-% $$$             s = E.sample;
-% $$$             assertTrue(S.contains(s));
-% $$$             ind = E.find(s);
-% $$$             s1 = E.at(ind);
-% $$$             self.S.assertEqv(s, s1);
-% $$$         end
-
-
-
 
     end
 
