@@ -284,17 +284,23 @@ classdef FiniteGroupLaws < replab.laws.GroupLaws & replab.laws.FiniteSetLaws
             self.assert(C3.contains(h));
         end
 
-        function laws_doubleCoset(self)
-            L = self.S.
-            L = self.S.subgroup({l});
-            R = self.S.subgroup(
+        function laws = laws_doubleCoset(self)
+            L = self.S.randomSubgroup;
+            R = self.S.randomSubgroup;
+            el = self.S.sample;
+            dc = L.doubleCoset(el, R, 'group', self.S);
+            laws = dc.laws;
         end
-
 
         function law_doubleCosets_(self)
             self.red;
             C = self.S.doubleCosets(self.S, self.S);
             self.assert(C.nElements == 1);
+        end
+
+        function laws = laws_doubleCosets(self)
+            self.red;
+            laws = self.S.doubleCosets(self.S.randomSubgroup, self.S.randomSubgroup).laws;
         end
 
     end
