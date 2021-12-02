@@ -14,16 +14,16 @@ replab_init('verbose', 0);
 
 M = rand(4)
 
-% Our aim is to compute the average $\sum_{g\in G} R_g M R_g'$ over a continuous group $G$,
+% Our aim is to compute the average $\sum_{g\in G} R_g M R_g^\dag$ over a continuous group $G$,
 % where $R_g$ is a representation of the group element $g$.
 
 % ## Group and representation definition
 %
-% Let us consider the special group of orthogonal matrices with determinant equal to 1
+% Let us consider the group of special orthogonal matrices with determinant equal to 1 in dimension 2
 
 group = replab.SO(2)
 
-% We consider the 4-dimensional tensor representation of this group
+% We consider the 4-dimensional tensor representation of this group $R=SO(2)\times SO(2)$
 
 rep = kron(group.definingRep, group.definingRep)
 
