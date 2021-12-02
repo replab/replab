@@ -272,7 +272,30 @@ classdef FiniteGroupLaws < replab.laws.GroupLaws & replab.laws.FiniteSetLaws
 
     methods % Laws: Cosets
 
-        % TODO
+        function law_doubleCoset_SS(self, g, h)
+            self.red;
+            S = self.S;
+            T = S.trivialSubgroup;
+            C1 = S.doubleCoset(g, T);
+            C2 = T.doubleCoset(g, S);
+            C3 = S.doubleCoset(g, S);
+            self.assert(C1.contains(h));
+            self.assert(C2.contains(h));
+            self.assert(C3.contains(h));
+        end
+
+        function laws_doubleCoset(self)
+            L = self.S.
+            L = self.S.subgroup({l});
+            R = self.S.subgroup(
+        end
+
+
+        function law_doubleCosets_(self)
+            self.red;
+            C = self.S.doubleCosets(self.S, self.S);
+            self.assert(C.nElements == 1);
+        end
 
     end
 

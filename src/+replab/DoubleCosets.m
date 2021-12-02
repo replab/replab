@@ -1,4 +1,4 @@
-classdef DoubleCosets < replab.Obj
+classdef DoubleCosets < replab.Domain
 % Describes the set of double cosets in a group
 %
 % A double coset is a set of the form ``{ H g K } = { h g k : h \in H, k \in K}`` for subgroups
@@ -8,6 +8,26 @@ classdef DoubleCosets < replab.Obj
         group % (`.FiniteGroup`): Group
         leftSubgroup % (`.FiniteGroup`): Subgroup of `.group`
         rightSubgroup % (`.FiniteGroup`): Subgroup of `.group`
+    end
+
+    methods % Implementations
+
+        % Obj
+
+        function l = laws(self)
+            l = replab.laws.DoubleCosetsLaws(self);
+        end
+
+        % Domain
+
+        function l = eqv(self, x, y)
+            l = self.group.eqv(x.representative, y.representative);
+        end
+
+        function c = sample(self)
+           c = self.leftSubgroup.doubleCoset(self.group.sample, self.rightSubgroup, 'group', self.group);
+       end
+
     end
 
     methods

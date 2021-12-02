@@ -28,6 +28,11 @@ classdef LeftCoset < replab.LeftCoset
             E = replab.perm.Sequence(matrix);
         end
 
+
+        function s = setProduct(self)
+            s = replab.SetProduct(self.type, horzcat({{self.representative}}, self.subgroup.setProduct.sets), false);
+        end
+
     end
 
 end

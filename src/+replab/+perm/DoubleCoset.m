@@ -54,6 +54,10 @@ classdef DoubleCoset < replab.DoubleCoset
             s = self.cached('nElements', @() self.computeNElements);
         end
 
+        function S = setProduct(self)
+            S = replab.SetProduct(self.type, {self.elements}, false);
+        end
+
     end
 
     methods (Access = protected)

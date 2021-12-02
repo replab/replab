@@ -1,4 +1,7 @@
 classdef Subgroups < replab.domain.BoundedLattice
+% Represents the lattice of subgroups of a finite group
+%
+% This class is mainly used to test the `+replab.FiniteGroup.closure` and `+replab.FiniteGroup.intersection` methods
 
     methods
 
@@ -15,15 +18,7 @@ classdef Subgroups < replab.domain.BoundedLattice
         end
 
         function G = sample(self)
-            try
-                G = self.one.randomProperSubgroup;
-            catch
-                if randi(2) == 1
-                    G = self.one;
-                else
-                    G = self.zero;
-                end
-            end
+            G = self.one.randomSubgroup;
         end
 
         function b = ltEqv(self, lhs, rhs)

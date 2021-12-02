@@ -733,11 +733,13 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
         function sub = randomProperSubgroup(self, nSteps)
         % Constructs a random proper subgroup of this group
         %
+        % The call fails if no proper subgroup exists.
+        %
         % Args:
         %   nSteps (integer, optional): How many steps of reduction to perform, default 1
         %
         % Returns:
-        %   `.FiniteGroup`
+        %   `.FiniteGroup`: A proper subgroup
             if nargin < 2 || isempty(nSteps)
                 nSteps = 1;
             end
@@ -763,6 +765,25 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
                     candidate = sub.subgroup({s1 s2});
                 end
                 sub = candidate;
+            end
+        end
+
+        function G = randomSubgroup(self)
+        % Constructs a random subgroup of this group
+        %
+        % Compared to `.randomProperSubgroup`, this method can return the trivial group or ``self``.
+        % This method never fails.
+        %
+        % Returns:
+        %   `.FiniteGroup`: A subgroup
+            try
+                G = self.randomProperSubgroup;
+            catch
+                if randi(2) == 1
+                    G = self;
+                else
+                    G = self.trivialSubgroup;
+                end
             end
         end
 

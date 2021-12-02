@@ -26,6 +26,10 @@ classdef NormalCoset < replab.NormalCoset
             E = replab.perm.Sequence(matrix);
         end
 
+        function s = setProduct(self)
+            s = setProduct@replab.LeftCoset(self);
+        end
+
     end
 
 end

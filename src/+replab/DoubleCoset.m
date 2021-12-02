@@ -14,10 +14,6 @@ classdef DoubleCoset < replab.FiniteSet
 
         % Domain
 
-        function b = eqv(self, lhs, rhs)
-            b = self.type.eqv(lhs, rhs);
-        end
-
         function l = laws(self)
             l = replab.laws.DoubleCosetLaws(self);
         end
@@ -34,10 +30,6 @@ classdef DoubleCoset < replab.FiniteSet
             rightSubgroup1 = self.rightSubgroup.imap(f);
             rep1 = f.imageElement(self.representative);
             C = leftSubgroup1.doubleCoset(rep1, rightSubgroup1, 'group', group1, 'isCanonical', f.preservesTypeOrder);
-        end
-
-        function s = setProduct(self)
-            s = replab.SetProduct(self.type, horzcat(self.leftSubgroup.setProduct.sets, {{self.representative}}, self.rightSubgroup.setProduct.sets), false);
         end
 
     end

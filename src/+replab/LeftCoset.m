@@ -20,10 +20,6 @@ classdef LeftCoset < replab.Coset
             C = subgroup1.leftCoset(rep1, 'group', group1, 'isCanonical', f.preservesTypeOrder);
         end
 
-        function s = setProduct(self)
-            s = replab.SetProduct(self.type, horzcat({{self.representative}}, self.subgroup.setProduct.sets), false);
-        end
-
     end
 
 end

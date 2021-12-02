@@ -32,6 +32,10 @@ classdef RightCoset < replab.RightCoset
             E = replab.perm.Sequence(matrix);
         end
 
+        function s = setProduct(self)
+            s = replab.SetProduct(self.type, horzcat(self.subgroup.setProduct.sets, {{self.representative}}), false);
+        end
+
     end
 
 end

@@ -25,10 +25,6 @@ classdef NormalCoset < replab.LeftCoset & replab.RightCoset
             s = nElements@replab.LeftCoset(self);
         end
 
-        function s = setProduct(self)
-            s = setProduct@replab.LeftCoset(self);
-        end
-
     end
 
 end
