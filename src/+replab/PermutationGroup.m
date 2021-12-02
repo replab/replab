@@ -398,7 +398,7 @@ classdef PermutationGroup < replab.FiniteGroup
             elseif isa(cosetOrElement, 'replab.LeftCoset')
                 l = self.factorization.factorizeRepresentativeOfLeftCoset(cosetOrElement);
             elseif isa(cosetOrElement, 'replab.RightCoset')
-                linv = self.factorizeLetters(cosetOrElement.subgroup.leftCoset(self.inverse(cosetOrElement.representative), 'group', cosetOrElement.group));
+                linv = self.factorizeFlat(cosetOrElement.subgroup.leftCoset(self.inverse(cosetOrElement.representative), 'group', cosetOrElement.group));
                 l = replab.fp.Letters.inverse(linv);
             else
                 l = self.factorization.factorize(cosetOrElement);

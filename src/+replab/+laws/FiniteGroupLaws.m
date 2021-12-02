@@ -358,7 +358,13 @@ classdef FiniteGroupLaws < replab.laws.GroupLaws & replab.laws.FiniteSetLaws
 
     methods % Relations to other groups
 
+        function law_derived_subgroup_is_normal_subgroup_(self)
+            self.assert(self.S.derivedSubgroup.isNormalSubgroupOf(self.S));
+        end
 
+        function law_isSubgroupOf_(self)
+            self.assert(self.S.randomSubgroup.isSubgroupOf(self.S));
+        end
 
     end
 
