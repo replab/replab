@@ -320,6 +320,11 @@ classdef FiniteGroupLaws < replab.laws.GroupLaws & replab.laws.FiniteSetLaws
             laws = lc.laws;
         end
 
+        function laws = laws_leftCosets(self)
+            self.red;
+            laws = self.S.leftCosets(self.S.randomSubgroup).laws;
+        end
+
     end
 
     methods % Relations to other groups
