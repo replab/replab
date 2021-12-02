@@ -20,6 +20,9 @@ classdef Sequence < replab.Sequence
         end
 
         function obj = at(self, ind)
+            if ischar(ind)
+                ind = str2num(ind);
+            end
             obj = self.permSet.at(double(ind))';
         end
 
