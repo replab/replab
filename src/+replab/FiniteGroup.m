@@ -271,12 +271,20 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
 % $$$             R = self.cached('fastRecognize', @() self.computeFastRecognize);
 % $$$         end
 
-        function res = knownOrder(self)
-        % Returns whether the order of this group has already been computed
-        %
-        % Returns:
-        %   logical: True if the order is known
-            error('Abstract');
+        function res = isCommutative(self)
+        % Returns whether this group is commutative
+            for i = 1:self.nGenerators
+                gi = self.generator(i);
+                for j = 1:i-1
+                    gj = self.generator(j);
+                    if ~self.eqv(self.compose(gi, gj), self.compose(gj, gi))
+                        res = false;
+                        return
+                    end
+                end
+            end
+            res = true;
+            return
         end
 
         function res = isCyclic(self)
@@ -321,20 +329,12 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
             b = self.nGenerators == 0;
         end
 
-        function res = isCommutative(self)
-        % Returns whether this group is commutative
-            for i = 1:self.nGenerators
-                gi = self.generator(i);
-                for j = 1:i-1
-                    gj = self.generator(j);
-                    if ~self.eqv(self.compose(gi, gj), self.compose(gj, gi))
-                        res = false;
-                        return
-                    end
-                end
-            end
-            res = true;
-            return
+        function res = knownOrder(self)
+        % Returns whether the order of this group has already been computed
+        %
+        % Returns:
+        %   logical: True if the order is known
+            error('Abstract');
         end
 
         function o = order(self)
