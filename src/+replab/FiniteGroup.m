@@ -1007,9 +1007,6 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
         % Returns:
         %   `.NormalCosets`: The set of normal cosets
             error('Abstract');
-            %             assert(subgroup.isNormalSubgroupOf(self), 'The given subgroup must be normal in parent group');
-            % c = replab.NormalCosets(self, subgroup);
-
         end
 
         function c = rightCoset(self, element, varargin)

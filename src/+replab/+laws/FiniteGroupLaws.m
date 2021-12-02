@@ -314,6 +314,7 @@ classdef FiniteGroupLaws < replab.laws.GroupLaws & replab.laws.FiniteSetLaws
         end
 
         function laws = laws_leftCoset(self)
+            self.red;
             el = self.S.sample;
             G = self.S.randomSubgroup;
             lc = G.leftCoset(el, 'group', self.S);
@@ -323,6 +324,34 @@ classdef FiniteGroupLaws < replab.laws.GroupLaws & replab.laws.FiniteSetLaws
         function laws = laws_leftCosets(self)
             self.red;
             laws = self.S.leftCosets(self.S.randomSubgroup).laws;
+        end
+
+        % we skip mldivide and mrdivide as they relate to syntax
+
+        function laws = laws_normalCoset(self)
+            self.red;
+            G = self.S.randomSubgroup;
+            nc = G.normalCoset(G.identity, 'group', self.S);
+            assert(isa(nc, 'replab.NormalCoset'));
+            laws = nc.laws;
+        end
+
+        function laws = laws_normalCosets(self)
+            self.red;
+            laws = self.S.normalCosets(self.S.derivedSubgroup).laws;
+        end
+
+        function laws = laws_rightCoset(self)
+            self.red;
+            el = self.S.sample;
+            G = self.S.randomSubgroup;
+            rc = G.rightCoset(el, 'group', self.S);
+            laws = rc.laws;
+        end
+
+        function laws = laws_rightCosets(self)
+            self.red;
+            laws = self.S.rightCosets(self.S.randomSubgroup).laws;
         end
 
     end
