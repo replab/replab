@@ -130,7 +130,18 @@ classdef Laws < replab.Str
                         % subinstance
                         nameParts = strsplit(name, '_');
                         prefix = [strjoin(nameParts(2:end), ' ') '->'];
-                        newLaws = self.(name);
+                        try
+                            newLaws = self.(name);
+                        catch
+                            err = lasterror;
+                            switch err.identifier
+                              case 'replab:skip'
+                                fprintf('skipping slow test');
+                                continue
+                              otherwise
+                                rethrow(err);
+                            end
+                        end
                         [newTestNames newTestFuns] = newLaws.getTestCases;
                         newTestNames = cellfun(@(x) [prefix x], newTestNames, 'UniformOutput', false);
                         testNames = horzcat(testNames, newTestNames);
