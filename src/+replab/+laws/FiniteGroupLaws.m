@@ -36,6 +36,12 @@ classdef FiniteGroupLaws < replab.laws.GroupLaws & replab.laws.FiniteSetLaws
             laws = self.S.conjugacyClasses.laws;
         end
 
+        function law_findLeftConjugations_SS(self, b, s)
+            t = self.S.leftConjugate(b, s);
+            b1 = self.S.findLeftConjugations(s, t);
+            assert(b1.contains(b));
+        end
+
     end
 
     methods % Laws: Group properites

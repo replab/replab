@@ -218,6 +218,27 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
             error('Abstract');
         end
 
+        function B = findLeftConjugations(self, s, t, varargin)
+        % Returns the set of all elements that left conjugates an element to another element
+        %
+        % Let ``s`` and ``t`` be two elements of this group. This returns the set of all elements
+        % ``b`` such that ``t = b s b^-1`` or ``t = leftConjugate(b, s)``.
+        %
+        % When no such ``b`` exists, this returns ``[]``.
+        %
+        % Args:
+        %   s (group element): Source element
+        %   t (group element): Target element
+        %
+        % Keyword Args:
+        %   sCentralizer (`+replab.FiniteGroup`, optional): Centralizer of ``s`` in this group
+        %   tCentralizer (`+replab.FiniteGroup`, optional): Centralizer of ``t`` in this group
+        %
+        % Returns:
+        %   `+replab.LeftCoset` or ``[]``: Set of all elements of this group that left conjugates ``s`` to ``t`` if it exists
+            error('Abstract');
+        end
+
         function c = realCharacterTable(self)
         % Returns the real character table of this group
         %
@@ -893,27 +914,6 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
         %
         % Returns:
         %   `+replab.DoubleCosets`: The set of double cosets
-            error('Abstract');
-        end
-
-        function B = findLeftConjugations(self, s, t, varargin)
-        % Returns the set of all elements that left conjugates an element to another element
-        %
-        % Let ``s`` and ``t`` be two elements of this group. This returns the set of all elements
-        % ``b`` such that ``t = b s b^-1`` or ``t = leftConjugate(b, s)``.
-        %
-        % When no such ``b`` exists, this returns ``[]``.
-        %
-        % Args:
-        %   s (group element): Source element
-        %   t (group element): Target element
-        %
-        % Keyword Args:
-        %   sCentralizer (`+replab.FiniteGroup`, optional): Centralizer of ``s`` in this group
-        %   tCentralizer (`+replab.FiniteGroup`, optional): Centralizer of ``t`` in this group
-        %
-        % Returns:
-        %   `+replab.LeftCoset` or ``[]``: Set of all elements of this group that left conjugates ``s`` to ``t`` if it exists
             error('Abstract');
         end
 
