@@ -309,6 +309,17 @@ classdef FiniteGroupLaws < replab.laws.GroupLaws & replab.laws.FiniteSetLaws
             laws = self.S.doubleCosets(self.S.randomSubgroup, self.S.randomSubgroup).laws;
         end
 
+        function law_isNormalizedBy_S(self, g)
+            self.assert(self.S.isNormalizedBy(g));
+        end
+
+        function laws = laws_leftCoset(self)
+            el = self.S.sample;
+            G = self.S.randomSubgroup;
+            lc = G.leftCoset(el, 'group', self.S);
+            laws = lc.laws;
+        end
+
     end
 
     methods % Relations to other groups

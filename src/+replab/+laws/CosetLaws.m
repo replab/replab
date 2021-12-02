@@ -1,9 +1,14 @@
 classdef CosetLaws < replab.laws.FiniteSetLaws
 
+    properties (SetAccess = protected)
+        G % (`+replab.FiniteGroup`): Subgroup
+    end
+
     methods
 
         function self = CosetLaws(S)
             self@replab.laws.FiniteSetLaws(S);
+            self.G = S.subgroup;
         end
 
     end
@@ -11,9 +16,8 @@ classdef CosetLaws < replab.laws.FiniteSetLaws
     methods
 
         function law_factorize_coset_representative_(self)
-            [l, r] = self.S.factorizeShortRepresentativeLetters;
-            r1 = self.S.group.imageLetters(l);
-            self.S.type.assertEqv(r, r1);
+            l = self.S.group.factorizeFlat(self.S);
+            r = self.S.group.imageFlat(l);
             assertTrue(self.S.contains(r));
         end
 

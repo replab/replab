@@ -394,7 +394,7 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
 
     methods % Generators-related methods
 
-        function [l, r] = factorizeFlat(self, elementOrCoset)
+        function l = factorizeFlat(self, elementOrCoset)
         % Factorizes an element or a coset as a flat sequence in the generators
         %
         % See `.imageFlat` for the convention.

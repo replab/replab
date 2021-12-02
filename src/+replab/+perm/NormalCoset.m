@@ -27,7 +27,7 @@ classdef NormalCoset < replab.NormalCoset
         end
 
         function s = setProduct(self)
-            s = setProduct@replab.LeftCoset(self);
+            s = replab.SetProduct(self.type, horzcat({{self.representative}}, self.subgroup.setProduct.sets), false);
         end
 
     end

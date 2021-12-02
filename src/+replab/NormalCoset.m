@@ -5,9 +5,16 @@ classdef NormalCoset < replab.LeftCoset & replab.RightCoset
 %
 % See parent classes `.LeftCoset` and `.RightCoset`
 
-    methods
+    methods % Implementations
+
+        % Obj
+
+        function l = laws(self)
+            l = replab.laws.NormalCosetLaws(self);
+        end
 
         % Domain
+
         function s = sample(self)
             s = sample@replab.LeftCoset(self);
         end
@@ -19,10 +26,6 @@ classdef NormalCoset < replab.LeftCoset & replab.RightCoset
             subgroup1 = self.subgroup.imap(f);
             rep1 = f.imageElement(self.representative);
             C = subgroup1.normalCoset(rep1, 'group', group1);
-        end
-
-        function s = nElements(self)
-            s = nElements@replab.LeftCoset(self);
         end
 
     end

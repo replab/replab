@@ -5,6 +5,13 @@ classdef RightCoset < replab.Coset
 
     methods % Implementations
 
+        % Obj
+
+        function l = laws(self)
+            l = replab.laws.RightCosetLaws(self);
+        end
+
+
         % Domain
 
         function s = sample(self)
