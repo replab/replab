@@ -49,16 +49,6 @@ classdef RightCosets < replab.Cosets
             d = self.leftCosetsBy(subgroup1);
         end
 
-        function s = nElements(self)
-        % Returns the number of right cosets
-        %
-        % Returns:
-        %   integer: Number of right cosets
-            s = self.group.order / self.subgroup.order;
-            assert(s < 2^53 - 1);
-            s = double(s);
-        end
-
         function T = transversal(self)
         % Returns all the canonical representatives of cosets
         %

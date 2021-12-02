@@ -49,16 +49,6 @@ classdef LeftCosets < replab.Cosets
             error('Abstract');
         end
 
-        function s = nElements(self)
-        % Returns the number of left cosets
-        %
-        % Returns:
-        %   integer: Number of left cosets
-            s = self.group.order / self.subgroup.order;
-            assert(s <= 2^53 - 1);
-            s = double(s);
-        end
-
         function T = transversal(self)
         % Returns all the canonical representatives of cosets
         %

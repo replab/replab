@@ -538,6 +538,10 @@ classdef PermutationGroup < replab.FiniteGroup
             c = replab.perm.NormalCoset(representative, subgroup, group);
         end
 
+        function C = normalCosets(self, subgroup)
+            C = replab.perm.NormalCosets(self, subgroup);
+        end
+
         function o = order(self)
             o = self.cached('order', @() self.chain.order);
         end
