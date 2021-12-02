@@ -132,7 +132,9 @@ classdef Sequence < replab.Domain
         end
 
         function obj = sample(self)
-            obj = self.at(randint(self.nElements)); % use randint as it is the method equivalent to randi on @vpi
+            ind = min(max(randint(self.nElements), vpi(1)), self.nElements); % use randint as it is the method equivalent to randi on @vpi
+                                                                             % but it is buggy
+            obj = self.at(ind);
         end
 
     end
