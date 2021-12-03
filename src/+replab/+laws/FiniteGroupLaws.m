@@ -418,15 +418,11 @@ classdef FiniteGroupLaws < replab.laws.GroupLaws & replab.laws.FiniteSetLaws
             laws = self.S.conjugatingAutomorphism(self.S.sample).laws;
         end
 
-        % findIsomorphism
-
         function law_findIsomorphism_to_trivial_group_(self)
             self.infrared;
             tg = replab.PermutationGroup.trivial(2);
             self.assert(isempty(self.S.findIsomorphism(tg)) ~= self.S.isTrivial);
         end
-
-        % findIsomorphisms
 
         function law_findIsomorphisms_(self)
             self.infrared;
@@ -435,6 +431,17 @@ classdef FiniteGroupLaws < replab.laws.GroupLaws & replab.laws.FiniteSetLaws
         end
 
         % findMorphisms
+
+        function law_findMorphisms_(self)
+            self.infrared;
+            tg = replab.PermutationGroup.trivial(2);
+            % there is only one morphism to the trivial group
+            self.assert(length(self.S.findMorphisms(tg)) == 1);
+        end
+
+        %        function law_isMorphismByImages_S(self)
+
+        %end
 
     end
 
