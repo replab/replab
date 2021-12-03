@@ -67,12 +67,11 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
                 names{1, end+1} = sprintf('generator(%d or ''%s'')', i, self.generatorNames{i});
                 values{1, end+1} = self.generator(i);
             end
-            % TODO
-% $$$             r = self.fastRecognize;
-% $$$             if ~isempty(r)
-% $$$                 names{1,end+1} = 'recognize.source';
-% $$$                 values{1,end+1} = r.source;
-% $$$             end
+            r = self.fastRecognize;
+            if ~isempty(r)
+                names{1,end+1} = 'recognize.source';
+                values{1,end+1} = r.source;
+            end
         end
 
         function names = hiddenFields(self)
@@ -247,15 +246,13 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
             error('Abstract');
         end
 
-% $$$         function R = fastRecognize(self)
-% $$$         % Attempts to recognize this group in the standard atlas
-% $$$         %
-% $$$         % Returns:
-% $$$         %   `.FiniteIsomorphism` or ``[]``: A result in case the group is identified; or ``[]`` if unrecognized.
-% $$$             R = [];
-% $$$             return % TODO
-% $$$             R = self.cached('fastRecognize', @() self.computeFastRecognize);
-% $$$         end
+        function R = fastRecognize(self)
+        % Attempts to recognize this group in the standard atlas
+        %
+        % Returns:
+        %   `.FiniteIsomorphism` or ``[]``: A result in case the group is identified; or ``[]`` if unrecognized.
+            error('Abstract');
+        end
 
         function res = isCommutative(self)
         % Returns whether this group is commutative
@@ -346,14 +343,13 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
             end
         end
 
-% $$$         function R = recognize(self)
-% $$$         % Attempts to recognize this group in the standard atlas
-% $$$         %
-% $$$         % Returns:
-% $$$         %   `.FiniteIsomorphism` or ``[]``: A result in case the group is identified; or ``[]`` if unrecognized.
-% $$$             R = replab.Atlas.recognize(self);
-% $$$             R = self.cached('recognize', @() self.computeRecognize);
-% $$$         end
+        function R = recognize(self)
+        % Attempts to recognize this group in the standard atlas
+        %
+        % Returns:
+        %   `.FiniteIsomorphism` or ``[]``: A result in case the group is identified; or ``[]`` if unrecognized.
+            R = self.cached('recognize', @() replab.Atlas.recognize(self));
+        end
 
     end
 

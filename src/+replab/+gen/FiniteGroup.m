@@ -223,6 +223,13 @@ classdef FiniteGroup < replab.FiniteGroup & replab.gen.FiniteSet
             end
         end
 
+        function R = fastRecognize(self)
+            R = self.nice.fastRecognize;
+            if ~isempty(R)
+                R = R.andThen(self.niceIsomorphism.inverse);
+            end
+        end
+
         function C = findLeftConjugations(self, s, t, varargin)
             args = struct('sCentralizer', [], 'tCentralizer', []);
             args = replab.util.populateStruct(args, varargin);

@@ -96,26 +96,21 @@ classdef PermutationGroup < replab.FiniteGroup
 
     end
 
-    % $$$
-% $$$     methods (Access = protected) % Implementations
-% $$$
-% $$$
-% $$$         function R = computeFastRecognize(self)
-% $$$         % TODO
-% $$$             R = [];
-% $$$             if self.permutationGroup.image.domainSize < replab.globals.fastChainDomainSize
-% $$$                 c = self.permutationIsomorphism.image.partialChain;
-% $$$                 if ~c.isMutable
-% $$$                     if c.order <= replab.globals.atlasMaximalOrder
-% $$$                         R = replab.Atlas.recognize(self);
-% $$$                     end
-% $$$                 end
-% $$$             end
-% $$$         end
-% $$$
+    methods (Access = protected) % Implementations
 
-    % end
-    % $$$
+        function R = computeFastRecognize(self)
+            R = [];
+            if self.domainSize < replab.globals.fastChainDomainSize
+                c = self.permutationIsomorphism.image.partialChain;
+                if ~c.isMutable
+                    if c.order <= replab.globals.atlasMaximalOrder
+                        R = replab.Atlas.recognize(self);
+                    end
+                end
+            end
+        end
+
+    end
 
     methods % Group internal description
 
@@ -406,6 +401,10 @@ classdef PermutationGroup < replab.FiniteGroup
             else
                 l = self.factorization.factorize(cosetOrElement);
             end
+        end
+
+        function R = fastRecognize(self)
+            R = self.cached('fastRecognize', @() self.computeFastRecognize);
         end
 
         function c = findLeftConjugations(self, s, t, varargin)

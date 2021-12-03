@@ -70,10 +70,10 @@ classdef Symmetric
                 values = replab.cyclotomic(values);
                 ctR = replab.RealCharacterTable(G.permutationGroup, classes, values, 'irreps', irreps);
                 ctC = replab.ComplexCharacterTable.fromRealCharacterTable(ctR);
-                G.cache('realCharacterTable', ctR.imap(G.niceMorphism.inverse), 'error');
-                G.cache('complexCharacterTable', ctC.imap(G.niceMorphism.inverse), 'error');
+                G.cache('realCharacterTable', ctR.imap(G.niceIsomorphism.inverse), 'error');
+                G.cache('complexCharacterTable', ctC.imap(G.niceIsomorphism.inverse), 'error');
             end
-            G.cache('conjugacyClasses', classes.imap(G.niceMorphism.inverse), 'error');
+            G.cache('conjugacyClasses', classes.imap(G.niceIsomorphism.inverse), 'error');
         end
 
         function R = recognize(G)

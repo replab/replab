@@ -68,9 +68,9 @@ function group = parseGroup(data)
     for i = 1:nClasses
         cd = data.classes{i};
         if isa(cd, 'char')
-            classes{i} = replab.ConjugacyClass.make(group, cd);
+            classes{i} = group.conjugacyClass(cd);
         else
-            classes{i} = replab.ConjugacyClass.make(group, group.niceMorphism.preimageElement(cell2mat(cd)));
+            classes{i} = group.conjugacyClass(group.niceIsomorphism.preimageElement(cell2mat(cd)));
         end
     end
     group.cache('conjugacyClasses', replab.ConjugacyClasses(group, classes), 'error');
