@@ -396,11 +396,11 @@ classdef FiniteGroupLaws < replab.laws.GroupLaws & replab.laws.FiniteSetLaws
         end
 
         function law_permutationGroup_(self)
-            T = self.S.permutationGroup;
+            P = self.S.permutationGroup;
             iso = self.S.permutationIsomorphism;
-            self.assert(self.S.nGenerators == T.nGenerators);
+            self.assert(self.S.nGenerators == P.nGenerators);
             for i = 1:self.S.nGenerators
-                self.T.assertEqv(T.generator(i), iso.imageElement(self.S.generator(i)));
+                P.assertEqv(P.generator(i), iso.imageElement(self.S.generator(i)));
             end
         end
 

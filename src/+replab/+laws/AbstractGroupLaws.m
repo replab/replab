@@ -9,12 +9,18 @@ classdef AbstractGroupLaws < replab.laws.FiniteGroupLaws
 
     end
 
-% $$$     methods
-% $$$
-% $$$         function law_relators_are_satisfied_by_permutation_realization_(self)
-% $$$             assert(self.S.isMorphismByImages(self.S.permutationGroup, 'images', self.S.permutationGroup.generators));
-% $$$         end
-% $$$
-% $$$     end
+    methods
+
+        function law_simplify_SS(self, s1, s2)
+            s = self.S.compose(s1, s2);
+            s1 = self.S.simplify(s);
+            self.S.assertEqv(s, s1);
+        end
+
+        function law_withGeneratorNames_S(self, s)
+        % nothing, disable this law
+        end
+
+    end
 
 end

@@ -37,7 +37,11 @@ classdef PermutationGroup < replab.FiniteGroup
                 self.cache('chain', args.chain, 'error');
             end
             if ~isequal(args.order, 0)
-                self.cache('order', args.order, 'error');
+                order = args.order;
+                if isa(order, 'double')
+                    order = vpi(order);
+                end
+                self.cache('order', order, 'error');
             end
             % Rest of arguments
             if ~isequal(args.relators, 'none')
