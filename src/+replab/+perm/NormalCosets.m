@@ -1,4 +1,4 @@
-classdef NormalCosets < replab.NormalCosets & replab.perm.LeftCosets & replab.perm.RightCosets
+classdef NormalCosets < replab.perm.LeftCosets & replab.NormalCosets & replab.perm.RightCosets
 % Describes the set of normal cosets of a finite group
 %
 % Let $H$ be a normal subgroup of a group $G$.
