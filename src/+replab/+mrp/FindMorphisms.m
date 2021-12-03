@@ -4,7 +4,6 @@ classdef FindMorphisms
 % Implements EPIMORPHISMS from
 % D. Holt et al., Handbook of Computational Group Theory, Chapman & Hall/CRC, 2004, pp. 325-332
 
-
     properties (SetAccess = protected)
         r % (integer): Number of generators in `.F`
         F % (`+replab.FiniteGroup`): Group to find homomorphisms from
@@ -12,7 +11,7 @@ classdef FindMorphisms
         A % (`+replab.FiniteGroup`): Supergroup of `.G`
         I % (cell(1,r) of cell(1,\*) of elements of `.G`): Candidates
         CI % (cell(1,r) of cell(1,\*) of `+replab.FiniteGroup`): Candidates centralizers in `.A`
-        relatorLetters % (cell(1,\*) of integer(1,\*)): Relators of F in letter form
+        relatorsFlat % (cell(1,\*) of integer(1,\*)): Relators of F in letter form
         relatorSubsets % (integer(1,nFGens)): How many relators contain only the first ``k`` generators, see line 1 of EPIMORPHISMS
         filter % ({'morphisms', 'epimorphisms', 'isomorphisms'): Whether to look for morphisms, epimorphisms, isomorphisms
         single % (logical): Whether to return only the first result
@@ -30,16 +29,16 @@ classdef FindMorphisms
             heo = cellfun(@(g) G.elementOrder(g), h);
             I = cell(1, r);
             CI = cell(1, r);
-            relatorLetters = cellfun(@(rel) F.wordToLetters(rel), F.relators, 'uniform', 0);
-            relmax = cellfun(@(rl) max(abs(rl)), relatorLetters);
+            relatorsFlat = F.relatorsFlat;
+            relmax = cellfun(@(rl) max(abs(rl)), relatorsFlat);
             relatorSubsets = zeros(1, 0);
             for i = 1:r
                 relatorSubsets(i) = find([relmax > i, true], 1) - 1;
             end
             for i = 1:r
                 t = 0;
-                for j = 1:length(relatorLetters)
-                    rel = relatorLetters{j};
+                for j = 1:length(relatorsFlat)
+                    rel = relatorsFlat{j};
                     if all(abs(rel) == i)
                         t = gcd(t, sum(sign(rel)));
                     end
@@ -67,7 +66,7 @@ classdef FindMorphisms
             self.A = A;
             self.I = I;
             self.CI = CI;
-            self.relatorLetters = relatorLetters;
+            self.relatorsFlat = relatorsFlat;
             self.relatorSubsets = relatorSubsets;
             self.filter = filter;
             self.single = single;
@@ -108,7 +107,7 @@ classdef FindMorphisms
         % Tests the relators for the given partial generator array
             res = false;
             for i = 1:self.relatorSubsets(k)
-                if ~self.G.isIdentity(self.G.composeLetters(im, self.relatorLetters{i}))
+                if ~self.G.isIdentity(self.G.composeLetters(im, self.relatorsFlat{i}))
                     return
                 end
             end

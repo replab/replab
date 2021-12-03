@@ -1156,118 +1156,118 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
             m = self.morphismByImages(self, 'preimages', self.generators, 'images', generatorImages, 'nChecks', 0);
         end
 
-% $$$         function res = findIsomorphism(self, to)
-% $$$         % Finds an isomorphism from this finite group to another finite group, if it exists
-% $$$         %
-% $$$         % Args:
-% $$$         %   to (`+replab.FiniteGroup`): Target of the isomorphism
-% $$$         %
-% $$$         % Returns:
-% $$$         %   `.FiniteIsomorphism` or ``[]``: The isomorphism if it exists, or an empty array
-% $$$             res = self.findIsomorphisms(to, 'single', true, 'upToConjugation', true);
-% $$$             if ~isempty(res)
-% $$$                 res = res{1};
-% $$$             else
-% $$$                 res = [];
-% $$$             end
-% $$$         end
+        function res = findIsomorphism(self, to)
+        % Finds an isomorphism from this finite group to another finite group, if it exists
+        %
+        % Args:
+        %   to (`+replab.FiniteGroup`): Target of the isomorphism
+        %
+        % Returns:
+        %   `.FiniteIsomorphism` or ``[]``: The isomorphism if it exists, or an empty array
+            res = self.findIsomorphisms(to, 'single', true, 'upToConjugation', true);
+            if ~isempty(res)
+                res = res{1};
+            else
+                res = [];
+            end
+        end
 
-% $$$         function res = findIsomorphisms(self, to, varargin)
-% $$$         % Finds all the isomorphisms from this finite group to another finite group
-% $$$         %
-% $$$         % Example:
-% $$$         %   >>> G = replab.S(6);
-% $$$         %   >>> m = G.findIsomorphisms(G, 'upToConjugation', true);
-% $$$         %   >>> length(m)
-% $$$         %       2
-% $$$         %
-% $$$         % Args:
-% $$$         %   to (`+replab.FiniteGroup`): Target of the isomorphism
-% $$$         %
-% $$$         % Keyword Args:
-% $$$         %   upToConjugation (logical, optional): Whether to list morphisms up to conjugation of the image group, default: false
-% $$$         %   single (logical, optional): Whether to return maximum a single result, default: false
-% $$$         %
-% $$$         % Returns:
-% $$$         %   cell(1,\*) of `.FiniteIsomorphism`: The isomorphisms
-% $$$             args = struct('upToConjugation', false, 'single', false);
-% $$$             args = replab.util.populateStruct(args, varargin);
-% $$$             if args.single
-% $$$                 args.upToConjugation = true;
-% $$$             end
-% $$$             if self.isTrivial
-% $$$                 if to.isTrivial
-% $$$                     res = {self.isomorphismByImages(to, 'preimages', {}, 'images', {})};
-% $$$                 else
-% $$$                     res = [];
-% $$$                 end
-% $$$                 return
-% $$$             end
-% $$$             F = self;
-% $$$             G = to;
-% $$$             A = to;
-% $$$             if F.order ~= G.order
-% $$$                 res = cell(1, 0);
-% $$$                 return
-% $$$             end
-% $$$             fm = replab.mrp.FindMorphisms(F, G, A, 'isomorphisms', args.single);
-% $$$             if args.upToConjugation || args.single
-% $$$                 res = fm.searchUpToConjugation;
-% $$$             else
-% $$$                 res = fm.searchAll;
-% $$$             end
-% $$$             res = cellfun(@(m) m.toIsomorphism, res, 'uniform', 0);
-% $$$         end
+        function res = findIsomorphisms(self, to, varargin)
+        % Finds all the isomorphisms from this finite group to another finite group
+        %
+        % Example:
+        %   >>> G = replab.S(6);
+        %   >>> m = G.findIsomorphisms(G, 'upToConjugation', true);
+        %   >>> length(m)
+        %       2
+        %
+        % Args:
+        %   to (`+replab.FiniteGroup`): Target of the isomorphism
+        %
+        % Keyword Args:
+        %   upToConjugation (logical, optional): Whether to list morphisms up to conjugation of the image group, default: false
+        %   single (logical, optional): Whether to return maximum a single result, default: false
+        %
+        % Returns:
+        %   cell(1,\*) of `.FiniteIsomorphism`: The isomorphisms
+            args = struct('upToConjugation', false, 'single', false);
+            args = replab.util.populateStruct(args, varargin);
+            if args.single
+                args.upToConjugation = true;
+            end
+            if self.isTrivial
+                if to.isTrivial
+                    res = {self.isomorphismByImages(to, 'preimages', {}, 'images', {})};
+                else
+                    res = [];
+                end
+                return
+            end
+            F = self;
+            G = to;
+            A = to;
+            if F.order ~= G.order
+                res = cell(1, 0);
+                return
+            end
+            fm = replab.mrp.FindMorphisms(F, G, A, 'isomorphisms', args.single);
+            if args.upToConjugation || args.single
+                res = fm.searchUpToConjugation;
+            else
+                res = fm.searchAll;
+            end
+            res = cellfun(@(m) m.toIsomorphism, res, 'uniform', 0);
+        end
 
-% $$$         function res = findMorphisms(self, to, varargin)
-% $$$         % Finds all the morphisms from this finite group to another finite group
-% $$$         %
-% $$$         % Example:
-% $$$         %   >>> S3 = replab.S(3);
-% $$$         %   >>> S4 = replab.S(4);
-% $$$         %   >>> m = S4.findMorphisms(S3, 'upToConjugation', true, 'surjective', false);
-% $$$         %   >>> length(m)
-% $$$         %       3
-% $$$         %
-% $$$         % Args:
-% $$$         %   to (`+replab.FiniteGroup`): Target of the morphism
-% $$$         %
-% $$$         % Keyword Args:
-% $$$         %   upToConjugation (logical, optional): Whether to list morphisms up to conjugation of the image group, default: false
-% $$$         %   surjective (logical, optional): Whether to consider only surjective morphisms (or epimorphisms), whose image span ``to``, default: false
-% $$$         %   single (logical, optional): Whether to return maximum a single result, default: false
-% $$$         %
-% $$$         % Returns:
-% $$$         %   cell(1,\*) of `.FiniteMorphism`: The morphisms
-% $$$             args = struct('upToConjugation', false, 'surjective', false, 'single', false);
-% $$$             args = replab.util.populateStruct(args, varargin);
-% $$$             if args.single
-% $$$                 args.upToConjugation = true;
-% $$$             end
-% $$$             if args.surjective
-% $$$                 if self.order == to.order
-% $$$                     res = self.findIsomorphisms(to, 'upToConjugation', args.upToConjugation, 'single', args.single);
-% $$$                     return
-% $$$                 else
-% $$$                     filter = 'epimorphisms';
-% $$$                 end
-% $$$             else
-% $$$                 filter = 'morphisms';
-% $$$             end
-% $$$             if self.isTrivial
-% $$$                 res = {self.morphismByImages(to, 'preimages', {}, 'images', {})};
-% $$$                 return
-% $$$             end
-% $$$             F = self;
-% $$$             G = to;
-% $$$             A = to;
-% $$$             fm = replab.mrp.FindMorphisms(F, G, A, filter, args.single);
-% $$$             if args.upToConjugation || args.single
-% $$$                 res = fm.searchUpToConjugation;
-% $$$             else
-% $$$                 res = fm.searchAll;
-% $$$             end
-% $$$         end
+        function res = findMorphisms(self, to, varargin)
+        % Finds all the morphisms from this finite group to another finite group
+        %
+        % Example:
+        %   >>> S3 = replab.S(3);
+        %   >>> S4 = replab.S(4);
+        %   >>> m = S4.findMorphisms(S3, 'upToConjugation', true, 'surjective', false);
+        %   >>> length(m)
+        %       3
+        %
+        % Args:
+        %   to (`+replab.FiniteGroup`): Target of the morphism
+        %
+        % Keyword Args:
+        %   upToConjugation (logical, optional): Whether to list morphisms up to conjugation of the image group, default: false
+        %   surjective (logical, optional): Whether to consider only surjective morphisms (or epimorphisms), whose image span ``to``, default: false
+        %   single (logical, optional): Whether to return maximum a single result, default: false
+        %
+        % Returns:
+        %   cell(1,\*) of `.FiniteMorphism`: The morphisms
+            args = struct('upToConjugation', false, 'surjective', false, 'single', false);
+            args = replab.util.populateStruct(args, varargin);
+            if args.single
+                args.upToConjugation = true;
+            end
+            if args.surjective
+                if self.order == to.order
+                    res = self.findIsomorphisms(to, 'upToConjugation', args.upToConjugation, 'single', args.single);
+                    return
+                else
+                    filter = 'epimorphisms';
+                end
+            else
+                filter = 'morphisms';
+            end
+            if self.isTrivial
+                res = {self.morphismByImages(to, 'preimages', {}, 'images', {})};
+                return
+            end
+            F = self;
+            G = to;
+            A = to;
+            fm = replab.mrp.FindMorphisms(F, G, A, filter, args.single);
+            if args.upToConjugation || args.single
+                res = fm.searchUpToConjugation;
+            else
+                res = fm.searchAll;
+            end
+        end
 
         function l = isMorphismByImages(self, target, varargin)
         % Checks whether the given images describe a group morphism

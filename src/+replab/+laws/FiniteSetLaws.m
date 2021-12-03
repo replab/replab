@@ -25,6 +25,13 @@ classdef FiniteSetLaws < replab.laws.DomainLaws
             end
         end
 
+        function infrared(self)
+        % Bails out the test for a law if the number of elements > 50
+            if self.S.nElements > 50
+                replab.Laws.skip;
+            end
+        end
+
     end
 
     methods % Laws

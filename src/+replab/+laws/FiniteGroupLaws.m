@@ -420,7 +420,19 @@ classdef FiniteGroupLaws < replab.laws.GroupLaws & replab.laws.FiniteSetLaws
 
         % findIsomorphism
 
+        function law_findIsomorphism_to_trivial_group_(self)
+            self.infrared;
+            tg = replab.PermutationGroup.trivial(2);
+            self.assert(isempty(self.S.findIsomorphism(tg)) ~= self.S.isTrivial);
+        end
+
         % findIsomorphisms
+
+        function law_findIsomorphisms_(self)
+            self.infrared;
+            nInner = double(self.S.order / self.S.center.order);
+            self.assert(length(self.S.findIsomorphisms(self.S)) >= nInner);
+        end
 
         % findMorphisms
 
