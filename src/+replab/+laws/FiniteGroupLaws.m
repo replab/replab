@@ -13,11 +13,11 @@ classdef FiniteGroupLaws < replab.laws.GroupLaws & replab.laws.FiniteSetLaws
     methods % Laws: Implementations
 
         function law_eq_to_itself_(self)
-            self.assert(self == self);
+            self.assert(self.S == self.S);
         end
 
         function law_isequal_to_itself_(self)
-            self.assert(isequal(self, self));
+            self.assert(isequal(self.S, self.S));
         end
 
     end
