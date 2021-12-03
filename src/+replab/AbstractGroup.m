@@ -85,43 +85,6 @@ classdef AbstractGroup < replab.gen.FiniteGroup
 
     end
 
-% $$$     methods (Access = protected)
-% $$$
-% $$$         function G = computeNiceGroup(self)
-% $$$             G = self.permutationGroup;
-% $$$         end
-% $$$
-% $$$         function m = computeNiceMorphism(self)
-% $$$             m = replab.mrp.AbstractGroupNiceIsomorphism(self);
-% $$$         end
-% $$$
-% $$$         function A = computeAbstractGroup(self)
-% $$$             A = self;
-% $$$         end
-% $$$
-% $$$         function m = computeAbstractMorphism(self)
-% $$$             m = replab.FiniteIsomorphism.identity(self);
-% $$$         end
-% $$$
-% $$$         function R = computeRecognize(self)
-% $$$             R = [];
-% $$$             if ~self.inAtlas
-% $$$                 R = replab.Atlas.recognize(self);
-% $$$             end
-% $$$         end
-% $$$
-% $$$         function R = computeFastRecognize(self)
-% $$$             R = [];
-% $$$             if ~self.inAtlas
-% $$$                 R = self.niceGroup.fastRecognize;
-% $$$                 if ~isempty(R)
-% $$$                     R = R.andThen(self.niceMorphism.inverse);
-% $$$                 end
-% $$$             end
-% $$$         end
-% $$$
-% $$$     end
-
     methods
 
         function self = AbstractGroup(generatorNames, relators, varargin)
@@ -184,67 +147,67 @@ classdef AbstractGroup < replab.gen.FiniteGroup
 % $$$             end
 % $$$         end
 % $$$
-% $$$         function letters = factorizeLetters(self, word)
-% $$$         % Parses word letters from word as a string
-% $$$         %
-% $$$         % Example:
-% $$$         %   >>> A = replab.AbstractGroup({'x'}, {'x^3'});
-% $$$         %   >>> isequal(A.factorizeLetters('x^2'), [1 1])
-% $$$         %       1
-% $$$         %
-% $$$         % Args:
-% $$$         %   word (charstring): Word as a string
-% $$$         %
-% $$$         % Returns:
-% $$$         %   integer(1,\*): Word letters
-% $$$         %
-% $$$         % Raises:
-% $$$         %   An error if the string is malformed
-% $$$             [ok, tokens] = replab.fp.Parser.lex(word, self.generatorNames);
-% $$$             assert(ok, 'Unknown tokens in string');
-% $$$             [pos, letters] = replab.fp.Parser.word(tokens, 1);
-% $$$             assert(pos > 0, 'Malformed word');
-% $$$             assert(tokens(1, pos) == replab.fp.Parser.types.END, 'Badly terminated word');
-% $$$         end
-% $$$
-% $$$         function word = imageLetters(self, letters)
-% $$$         % Prints a word formed of letters as a string
-% $$$         %
-% $$$         %   >>> A = replab.AbstractGroup({'x'}, {[2 3 1]}, {'x^3'});
-% $$$         %   >>> A.imageLetters([1 1])
-% $$$         %       'x^2'
-% $$$         %
-% $$$         % Args:
-% $$$         %   letters (integer(1,\*)): Word letters
-% $$$         %
-% $$$         % Returns:
-% $$$         %   charstring: Word as a string
-% $$$             word = replab.fp.Letters.print(letters, self.generatorNames, ' ');
-% $$$         end
-% $$$
-% $$$         function img = computeImage(self, word, target, targetGeneratorImages)
-% $$$         % Computes the image of this word using the given generator images
-% $$$         %
-% $$$         % Does not verify the validity of the implied homomorphism.
-% $$$         %
-% $$$         % Args:
-% $$$         %   word (charstring): Word
-% $$$         %   target (`+replab.Group`): Target group
-% $$$         %   targetGeneratorImages (cell(1,\*) of elements of ``target``): Images of the generators of this group
-% $$$         %
-% $$$         % Returns:
-% $$$         %   permutation: Computed image
-% $$$             letters = self.factorizeLetters(word);
-% $$$             img = target.identity;
-% $$$             for i = 1:length(letters)
-% $$$                 l = letters(i);
-% $$$                 if l > 0
-% $$$                     img = target.compose(img, targetGeneratorImages{l});
-% $$$                 else
-% $$$                     img = target.composeWithInverse(img, targetGeneratorImages{-l});
-% $$$                 end
-% $$$             end
-% $$$         end
+        function letters = factorizeFlat(self, word)
+        % Parses word letters from word as a string
+        %
+        % Example:
+        %   >>> A = replab.AbstractGroup({'x'}, {'x^3'});
+        %   >>> isequal(A.factorizeLetters('x^2'), [1 1])
+        %       1
+        %
+        % Args:
+        %   word (charstring): Word as a string
+        %
+        % Returns:
+        %   integer(1,\*): Word letters
+        %
+        % Raises:
+        %   An error if the string is malformed
+            [ok, tokens] = replab.fp.Parser.lex(word, self.generatorNames);
+            assert(ok, 'Unknown tokens in string');
+            [pos, letters] = replab.fp.Parser.word(tokens, 1);
+            assert(pos > 0, 'Malformed word');
+            assert(tokens(1, pos) == replab.fp.Parser.types.END, 'Badly terminated word');
+        end
+
+        function word = imageFlat(self, letters)
+        % Prints a word formed of letters as a string
+        %
+        %   >>> A = replab.AbstractGroup({'x'}, {[2 3 1]}, {'x^3'});
+        %   >>> A.imageLetters([1 1])
+        %       'x^2'
+        %
+        % Args:
+        %   letters (integer(1,\*)): Word letters
+        %
+        % Returns:
+        %   charstring: Word as a string
+            word = replab.fp.Letters.print(letters, self.generatorNames, ' ');
+        end
+
+        function img = computeImage(self, word, target, targetGeneratorImages)
+        % Computes the image of this word using the given generator images
+        %
+        % Does not verify the validity of the implied homomorphism.
+        %
+        % Args:
+        %   word (charstring): Word
+        %   target (`+replab.Group`): Target group
+        %   targetGeneratorImages (cell(1,\*) of elements of ``target``): Images of the generators of this group
+        %
+        % Returns:
+        %   permutation: Computed image
+            letters = self.factorizeLetters(word);
+            img = target.identity;
+            for i = 1:length(letters)
+                l = letters(i);
+                if l > 0
+                    img = target.compose(img, targetGeneratorImages{l});
+                else
+                    img = target.composeWithInverse(img, targetGeneratorImages{-l});
+                end
+            end
+        end
 % $$$
 % $$$         function m = renamingMorphism(self, newNames)
 % $$$         % Returns a morphism from this abstract group with the generators renamed
@@ -276,45 +239,25 @@ classdef AbstractGroup < replab.gen.FiniteGroup
             names{1,end+1} = 'type';
             names{1,end+1} = 'inAtlas';
         end
-% $$$
-% $$$         function [names, values] = additionalFields(self)
-% $$$             [names, values] = additionalFields@replab.NiceFiniteGroup(self);
-% $$$             names{1,end+1} = 'relators';
-% $$$             values{1,end+1} = self.relators;
-% $$$         end
-% $$$
-% $$$         % Domain
-% $$$
-% $$$         function b = eqv(self, x, y)
-% $$$             b = all(self.niceImage(x) == self.niceImage(y));
-% $$$         end
-% $$$
-% $$$         function l = laws(self)
-% $$$             l = replab.laws.AbstractGroupLaws(self);
-% $$$         end
-% $$$
-% $$$         % Monoid
-% $$$
-% $$$         function z = compose(self, x, y)
-% $$$             xl = self.factorizeLetters(x);
-% $$$             yl = self.factorizeLetters(y);
-% $$$             zl = replab.fp.Letters.compose(xl, yl);
-% $$$             z = self.imageLetters(zl);
-% $$$         end
-% $$$
-% $$$         % Group
-% $$$
-% $$$         function z = inverse(self, x)
-% $$$             xl = self.factorizeLetters(x);
-% $$$             zl = replab.fp.Letters.inverse(xl);
-% $$$             z = self.imageLetters(zl);
-% $$$         end
-% $$$
-% $$$         % FiniteSet
-% $$$
-% $$$         function b = hasSameTypeAs(self, rhs)
-% $$$             b = self.type.groupId == rhs.type.groupId;
-% $$$         end
+
+        function [names, values] = additionalFields(self)
+            [names, values] = additionalFields@replab.gen.FiniteGroup(self);
+            names{1,end+1} = 'relatorsWord';
+            values{1,end+1} = self.relatorsWord;
+        end
+
+        % Domain
+
+        function l = laws(self)
+            l = replab.laws.AbstractGroupLaws(self);
+        end
+
+        % FiniteGroup
+
+        function iso = abstractIsomorphism(self)
+            iso = replab.FiniteIsomorphism.identity(self);
+        end
+
 % $$$
 % $$$         % FiniteGroup
 % $$$

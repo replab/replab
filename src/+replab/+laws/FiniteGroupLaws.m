@@ -103,6 +103,22 @@ classdef FiniteGroupLaws < replab.laws.GroupLaws & replab.laws.FiniteSetLaws
 
     methods % Laws: Generators-related methods
 
+        function law_factorizeFlat_left_coset_S(self, s)
+            subgroup = self.S.randomSubgroup;
+            coset = subgroup.leftCoset(s, 'group', self.S);
+            l = self.S.factorizeFlat(coset);
+            r = self.S.imageFlat(l);
+            self.assert(coset.contains(r));
+        end
+
+        function law_factorizeFlat_right_coset_S(self, s)
+            subgroup = self.S.randomSubgroup;
+            coset = subgroup.rightCoset(s, 'group', self.S);
+            l = self.S.factorizeFlat(coset);
+            r = self.S.imageFlat(l);
+            self.assert(coset.contains(r));
+        end
+
         function law_factorizeFlat_imageFlat_element_S(self, s)
             self.S.assertEqv(self.S.imageFlat(self.S.factorizeFlat(s)), s);
         end
@@ -368,17 +384,39 @@ classdef FiniteGroupLaws < replab.laws.GroupLaws & replab.laws.FiniteSetLaws
 
     end
 
+    methods % Isomorphic groups
+
+        function law_abstractGroup_(self)
+            T = self.S.abstractGroup;
+            iso = self.S.abstractIsomorphism;
+            self.assert(self.S.nGenerators == T.nGenerators);
+            for i = 1:self.S.nGenerators
+                self.T.assertEqv(T.generator(i), iso.imageElement(self.S.generator(i)));
+            end
+        end
+
+        function law_permutationGroup_(self)
+            T = self.S.permutationGroup;
+            iso = self.S.permutationIsomorphism;
+            self.assert(self.S.nGenerators == T.nGenerators);
+            for i = 1:self.S.nGenerators
+                self.T.assertEqv(T.generator(i), iso.imageElement(self.S.generator(i)));
+            end
+        end
+
+    end
+
     methods % Morphisms
 
-% $$$         function laws = laws_abstractIsomorphism(self)
-% $$$             self.red;
-% $$$             laws = self.S.abstractIsomorphism.laws;
-% $$$         end
+        function laws = laws_abstractIsomorphism(self)
+            self.red;
+            laws = self.S.abstractIsomorphism.laws;
+        end
 
-% $$$         function laws = laws_conjugatingAutomorphism(self)
-% $$$             self.red;
-% $$$             laws = self.S.conjugatingAutomorphism(self.S.sample).laws;
-% $$$         end
+        function laws = laws_conjugatingAutomorphism(self)
+            self.red;
+            laws = self.S.conjugatingAutomorphism(self.S.sample).laws;
+        end
 
         % findIsomorphism
 

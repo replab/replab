@@ -186,11 +186,6 @@ classdef FiniteGroup < replab.FiniteGroup & replab.gen.FiniteSet
             sub = self.niceIsomorphism.preimageGroup(self.nice.derivedSubgroup);
         end
 
-        % FiniteGroup/Cosets
-
-        % TODO
-        % doubleCosets / leftCosets / normalCosets / / rightCosets
-
         function c = doubleCoset(self, element, rightSubgroup, varargin)
             args = struct('group', [], 'isCanonical', false);
             args = replab.util.populateStruct(args, varargin);
@@ -328,6 +323,15 @@ classdef FiniteGroup < replab.FiniteGroup & replab.gen.FiniteSet
 
         function o = order(self)
             o = self.nice.order;
+        end
+
+        function iso = permutationIsomorphism(self)
+            if isa(self.niceIsomorphism.target, 'replab.PermutationGroup')
+                iso = self.niceIsomorphism.restrictedSource(self);
+            else
+                iso = self.niceIsomorphism.restrictedSource(self);
+                iso = iso.andThen(self.nice.permutationIsomorphism);
+            end
         end
 
         function R = relatorsFlat(self)

@@ -13,14 +13,4 @@ classdef CosetLaws < replab.laws.FiniteSetLaws
 
     end
 
-    methods
-
-        function law_factorize_coset_representative_(self)
-            l = self.S.group.factorizeFlat(self.S);
-            r = self.S.group.imageFlat(l);
-            assertTrue(self.S.contains(r));
-        end
-
-    end
-
 end

@@ -10,7 +10,7 @@ classdef SourceRestrictedFiniteIsomorphism < replab.FiniteIsomorphism
             assert(isa(original, 'replab.FiniteIsomorphism'));
             assert(isa(newSource, 'replab.FiniteGroup') && newSource.isSubgroupOf(original.source));
             targetGenerators = cellfun(@(g) original.imageElement(g), newSource.generators, 'uniform', 0);
-            newTarget = original.target.subgroupWithGenerators(targetGenerators);
+            newTarget = original.target.subgroupWithGenerators(targetGenerators, 'order', newSource.order);
             self.original = original;
             self.source = newSource;
             self.target = newTarget;

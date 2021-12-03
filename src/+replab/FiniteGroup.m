@@ -1140,7 +1140,7 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
         %
         % Returns:
         %   `.FiniteIsomorphism`: Isomorphism to an abstract group
-            error('Abstract');
+            m = self.cached('abstractIsomorphism', @() replab.abstract.Isomorphism(self));
         end
 
         function m = conjugatingAutomorphism(self, by)

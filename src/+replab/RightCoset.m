@@ -24,7 +24,7 @@ classdef RightCoset < replab.Coset
             group1 = self.group.imap(f);
             subgroup1 = self.subgroup.imap(f);
             rep1 = f.imageElement(self.representative);
-            C = subgroup1.leftCoset(rep1, 'group', group1, 'isCanonical', f.preservesTypeOrder);
+            C = subgroup1.rightCoset(rep1, 'group', group1, 'isCanonical', f.preservesTypeOrder);
         end
 
     end

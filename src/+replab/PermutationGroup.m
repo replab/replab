@@ -393,8 +393,7 @@ classdef PermutationGroup < replab.FiniteGroup
 
         function l = factorizeFlat(self, cosetOrElement)
             if isa(cosetOrElement, 'replab.DoubleCoset')
-                % TODO: better implementation
-                l = self.factorizeLetters(r);
+                l = self.factorizeFlat(cosetOrElement.representative);
             elseif isa(cosetOrElement, 'replab.LeftCoset')
                 l = self.factorization.factorizeRepresentativeOfLeftCoset(cosetOrElement);
             elseif isa(cosetOrElement, 'replab.RightCoset')
