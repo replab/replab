@@ -11,15 +11,6 @@ classdef FiniteSet < replab.FiniteSet
 
     methods
 
-        function self = FiniteSet(type, nice, niceIsomorphism)
-            assert(isa(type, 'replab.gen.FiniteGroupType'));
-            assert(isa(nice, 'replab.FiniteSet'));
-            assert(isa(niceIsomorphism, 'replab.gen.NiceIsomorphism'));
-            self.type = type;
-            self.nice = nice;
-            self.niceIsomorphism = niceIsomorphism;
-        end
-
         function l = compatibleWithNiceIsomorphism(self, iso)
         % Returns whether the given finite isomorphism is compatible with this object isomorphism
         %

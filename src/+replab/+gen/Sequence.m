@@ -14,7 +14,7 @@ classdef Sequence < replab.Sequence
         end
 
         function obj = at(self, ind)
-            obj = self.niceIsomorphism.preimageElement(self.nice.at(ind))
+            obj = self.niceIsomorphism.preimageElement(self.nice.at(ind));
         end
 
         function ind = find(self, obj)

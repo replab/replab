@@ -137,6 +137,13 @@ classdef Sequence < replab.Domain
             obj = self.at(ind);
         end
 
+        % FiniteSet
+
+        function res = imap(self, f)
+            assert(isa(f.inverse, 'replab.gen.NiceIsomorphism'));
+            res = replab.gen.Sequence(self, f.inverse);
+        end
+
     end
 
     methods (Static) % Sequence construction

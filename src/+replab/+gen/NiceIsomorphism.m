@@ -2,20 +2,21 @@ classdef NiceIsomorphism < replab.FiniteIsomorphism
 % An isomorphism from a subgroup of a finite group type to a finite group (Abstract)
 %
 % In addition, the isomorphism should preserve the type order.
+%
+% Its source must be of a generic type `+replab.+gen.FiniteGroupType`.
 
     methods % Implementations
 
         % Obj
 
         function l = laws(self)
-            l = replab.laws.OrderPreservingFiniteIsomorphismLaws(self);
+            l = replab.laws.NiceIsomorphismLaws(self);
         end
 
         % FiniteIsomorphism
 
         function S = preimageGroup(self, T)
-            Sgens = cellfun(@(t) self.preimageElement(t), T.generators, 'uniform', 0);
-            S = replab.gen.FiniteGroup(self.source.type, Sgens, 'nice', T, 'niceIsomorphism', self);
+            S = self.source.type.groupFromNiceImage(T, self);
         end
 
         function l = preservesTypeOrder(self)

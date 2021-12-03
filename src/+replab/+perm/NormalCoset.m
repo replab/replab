@@ -26,6 +26,10 @@ classdef NormalCoset < replab.NormalCoset
             E = replab.perm.Sequence(matrix);
         end
 
+        function s = nElements(self)
+            s = self.subgroup.order;
+        end
+
         function s = setProduct(self)
             s = replab.SetProduct(self.type, horzcat({{self.representative}}, self.subgroup.setProduct.sets), false);
         end

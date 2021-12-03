@@ -28,8 +28,9 @@ classdef FiniteIsomorphism < replab.Isomorphism & replab.FiniteMorphism
 
         % FiniteMorphism
 
-        function s = preimageRepresentative(self, t)
-            s = self.preimageElement(t);
+        function T = imageGroup(self, S)
+            images = cellfun(@(g) self.imageElement(g), S.generators, 'uniform', 0);
+            T = self.target.subgroupWithGenerators(images); % do not need to check for non-generators
         end
 
         function S = preimageGroup(self, T)
@@ -37,9 +38,8 @@ classdef FiniteIsomorphism < replab.Isomorphism & replab.FiniteMorphism
             S = self.source.subgroupWithGenerators(preimages); % do not need to check for non-generators
         end
 
-        function T = imageGroup(self, S)
-            images = cellfun(@(g) self.imageElement(g), S.generators, 'uniform', 0);
-            T = self.target.subgroupWithGenerators(images); % do not need to check for non-generators
+        function s = preimageRepresentative(self, t)
+            s = self.preimageElement(t);
         end
 
         function m = restrictedSource(self, newSource)

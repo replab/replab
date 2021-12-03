@@ -2,8 +2,17 @@ classdef DoubleCoset < replab.DoubleCoset & replab.gen.FiniteSet
 
     methods
 
-        function self = DoubleCoset(type, nice, niceIsomorphism)
-            self@replab.gen.FiniteSet(type, nice, niceIsomorphism);
+        function self = DoubleCoset(type, nice, niceIsomorphism, representative, leftSubgroup, rightSubgroup, group)
+            assert(isa(type, 'replab.gen.FiniteGroupType'));
+            assert(isa(nice, 'replab.DoubleCoset'));
+            assert(isa(niceIsomorphism, 'replab.gen.NiceIsomorphism'));
+            self.type = type;
+            self.nice = nice;
+            self.niceIsomorphism = niceIsomorphism;
+            self.representative_ = representative;
+            self.leftSubgroup = leftSubgroup;
+            self.rightSubgroup = rightSubgroup;
+            self.group = group;
         end
 
     end

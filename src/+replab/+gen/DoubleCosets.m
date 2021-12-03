@@ -1,22 +1,9 @@
-classdef DoubleCosets < replab.Obj
-% Describes the set of double cosets in a group
-%
-% A double coset is a set of the form ``{ H g K } = { h g k : h \in H, k \in K}`` for subgroups
-% ``H`` and ``K`` of a group ``G``
-
-    properties (SetAccess = protected)
-        isomorphism % (`+replab.FiniteIsomorphism`): Isomorphism to a permutation group
-        group % (`.FiniteGroup`): Group
-        H % (`.FiniteGroup`): Subgroup of `.group`
-        K % (`.FiniteGroup`): Subgroup of `.group`
-        Hprmgrp % (`.PermutationGroup`): Realization of `.H` as a permutation group
-        Kprmgrp % (`.PermutationGroup`): Realization of `.K` as a permutation group
-        leftCosets % (`+replab.LeftCosets`): Left cosets G / K
-    end
+classdef DoubleCosets < replab.DoubleCosets
 
     methods
 
-        function self = DoubleCosets(group, H, K)
+        function self = DoubleCosets(nice, niceIsomorphism)
+            self.group = niceIsomorphism.preimageElement
             assert(group.hasSameTypeAs(H));
             assert(group.hasSameTypeAs(K));
             self.isomorphism = group.niceMorphism;

@@ -2,15 +2,14 @@ classdef ConjugacyClass < replab.ConjugacyClass & replab.gen.FiniteSet
 
     methods
 
-        function self = ConjugacyClass(type, nice, niceIsomorphism, varargin)
-            self@replab.gen.FiniteSet(type, nice, niceIsomorphism);
-            args = struct('group', []);
-            args = replab.util.populateStruct(args, varargin);
-            if isempty(args.group)
-                self.group = niceIsomorphism.preimageGroup(nice.group);
-            else
-                self.group = args.group;
-            end
+        function self = ConjugacyClass(type, nice, niceIsomorphism, group)
+            assert(isa(type, 'replab.gen.FiniteGroupType'));
+            assert(isa(nice, 'replab.ConjugacyClass'));
+            assert(isa(niceIsomorphism, 'replab.gen.NiceIsomorphism'));
+            self.type = type;
+            self.nice = nice;
+            self.niceIsomorphism = niceIsomorphism;
+            self.group = group;
         end
 
     end

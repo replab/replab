@@ -50,7 +50,9 @@ classdef FiniteGroup < replab.FiniteGroup & replab.gen.FiniteSet
                 nice = args.nice;
                 niceIsomorphism = args.niceIsomorphism;
             end
-            self@replab.gen.FiniteSet(type, nice, niceIsomorphism);
+            self.type = type;
+            self.nice = nice;
+            self.niceIsomorphism = niceIsomorphism;
             self.identity = type.identity;
             self.representative_ = type.identity;
             self.generators = generators;
@@ -177,7 +179,7 @@ classdef FiniteGroup < replab.FiniteGroup & replab.gen.FiniteSet
                 c1 = args.centralizer.imap(self.niceIsomorphism);
                 cc1 = self.nice.conjugacyClass(g1, 'isCanonical', args.isCanonical, 'centralizer', c1);
             end
-            C = replab.gen.ConjugacyClass(self.type, cc1, self.niceIsomorphism, 'group', self);
+            C = replab.gen.ConjugacyClass(self.type, cc1, self.niceIsomorphism, self);
         end
 
         function sub = derivedSubgroup(self)
@@ -186,22 +188,23 @@ classdef FiniteGroup < replab.FiniteGroup & replab.gen.FiniteSet
 
         % FiniteGroup/Cosets
 
-        % doubleCoset / doubleCosets / leftCoset / leftCosets / normalCoset / normalCosets
+        % TODO
+        % doubleCoset / doubleCosets / leftCosets / normalCoset / normalCosets
         % rightCoset / rightCosets
 
-        function c = doubleCoset(self, element, rightSubgroup, varargin)
-            args = struct('group', [], 'isCanonical', false);
-            args = replab.util.populateStruct(args, varargin);
-            leftSubgroup = self;
-            group = args.group;
-            if isempty(group)
-                group = leftSubgroup.closure(rightSubgroup, element);
-            end
-            1
-            [iso, group1, leftSubgroup1, element1, rightSubgroup1] = self.type.niceImages(group, leftSubgroup, element, rightSubgroup);
-            c1 = leftSubgroup1.doubleCoset(element1, rightSubgroup1, 'group', group1, 'isCanonical', args.isCanonical);
-            c = replab.gen.DoubleCoset(self.type, c1, iso);
-        end
+% $$$         function c = doubleCoset(self, element, rightSubgroup, varargin)
+% $$$             args = struct('group', [], 'isCanonical', false);
+% $$$             args = replab.util.populateStruct(args, varargin);
+% $$$             leftSubgroup = self;
+% $$$             group = args.group;
+% $$$             if isempty(group)
+% $$$                 group = leftSubgroup.closure(rightSubgroup, element);
+% $$$             end
+% $$$             1
+% $$$             [iso, group1, leftSubgroup1, element1, rightSubgroup1] = self.type.niceImages(group, leftSubgroup, element, rightSubgroup);
+% $$$             c1 = leftSubgroup1.doubleCoset(element1, rightSubgroup1, 'group', group1, 'isCanonical', args.isCanonical);
+% $$$             c = replab.gen.DoubleCoset(self.type, c1, iso);
+% $$$         end
 
         function o = elementOrder(self, g)
             o = self.nice.elementOrder(self.niceIsomorphism.imageElement(g));
@@ -258,10 +261,45 @@ classdef FiniteGroup < replab.FiniteGroup & replab.gen.FiniteSet
             res = self.nice.knownOrder;
         end
 
+        function c = leftCoset(self, element, varargin)
+            if self.isNormalizedBy(element)
+                c = self.normalCoset(element, varargin{:});
+                return
+            end
+            args = struct('group', [], 'isCanonical', false);
+            args = replab.util.populateStruct(args, varargin);
+            subgroup = self;
+            if isempty(args.group)
+                group = self.closure(element);
+            else
+                group = args.group;
+            end
+            [iso, element1, subgroup1, group1] = self.type.niceImages(element, subgroup, group);
+            nice = subgroup1.leftCoset(element1, 'isCanonical', args.isCanonical, 'group', group1);
+            representative = iso.preimageElement(nice.representative);
+            c = replab.gen.LeftCoset(self.type, nice, iso, representative, subgroup, group);
+        end
+
         function res = normalClosure(self, obj)
             [iso, self1, obj1] = self.type.niceImages(self, obj);
             res1 = self1.normalClosure(obj1);
             res = self.type.groupFromNiceImage(res1, iso);
+        end
+
+        function c = normalCoset(self, element, varargin)
+            assert(self.isNormalizedBy(element));
+            args = struct('group', [], 'isCanonical', false);
+            args = replab.util.populateStruct(args, varargin);
+            subgroup = self;
+            if isempty(args.group)
+                group = self.closure(element);
+            else
+                group = args.group;
+            end
+            [iso, element1, subgroup1, group1] = self.type.niceImages(element, subgroup, group);
+            nice = subgroup1.normalCoset(element1, 'isCanonical', args.isCanonical, 'group', group1);
+            representative = iso.preimageElement(nice.representative);
+            c = replab.gen.NormalCoset(self.type, nice, iso, representative, subgroup, group);
         end
 
         function o = order(self)
@@ -270,6 +308,25 @@ classdef FiniteGroup < replab.FiniteGroup & replab.gen.FiniteSet
 
         function R = relatorsFlat(self)
             R = self.nice.relatorsFlat;
+        end
+
+        function c = rightCoset(self, element, varargin)
+            if self.isNormalizedBy(element)
+                c = self.normalCoset(element, varargin{:});
+                return
+            end
+            args = struct('group', [], 'isCanonical', false);
+            args = replab.util.populateStruct(args, varargin);
+            subgroup = self;
+            if isempty(args.group)
+                group = self.closure(element);
+            else
+                group = args.group;
+            end
+            [iso, element1, subgroup1, group1] = self.type.niceImages(element, subgroup, group);
+            nice = subgroup1.rightCoset(element1, 'isCanonical', args.isCanonical, 'group', group1);
+            representative = iso.preimageElement(nice.representative);
+            c = replab.gen.RightCoset(self.type, nice, iso, representative, subgroup, group);
         end
 
 % $$$         function rep = regularRep(self)
