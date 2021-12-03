@@ -59,41 +59,6 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
 
     methods % Implementations
 
-        function res = eq(self, rhs)
-        % Test groups for equality
-        %
-        % Example:
-        %   >>> G = replab.PermutationGroup.of([2 3 1], [2 1 3]);
-        %   >>> H = replab.PermutationGroup.of([2 1 3], [1 3 2]);
-        %   >>> G == H
-        %       1
-            res = isa(rhs, 'replab.FiniteGroup') && self.hasSameTypeAs(rhs) && self.isSubgroupOf(rhs) && rhs.isSubgroupOf(self);
-        end
-
-        function res = isequal(self, rhs)
-        % Test groups for equality
-        %
-        % Alternative syntax to `.eq`
-        %
-        % Example:
-        %   >>> G = replab.PermutationGroup.of([2 3 1], [2 1 3]);
-        %   >>> H = replab.PermutationGroup.of([2 1 3], [1 3 2]);
-        %   >>> isequal(G, H)
-        %       1
-            res = self == rhs;
-        end
-
-        function res = ne(self, rhs)
-        % Test groups for non-equality
-        %
-        % Example:
-        %   >>> G = replab.PermutationGroup.of([2 3 1], [2 1 3]);
-        %   >>> H = replab.PermutationGroup.of([2 1 3]);
-        %   >>> G ~= H
-        %       1
-            res = ~(self == rhs);
-        end
-
         % Str
 
         function [names values] = additionalFields(self)
