@@ -1534,7 +1534,7 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
             images = cellfun(@(g) replab.SignedPermutation.toSparseMatrix(g), args.images, 'uniform', 0);
             assert(length(preimages) == length(images), 'Must provide as many images as preimages');
             imageElements = cellfun(@(g) [abs(g); (1-sign(g))/2], args.images, 'uniform', 0);
-            imageGroup = replab.perm.GeneralizedSymmetricGroup(dimension, 2);
+            imageGroup = replab.perm.GeneralizedSymmetricGroupType(dimension, 2);
             rho = replab.rep.RepByImages_monomial(self, 'R', dimension, preimages, images, imageGroup, imageElements);
         end
 
