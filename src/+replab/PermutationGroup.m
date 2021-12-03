@@ -618,20 +618,6 @@ classdef PermutationGroup < replab.FiniteGroup
 
         % FiniteGroup / Morphisms
 
-        % $$$         function A = abstractGroup(self, generatorNames)
-% $$$             if nargin < 2 || isempty(generatorNames)
-% $$$                 generatorNames = self.generatorNames;
-% $$$             end
-% $$$             A = replab.AbstractGroup(generatorNames, self.relators(generatorNames), 'permutationGenerators', self.generators);
-% $$$         end
-% $$$
-% $$$         function m = abstractMorphism(self, generatorNames)
-% $$$             if nargin < 2 || isempty(generatorNames)
-% $$$                 generatorNames = self.generatorNames;
-% $$$             end
-% $$$             m = self.abstractGroup(generatorNames).niceMorphism.inverse;
-% $$$         end
-
     end
 
     methods % Methods specific to permutation groups

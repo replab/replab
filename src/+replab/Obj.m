@@ -25,7 +25,7 @@ classdef Obj < replab.Str
 
     end
 
-    methods (Access = protected)% Property cache
+    methods % Property cache
 
         function l = inCache(self, name)
         % Returns whether the value of the given property has already been computed

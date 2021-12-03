@@ -364,9 +364,9 @@ classdef FiniteGroup < replab.FiniteGroup & replab.gen.FiniteSet
             c = replab.gen.RightCosets(c1, iso, group, subgroup);
         end
 
-% $$$         function rep = regularRep(self)
-% $$$             rep = self.niceMorphism.andThen(self.niceGroup.regularRep);
-% $$$         end
+        function rep = regularRep(self)
+            rep = self.niceIsomorphism.andThen(self.nice.regularRep);
+        end
 
 
 % $$$         function res = withGeneratorNames(self, newNames)

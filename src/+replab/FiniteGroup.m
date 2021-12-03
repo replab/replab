@@ -1415,13 +1415,13 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
 
     methods % Representations
 
-% $$$         function rep = regularRep(self)
-% $$$         % Returns the left regular representation of this group
-% $$$         %
-% $$$         % Returns:
-% $$$         %   `.Rep`: The left regular representation as a real permutation representation
-% $$$             error('Abstract');
-% $$$         end
+        function rep = regularRep(self)
+        % Returns the left regular representation of this group
+        %
+        % Returns:
+        %   `.Rep`: The left regular representation as a real permutation representation
+            error('Abstract');
+        end
 
         function rho = repByImages(self, field, dimension, varargin)
         % Constructs a finite dimensional representation of this group from preimages/images pairs
