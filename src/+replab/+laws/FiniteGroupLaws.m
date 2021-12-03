@@ -370,6 +370,22 @@ classdef FiniteGroupLaws < replab.laws.GroupLaws & replab.laws.FiniteSetLaws
 
     methods % Morphisms
 
+% $$$         function laws = laws_abstractIsomorphism(self)
+% $$$             self.red;
+% $$$             laws = self.S.abstractIsomorphism.laws;
+% $$$         end
+
+% $$$         function laws = laws_conjugatingAutomorphism(self)
+% $$$             self.red;
+% $$$             laws = self.S.conjugatingAutomorphism(self.S.sample).laws;
+% $$$         end
+
+        % findIsomorphism
+
+        % findIsomorphisms
+
+        % findMorphisms
+
     end
 
 % $$$

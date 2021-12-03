@@ -45,7 +45,7 @@ classdef LeftCosets < replab.LeftCosets
 
     end
 
-    methods
+    methods % Permutation group specific methods
 
         function M = transversalAsMatrix(self)
             M = self.cached('transversalAsMatrix', @() self.computeTransversalAsMatrix);
