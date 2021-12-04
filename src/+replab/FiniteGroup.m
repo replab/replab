@@ -1589,4 +1589,14 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
 
     end
 
+    methods
+
+        % Workaround Octave method selection
+
+        function b = isequal(lhs, rhs)
+            b = isequal@replab.FiniteSet(lhs, rhs);
+        end
+
+    end
+
 end

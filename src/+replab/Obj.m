@@ -196,7 +196,7 @@ classdef Obj < replab.Str
         % Returns:
         %   logical: true iff both objects are the same
             if isa(lhs, 'replab.Obj') && isa(rhs, 'replab.Obj')
-                res = (self.id == rhs.id);
+                res = (lhs.id == rhs.id);
             else
                 res = false;
             end
