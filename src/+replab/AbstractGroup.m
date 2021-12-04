@@ -117,7 +117,11 @@ classdef AbstractGroup < replab.gen.FiniteGroup
                     assert(order == args.order, 'The given order does not match the computed order');
                 end
             else % Permutation generators are given
-                domainSize = length(args.permutationGenerators{1});
+                if isempty(generatorNames)
+                    domainSize = 1;
+                else
+                    domainSize = length(args.permutationGenerators{1});
+                end
                 if isequal(args.order, 0)
                     nice = replab.PermutationGroup(domainSize, args.permutationGenerators, 'relators', relators, 'generatorNames', generatorNames);
                 else

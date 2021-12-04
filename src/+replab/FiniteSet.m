@@ -163,6 +163,10 @@ classdef FiniteSet < replab.Domain
             res = ~(self == rhs);
         end
 
+        function res = mtimes(self, rhs)
+            res = replab.FiniteSet.multiply(self, rhs);
+        end
+
         % Str
 
         function [names, values] = additionalFields(self)
@@ -175,10 +179,6 @@ classdef FiniteSet < replab.Domain
 
         function b = eqv(self, lhs, rhs)
             b = self.type.eqv(lhs, rhs);
-        end
-
-        function res = mtimes(self, lhs, rhs)
-            res = replab.FiniteSet.multiply(lhs, rhs);
         end
 
     end

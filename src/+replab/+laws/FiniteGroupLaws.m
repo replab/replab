@@ -307,6 +307,7 @@ classdef FiniteGroupLaws < replab.laws.GroupLaws & replab.laws.FiniteSetLaws
         end
 
         function laws = laws_doubleCoset(self)
+            self.red;
             L = self.S.randomSubgroup;
             R = self.S.randomSubgroup;
             el = self.S.sample;
@@ -387,6 +388,7 @@ classdef FiniteGroupLaws < replab.laws.GroupLaws & replab.laws.FiniteSetLaws
     methods % Isomorphic groups
 
         function law_abstractGroup_(self)
+            self.red;
             T = self.S.abstractGroup;
             iso = self.S.abstractIsomorphism;
             self.assert(self.S.nGenerators == T.nGenerators);
@@ -396,6 +398,7 @@ classdef FiniteGroupLaws < replab.laws.GroupLaws & replab.laws.FiniteSetLaws
         end
 
         function law_permutationGroup_(self)
+            self.yellow;
             P = self.S.permutationGroup;
             iso = self.S.permutationIsomorphism;
             self.assert(self.S.nGenerators == P.nGenerators);
