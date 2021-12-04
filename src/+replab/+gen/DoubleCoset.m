@@ -27,4 +27,34 @@ classdef DoubleCoset < replab.DoubleCoset & replab.gen.FiniteSet
 
     end
 
+    methods
+
+        % Bugfix for Octave method selection
+
+        function b = contains(self, el)
+            b = contains@replab.gen.FiniteSet(self, el);
+        end
+
+        function E = elements(self)
+            E = elements@replab.gen.FiniteSet(self);
+        end
+
+        function E = elementsSequence(self)
+            E = elementsSequence@replab.gen.FiniteSet(self);
+        end
+
+        function s = nElements(self)
+            s = nElements@replab.gen.FiniteSet(self);
+        end
+
+        function r = representative(self)
+            r = representative@replab.gen.FiniteSet(self);
+        end
+
+        function S = setProduct(self)
+            S = setProduct@replab.gen.FiniteSet(self);
+        end
+
+    end
+
 end

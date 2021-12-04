@@ -149,7 +149,7 @@ classdef FiniteSet < replab.Domain
         %   >>> H = replab.PermutationGroup.of([2 1 3], [1 3 2]);
         %   >>> isequal(G, H)
         %       1
-            res = self == rhs;
+            res = replab.finite.equality(self, rhs);
         end
 
         function res = ne(self, rhs)
@@ -160,7 +160,7 @@ classdef FiniteSet < replab.Domain
         %   >>> H = replab.PermutationGroup.of([2 1 3]);
         %   >>> G ~= H
         %       1
-            res = ~(self == rhs);
+            res = ~replab.finite.equality(self, rhs);
         end
 
         function res = mtimes(self, rhs)
