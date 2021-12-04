@@ -1,4 +1,4 @@
-classdef FiniteGroup < replab.FiniteGroup & replab.gen.FiniteSet
+classdef FiniteGroup < replab.gen.FiniteSet & replab.FiniteGroup
 % A generic finite group
 
     methods
