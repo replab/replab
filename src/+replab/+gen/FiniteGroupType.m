@@ -67,8 +67,15 @@ classdef FiniteGroupType < replab.FiniteGroupType
             iso = [];
             % find the group with maximal order, if there is one, and reuse its nice isomorphism if it is compatible
             if ~isempty(groups)
-                orders = cellfun(@(x) x.order, groups);
-                ind = find(orders == max(orders), 1);
+                ind = 0;
+                maxOrder = 0;
+                for i = 1:length(groups)
+                    ord = groups{i}.order;
+                    if ord > maxOrder
+                        maxOrder = ord;
+                        ind = i;
+                    end
+                end
                 iso = groups{ind}.niceIsomorphism;
                 for i = 1:n
                     arg = varargin{i};
