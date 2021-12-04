@@ -778,6 +778,9 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
             if nargin < 2 || isempty(nSteps)
                 nSteps = 1;
             end
+            if self.isTrivial
+                error('This group is trivial');
+            end
             sub = self;
             for i = 1:nSteps
                 if isprime(sub.order)
