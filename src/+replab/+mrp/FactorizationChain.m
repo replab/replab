@@ -93,7 +93,7 @@ classdef FactorizationChain < replab.mrp.Factorization
         %     Word expressed in letters
         %   r: group element
         %     Chosen coset representative
-            [l, r] = self.chain.wordLeftCoset(leftCoset.representative, leftCoset.group.chain);
+            [l, r] = self.chain.wordLeftCoset(leftCoset.representative, leftCoset.subgroup.chain);
         end
 
         function n = maximumWordLength(self)

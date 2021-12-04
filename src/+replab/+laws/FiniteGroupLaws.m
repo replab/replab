@@ -51,6 +51,7 @@ classdef FiniteGroupLaws < replab.laws.GroupLaws & replab.laws.FiniteSetLaws
         end
 
         function law_exponent_S(self, s)
+            self.red;
             e = self.S.exponent;
             if e > 2^52
                 return
@@ -72,6 +73,7 @@ classdef FiniteGroupLaws < replab.laws.GroupLaws & replab.laws.FiniteSetLaws
         end
 
         function law_isSimple_(self)
+            self.red;
             if self.S.isSimple
                 self.assert(self.S.derivedSubgroup.isTrivial);
             end
