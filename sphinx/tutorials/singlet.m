@@ -1,4 +1,4 @@
-% # Tutorial for quantum information people
+% # Tutorial for physicists
 %
 % The unitary group $U(n)$ describes the possible change of basis in the
 % complex Hilbert space of dimension $n$. For $n=2$, this captures the
