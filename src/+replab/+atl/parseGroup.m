@@ -73,5 +73,5 @@ function group = parseGroup(data)
             classes{i} = group.conjugacyClass(group.niceIsomorphism.preimageElement(cell2mat(cd)));
         end
     end
-    group.cache('conjugacyClasses', replab.ConjugacyClasses(group, classes), 'error');
+    group.setConjugacyClasses(replab.ConjugacyClasses(group, classes));
 end

@@ -61,8 +61,8 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
 
         % Str
 
-        function [names values] = additionalFields(self)
-            [names values] = additionalFields@replab.Group(self);
+        function [names, values] = additionalFields(self)
+            [names, values] = additionalFields@replab.Group(self);
             for i = 1:self.nGenerators
                 names{1, end+1} = sprintf('generator(%d or ''%s'')', i, self.generatorNames{i});
                 values{1, end+1} = self.generator(i);
@@ -154,6 +154,9 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
         % Note that randomized techniques are used to find group isomorphisms, and thus the output of this
         % method may not be deterministic.
         %
+        % Raises:
+        %   An error if the character table cannot be computed.
+        %
         % Returns:
         %   `.ComplexCharacterTable`: Complex character table
             error('Abstract');
@@ -178,7 +181,7 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
         % Returns the conjugacy classes of this group
         %
         % Returns:
-        %   `+replab.ConjugacyClasses`: Conjugacy classes
+        %   `.ConjugacyClasses`: Conjugacy classes
             error('Abstract');
         end
 
@@ -195,8 +198,8 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
         %   t (group element): Target element
         %
         % Keyword Args:
-        %   sCentralizer (`+replab.FiniteGroup`, optional): Centralizer of ``s`` in this group
-        %   tCentralizer (`+replab.FiniteGroup`, optional): Centralizer of ``t`` in this group
+        %   sCentralizer (`.FiniteGroup`, optional): Centralizer of ``s`` in this group
+        %   tCentralizer (`.FiniteGroup`, optional): Centralizer of ``t`` in this group
         %
         % Returns:
         %   `+replab.LeftCoset` or ``[]``: Set of all elements of this group that left conjugates ``s`` to ``t`` if it exists
@@ -209,8 +212,41 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
         % Note that randomized techniques are used to find group isomorphisms, and thus the output of this
         % method may not be deterministic.
         %
+        % Raises:
+        %   An error if the character table cannot be computed.
+        %
         % Returns:
         %   `.RealCharacterTable`: Real character table
+            error('Abstract');
+        end
+
+        function setComplexCharacterTable(self, table)
+        % Sets the complex character table of this group
+        %
+        % Throws an error if this method or `.complexCharacterTable` has already been called before.
+        %
+        % Args:
+        %   table (`.ComplexCharacterTable`): Complex character table
+            error('Abstract');
+        end
+
+        function setConjugacyClasses(self, classes)
+        % Sets the conjugacy classes of this group
+        %
+        % Throws an error if this method or `.conjugacyClasses` has already been called before.
+        %
+        % Args:
+        %   classes (`.ConjugacyClasses`): Conjugacy classes
+            error('Abstract');
+        end
+
+        function setRealCharacterTable(self, table)
+        % Sets the complex character table of this group
+        %
+        % Throws an error if this method or `.realCharacterTable` has already been called before.
+        %
+        % Args:
+        %   table (`.RealCharacterTable`): Complex character table
             error('Abstract');
         end
 

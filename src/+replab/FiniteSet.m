@@ -163,6 +163,14 @@ classdef FiniteSet < replab.Domain
             res = ~(self == rhs);
         end
 
+        % Str
+
+        function [names, values] = additionalFields(self)
+            [names, values] = additionalFields@replab.Domain(self);
+            names{1, end+1} = 'representative';
+            values{1, end+1} = self.representative;
+        end
+
         % Domain
 
         function b = eqv(self, lhs, rhs)

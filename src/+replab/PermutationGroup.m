@@ -147,7 +147,7 @@ classdef PermutationGroup < replab.FiniteGroup
 
     end
 
-    methods (Access = protected)
+    methods (Access = protected) % BSGS chain construction
 
         function c = computeLexChain(self)
             c = self.chain;
@@ -198,6 +198,24 @@ classdef PermutationGroup < replab.FiniteGroup
             else
                 m = replab.mrp.PermToGroup(self, target, preimages, images, imageElementFun);
             end
+        end
+
+    end
+
+    methods (Access = protected) % Character table
+
+        function c = computeComplexCharacterTable(self)
+            r = self.recognize;
+            assert(~isempty(r), 'No character table information available for this group.');
+            c = r.source.complexCharacterTable;
+            c = c.imap(r);
+        end
+
+        function c = computeRealCharacterTable(self)
+            r = self.recognize;
+            assert(~isempty(r), 'No character table information available for this group.');
+            c = r.source.realCharacterTable;
+            c = c.imap(r);
         end
 
     end
@@ -330,6 +348,10 @@ classdef PermutationGroup < replab.FiniteGroup
             else
                 res = self;
             end
+        end
+
+        function c = complexCharacterTable(self)
+            c = self.cached('complexCharacterTable', @() self.computeComplexCharacterTable);
         end
 
         function c = conjugacyClass(self, el, varargin)
@@ -552,6 +574,10 @@ classdef PermutationGroup < replab.FiniteGroup
             m = replab.FiniteIsomorphism.identity(self);
         end
 
+        function c = realCharacterTable(self)
+            c = self.cached('realCharacterTable', @() self.computeComplexCharacterTable);
+        end
+
         function rep = regularRep(self)
             o = self.order;
             assert(o < 1e6);
@@ -596,6 +622,18 @@ classdef PermutationGroup < replab.FiniteGroup
 
         function C = rightCosets(self, subgroup)
             C = replab.perm.RightCosets(self, subgroup);
+        end
+
+        function setComplexCharacterTable(self, table)
+            self.cache('complexCharacterTable', table, 'error');
+        end
+
+        function setConjugacyClasses(self, classes)
+            self.cache('conjugacyClasses', classes, 'error');
+        end
+
+        function setRealCharacterTable(self, table)
+            self.cache('realCharacterTable', table, 'error');
         end
 
         function res = withGeneratorNames(self, newNames)
