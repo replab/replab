@@ -159,18 +159,6 @@ classdef AbstractGroup < replab.gen.FiniteGroup
 
     methods
 
-% $$$
-% $$$         function m = renamingMorphism(self, newNames)
-% $$$         % Returns a morphism from this abstract group with the generators renamed
-% $$$         %
-% $$$         % Args:
-% $$$         %   newNames (cell(1,\*) of charstring): New generator names
-% $$$         %
-% $$$         % Returns:
-% $$$         %   `.AbstractGroup`: Updated copy
-% $$$             m = replab.mrp.AbstractGroupRenamingIsomorphism(self, self.withGeneratorNames(newNames));
-% $$$         end
-
         function res = simplify(self, word)
         % Attempts to simplify the given word
         %
@@ -223,8 +211,15 @@ classdef AbstractGroup < replab.gen.FiniteGroup
             iso = replab.FiniteIsomorphism.identity(self);
         end
 
+        function c = complexCharacterTable(self)
+            assert(self.nice.knownComplexCharacterTable, 'Real character table unknown for this group');
+            c = complexCharacterTable@replab.gen.FiniteGroup(self);
+        end
 
-        % FiniteGroup
+        function c = realCharacterTable(self)
+            assert(self.nice.knownRealCharacterTable, 'Real character table unknown for this group');
+            c = realCharacterTable@replab.gen.FiniteGroup(self);
+        end
 
         function A1 = withGeneratorNames(self, newNames)
             error('withGeneratorNames cannot be used with abstract groups');

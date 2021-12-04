@@ -269,8 +269,16 @@ classdef FiniteGroup < replab.FiniteGroup & replab.gen.FiniteSet
             res = self.nice.isSimple;
         end
 
+        function l = knownComplexCharacterTable(self)
+            l = self.nice.knownComplexCharacterTable;
+        end
+
         function res = knownOrder(self)
             res = self.nice.knownOrder;
+        end
+
+        function l = knownRealCharacterTable(self)
+            l = self.nice.knownRealCharacterTable;
         end
 
         function res = knownRelators(self)

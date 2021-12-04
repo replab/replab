@@ -206,6 +206,23 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
             error('Abstract');
         end
 
+        function l = knownComplexCharacterTable(self)
+        % Returns whether the complex character table of this group is already known or computed
+        %
+        % Returns:
+        %   logical: Whether the table is already computed
+            error('Abstract');
+        end
+
+        function l = knownRealCharacterTable(self)
+        % Returns whether the real character table of this group is already known or computed
+        %
+        % Returns:
+        %   logical: Whether the table is already computed
+
+            error('Abstract');
+        end
+
         function c = realCharacterTable(self)
         % Returns the real character table of this group
         %
@@ -241,7 +258,7 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
         end
 
         function setRealCharacterTable(self, table)
-        % Sets the complex character table of this group
+        % Sets the real character table of this group
         %
         % Throws an error if this method or `.realCharacterTable` has already been called before.
         %
@@ -496,7 +513,7 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
         %
         % Returns;
         %   element: Element of the group corresponding to the given word
-            g = self.composeLetters(self.generators, letters);
+            g = self.composeFlat(self.generators, letters);
         end
 
         function g = imageWord(self, word)

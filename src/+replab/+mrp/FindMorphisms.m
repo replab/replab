@@ -107,7 +107,7 @@ classdef FindMorphisms
         % Tests the relators for the given partial generator array
             res = false;
             for i = 1:self.relatorSubsets(k)
-                if ~self.G.isIdentity(self.G.composeLetters(im, self.relatorsFlat{i}))
+                if ~self.G.isIdentity(self.G.composeFlat(im, self.relatorsFlat{i}))
                     return
                 end
             end

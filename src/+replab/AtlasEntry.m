@@ -39,16 +39,16 @@ classdef AtlasEntry < replab.Obj
         function G = groupFromJSONData(data)
         % Computes the group stored in this entry from the known JSON data
             G = replab.atl.parseGroup(data.group);
-% $$$             if replab.init.cyclolab().works
-% $$$                 if isfield(data, 'realCharacterTable')
-% $$$                     realCharacterTable = replab.atl.parseCharacterTable(G, 'R', data.realCharacterTable);
-% $$$                     G.cache('realCharacterTable', realCharacterTable, 'error');
-% $$$                 end
-% $$$                 if isfield(data, 'complexCharacterTable')
-% $$$                     complexCharacterTable = replab.atl.parseCharacterTable(G, 'C', data.complexCharacterTable);
-% $$$                     G.cache('complexCharacterTable', complexCharacterTable, 'error');
-% $$$                 end
-% $$$             end
+            if replab.init.cyclolab().works
+                if isfield(data, 'realCharacterTable')
+                    realCharacterTable = replab.atl.parseCharacterTable(G, 'R', data.realCharacterTable);
+                    G.setRealCharacterTable(realCharacterTable);
+                end
+                if isfield(data, 'complexCharacterTable')
+                    complexCharacterTable = replab.atl.parseCharacterTable(G, 'C', data.complexCharacterTable);
+                    G.setComplexCharacterTable(complexCharacterTable);
+                end
+            end
         end
 
     end

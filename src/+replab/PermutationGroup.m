@@ -482,8 +482,16 @@ classdef PermutationGroup < replab.FiniteGroup
             res = self.cached('isSimple', @() replab.perm.isSimple(self));
         end
 
+        function l = knownComplexCharacterTable(self)
+            l = self.inCache('complexCharacterTable');
+        end
+
         function res = knownOrder(self)
             res = self.inCache('order');
+        end
+
+        function l = knownRealCharacterTable(self)
+            l = self.inCache('realCharacterTable');
         end
 
         function res = knownRelators(self)
