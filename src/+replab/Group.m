@@ -89,7 +89,7 @@ classdef Group < replab.Monoid
             z = self.compose(x, self.inverse(y));
         end
 
-        function z = composeLetters(self, array, letters)
+        function z = composeFlat(self, array, letters)
         % Returns the composition of elements from an array picked according to the given indices/letters
         %
         % Computes ``composeAll({array(letters(1)) ... array(letters(n))})`` with the convention that

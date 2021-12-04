@@ -65,8 +65,8 @@ classdef RepByImages_exact < replab.RepByImages
             inverseImages = inverseImages(~isId);
             m = length(preimages);
             d = self.dimension;
-            n = self.group.niceMorphism.target.domainSize;
-            iso = self.group.niceMorphism;
+            iso = self.group.permutationIsomorphism;
+            n = self.group.permutationIsomorphism.target.domainSize;
             nicePreimages = cellfun(@(g) iso.imageElement(g), self.preimages, 'uniform', 0);
             order = self.group.order;
             base = [];
@@ -97,7 +97,7 @@ classdef RepByImages_exact < replab.RepByImages
         % Rep
 
         function rho = image_double_sparse(self, g)
-            perm = self.group.niceMorphism.imageElement(g);
+            perm = self.group.permutationIsomorphism.imageElement(g);
             rho = self.chain.image(perm);
             if isa(rho, 'replab.cyclotomic')
                 rho = double(rho);
@@ -105,7 +105,7 @@ classdef RepByImages_exact < replab.RepByImages
         end
 
         function rho = image_exact(self, g)
-            perm = self.group.niceMorphism.imageElement(g);
+            perm = self.group.permutationIsomorphism.imageElement(g);
             rho = self.chain.image(perm);
             if isa(rho, 'double')
                 rho = replab.cyclotomic(rho);

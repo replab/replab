@@ -59,55 +59,19 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
 
     methods % Implementations
 
-        function res = eq(self, rhs)
-        % Test groups for equality
-        %
-        % Example:
-        %   >>> G = replab.PermutationGroup.of([2 3 1], [2 1 3]);
-        %   >>> H = replab.PermutationGroup.of([2 1 3], [1 3 2]);
-        %   >>> G == H
-        %       1
-            res = isa(rhs, 'replab.FiniteGroup') && self.hasSameTypeAs(rhs) && self.isSubgroupOf(rhs) && rhs.isSubgroupOf(self);
-        end
-
-        function res = isequal(self, rhs)
-        % Test groups for equality
-        %
-        % Alternative syntax to `.eq`
-        %
-        % Example:
-        %   >>> G = replab.PermutationGroup.of([2 3 1], [2 1 3]);
-        %   >>> H = replab.PermutationGroup.of([2 1 3], [1 3 2]);
-        %   >>> isequal(G, H)
-        %       1
-            res = self == rhs;
-        end
-
-        function res = ne(self, rhs)
-        % Test groups for non-equality
-        %
-        % Example:
-        %   >>> G = replab.PermutationGroup.of([2 3 1], [2 1 3]);
-        %   >>> H = replab.PermutationGroup.of([2 1 3]);
-        %   >>> G ~= H
-        %       1
-            res = ~(self == rhs);
-        end
-
         % Str
 
-        function [names values] = additionalFields(self)
-            [names values] = additionalFields@replab.Group(self);
+        function [names, values] = additionalFields(self)
+            [names, values] = additionalFields@replab.Group(self);
             for i = 1:self.nGenerators
                 names{1, end+1} = sprintf('generator(%d or ''%s'')', i, self.generatorNames{i});
                 values{1, end+1} = self.generator(i);
             end
-            % TODO
-% $$$             r = self.fastRecognize;
-% $$$             if ~isempty(r)
-% $$$                 names{1,end+1} = 'recognize.source';
-% $$$                 values{1,end+1} = r.source;
-% $$$             end
+            r = self.fastRecognize;
+            if ~isempty(r)
+                names{1,end+1} = 'recognize.source';
+                values{1,end+1} = r.source;
+            end
         end
 
         function names = hiddenFields(self)
@@ -190,6 +154,9 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
         % Note that randomized techniques are used to find group isomorphisms, and thus the output of this
         % method may not be deterministic.
         %
+        % Raises:
+        %   An error if the character table cannot be computed.
+        %
         % Returns:
         %   `.ComplexCharacterTable`: Complex character table
             error('Abstract');
@@ -214,7 +181,7 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
         % Returns the conjugacy classes of this group
         %
         % Returns:
-        %   `+replab.ConjugacyClasses`: Conjugacy classes
+        %   `.ConjugacyClasses`: Conjugacy classes
             error('Abstract');
         end
 
@@ -231,11 +198,28 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
         %   t (group element): Target element
         %
         % Keyword Args:
-        %   sCentralizer (`+replab.FiniteGroup`, optional): Centralizer of ``s`` in this group
-        %   tCentralizer (`+replab.FiniteGroup`, optional): Centralizer of ``t`` in this group
+        %   sCentralizer (`.FiniteGroup`, optional): Centralizer of ``s`` in this group
+        %   tCentralizer (`.FiniteGroup`, optional): Centralizer of ``t`` in this group
         %
         % Returns:
         %   `+replab.LeftCoset` or ``[]``: Set of all elements of this group that left conjugates ``s`` to ``t`` if it exists
+            error('Abstract');
+        end
+
+        function l = knownComplexCharacterTable(self)
+        % Returns whether the complex character table of this group is already known or computed
+        %
+        % Returns:
+        %   logical: Whether the table is already computed
+            error('Abstract');
+        end
+
+        function l = knownRealCharacterTable(self)
+        % Returns whether the real character table of this group is already known or computed
+        %
+        % Returns:
+        %   logical: Whether the table is already computed
+
             error('Abstract');
         end
 
@@ -245,8 +229,41 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
         % Note that randomized techniques are used to find group isomorphisms, and thus the output of this
         % method may not be deterministic.
         %
+        % Raises:
+        %   An error if the character table cannot be computed.
+        %
         % Returns:
         %   `.RealCharacterTable`: Real character table
+            error('Abstract');
+        end
+
+        function setComplexCharacterTable(self, table)
+        % Sets the complex character table of this group
+        %
+        % Throws an error if this method or `.complexCharacterTable` has already been called before.
+        %
+        % Args:
+        %   table (`.ComplexCharacterTable`): Complex character table
+            error('Abstract');
+        end
+
+        function setConjugacyClasses(self, classes)
+        % Sets the conjugacy classes of this group
+        %
+        % Throws an error if this method or `.conjugacyClasses` has already been called before.
+        %
+        % Args:
+        %   classes (`.ConjugacyClasses`): Conjugacy classes
+            error('Abstract');
+        end
+
+        function setRealCharacterTable(self, table)
+        % Sets the real character table of this group
+        %
+        % Throws an error if this method or `.realCharacterTable` has already been called before.
+        %
+        % Args:
+        %   table (`.RealCharacterTable`): Complex character table
             error('Abstract');
         end
 
@@ -282,15 +299,13 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
             error('Abstract');
         end
 
-% $$$         function R = fastRecognize(self)
-% $$$         % Attempts to recognize this group in the standard atlas
-% $$$         %
-% $$$         % Returns:
-% $$$         %   `.FiniteIsomorphism` or ``[]``: A result in case the group is identified; or ``[]`` if unrecognized.
-% $$$             R = [];
-% $$$             return % TODO
-% $$$             R = self.cached('fastRecognize', @() self.computeFastRecognize);
-% $$$         end
+        function R = fastRecognize(self)
+        % Attempts to recognize this group in the standard atlas
+        %
+        % Returns:
+        %   `.FiniteIsomorphism` or ``[]``: A result in case the group is identified; or ``[]`` if unrecognized.
+            error('Abstract');
+        end
 
         function res = isCommutative(self)
         % Returns whether this group is commutative
@@ -381,14 +396,13 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
             end
         end
 
-% $$$         function R = recognize(self)
-% $$$         % Attempts to recognize this group in the standard atlas
-% $$$         %
-% $$$         % Returns:
-% $$$         %   `.FiniteIsomorphism` or ``[]``: A result in case the group is identified; or ``[]`` if unrecognized.
-% $$$             R = replab.Atlas.recognize(self);
-% $$$             R = self.cached('recognize', @() self.computeRecognize);
-% $$$         end
+        function R = recognize(self)
+        % Attempts to recognize this group in the standard atlas
+        %
+        % Returns:
+        %   `.FiniteIsomorphism` or ``[]``: A result in case the group is identified; or ``[]`` if unrecognized.
+            R = self.cached('recognize', @() replab.Atlas.recognize(self));
+        end
 
     end
 
@@ -499,7 +513,7 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
         %
         % Returns;
         %   element: Element of the group corresponding to the given word
-            g = self.composeLetters(self.generators, letters);
+            g = self.composeFlat(self.generators, letters);
         end
 
         function g = imageWord(self, word)
@@ -1450,13 +1464,13 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
 
     methods % Representations
 
-% $$$         function rep = regularRep(self)
-% $$$         % Returns the left regular representation of this group
-% $$$         %
-% $$$         % Returns:
-% $$$         %   `.Rep`: The left regular representation as a real permutation representation
-% $$$             error('Abstract');
-% $$$         end
+        function rep = regularRep(self)
+        % Returns the left regular representation of this group
+        %
+        % Returns:
+        %   `.Rep`: The left regular representation as a real permutation representation
+            error('Abstract');
+        end
 
         function rho = repByImages(self, field, dimension, varargin)
         % Constructs a finite dimensional representation of this group from preimages/images pairs
@@ -1569,7 +1583,7 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
             images = cellfun(@(g) replab.SignedPermutation.toSparseMatrix(g), args.images, 'uniform', 0);
             assert(length(preimages) == length(images), 'Must provide as many images as preimages');
             imageElements = cellfun(@(g) [abs(g); (1-sign(g))/2], args.images, 'uniform', 0);
-            imageGroup = replab.perm.GeneralizedSymmetricGroup(dimension, 2);
+            imageGroup = replab.perm.GeneralizedSymmetricGroupType(dimension, 2);
             rho = replab.rep.RepByImages_monomial(self, 'R', dimension, preimages, images, imageGroup, imageElements);
         end
 

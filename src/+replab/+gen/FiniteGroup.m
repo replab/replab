@@ -165,6 +165,10 @@ classdef FiniteGroup < replab.FiniteGroup & replab.gen.FiniteSet
             res = self.type.groupFromNiceImage(nice, iso);
         end
 
+        function c = complexCharacterTable(self)
+            c = self.nice.complexCharacterTable.imap(self.niceIsomorphism.inverse);
+        end
+
         function C = conjugacyClasses(self, el, varargin)
             C = self.cached('conjugacyClasses', @() self.nice.conjugacyClasses.imap(self.niceIsomorphism.inverse));
         end
@@ -223,6 +227,13 @@ classdef FiniteGroup < replab.FiniteGroup & replab.gen.FiniteSet
             end
         end
 
+        function R = fastRecognize(self)
+            R = self.nice.fastRecognize;
+            if ~isempty(R)
+                R = R.andThen(self.niceIsomorphism.inverse);
+            end
+        end
+
         function C = findLeftConjugations(self, s, t, varargin)
             args = struct('sCentralizer', [], 'tCentralizer', []);
             args = replab.util.populateStruct(args, varargin);
@@ -258,8 +269,16 @@ classdef FiniteGroup < replab.FiniteGroup & replab.gen.FiniteSet
             res = self.nice.isSimple;
         end
 
+        function l = knownComplexCharacterTable(self)
+            l = self.nice.knownComplexCharacterTable;
+        end
+
         function res = knownOrder(self)
             res = self.nice.knownOrder;
+        end
+
+        function l = knownRealCharacterTable(self)
+            l = self.nice.knownRealCharacterTable;
         end
 
         function res = knownRelators(self)
@@ -334,6 +353,10 @@ classdef FiniteGroup < replab.FiniteGroup & replab.gen.FiniteSet
             end
         end
 
+        function c = realCharacterTable(self)
+            c = self.nice.realCharacterTable.imap(self.niceIsomorphism.inverse);
+        end
+
         function R = relatorsFlat(self)
             R = self.nice.relatorsFlat;
         end
@@ -364,10 +387,21 @@ classdef FiniteGroup < replab.FiniteGroup & replab.gen.FiniteSet
             c = replab.gen.RightCosets(c1, iso, group, subgroup);
         end
 
-% $$$         function rep = regularRep(self)
-% $$$             rep = self.niceMorphism.andThen(self.niceGroup.regularRep);
-% $$$         end
+        function rep = regularRep(self)
+            rep = self.niceIsomorphism.andThen(self.nice.regularRep);
+        end
 
+        function setComplexCharacterTable(self, table)
+            self.nice.setComplexCharacterTable(table.imap(self.niceIsomorphism));
+        end
+
+        function setConjugacyClasses(self, classes)
+            self.nice.setConjugacyClasses(classes.imap(self.niceIsomorphism));
+        end
+
+        function setRealCharacterTable(self, table)
+            self.nice.setRealCharacterTable(table.imap(self.niceIsomorphism));
+        end
 
 % $$$         function res = withGeneratorNames(self, newNames)
 % $$$         % TODO

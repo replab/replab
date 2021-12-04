@@ -128,6 +128,49 @@ classdef FiniteSet < replab.Domain
 
     methods % Implementations
 
+        function res = eq(self, rhs)
+        % Tests finite sets for equality
+        %
+        % Example:
+        %   >>> G = replab.PermutationGroup.of([2 3 1], [2 1 3]);
+        %   >>> H = replab.PermutationGroup.of([2 1 3], [1 3 2]);
+        %   >>> G == H
+        %       1
+            res = replab.finite.equality(self, rhs);
+        end
+
+        function res = isequal(self, rhs)
+        % Tests finite sets for equality
+        %
+        % Alternative syntax to `.eq`
+        %
+        % Example:
+        %   >>> G = replab.PermutationGroup.of([2 3 1], [2 1 3]);
+        %   >>> H = replab.PermutationGroup.of([2 1 3], [1 3 2]);
+        %   >>> isequal(G, H)
+        %       1
+            res = self == rhs;
+        end
+
+        function res = ne(self, rhs)
+        % Test finite sets for non-equality
+        %
+        % Example:
+        %   >>> G = replab.PermutationGroup.of([2 3 1], [2 1 3]);
+        %   >>> H = replab.PermutationGroup.of([2 1 3]);
+        %   >>> G ~= H
+        %       1
+            res = ~(self == rhs);
+        end
+
+        % Str
+
+        function [names, values] = additionalFields(self)
+            [names, values] = additionalFields@replab.Domain(self);
+            names{1, end+1} = 'representative';
+            values{1, end+1} = self.representative;
+        end
+
         % Domain
 
         function b = eqv(self, lhs, rhs)

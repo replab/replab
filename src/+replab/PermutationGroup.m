@@ -96,26 +96,21 @@ classdef PermutationGroup < replab.FiniteGroup
 
     end
 
-    % $$$
-% $$$     methods (Access = protected) % Implementations
-% $$$
-% $$$
-% $$$         function R = computeFastRecognize(self)
-% $$$         % TODO
-% $$$             R = [];
-% $$$             if self.permutationGroup.image.domainSize < replab.globals.fastChainDomainSize
-% $$$                 c = self.permutationIsomorphism.image.partialChain;
-% $$$                 if ~c.isMutable
-% $$$                     if c.order <= replab.globals.atlasMaximalOrder
-% $$$                         R = replab.Atlas.recognize(self);
-% $$$                     end
-% $$$                 end
-% $$$             end
-% $$$         end
-% $$$
+    methods (Access = protected) % Implementations
 
-    % end
-    % $$$
+        function R = computeFastRecognize(self)
+            R = [];
+            if self.domainSize < replab.globals.fastChainDomainSize
+                c = self.permutationIsomorphism.image.partialChain;
+                if ~c.isMutable
+                    if c.order <= replab.globals.atlasMaximalOrder
+                        R = replab.Atlas.recognize(self);
+                    end
+                end
+            end
+        end
+
+    end
 
     methods % Group internal description
 
@@ -152,7 +147,7 @@ classdef PermutationGroup < replab.FiniteGroup
 
     end
 
-    methods (Access = protected)
+    methods (Access = protected) % BSGS chain construction
 
         function c = computeLexChain(self)
             c = self.chain;
@@ -203,6 +198,24 @@ classdef PermutationGroup < replab.FiniteGroup
             else
                 m = replab.mrp.PermToGroup(self, target, preimages, images, imageElementFun);
             end
+        end
+
+    end
+
+    methods (Access = protected) % Character table
+
+        function c = computeComplexCharacterTable(self)
+            r = self.recognize;
+            assert(~isempty(r), 'No character table information available for this group.');
+            c = r.source.complexCharacterTable;
+            c = c.imap(r);
+        end
+
+        function c = computeRealCharacterTable(self)
+            r = self.recognize;
+            assert(~isempty(r), 'No character table information available for this group.');
+            c = r.source.realCharacterTable;
+            c = c.imap(r);
         end
 
     end
@@ -337,6 +350,10 @@ classdef PermutationGroup < replab.FiniteGroup
             end
         end
 
+        function c = complexCharacterTable(self)
+            c = self.cached('complexCharacterTable', @() self.computeComplexCharacterTable);
+        end
+
         function c = conjugacyClass(self, el, varargin)
             args = struct('isCanonical', false, 'centralizer', []);
             args = replab.util.populateStruct(args, varargin);
@@ -408,6 +425,10 @@ classdef PermutationGroup < replab.FiniteGroup
             end
         end
 
+        function R = fastRecognize(self)
+            R = self.cached('fastRecognize', @() self.computeFastRecognize);
+        end
+
         function c = findLeftConjugations(self, s, t, varargin)
             args = struct('sCentralizer', [], 'tCentralizer', []);
             args = replab.util.populateStruct(args, varargin);
@@ -461,8 +482,16 @@ classdef PermutationGroup < replab.FiniteGroup
             res = self.cached('isSimple', @() replab.perm.isSimple(self));
         end
 
+        function l = knownComplexCharacterTable(self)
+            l = self.inCache('complexCharacterTable');
+        end
+
         function res = knownOrder(self)
             res = self.inCache('order');
+        end
+
+        function l = knownRealCharacterTable(self)
+            l = self.inCache('realCharacterTable');
         end
 
         function res = knownRelators(self)
@@ -553,6 +582,10 @@ classdef PermutationGroup < replab.FiniteGroup
             m = replab.FiniteIsomorphism.identity(self);
         end
 
+        function c = realCharacterTable(self)
+            c = self.cached('realCharacterTable', @() self.computeComplexCharacterTable);
+        end
+
         function rep = regularRep(self)
             o = self.order;
             assert(o < 1e6);
@@ -599,6 +632,18 @@ classdef PermutationGroup < replab.FiniteGroup
             C = replab.perm.RightCosets(self, subgroup);
         end
 
+        function setComplexCharacterTable(self, table)
+            self.cache('complexCharacterTable', table, 'error');
+        end
+
+        function setConjugacyClasses(self, classes)
+            self.cache('conjugacyClasses', classes, 'error');
+        end
+
+        function setRealCharacterTable(self, table)
+            self.cache('realCharacterTable', table, 'error');
+        end
+
         function res = withGeneratorNames(self, newNames)
             if isequal(self.generatorNames, newNames)
                 res = self;
@@ -617,20 +662,6 @@ classdef PermutationGroup < replab.FiniteGroup
         % FiniteGroup/Cosets
 
         % FiniteGroup / Morphisms
-
-        % $$$         function A = abstractGroup(self, generatorNames)
-% $$$             if nargin < 2 || isempty(generatorNames)
-% $$$                 generatorNames = self.generatorNames;
-% $$$             end
-% $$$             A = replab.AbstractGroup(generatorNames, self.relators(generatorNames), 'permutationGenerators', self.generators);
-% $$$         end
-% $$$
-% $$$         function m = abstractMorphism(self, generatorNames)
-% $$$             if nargin < 2 || isempty(generatorNames)
-% $$$                 generatorNames = self.generatorNames;
-% $$$             end
-% $$$             m = self.abstractGroup(generatorNames).niceMorphism.inverse;
-% $$$         end
 
     end
 

@@ -352,13 +352,6 @@ classdef CharacterTable < replab.Obj
 % $$$         % Returns:
 % $$$         %   `.CharacterTable`: Updated character table
 % $$$
-% $$$
-% $$$         % TODO
-% $$$         % TODO
-% $$$         % TODO
-% $$$         % TODO
-% $$$         % TODO
-% $$$         % TODO
 % $$$         end
 
     end

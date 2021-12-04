@@ -216,7 +216,7 @@ classdef CommutantVar < replab.Str
             self.field = field;
 
             % Representation decomposition
-            group = replab.SignedSymmetricGroup(n).subgroup(generators);
+            group = replab.SignedPermutationGroup(n, generators);
             irrDecomp = group.naturalRep.decomposition;
             assert(irrDecomp.isUnitary);
             assert(irrDecomp.mapsAreAdjoint);
