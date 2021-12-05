@@ -60,6 +60,32 @@ classdef DirectProductGroup_finite < replab.DirectProductGroup & replab.gen.Fini
             xInv = inverse@replab.DirectProductGroup(self, x);
         end
 
+        % FiniteSet
+
+        function s = setProduct(self)
+            T = {};
+            % The decomposition of a direct product into sets
+            % is simply the concatenation of the sequence of sets
+            % corresponding to each factor
+            for i = 1:self.nFactors
+                D = self.factor(i).setProduct.sets;
+                Ti = cell(1, length(D));
+                for j = 1:length(D)
+                    Dj = D{j};
+                    Tij = cell(1, length(Dj));
+                    for k = 1:length(Dj)
+                        Djk = Dj{k};
+                        Tijk = self.identity;
+                        Tijk{i} = Djk;
+                        Tij{k} = Tijk;
+                    end
+                    Ti{j} = Tij;
+                end
+                T = horzcat(T, Ti);
+            end
+            s = replab.SetProduct(self, T, true);
+        end
+
     end
 
 
@@ -88,15 +114,6 @@ classdef DirectProductGroup_finite < replab.DirectProductGroup & replab.gen.Fini
 % $$$             ind = ind + 1;
 % $$$         end
 % $$$
-% $$$         function o = computeOrder(self)
-% $$$             o = vpi(1);
-% $$$             % The order of a direct product is the product of the
-% $$$             % order of the factors
-% $$$             for i = 1:self.nFactors
-% $$$                 o = o * self.factor(i).order;
-% $$$             end
-% $$$         end
-% $$$
 % $$$         function c = computeCharacterTable(self, field)
 % $$$             c = replab.ct.directProduct(self, field);
 % $$$         end
@@ -119,29 +136,6 @@ classdef DirectProductGroup_finite < replab.DirectProductGroup & replab.gen.Fini
 % $$$             % TODO: verify ordering
 % $$$         end
 % $$$
-% $$$         function s = computeSetProduct(self)
-% $$$             T = {};
-% $$$             % The decomposition of a direct product into sets
-% $$$             % is simply the concatenation of the sequence of sets
-% $$$             % corresponding to each factor
-% $$$             for i = 1:self.nFactors
-% $$$                 D = self.factor(i).setProduct.sets;
-% $$$                 Ti = cell(1, length(D));
-% $$$                 for j = 1:length(D)
-% $$$                     Dj = D{j};
-% $$$                     Tij = cell(1, length(Dj));
-% $$$                     for k = 1:length(Dj)
-% $$$                         Djk = Dj{k};
-% $$$                         Tijk = self.identity;
-% $$$                         Tijk{i} = Djk;
-% $$$                         Tij{k} = Tijk;
-% $$$                     end
-% $$$                     Ti{j} = Tij;
-% $$$                 end
-% $$$                 T = horzcat(T, Ti);
-% $$$             end
-% $$$             s = replab.SetProduct(self, T, true);
-% $$$         end
 % $$$
 % $$$     end
 
