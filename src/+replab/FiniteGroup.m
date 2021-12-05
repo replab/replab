@@ -1122,9 +1122,6 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
         % The generators of the abstract group must be in one-to-one correspondance with the generators of this group, and
         % their names are taken from `.generatorNames`
         %
-        % This is the image of `.abstractIsomorphism`; and the `+replab.AbstractGroup.permutationGroup` will be the same as this group
-        % `.permutationGroup`. TODO: check relevance
-        %
         % Returns:
         %   `+replab.AbstractGroup`: An abstract group isomorphic to this group
             G = self.abstractIsomorphism.target;
@@ -1139,7 +1136,9 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
         %
         % Returns:
         %   `+replab.PermutationGroup`: A permutation group isomorphic to this group
-            G = self.permutationIsomorphism.target;
+            iso = self.permutationIsomorphism;
+            pgens = cellfun(@(g) iso.imageElement(g), self.generators, 'uniform', 0);
+            G = self.permutationIsomorphism.target.subgroupWithGenerators(pgens, 'order', self.order);
         end
 
     end

@@ -344,7 +344,7 @@ classdef FiniteGroup < replab.FiniteGroup & replab.gen.FiniteSet
             o = self.nice.order;
         end
 
-        function m = orderPreservingPermutationIsomorphism(self)
+        function iso = orderPreservingPermutationIsomorphism(self)
             if isa(self.niceIsomorphism.target, 'replab.PermutationGroup')
                 iso = self.niceIsomorphism.restrictedSource(self);
             else

@@ -395,7 +395,7 @@ classdef FiniteGroupLaws < replab.laws.GroupLaws & replab.laws.FiniteSetLaws
             iso = self.S.abstractIsomorphism;
             self.assert(self.S.nGenerators == T.nGenerators);
             for i = 1:self.S.nGenerators
-                self.T.assertEqv(T.generator(i), iso.imageElement(self.S.generator(i)));
+                T.assertEqv(T.generator(i), iso.imageElement(self.S.generator(i)));
             end
         end
 
@@ -446,7 +446,7 @@ classdef FiniteGroupLaws < replab.laws.GroupLaws & replab.laws.FiniteSetLaws
 
         function law_isMorphismByImages_(self)
             self.red;
-            self.assert(self.S.isMorphismByImages(self.S, 'preimages', S.generators, 'images', S.generators));
+            self.assert(self.S.isMorphismByImages(self.S, 'preimages', self.S.generators, 'images', self.S.generators));
         end
 
         % TODO isomorphismByFunction, isomorphismByImages, morphismByImages

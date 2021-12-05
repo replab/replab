@@ -67,11 +67,19 @@ classdef DirectProductGroupType < replab.gen.FiniteGroupType
         % FiniteGroupType
 
         function mu = niceIsomorphism(self, elements)
-            error;
-        end
-
-        function G = groupWithGenerators(self, generators, varargin)
-            error;
+            n = length(self.factors);
+            factorGroups = cell(1, n);
+            for i = 1:n
+                factorElements = cell(1, 0);
+                for j = 1:length(elements)
+                    el = elements{j}{i};
+                    if ~self.factors{i}.isIdentity(el)
+                        factorElements{1,end+1} = el;
+                    end
+                end
+                factorGroups{i} = self.factors{i}.groupWithGenerators(factorElements);
+            end
+            mu = replab.prods.DirectProductNiceIsomorphism(factorGroups);
         end
 
         function l = isSameTypeAs(self, otherType)

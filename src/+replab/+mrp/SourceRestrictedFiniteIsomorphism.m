@@ -44,6 +44,10 @@ classdef SourceRestrictedFiniteIsomorphism < replab.FiniteIsomorphism
             S = self.original.preimagesElement(t);
         end
 
+        function l = preservesTypeOrder(self)
+            l = self.original.preservesTypeOrder;
+        end
+
         function r = restrictedSource(self, newSource)
             r = replab.mrp.SourceRestrictedFiniteIsomorphism(self.original, newSource);
         end

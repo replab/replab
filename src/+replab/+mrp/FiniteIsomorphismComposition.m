@@ -15,6 +15,10 @@ classdef FiniteIsomorphismComposition < replab.FiniteIsomorphism & replab.mrp.Fi
             s = preimageRepresentative@replab.mrp.FiniteComposition(self, t);
         end
 
+        function l = preservesTypeOrder(self)
+            l = self.first.preservesTypeOrder && self.second.preservesTypeOrder;
+        end
+
     end
 
     methods (Access = protected)
