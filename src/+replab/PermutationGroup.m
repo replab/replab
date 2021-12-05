@@ -579,6 +579,10 @@ classdef PermutationGroup < replab.FiniteGroup
             o = self.cached('order', @() self.chain.order);
         end
 
+        function m = orderPreservingPermutationIsomorphism(self)
+            m = replab.FiniteIsomorphism.identity(self);
+        end
+
         function m = permutationIsomorphism(self)
             m = replab.FiniteIsomorphism.identity(self);
         end

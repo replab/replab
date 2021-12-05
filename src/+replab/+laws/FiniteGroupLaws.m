@@ -444,9 +444,28 @@ classdef FiniteGroupLaws < replab.laws.GroupLaws & replab.laws.FiniteSetLaws
             self.assert(length(self.S.findMorphisms(tg)) == 1);
         end
 
-        %        function law_isMorphismByImages_S(self)
+        function law_isMorphismByImages_(self)
+            self.red;
+            self.assert(self.S.isMorphismByImages(self.S, 'preimages', S.generators, 'images', S.generators));
+        end
 
-        %end
+        % TODO isomorphismByFunction, isomorphismByImages, morphismByImages
+
+        function law_orderPreservingPermutationIsomorphism_(self)
+            self.red;
+            iso = self.S.orderPreservingPermutationIsomorphism;
+            self.assert(iso.preservesTypeOrder);
+        end
+
+        function laws = laws_orderPreservingPermutationIsomorphism(self)
+            self.red;
+            laws = self.S.orderPreservingPermutationIsomorphism.laws;
+        end
+
+        function laws = laws_permutationIsomorphism(self)
+            self.red;
+            laws = self.S.permutationIsomorphism.laws;
+        end
 
     end
 

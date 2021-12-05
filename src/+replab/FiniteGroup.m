@@ -1422,8 +1422,22 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
             end
         end
 
+        function f = orderPreservingPermutationIsomorphism(self)
+        % Returns an isomorphism from this group to a permutation group, which preserves element order
+        %
+        % Returns:
+        %   `+replab.FiniteIsomorphism`: Isomorphism with `+replab.FiniteIsomorphism.preservesTypeOrder` set
+            error('Abstract');
+        end
+
+
         function f = permutationIsomorphism(self)
-        % Returns the isomorphism from this group to a permutation group
+        % Returns an isomorphism from this group to a permutation group
+        %
+        % Compared to `.orderPreservingpermutationIsomorphism`, this isomorphism may be more efficient to compute or use.
+        %
+        % Returns:
+        %   `+replab.FiniteIsomorphism`: Isomorphism
             error('Abstract');
         end
 

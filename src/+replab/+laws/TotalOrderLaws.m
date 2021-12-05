@@ -25,12 +25,12 @@ classdef TotalOrderLaws < replab.laws.DomainLaws
         % sort
 
         function law_sort_SSSS(self, s1, s2, s3, s4)
-            array = [s1 s2 s3 s4];
+            array = {s1, s2, s3, s4};
             I = self.S.sort(array);
             array = array(I);
             for i = 1:4
                 for j = i:4
-                    self.assert(self.S.compare(array(i), array(j)) <= 0);
+                    self.assert(self.S.compare(array{i}, array{j}) <= 0);
                 end
             end
         end

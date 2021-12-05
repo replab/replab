@@ -3,13 +3,13 @@ classdef FiniteGroupTypeLaws < replab.laws.GroupLaws & replab.laws.TotalOrderLaw
 
     methods
 
-        function self = FiniteGroupTypeLaws(T)
-            self@replab.laws.GroupLaws(T);
-            self@replab.laws.TotalOrderLaws(T);
+        function self = FiniteGroupTypeLaws(S)
+            self@replab.laws.GroupLaws(S);
+            self@replab.laws.TotalOrderLaws(S);
         end
 
         function law_is_same_type_as_self_(self)
-            self.assert(self.T.isSameTypeAs(self.T));
+            self.assert(self.S.isSameTypeAs(self.S));
         end
 
     end
