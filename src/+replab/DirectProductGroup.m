@@ -16,7 +16,8 @@ classdef DirectProductGroup < replab.CompactGroup
             assert(all(isCompact), 'All factors must be compact');
             isFinite = cellfun(@(g) isa(g, 'replab.FiniteGroup'), factors);
             if all(isFinite)
-                prd = replab.prods.DirectProductGroup_finite(factors);
+                iso = replab.prods.DirectProductNiceIsomorphism(factors);
+                prd = iso.source;
             else
                 prd = replab.prods.DirectProductGroup_compact(factors);
             end
