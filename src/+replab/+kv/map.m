@@ -8,7 +8,7 @@ function kv1 = map(kv, funs)
 %   >>> kv = {'a', 1, 'b', 2};
 %   >>> funs = struct('a', @(x) 3*x);
 %   >>> kv1 = replab.kv.map(kv, funs)
-%       {'a', 3, 'b', 2}
+%       {'a' 3 'b' 2}
 % Args:
 %   kv (cell(1,\*)): Key/value pairs
 %   fun (struct): Struct whose value are function handles

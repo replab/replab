@@ -38,8 +38,9 @@ classdef AbstractGroup < replab.gen.FiniteGroup
 % Abstract groups can also be created by isomorphisms from an explicit group.
 %
 % Example:
-%   >>> G = replab.S(3);
-%   >>> f = G.abstractMorphism({'s' 't'});
+%   >>> S3 = replab.S(3);
+%   >>> G = S3.withGeneratorNames({'s', 't'});
+%   >>> f = G.abstractIsomorphism;
 %   >>> f.imageElement([2 3 1])
 %       's'
 

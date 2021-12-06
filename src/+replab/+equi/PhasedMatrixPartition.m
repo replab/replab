@@ -449,7 +449,7 @@ classdef PhasedMatrixPartition < replab.Obj
         %   >>> g2 = [1 4 5 2 3];
         %   >>> g3 = [1 3 2 4 -5];
         %   >>> G = replab.SignedPermutationGroup.of(g1,g2,g3);
-        %   >>> mu = replab.perm.GeneralizedSymmetricGroup.morphismFromSignedPermutationGroup(G);
+        %   >>> mu = replab.perm.GeneralizedSymmetricGroupType.isomorphismSignedPermutationGroup(G);
         %   >>> h1 = mu.imageElement(g1); h2 = mu.imageElement(g2); h3 = mu.imageElement(g3);
         %   >>> pmp = replab.equi.PhasedMatrixPartition.fromGeneralizedPermutations(2, {h1 h2 h3}, {h1 h2 h3});
             m = phaseOrder; % Phase order
