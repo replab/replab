@@ -89,7 +89,8 @@ classdef SemidirectProductGroup < replab.Group
         %   `.SemidirectProductGroup`: A specialized instance of `.SemidirectProductGroup`
             isFinite = isa(phi.G, 'replab.FiniteGroup') && isa(phi.P, 'replab.FiniteGroup');
             if isFinite
-                prd = replab.prods.SemidirectProductGroup_finite(phi, 'self');
+                type = replab.prods.SemidirectProductGroupType(phi);
+                prd = type.parentGroup;
             else
                 prd = replab.prods.SemidirectProductGroup_compact(phi);
             end

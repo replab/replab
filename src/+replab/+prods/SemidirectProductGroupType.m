@@ -10,21 +10,53 @@ classdef SemidirectProductGroupType < replab.gen.StaticFiniteGroupType
         H % (`+replab.FiniteGroup`): Group acting
         N % (`+replab.FiniteGroup`): Group acted upon
         phi % (`+replab.Action`): Action of H on N
+        regularIsomorphism % (`+replab.FiniteIsomorphism`): Regular isomorphism of `.N`
+        regularPhi % (`+replab.FiniteMorphism`): `.phi` as a morphism from `.H` to the symmetric group of degree ``N.order``
     end
 
     methods
 
         function self = SemidirectProductGroupType(phi)
             assert(isa(phi, 'replab.Action'));
+            % note the code duplication with `.SemidirectProductGroup_compact` and `.SemidirectProductGroup_finite`
             H = phi.G;
             N = phi.P;
             assert(isa(N, 'replab.FiniteGroup'));
             assert(isa(H, 'replab.FiniteGroup'));
-            % note the code duplication with `.SemidirectProductGroup_compact` and `.SemidirectProductGroup_finite`
             self.identity = {H.identity N.identity};
             self.phi = phi;
             self.H = H;
             self.N = N;
+            % compute the regular representation stuff
+            permIso = N.orderPreservingPermutationIsomorphism;
+            S = replab.perm.Set.fromPermutationGroup(permIso.target);
+            o = double(N.order);
+            % regular representation of N
+            regularImages = cell(1, N.nGenerators);
+            for i = 1:N.nGenerators
+                img = zeros(1, o);
+                gen = permIso.imageElement(N.generator(i));
+                for j = 1:o
+                    img(j) = S.find(gen(S.at(j)')');
+                end
+                regularImages{i} = img;
+            end
+            self.regularIsomorphism = N.isomorphismByImages(replab.S(o), 'preimages', N.generators, 'images', regularImages);
+            % regular representation of phi
+            phiImages = cell(1, H.nGenerators);
+            for i = 1:H.nGenerators
+                img = zeros(1, o);
+                genH = H.generator(i);
+                for j = 1:o
+                    preimg_prm = S.at(j)';
+                    preimg = permIso.preimageElement(preimg_prm);
+                    img = phi.leftAction(genH, preimg);
+                    img_prm = permIso.imageElement(img);
+                    phiImage(j) = S.find(img_prm');
+                end
+                phiImages{i} = phiImage;
+            end
+            self.regularPhi = H.morphismByImages(replab.S(o), 'preimages', H.generators, 'images', phiImages);
             generators = horzcat(cellfun(@(h) {h, N.identity}, H.generators, 'uniform', 0), ...
                                  cellfun(@(n) {H.identity, n}, N.generators, 'uniform', 0));
             generatorNames = horzcat(H.generatorNames, N.generatorNames);
@@ -38,47 +70,47 @@ classdef SemidirectProductGroupType < replab.gen.StaticFiniteGroupType
 
     end
 
-    methods (Access = protected)
-
-        function iso = computeRegularPhi(self)
-            o = double(self.N.order);
-            nGenH = self.H.nGenerators;
-            phiImages = cell(1, nGenH);
-            s = self.N.elementsSequence;
-            for i = 1:nGenH
-                phiImage = zeros(1, o);
-                genH = self.H.generator(i);
-                for j = 1:o
-                    preimg = s.at(j);
-                    img = self.phi.leftAction(genH, preimg);
-                    phiImage(j) = s.find(img);
-                end
-                phiImages{i} = phiImage;
-            end
-            iso = self.H.morphismByImages(replab.S(o), 'preimages', self.H.generators, 'images', phiImages);
-        end
-
-    end
-
-    methods
-
-        function iso = regularPhi(self)
-        % Computes the action of `.phi` on the regular representation of `.N`
-        %
-        % Returns:
-        %   `+replab.FiniteMorphism`: Morphism from `.H` to the symmetric group acting on ``N.order`` elements
-            iso = self.cached('regularPhi', @() self.computeRegularPhi);
-        end
-
-        function iso = regularIsomorphism(self)
-        % Returns the regular isomorphism of `.N`
-        %
-        % Returns:
-        %   `+replab.FiniteIsomorphism`: Isomorphism from `.N` to its regular permutation group
-            iso = self.cached('regularIsomorphism', @() self.N.regularIsomorphism);
-        end
-
-    end
+% $$$     methods (Access = protected)
+% $$$
+% $$$         function iso = computeRegularPhi(self)
+% $$$             o = double(self.N.order);
+% $$$             nGenH = self.H.nGenerators;
+% $$$             phiImages = cell(1, nGenH);
+% $$$             s = self.N.elementsSequence;
+% $$$             for i = 1:nGenH
+% $$$                 phiImage = zeros(1, o);
+% $$$                 genH = self.H.generator(i);
+% $$$                 for j = 1:o
+% $$$                     preimg = s.at(j);
+% $$$                     img = self.phi.leftAction(genH, preimg);
+% $$$                     phiImage(j) = s.find(img);
+% $$$                 end
+% $$$                 phiImages{i} = phiImage;
+% $$$             end
+% $$$             iso = self.H.morphismByImages(replab.S(o), 'preimages', self.H.generators, 'images', phiImages);
+% $$$         end
+% $$$
+% $$$     end
+% $$$
+% $$$     methods
+% $$$
+% $$$         function iso = regularPhi(self)
+% $$$         % Computes the action of `.phi` on the regular representation of `.N`
+% $$$         %
+% $$$         % Returns:
+% $$$         %   `+replab.FiniteMorphism`: Morphism from `.H` to the symmetric group acting on ``N.order`` elements
+% $$$             iso = self.cached('regularPhi', @() self.computeRegularPhi);
+% $$$         end
+% $$$
+% $$$         function iso = regularIsomorphism(self)
+% $$$         % Returns the regular isomorphism of `.N`
+% $$$         %
+% $$$         % Returns:
+% $$$         %   `+replab.FiniteIsomorphism`: Isomorphism from `.N` to its regular permutation group
+% $$$             iso = self.cached('regularIsomorphism', @() self.N.regularIsomorphism);
+% $$$         end
+% $$$
+% $$$     end
 
 
     methods % Implementations
@@ -153,6 +185,10 @@ classdef SemidirectProductGroupType < replab.gen.StaticFiniteGroupType
             p2b = self.regularIsomorphism.imageElement(n);
             p2 = p2a(p2b);
             t = [p1 p2+length(p1)];
+        end
+
+        function G = makeParentGroup(self, generators, nice, niceIsomorphism)
+            G = replab.prods.SemidirectProductGroup_finite(self, generators, nice, niceIsomorphism);
         end
 
         function s = preimageElement(self, t)
