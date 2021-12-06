@@ -67,7 +67,6 @@ classdef FiniteGroup < replab.FiniteGroup & replab.gen.FiniteSet
         function m = morphismByImages_(self, target, preimages, images, imageElementFun)
             first = self.niceIsomorphism.restrictedSource(self); % maps this to the perm group
             preimagesNG = cellfun(@(g) first.imageElement(g), preimages, 'uniform', 0);
-            replab.longStr(preimagesNG)
             second = self.nice.morphismByImages(target, 'preimages', preimagesNG, 'images', images, 'nChecks', 0); % from the perm group to the images
             if isa(second, 'replab.FiniteMorphism')
                 m = replab.mrp.FiniteComposition(second, first, imageElementFun);
