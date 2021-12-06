@@ -190,11 +190,31 @@ classdef Laws < replab.Str
         % Runs the randomized tests without using MOxUnit
         %
         % This method is useful from the REPL command line.
+        %
+        % This method stops at the first error.
             [testNames testFuns] = self.getTestCases;
             for i = 1:length(testNames)
                 disp(sprintf('Checking %s...', testNames{i}));
                 f = testFuns{i};
                 f();
+            end
+        end
+
+        function checkAndContinue(self)
+        % Runs the randomized tests without using MOxUnit
+        %
+        % This method is useful from the REPL command line.
+        %
+        % This method catches errors and does not throw.
+            [testNames testFuns] = self.getTestCases;
+            for i = 1:length(testNames)
+                disp(sprintf('Checking %s...', testNames{i}));
+                f = testFuns{i};
+                try
+                    f();
+                catch
+                    lasterror
+                end
             end
         end
 

@@ -6,7 +6,8 @@ function test_suite = GeneralizedSymmetricSubgroupTest()
     end
     initTestSuite;
 
-    G = replab.perm.GeneralizedSymmetricGroup(3, 3);
+    G = replab.perm.GeneralizedSymmetricGroupType(3, 3);
+    G = G.parentGroup;
     test_suite = G.laws.addTestCases(test_suite);
     H = G.randomProperSubgroup(2);
     test_suite = H.laws.addTestCases(test_suite);

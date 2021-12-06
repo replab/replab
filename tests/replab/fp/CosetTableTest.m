@@ -65,13 +65,13 @@ function test_quaternion_presentation
     b = [4 7 8 6 1 5 3 2];
     G = replab.PermutationGroup.of(a, b);
     relators = replab.fp.relatorsForPermutationGroup(G);
-    assert(all(cellfun(@(r) G.isIdentity(G.imageLetters(r)), relators)));
+    assert(all(cellfun(@(r) G.isIdentity(G.imageFlat(r)), relators)));
 end
 
 function test_symmetric_group_presentation
     G = replab.S(6);
     relators = replab.fp.relatorsForPermutationGroup(G);
-    assert(all(cellfun(@(r) G.isIdentity(G.imageLetters(r)), relators)));
+    assert(all(cellfun(@(r) G.isIdentity(G.imageFlat(r)), relators)));
 end
 
 function test_dihedral_group_presentation
@@ -80,7 +80,7 @@ function test_dihedral_group_presentation
     end
     G = replab.PermutationGroup.dihedral(20);
     relators = replab.fp.relatorsForPermutationGroup(G);
-    assert(all(cellfun(@(r) G.isIdentity(G.imageLetters(r)), relators)));
+    assert(all(cellfun(@(r) G.isIdentity(G.imageFlat(r)), relators)));
 end
 
 function test_Mathieu_M11

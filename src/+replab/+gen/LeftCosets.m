@@ -25,7 +25,7 @@ classdef LeftCosets < replab.LeftCosets
 
         function mu = leftAction(self)
             mu1 = self.nice.leftAction;
-            mu = self.niceIsomorphism.andThen(mu1);
+            mu = self.niceIsomorphism.restrictedSource(self.group).andThen(mu1);
         end
 
         function T = transversal(self)

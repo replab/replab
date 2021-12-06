@@ -757,7 +757,7 @@ classdef PermutationGroup < replab.FiniteGroup
             end
             lm = replab.bsgs.LexMin(self, s, sStabilizer);
             [sMinLex, p] = lm.search;
-            P = sStabilizer.leftCoset(p, self);
+            P = sStabilizer.leftCoset(p, 'group', self);
         end
 
         function P = vectorFindPermutationsTo(self, s, t, sStabilizer, tStabilizer)
@@ -783,7 +783,7 @@ classdef PermutationGroup < replab.FiniteGroup
             end
             p = replab.bsgs.VectorPermutationTo(self, s, t, sStabilizer, tStabilizer).find;
             if ~isempty(p)
-                P = sStabilizer.leftCoset(p, self);
+                P = sStabilizer.leftCoset(p, 'group', self);
             else
                 P = [];
             end
@@ -812,7 +812,7 @@ classdef PermutationGroup < replab.FiniteGroup
             end
             p = replab.bsgs.MatrixPermutationTo(self, S, T, SStabilizer, TStabilizer).find;
             if ~isempty(p)
-                P = SStabilizer.leftCoset(p, self);
+                P = SStabilizer.leftCoset(p, 'group', self);
             else
                 P = [];
             end

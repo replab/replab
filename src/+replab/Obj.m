@@ -12,7 +12,22 @@ classdef Obj < replab.Str
         % Checks the consistency of this object
         %
         % The default implementation checks the declared laws.
+        %
+        % This method is useful in conjonction with ``dbstop if error``.
+        %
+        % Raises:
+        %   An error if any law fails.
             self.laws.check;
+        end
+
+        function checkAndContinue(self)
+        % Checks the consistency of this object
+        %
+        % The default implementation checks the declared laws.
+        %
+        % This method is useful to see how many laws fail, as it catches errors and continues.
+        % For use with a debugger, `.check` is better.
+            self.laws.checkAndContinue;
         end
 
         function l = laws(self)

@@ -39,7 +39,9 @@ classdef WreathProductGroup < replab.SemidirectProductGroup
         % Returns:
         %   `.WreathProductGroup`: A specialized instance of `.WreathProductGroup`
             if isa(A, 'replab.FiniteGroup')
-                w = replab.prods.WreathProductGroup_finite(H, A);
+                type = replab.prods.WreathProductGroupType(H.type, A.type);
+                iso = replab.prods.WreathProductNiceIsomorphism(type, H, A);
+                w = iso.source;
             else
                 w = replab.prods.WreathProductGroup_compact(H, A);
             end
