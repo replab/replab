@@ -1,4 +1,8 @@
 classdef DirectProductGroupType < replab.gen.FiniteGroupType
+% Describes the type of a direct product of group elements
+%
+% Note the duplication of the methods with `+replab.DirectProductGroup`, as we did not want to make the public-facing
+% direct product group hierarchy too complex.
 
     properties (SetAccess = protected)
         factors % (cell(1,\*) of `+replab.FiniteGroupType`): Type of the factors

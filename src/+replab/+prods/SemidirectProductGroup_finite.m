@@ -8,6 +8,7 @@ classdef SemidirectProductGroup_finite < replab.SemidirectProductGroup & replab.
             N = phi.P;
             assert(isa(N, 'replab.FiniteGroup'));
             assert(isa(H, 'replab.FiniteGroup'));
+            % note the code duplication with `.SemidirectProductGroup_compact` and `.SemidirectProductGroupType`
             identity = {H.identity N.identity};
             generators = cell(1, H.nGenerators + N.nGenerators);
             for i = 1:length(H.generators)

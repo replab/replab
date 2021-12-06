@@ -396,6 +396,10 @@ classdef FiniteGroup < replab.FiniteGroup & replab.gen.FiniteSet
             c = replab.gen.RightCosets(c1, iso, group, subgroup);
         end
 
+        function iso = regularIsomorphism(self)
+            iso = self.niceIsomorphism.andThen(self.nice.regularIsomorphism);
+        end
+
         function rep = regularRep(self)
             rep = self.niceIsomorphism.andThen(self.nice.regularRep);
         end

@@ -86,6 +86,13 @@ classdef DirectProductGroup_finite < replab.DirectProductGroup & replab.gen.Fini
             s = replab.SetProduct(self, T, true);
         end
 
+        % FiniteGroup
+
+        function G = withGeneratorNames(self, newNames)
+            nice1 = self.nice.withGeneratorNames(newNames);
+            G = replab.prods.DirectProductGroup_finite(self.factors, self.type, self.generators, nice1, self.niceIsomorphism);
+        end
+
     end
 
 
@@ -135,11 +142,6 @@ classdef DirectProductGroup_finite < replab.DirectProductGroup & replab.gen.Fini
 % $$$
 % $$$             % TODO: verify ordering
 % $$$         end
-% $$$
-% $$$
-% $$$     end
-
-% $$$     methods % Implementations
 % $$$
 % $$$
 % $$$     end

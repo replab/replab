@@ -106,7 +106,7 @@ classdef SemidirectProductGroup < replab.Group
         end
 
         function g = sample(self)
-            g = {self.H.sample self.N.sample};
+            g = {self.H.sample, self.N.sample};
         end
 
         % Monoid

@@ -1440,6 +1440,14 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
             error('Abstract');
         end
 
+        function r = regularIsomorphism(self)
+        % Returns an isomorphism from this group to a permutation group whose degree matches the order of this group
+        %
+        % Returns:
+        %   `+replab.FiniteIsomorphism`: Isomorphism
+            error('Abstract');
+        end
+
     end
 
     methods (Access = protected)

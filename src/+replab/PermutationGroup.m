@@ -591,6 +591,10 @@ classdef PermutationGroup < replab.FiniteGroup
             c = self.cached('realCharacterTable', @() self.computeComplexCharacterTable);
         end
 
+        function iso = regularIsomorphism(self)
+            iso = self.cached('regularIsomorphism', @() replab.perm.regularIsomorphism(self));
+        end
+
         function rep = regularRep(self)
             o = self.order;
             assert(o < 1e6);
