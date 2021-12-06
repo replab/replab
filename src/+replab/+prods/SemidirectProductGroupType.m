@@ -25,17 +25,26 @@ classdef SemidirectProductGroupType < replab.gen.StaticFiniteGroupType
             self.phi = phi;
             self.H = H;
             self.N = N;
+            generators = horzcat(cellfun(@(h) {h, N.identity}, H.generators, 'uniform', 0), ...
+                                 cellfun(@(n) {H.identity, n}, N.generators, 'uniform', 0));
+            generatorNames = horzcat(H.generatorNames, N.generatorNames);
+            if length(unique(generatorNames)) ~= length(generatorNames) % names are not unique
+                generatorNames = [];
+            end
+            args = {'order', H.order*N.order, 'generatorNames', generatorNames};
+            niceType = replab.PermutationGroupType.make(H.orderPreservingPermutationIsomorphism.target.domainSize + double(N.order));
+            self.finishConstruction(generators, args, niceType);
         end
 
     end
 
     methods (Access = protected)
 
-        function iso = computePhiMorphism(self)
+        function iso = computeRegularPhi(self)
             o = double(self.N.order);
             nGenH = self.H.nGenerators;
             phiImages = cell(1, nGenH);
-            s = self.N.elementSequence;
+            s = self.N.elementsSequence;
             for i = 1:nGenH
                 phiImage = zeros(1, o);
                 genH = self.H.generator(i);
@@ -53,8 +62,20 @@ classdef SemidirectProductGroupType < replab.gen.StaticFiniteGroupType
 
     methods
 
-        function iso = phiMorphism(self)
-            iso = self.cached('phiMorphism', @() self.computePhiMorphism);
+        function iso = regularPhi(self)
+        % Computes the action of `.phi` on the regular representation of `.N`
+        %
+        % Returns:
+        %   `+replab.FiniteMorphism`: Morphism from `.H` to the symmetric group acting on ``N.order`` elements
+            iso = self.cached('regularPhi', @() self.computeRegularPhi);
+        end
+
+        function iso = regularIsomorphism(self)
+        % Returns the regular isomorphism of `.N`
+        %
+        % Returns:
+        %   `+replab.FiniteIsomorphism`: Isomorphism from `.N` to its regular permutation group
+            iso = self.cached('regularIsomorphism', @() self.N.regularIsomorphism);
         end
 
     end
@@ -70,12 +91,6 @@ classdef SemidirectProductGroupType < replab.gen.StaticFiniteGroupType
 
         function g = sample(self)
             g = {self.H.sample, self.N.sample};
-        end
-
-        % TotalOrder
-
-        function c = compare(self, x, y)
-            error('Abstract');
         end
 
         % Monoid
@@ -117,7 +132,7 @@ classdef SemidirectProductGroupType < replab.gen.StaticFiniteGroupType
             for i = 1:self.H.nGenerators
                 h = self.H.generator(i);
                 for j = 1:self.N.nGenerators
-                    n = self.n.generator(j);
+                    n = self.N.generator(j);
                     img1 = phi1.leftAction(h, n);
                     img2 = phi2.leftAction(h, n);
                     if ~self.N.eqv(img1, img2)
@@ -126,6 +141,29 @@ classdef SemidirectProductGroupType < replab.gen.StaticFiniteGroupType
                 end
             end
             l = true;
+        end
+
+        % StaticFiniteGroupType
+
+        function t = imageElement(self, s)
+            h = s{1};
+            n = s{2};
+            p1 = self.H.orderPreservingPermutationIsomorphism.imageElement(h);
+            p2a = self.regularPhi.imageElement(h);
+            p2b = self.regularIsomorphism.imageElement(n);
+            p2 = p2a(p2b);
+            t = [p1 p2+length(p1)];
+        end
+
+        function s = preimageElement(self, t)
+            ds = self.H.orderPreservingPermutationIsomorphism.target.domainSize;
+            p1 = t(1:ds);
+            p2 = t((ds+1):end) - ds;
+            h = self.H.orderPreservingPermutationIsomorphism.preimageElement(p1);
+            p2a_inv = self.regularPhi.imageElement(self.H.inverse(h));
+            p2b = p2a_inv(p2);
+            n = self.regularIsomorphism.preimageElement(p2b);
+            s = {h, n};
         end
 
     end

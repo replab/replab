@@ -249,7 +249,7 @@ classdef ConjugacyClasses < replab.Obj
         % Returns:
         %   `.ConjugacyClasses`: The conjugacy classes mapped under ``f``, expressed as a subset of ``f.image``
             classes1 = cellfun(@(c) c.imap(f), self.classes, 'uniform', 0);
-            c1 = replab.ConjugacyClasses(f.target, classes1);
+            c1 = replab.ConjugacyClasses(f.imageGroup(self.group), classes1);
         end
 
         function c1 = sorted(self)
