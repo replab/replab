@@ -13,8 +13,10 @@ classdef cyclolab < replab.init.ExternalDependency
 
         function res = inPath(self)
             res = false;
-            if replab.compat.isOctave && ~__have_feature__('JAVA')
-                return
+            if replab.compat.isOctave
+                if ~eval('~__have_feature__(''JAVA'')')
+                    return
+                end
             end
             try
                 array = javaMethod('parse', 'cyclo.Lab', {'1'});
