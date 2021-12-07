@@ -111,7 +111,6 @@ classdef AtlasEntry < replab.Obj
                 return
             end
             res = all(arrayfun(@(i) length(x{i}) == length(y{i}) && all(x{i} == y{i}), 1:length(x)));
-            % TODO: tests based on conjugacy classes
         end
 
         function m = match(self, group)
