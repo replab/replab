@@ -31,6 +31,17 @@ classdef Isomorphism < replab.Morphism
     methods % Preimages
 
         function s = preimageElement(t)
+        % Returns an the preimage of an element of the range
+        %
+        % Returns the ``s`` such that ``self.imageElement(s) == t`` .
+        %
+        % If the argument is not in the range of this isomorphism, the behavior is undefined.
+        %
+        % Args:
+        %   t (element of `.target`): Element to compute the preimage of
+        %
+        % Returns:
+        %   element of `.source`: Preimage
             error('Abstract');
         end
 

@@ -80,7 +80,9 @@ classdef FiniteMorphism < replab.Morphism
         % Returns an arbitrary preimage of the given element
         %
         % Returns an ``s`` such that ``self.imageElement(s) == t`` .
-
+        %
+        % If the argument is not in the range of this morphism, the behavior is undefined.
+        %
         % Args:
         %   t (element of `.target`): Element to compute the preimage of
         %
@@ -91,6 +93,8 @@ classdef FiniteMorphism < replab.Morphism
 
         function S = preimagesElement(self, t)
         % Returns the set of all source elements that map to a given element
+        %
+        % If the argument is not in the range of this morphism, the behavior is undefined.
         %
         % Args:
         %   t (element of `.target`): Element to compute the preimages of
