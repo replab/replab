@@ -678,7 +678,7 @@ classdef CommutantVar < replab.Str
                     pairsH = [reshape(imagesMatrix, d^2, 1) reshape(imagesMatrix', d^2, 1)];
                     pairsH = unique(sort(pairsH, 2), 'rows');
 
-                    [~, subsetsH] = replab.graph.connectedComponents(max(pairsH, [], 'all'), pairsH);
+                    [~, subsetsH] = replab.graph.connectedComponents(max(pairsH(:)), pairsH);
 
                     % We distinguish between images which are real, and
                     % images which are conjugated to each other
