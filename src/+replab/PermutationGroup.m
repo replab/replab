@@ -588,7 +588,7 @@ classdef PermutationGroup < replab.FiniteGroup
         end
 
         function c = realCharacterTable(self)
-            c = self.cached('realCharacterTable', @() self.computeComplexCharacterTable);
+            c = self.cached('realCharacterTable', @() self.computeRealCharacterTable);
         end
 
         function iso = regularIsomorphism(self)
