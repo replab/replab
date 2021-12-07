@@ -169,7 +169,7 @@ classdef FiniteGroup < replab.FiniteGroup & replab.gen.FiniteSet
             c = self.nice.complexCharacterTable.imap(self.niceIsomorphism.inverse);
         end
 
-        function C = conjugacyClasses(self, el, varargin)
+        function C = conjugacyClasses(self)
             C = self.cached('conjugacyClasses', @() self.nice.conjugacyClasses.imap(self.niceIsomorphism.inverse));
         end
 

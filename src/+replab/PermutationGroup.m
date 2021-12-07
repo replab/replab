@@ -374,7 +374,7 @@ classdef PermutationGroup < replab.FiniteGroup
             end
         end
 
-        function c = conjugacyClasses(self, varargin)
+        function c = conjugacyClasses(self)
             c = self.cached('conjugacyClasses', @() replab.perm.conjugacyClasses(self));
         end
 

@@ -78,15 +78,21 @@ classdef SymmetricGroup < replab.PermutationGroup
             b = true;
         end
 
+        % replab.PermutationGroup
+
+        function c = conjugacyClasses(self)
+            c = self.cached('conjugacyClasses', @() self.computeConjugacyClasses);
+        end
+
     end
 
     methods (Access = protected)
 
-% $$$         function classes = computeConjugacyClasses(self)
-% $$$             I = replab.sym.IntegerPartition.all(self.domainSize);
-% $$$             classes = replab.ConjugacyClasses.sorted(self, cellfun(@(ip) ip.conjugacyClass, I, 'uniform', 0));
-% $$$         end
-
+        function classes = computeConjugacyClasses(self)
+            I = replab.sym.IntegerPartition.all(self.domainSize);
+            classes = replab.ConjugacyClasses(self, cellfun(@(ip) ip.conjugacyClass, I, 'uniform', 0));
+            classes = classes.sorted;
+        end
 
 % $$$         function E = computeElementsSequence(self)
 % $$$             E = replab.Sequence.lambda(self.order, ...

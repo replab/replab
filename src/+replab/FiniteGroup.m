@@ -177,7 +177,7 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
             error('Abstract');
         end
 
-        function c = conjugacyClasses(self, varargin)
+        function c = conjugacyClasses(self)
         % Returns the conjugacy classes of this group
         %
         % Returns:

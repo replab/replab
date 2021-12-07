@@ -53,7 +53,8 @@ classdef Symmetric
             G = replab.AbstractGroup({'s' 't'}, relators, 'permutationGenerators', {S, T}, 'order', replab.util.factorial(n), 'name', sprintf('Symmetric group S(%d)', n), 'inAtlas', true);
             partitions = replab.sym.IntegerPartition.all(n);
             classes = cellfun(@(p) p.conjugacyClass, partitions, 'uniform', 0);
-            classes = G.permutationGroup.conjugacyClasses('classes', classes, 'sort', true);
+            classes = replab.ConjugacyClasses(G.permutationGroup, classes);
+            classes = classes.sorted;
             if replab.init.cyclolab().works
                 irreps = cell(1, length(partitions));
                 for i = 1:length(partitions)
