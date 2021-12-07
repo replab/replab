@@ -14,7 +14,7 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
 %
 % - to factor a group element as a word in the generators,
 % - as the default preimages set for representation/morphism construction,
-% - to construct an abstract form of the group (see `.relatorsWords`).
+% - to construct an abstract form of the group (see `.relatorsWord`).
 %
 % However, groups that differ only by their generators are equal as sets. Thus, two groups that are equal under ``==``
 % can nevertheless return different values for the methods that work with the group generators.
@@ -37,7 +37,7 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
 %
 % Finite group methods such as `.contains` can be called with arguments from the group type.
 %
-% Types can be compared with the `==` operator.
+% Types can be compared with the ``==`` operator.
 %
 % Implementations of finite groups
 % ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1433,7 +1433,7 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
         function f = permutationIsomorphism(self)
         % Returns an isomorphism from this group to a permutation group
         %
-        % Compared to `.orderPreservingpermutationIsomorphism`, this isomorphism may be more efficient to compute or use.
+        % Compared to `.orderPreservingPermutationIsomorphism`, this isomorphism may be more efficient to compute or use.
         %
         % Returns:
         %   `+replab.FiniteIsomorphism`: Isomorphism
