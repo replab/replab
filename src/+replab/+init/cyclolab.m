@@ -14,7 +14,7 @@ classdef cyclolab < replab.init.ExternalDependency
         function res = inPath(self)
             res = false;
             if replab.compat.isOctave
-                if ~eval('~__have_feature__(''JAVA'')')
+                if ~eval('__have_feature__(''JAVA'')')
                     return
                 end
             end
