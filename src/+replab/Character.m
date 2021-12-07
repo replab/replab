@@ -132,9 +132,9 @@ classdef Character < replab.Obj
         % Returns:
         %   cyclotomic: Class function value
             if isa(arg, 'replab.ConjugacyClass')
-                ind = self.conjugacyClasses.classIndexRepresentative(arg.representative);
+                ind = self.conjugacyClasses.classIndexOf(arg.representative, 'isCanonical', true);
             else
-                ind = self.conjugacyClasses.classIndex(arg);
+                ind = self.conjugacyClasses.classIndexOf(arg);
             end
             ind;
             v = self.values(ind);

@@ -1728,7 +1728,11 @@ classdef Rep < replab.Obj
         function dec = computeDecomposition_exact(self)
         % Computes the representation decomposition, exact variant, only available for finite groups
             assert(isa(self.group, 'replab.FiniteGroup'));
-            ct = self.group.characterTable(self.field);
+            if isequal(self.field, 'R')
+                ct = self.group.realCharacterTable;
+            else
+                ct = self.group.complexCharacterTable;
+            end
             assert(ct.hasIrreps, 'All irreps must have explicit constructions available');
             irreps = ct.irreps;
             assert(all(cellfun(@(ir) ir.isExact, irreps)), 'All irreps must be available in exact form');

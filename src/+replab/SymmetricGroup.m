@@ -1,5 +1,5 @@
 classdef SymmetricGroup < replab.PermutationGroup
-% Describes permutations over n = "domainSize" elements, i.e. the symmetric group Sn
+% The symmetric group ``S(n)``, i.e. all permutations over n = "domainSize" elements
 %
 % Example:
 %   >>> S5 = replab.S(5);
@@ -24,27 +24,22 @@ classdef SymmetricGroup < replab.PermutationGroup
                 cache = cell(1, 0);
             end
             if n+1 > length(cache) || isempty(cache{n+1})
-                cache{1,n+1} = replab.SymmetricGroup(n, true);
+                cache{1,n+1} = replab.SymmetricGroup(n);
             end
             G = cache{n+1};
         end
 
     end
 
-    methods
-        % TODO: after deprecation period (Access = protected)
+    methods (Access = protected) % Constructor
 
-        function self = SymmetricGroup(domainSize, fromMake)
+        function self = SymmetricGroup(domainSize)
         % Constructs the symmetric over a given domain size
         %
         % Instead of the constructor, use `.make`, which caches the constructed group.
         %
         % Args:
         %   domainSize (integer): Domain size, must be >= 0
-            if nargin < 2 || isempty(fromMake) || ~fromMake
-                % TODO: remove deprecation warning
-                warning('Direct constructor call is deprecated. Please call replab.S(n) instead of replab.SymmetricGroup(n)');
-            end
             if domainSize < 2
                 generators = cell(1, 0);
             elseif domainSize == 2
@@ -52,7 +47,11 @@ classdef SymmetricGroup < replab.PermutationGroup
             else
                 generators = {[2:domainSize 1] [2 1 3:domainSize]};
             end
-            self@replab.PermutationGroup(domainSize, generators, 'type', 'self');
+            self@replab.PermutationGroup(domainSize, generators, 'order', @() replab.util.factorial(domainSize));
+        end
+
+        function b = hasFastOrder(self)
+            b = true;
         end
 
     end
@@ -79,60 +78,58 @@ classdef SymmetricGroup < replab.PermutationGroup
             b = true;
         end
 
+        % replab.PermutationGroup
+
+        function c = conjugacyClasses(self)
+            c = self.cached('conjugacyClasses', @() self.computeConjugacyClasses);
+        end
+
     end
 
     methods (Access = protected)
 
         function classes = computeConjugacyClasses(self)
             I = replab.sym.IntegerPartition.all(self.domainSize);
-            classes = replab.ConjugacyClasses.sorted(self, cellfun(@(ip) ip.conjugacyClass, I, 'uniform', 0));
+            classes = replab.ConjugacyClasses(self, cellfun(@(ip) ip.conjugacyClass, I, 'uniform', 0));
+            classes = classes.sorted;
         end
 
-        function c = computeChain(self)
-            self.order; % force order computation
-            c = computeChain@replab.PermutationGroup(self);
-        end
-
-        function o = computeOrder(self)
-            o = replab.util.multiplyIntegers(1:self.domainSize);
-        end
-
-        function E = computeElementsSequence(self)
-            E = replab.Sequence.lambda(self.order, ...
-                                       @(ind) self.enumeratorAt(ind), ...
-                                       @(el) self.enumeratorFind(el));
-        end
-
-        function ind = enumeratorFind(self, g)
-            n = self.domainSize;
-            ind0 = vpi(0);
-            els = 1:n;
-            for i = 1:n
-                ind0 = ind0 * (n - i + 1);
-                ind0 = ind0 + (find(els == g(i)) - 1);
-                els = setdiff(els, g(i));
-            end
-            ind = ind0 + 1;
-        end
-
-        function g = enumeratorAt(self, ind)
-            n = self.domainSize;
-            ind0 = ind - 1; % make it 0-based
-            inds = zeros(1, n);
-            for i = 1:n
-                r = mod(ind0, i);
-                ind0 = (ind0 - r)/i;
-                inds(i) = double(r + 1);
-            end
-            inds = fliplr(inds);
-            els = 1:n;
-            g = zeros(1, n);
-            for i = 1:n
-                e = els(inds(i));
-                g(i) = e;
-                els = setdiff(els, e);
-            end
-        end
+% $$$         function E = computeElementsSequence(self)
+% $$$             E = replab.Sequence.lambda(self.order, ...
+% $$$                                        @(ind) self.enumeratorAt(ind), ...
+% $$$                                        @(el) self.enumeratorFind(el));
+% $$$         end
+% $$$
+% $$$         function ind = enumeratorFind(self, g)
+% $$$             n = self.domainSize;
+% $$$             ind0 = vpi(0);
+% $$$             els = 1:n;
+% $$$             for i = 1:n
+% $$$                 ind0 = ind0 * (n - i + 1);
+% $$$                 ind0 = ind0 + (find(els == g(i)) - 1);
+% $$$                 els = setdiff(els, g(i));
+% $$$             end
+% $$$             ind = ind0 + 1;
+% $$$         end
+% $$$
+% $$$         function g = enumeratorAt(self, ind)
+% $$$             n = self.domainSize;
+% $$$             ind0 = ind - 1; % make it 0-based
+% $$$             inds = zeros(1, n);
+% $$$             for i = 1:n
+% $$$                 r = mod(ind0, i);
+% $$$                 ind0 = (ind0 - r)/i;
+% $$$                 inds(i) = double(r + 1);
+% $$$             end
+% $$$             inds = fliplr(inds);
+% $$$             els = 1:n;
+% $$$             g = zeros(1, n);
+% $$$             for i = 1:n
+% $$$                 e = els(inds(i));
+% $$$                 g(i) = e;
+% $$$                 els = setdiff(els, e);
+% $$$             end
+% $$$         end
 
     end
 

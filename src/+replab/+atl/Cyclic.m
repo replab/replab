@@ -76,10 +76,10 @@ classdef Cyclic
                 end
                 ctR = replab.RealCharacterTable(G, classes, charsR, 'irreps', irrepsR);
                 ctC = replab.ComplexCharacterTable(G, classes, charsC, 'irreps', irrepsC);
-                G.cache('realCharacterTable', ctR, 'error');
-                G.cache('complexCharacterTable', ctC, 'error');
+                G.setRealCharacterTable(ctR);
+                G.setComplexCharacterTable(ctC);
             end
-            G.cache('conjugacyClasses', classes, 'error');
+            G.setConjugacyClasses(classes);
         end
 
     end

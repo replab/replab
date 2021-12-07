@@ -6,28 +6,15 @@ classdef NormalCosets < replab.LeftCosets & replab.RightCosets
 % Then the right cosets are the sets $H g = \{ h g : h \in H \}$.
 % Because the subgroup is normal, we have $g H = H g$.
 
-    methods
+    methods % Implementation
 
-        function self = NormalCosets(group, subgroup)
-            self@replab.LeftCosets(group, subgroup);
-            self@replab.RightCosets(group, subgroup);
+        % Obj
+
+        function l = laws(self)
+            l = replab.laws.LeftCosetsLaws(self);
         end
 
-        function s = nElements(self)
-            s = nElements@replab.LeftCosets(self);
-        end
-
-        function t = cosetRepresentative(self, g)
-            t = cosetRepresentative@replab.LeftCosets(self, g);
-        end
-
-        function T = transversal(self)
-            T = transversal@replab.RightCosets(self);
-        end
-
-        function T = computeTransversal(self)
-            T = computeTransversal@replab.RightCosets(self);
-        end
+        % Cosets
 
         function C = elements(self)
         % Returns the set of normal cosets as a cell array
@@ -37,8 +24,12 @@ classdef NormalCosets < replab.LeftCosets & replab.RightCosets
             C = cellfun(@(t) replab.NormalCoset(self.subgroup, t, self.group), self.transversal, 'uniform', 0);
         end
 
-        function l = laws(self)
-            l = laws@replab.LeftCosetsLaws(self);
+        function t = cosetRepresentative(self, g)
+            t = cosetRepresentative@replab.LeftCosets(self, g);
+        end
+
+        function T = transversal(self)
+            T = transversal@replab.RightCosets(self);
         end
 
     end

@@ -12,7 +12,22 @@ classdef Obj < replab.Str
         % Checks the consistency of this object
         %
         % The default implementation checks the declared laws.
+        %
+        % This method is useful in conjonction with ``dbstop if error``.
+        %
+        % Raises:
+        %   An error if any law fails.
             self.laws.check;
+        end
+
+        function checkAndContinue(self)
+        % Checks the consistency of this object
+        %
+        % The default implementation checks the declared laws.
+        %
+        % This method is useful to see how many laws fail, as it catches errors and continues.
+        % For use with a debugger, `.check` is better.
+            self.laws.checkAndContinue;
         end
 
         function l = laws(self)
@@ -123,8 +138,7 @@ classdef Obj < replab.Str
         function res = cached(self, name, fun)
         % Returns the cached property if it exists, computing it if necessary
         %
-        % If the property is not known, it will call the given function handle and
-        % cache the result.
+        % If the property is not known, it will call the given function handle and cache the result.
         %
         % Args:
         %   name (charstring): Name of the property
@@ -160,9 +174,9 @@ classdef Obj < replab.Str
         end
 
         function res = ne(self, rhs)
-        % Non-equality test (deprecated)
+        % Non-equality test
         %
-        % Workaround bug of == not implemented for handles in Octave
+        % Do not overload this, instead, overload `.isequal`.
         %
         % Args:
         %   self (object): first object
@@ -170,13 +184,13 @@ classdef Obj < replab.Str
         %
         % Returns:
         %   logical: true iff self ~= rhs
-            res = ~self.eq(rhs);
+            res = ~self.isequal(rhs);
         end
 
         function res = eq(self, rhs)
-        % Equality test (deprecated)
+        % Equality test
         %
-        % Workaround bug of == not implemented for handles in Octave
+        % Do not overload this, instead, overload `.isequal`.
         %
         % Args:
         %   self (object): first object
@@ -184,13 +198,23 @@ classdef Obj < replab.Str
         %
         % Returns:
         %   logical: true iff self == rhs
-            if ~isa(rhs, 'replab.Obj')
+            res = self.isequal(rhs);
+        end
+
+        function res = isequal(lhs, rhs)
+        % Equality test
+        %
+        % Args:
+        %   self (object): first object
+        %   rhs (object): second object to compare to
+        %
+        % Returns:
+        %   logical: true iff both objects are the same
+            if isa(lhs, 'replab.Obj') && isa(rhs, 'replab.Obj')
+                res = (lhs.id == rhs.id);
+            else
                 res = false;
-                return
             end
-            l = arrayfun(@(x) x.id, self);
-            r = arrayfun(@(x) x.id, rhs);
-            res = (l == r);
         end
 
     end

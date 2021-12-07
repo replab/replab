@@ -53,7 +53,8 @@ classdef Symmetric
             G = replab.AbstractGroup({'s' 't'}, relators, 'permutationGenerators', {S, T}, 'order', replab.util.factorial(n), 'name', sprintf('Symmetric group S(%d)', n), 'inAtlas', true);
             partitions = replab.sym.IntegerPartition.all(n);
             classes = cellfun(@(p) p.conjugacyClass, partitions, 'uniform', 0);
-            classes = replab.ConjugacyClasses.sorted(G.permutationGroup, classes);
+            classes = replab.ConjugacyClasses(G.permutationGroup, classes);
+            classes = classes.sorted;
             if replab.init.cyclolab().works
                 irreps = cell(1, length(partitions));
                 for i = 1:length(partitions)
@@ -70,10 +71,10 @@ classdef Symmetric
                 values = replab.cyclotomic(values);
                 ctR = replab.RealCharacterTable(G.permutationGroup, classes, values, 'irreps', irreps);
                 ctC = replab.ComplexCharacterTable.fromRealCharacterTable(ctR);
-                G.cache('realCharacterTable', ctR.imap(G.niceMorphism.inverse), 'error');
-                G.cache('complexCharacterTable', ctC.imap(G.niceMorphism.inverse), 'error');
+                G.setRealCharacterTable(ctR.imap(G.niceIsomorphism.inverse));
+                G.setComplexCharacterTable(ctC.imap(G.niceIsomorphism.inverse));
             end
-            G.cache('conjugacyClasses', classes.imap(G.niceMorphism.inverse), 'error');
+            G.setConjugacyClasses(classes.imap(G.niceIsomorphism.inverse));
         end
 
         function R = recognize(G)

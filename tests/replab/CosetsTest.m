@@ -13,7 +13,7 @@ function test_suite = CosetsTest()
     test_suite = leftCosets.laws.addTestCases(test_suite);
     test_suite = rightCosets.laws.addTestCases(test_suite);
 
-    SS3 = replab.SignedSymmetricGroup(3);
+    SS3 = replab.SignedPermutationGroup.signedSymmetric(3);
     sub = SS3.subgroup({[2 3 1], [-1 -2 -3]});
     leftCosets = SS3/sub;
     rightCosets = sub\SS3;

@@ -3,13 +3,13 @@ classdef SubEquivariantLaws < replab.laws.EquivariantLaws
 
     methods
 
-        function self = SubEquivariantLaws(T)
-            self@replab.laws.EquivariantLaws(T);
+        function self = SubEquivariantLaws(S)
+            self@replab.laws.EquivariantLaws(S);
         end
 
-        function law_projectFromParent_T(self, X)
-            parentX = self.T.repR.injection * X * self.T.repC.projection;
-            [X1, err] = self.T.projectFromParent(parentX);
+        function law_projectFromParent_S(self, X)
+            parentX = self.S.repR.injection * X * self.S.repC.projection;
+            [X1, err] = self.S.projectFromParent(parentX);
             self.assertApproxEqual(X, X1, err);
         end
 

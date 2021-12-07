@@ -6,7 +6,7 @@ function [G, images] = monomialImages(rep, preimages)
 %
 % Returns
 % -------
-%   G: `+replab.perm.GeneralizedSymmetricGroup`
+%   G: `+replab.perm.GeneralizedSymmetricGroupType`
 %     Group of monomial images, or ``[]`` if the representation is not monomial
 %   images: cell(1,\*) of elements of ``G``
 %     Requested images
@@ -22,10 +22,13 @@ function [G, images] = monomialImages(rep, preimages)
         end
     elseif isa(rep, 'replab.rep.TrivialRep')
         n = rep.dimension;
-        G = replab.perm.GeneralizedSymmetricGroup(n, 1);
+        G = replab.perm.GeneralizedSymmetricGroupType(n, 1);
         images = repmat({[1:n; zeros(1, n)]}, 1, length(preimages));
     elseif isa(rep, 'replab.rep.RepByImages_monomial')
         G = rep.morphism.target;
+        if ~isa(G, 'replab.perm.GeneralizedSymmetricGroupType');
+            G = G.type;
+        end
         images = cellfun(@(x) rep.morphism.imageElement(x), preimages, 'uniform', 0);
     else
         G = [];

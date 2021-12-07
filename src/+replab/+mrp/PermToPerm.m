@@ -1,4 +1,7 @@
 classdef PermToPerm < replab.FiniteMorphism
+% Describes a morphism between two permutation groups
+%
+% We use the approach in Section 4.5.3 of Derek Holt, Handbook of CGT
 
     properties (SetAccess = protected)
         preimages % (cell(1,\*) of permutation): Preimages in the source group

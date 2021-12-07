@@ -14,7 +14,7 @@ function test_centralizer_order
     classes = replab.perm.conjugacyClassesByOrbits(G);
     for i = 1:length(classes)
         cc1 = classes{i};
-        cc2 = replab.ConjugacyClass(G, cc1(:,1)');
+        cc2 = G.conjugacyClass(cc1(:,1)');
         assert(size(cc1, 2) == cc2.nElements);
     end
 end

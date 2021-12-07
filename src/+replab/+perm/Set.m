@@ -13,7 +13,7 @@ classdef Set < replab.Str
 %
 % This enables the use of fast vectorized operations in Matlab while retrieving elements.
 
-    properties
+    properties (SetAccess = protected)
         arrayLength % (integer): Length of the stored arrays
         arrayRange % (integer): Range of the array coefficients: ``-arrayRange ... arrayRange``
         matrix % (integer(arrayLength,size)): Elements stored as column vectors

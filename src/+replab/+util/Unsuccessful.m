@@ -1,7 +1,7 @@
 classdef Unsuccessful < replab.Str
 % Unsuccessful event
 %
-% This class implements a value signifying that an attempt to do something was 
+% This class implements a value signifying that an attempt to do something was
 % unsuccessful. It is not an error to be unsuccessful, but an allowed behavior.
 
     properties (SetAccess = protected)
@@ -29,4 +29,3 @@ classdef Unsuccessful < replab.Str
     end
 
 end
-

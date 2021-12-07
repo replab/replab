@@ -6,7 +6,8 @@ function D = vpi(rangeMin, rangeMax)
     else
         rangeMin = vpi(rangeMin);
         rangeMax = vpi(rangeMax);
-        sampleFun = @() rangeMin + randint(rangeMax - rangeMin);
+        % randint is buggy
+        sampleFun = @() min(max(rangeMin + randint(rangeMax - rangeMin), rangeMin), rangeMax);
     end
     desc = sprintf('Integers (vpi) between %s and %s', strtrim(num2str(rangeMin)), strtrim(num2str(rangeMax)));
     D = replab.Domain.lambda(desc, @isequal, sampleFun);

@@ -9,7 +9,7 @@ function tuples = cartesian(sets)
 %   cell(1,\*) of cell(1,nSets): Tuples of elements
     nSets = length(sets);
     nEls = cellfun(@length, sets);
-    M = replab.util.MixedRadix(nEls, true, false);
+    M = replab.util.MixedRadix(nEls, 'oneBased', true, 'bigEndian', false);
     tuples = cell(1, prod(nEls));
     for i = 1:prod(nEls)
         sub = M.ind2sub(i);
