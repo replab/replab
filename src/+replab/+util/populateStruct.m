@@ -1,4 +1,4 @@
-function [s rest] = populateStruct(s, keyValuePairs)
+function [s, rest] = populateStruct(s, keyValuePairs)
 % Populates a struct from key-value pairs
 %
 % Raises:

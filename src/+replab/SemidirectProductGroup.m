@@ -59,7 +59,7 @@ classdef SemidirectProductGroup < replab.Group
 % Implementation note
 % ~~~~~~~~~~~~~~~~~~~
 %
-% As semidirect product groups are used as a base for wreath product groups,  the constructors are duplicated in subclasses
+% As semidirect product groups are used as a base for wreath product groups, the constructors are duplicated in subclasses
 % as to keep a simple hierarchy of constructor calls.
 %
 % Example:
@@ -89,7 +89,8 @@ classdef SemidirectProductGroup < replab.Group
         %   `.SemidirectProductGroup`: A specialized instance of `.SemidirectProductGroup`
             isFinite = isa(phi.G, 'replab.FiniteGroup') && isa(phi.P, 'replab.FiniteGroup');
             if isFinite
-                prd = replab.prods.SemidirectProductGroup_finite(phi, 'self');
+                type = replab.prods.SemidirectProductGroupType(phi);
+                prd = type.parentGroup;
             else
                 prd = replab.prods.SemidirectProductGroup_compact(phi);
             end
@@ -106,7 +107,7 @@ classdef SemidirectProductGroup < replab.Group
         end
 
         function g = sample(self)
-            g = {self.H.sample self.N.sample};
+            g = {self.H.sample, self.N.sample};
         end
 
         % Monoid

@@ -1,7 +1,9 @@
 classdef Sequence < replab.Domain
 % Describes a sequence of elements
 %
-% See `<https://en.wikipedia.org/wiki/Sequence>`_ . Our indices are (bounded) integers, represented by ``vpi`` instances.
+% See `<https://en.wikipedia.org/wiki/Sequence>`_ .
+%
+% Our indices are (bounded) integers, represented by ``vpi`` instances.
 %
 % The sequence supports element indexing and searching for elements.
 
@@ -10,6 +12,14 @@ classdef Sequence < replab.Domain
     end
 
     methods
+
+        function self = Sequence(nElements)
+            if isa(nElements, 'vpi')
+                self.nElements = nElements;
+            else
+                self.nElements = vpi(nElements);
+            end
+        end
 
         function obj = at(self, ind)
         % Retrieves a element by position
@@ -122,7 +132,16 @@ classdef Sequence < replab.Domain
         end
 
         function obj = sample(self)
-            obj = self.at(randint(self.nElements)); % use randint as it is the method equivalent to randi on @vpi
+            ind = min(max(randint(self.nElements), vpi(1)), self.nElements); % use randint as it is the method equivalent to randi on @vpi
+                                                                             % but it is buggy
+            obj = self.at(ind);
+        end
+
+        % FiniteSet
+
+        function res = imap(self, f)
+            assert(isa(f.inverse, 'replab.gen.NiceIsomorphism'));
+            res = replab.gen.Sequence(self, f.inverse);
         end
 
     end

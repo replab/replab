@@ -2,20 +2,20 @@ classdef IsotypicEquivariantLaws < replab.laws.SubEquivariantLaws
 
     methods
 
-        function self = IsotypicEquivariantLaws(T)
-            self@replab.laws.SubEquivariantLaws(T);
+        function self = IsotypicEquivariantLaws(S)
+            self@replab.laws.SubEquivariantLaws(S);
         end
 
-        function law_projectAndFactor_T(self, X)
-            [M, err] = self.T.projectAndFactor(X);
-            X1 = self.T.reconstruct(M);
+        function law_projectAndFactor_S(self, X)
+            [M, err] = self.S.projectAndFactor(X);
+            X1 = self.S.reconstruct(M);
             self.assertApproxEqual(X, X1, err);
         end
 
-        function law_projectAndFactorFromParent_T(self, X)
-            parentX = self.T.repR.injection * X * self.T.repC.projection;
-            [M, err] = self.T.projectAndFactorFromParent(parentX);
-            X1 = self.T.reconstruct(M);
+        function law_projectAndFactorFromParent_S(self, X)
+            parentX = self.S.repR.injection * X * self.S.repC.projection;
+            [M, err] = self.S.projectAndFactorFromParent(parentX);
+            X1 = self.S.reconstruct(M);
             self.assertApproxEqual(X, X1, err);
         end
 

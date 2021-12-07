@@ -42,11 +42,11 @@ classdef AtlasEntry < replab.Obj
             if replab.init.cyclolab().works
                 if isfield(data, 'realCharacterTable')
                     realCharacterTable = replab.atl.parseCharacterTable(G, 'R', data.realCharacterTable);
-                    G.cache('realCharacterTable', realCharacterTable, 'error');
+                    G.setRealCharacterTable(realCharacterTable);
                 end
                 if isfield(data, 'complexCharacterTable')
                     complexCharacterTable = replab.atl.parseCharacterTable(G, 'C', data.complexCharacterTable);
-                    G.cache('complexCharacterTable', complexCharacterTable, 'error');
+                    G.setComplexCharacterTable(complexCharacterTable);
                 end
             end
         end

@@ -21,7 +21,7 @@ classdef existingSdpSolver < replab.init.Dependency
 
                 % If LMILAB was identified as the best solver to solve the
                 % problem, this means that no good solver was found.
-                if ~isempty(strfind(upper(solver.tag), 'LMILAB'))
+                if ~isempty(strfind(upper(solver.tag), 'LMILAB')) || ~isempty(strfind(upper(solver.tag), 'FMINCON-STANDARD'))
                     decentSDPSolverInPath = false;
                 end
 

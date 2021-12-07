@@ -116,7 +116,7 @@ classdef CharacterTable < replab.Obj
         %
         % Returns:
         %   integer: Index of (the column containing) the identity conjugacy class
-            ind = self.classes.classIndex(self.group.identity);
+            ind = self.classes.classIndexOf(self.group.identity);
         end
 
         function n = nClasses(self)
@@ -352,13 +352,6 @@ classdef CharacterTable < replab.Obj
 % $$$         % Returns:
 % $$$         %   `.CharacterTable`: Updated character table
 % $$$
-% $$$
-% $$$         % TODO
-% $$$         % TODO
-% $$$         % TODO
-% $$$         % TODO
-% $$$         % TODO
-% $$$         % TODO
 % $$$         end
 
     end

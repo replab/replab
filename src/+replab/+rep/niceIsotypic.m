@@ -4,7 +4,7 @@ function iso1 = niceIsotypic(iso)
         return
     end
     if iso.multiplicity == 1
-        irrep1 = replab.nice.niceSubRep(iso.irrep(1));
+        irrep1 = replab.rep.niceSubRep(iso.irrep(1));
         if isempty(irrep1)
             return
         end
@@ -12,7 +12,7 @@ function iso1 = niceIsotypic(iso)
         return
     end
     if iso.trivialDimension == iso.dimension
-        sub1 = replab.nice.niceSubRep(iso);
+        sub1 = replab.rep.niceSubRep(iso);
         iso1 = replab.Isotypic.fromTrivialSubRep(sub1);
         return
     end

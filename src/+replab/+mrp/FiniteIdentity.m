@@ -11,13 +11,19 @@ classdef FiniteIdentity < replab.FiniteIsomorphism & replab.mrp.Identity
 
     methods % Implementations
 
+        % Morphism
+
         function y = imageElement(self, x)
             y = x;
         end
 
+        % Isomorphism
+
         function x = preimageElement(self, y)
             x = y;
         end
+
+        % FiniteMorphism
 
         function T = imageGroup(self, S)
             T = S;
@@ -25,6 +31,12 @@ classdef FiniteIdentity < replab.FiniteIsomorphism & replab.mrp.Identity
 
         function S = preimageGroup(self, T)
             S = T;
+        end
+
+        % FiniteIsomorphism
+
+        function l = preservesTypeOrder(self)
+            l = true;
         end
 
     end

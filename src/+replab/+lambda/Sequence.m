@@ -9,11 +9,7 @@ classdef Sequence < replab.Sequence
     methods
 
         function self = Sequence(nElements, atFun, findFun)
-            if isa(nElements, 'vpi')
-                self.nElements = nElements;
-            else
-                self.nElements = vpi(nElements);
-            end
+            self@replab.Sequence(nElements);
             self.atFun = atFun;
             self.findFun = findFun;
         end

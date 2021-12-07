@@ -27,14 +27,14 @@ replab_init('verbose', 0);
 %
 % Below, we construct the symmetric group $S_5$. The object `S5` we construct knows how to compose permutations, when they are written using row vectors of integers in Matlab/Octave. The composition example is the one from [Wikipedia](https://en.wikipedia.org/wiki/Symmetric_group#Multiplication), and we check that we recover the same results.
 
-S5 = replab.SymmetricGroup(5); % or shorter, S5 = replab.S(5)
+S5 = replab.S(5);
 f = [3 2 1 5 4]
 g = [2 5 4 3 1]
 fg = S5.compose(f, g)
 
 % Note that permutations carry the size of their domain with them: the permutation $[2, 3, 1, 4]$ is not the same as the permutation $[2, 3, 1]$ even if both have the same action on $1,2,3$ and the first one leaves $4$ invariant.
 
-% **Exercice**: for fun, try to run `S5.order`, `S5.inverse(f)`, `S5.elements`, `S5.sample`. Construct `S50 = replab.SymmetricGroup(50)`. Compute `S50.order`, and try `S50.elements`.
+% **Exercice**: for fun, try to run `S5.order`, `S5.inverse(f)`, `S5.elements`, `S5.sample`. Construct `S50 = replab.S(50)`. Compute `S50.order`, and try `S50.elements`.
 
 % ### Representation
 %
@@ -103,7 +103,7 @@ inv(B) * rep5.image(S5.generator(2)) * B
 %
 % To continue this discussion, we consider a measurement with two outcomes $a=1,2$. The symmetry group is now $S_2$, and has two elements: identity $[1,2]$ and flip $[2,1]$.
 
-S2 = replab.SymmetricGroup(2)
+S2 = replab.S(2)
 S2.elements
 
 % The defining representation has two images: the identity $\begin{pmatrix}1 & 0\\0 & 1\end{pmatrix}$ and the flip $\begin{pmatrix}0 & 1\\1 & 0 \end{pmatrix}$.
@@ -139,7 +139,7 @@ D2.irrep(2).basis
 g1 = [3,4,1,2];
 g2 = [2,1,3,4];
 generators = {g1 g2}; % arrays of things in Matlab are cell arrays
-S4 = replab.SymmetricGroup(4);
+S4 = replab.S(4);
 G = S4.subgroup(generators) % construction as a subgroup of a generic parent group
 G.elements
 Grep = G.naturalRep

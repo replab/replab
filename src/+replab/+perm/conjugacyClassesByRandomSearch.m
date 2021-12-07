@@ -45,7 +45,7 @@ function classes = conjugacyClassesByRandomSearch(group)
             if isempty(gr)
                 gr = replab.bsgs.ConjugacyClasses.representative(group, g);
             end
-            c = replab.ConjugacyClass(group, gr);
+            c = replab.perm.ConjugacyClass(group, gr);
             classes{1,end+1} = c;
             remains = remains - c.nElements;
         end

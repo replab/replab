@@ -6,9 +6,9 @@ classdef PermutationGroupLaws < replab.laws.FiniteGroupLaws
 
     methods
 
-        function self = PermutationGroupLaws(T)
-            self@replab.laws.FiniteGroupLaws(T);
-            self.P = replab.domain.intAsDouble(1, T.domainSize);
+        function self = PermutationGroupLaws(S)
+            self@replab.laws.FiniteGroupLaws(S);
+            self.P = replab.domain.intAsDouble(1, S.domainSize);
         end
 
     end
@@ -16,27 +16,27 @@ classdef PermutationGroupLaws < replab.laws.FiniteGroupLaws
     methods
 
         function actionLaws = laws_naturalAction(self)
-            actionLaws = self.T.naturalAction.laws;
+            actionLaws = self.S.naturalAction.laws;
         end
 
         function actionLaws = laws_vectorAction(self)
-            actionLaws = self.T.vectorAction.laws;
+            actionLaws = self.S.vectorAction.laws;
         end
 
         function actionLaws = laws_matrixAction(self)
-            actionLaws = self.T.matrixAction.laws;
+            actionLaws = self.S.matrixAction.laws;
         end
 
-        function law_orbits_TP(self, t, p)
+        function law_orbits_SP(self, t, p)
             p1 = t(p);
-            orbits = self.T.orbits;
-            self.assert(self.T.orbits.blockIndex(p) == self.T.orbits.blockIndex(p1));
+            orbits = self.S.orbits;
+            self.assert(self.S.orbits.blockIndex(p) == self.S.orbits.blockIndex(p1));
         end
 
         function law_elements_are_ordered_(self)
-            if self.T.order < 200
-                E = self.T.elements;
-                M = zeros(length(E), self.T.domainSize);
+            if self.S.order < 200
+                E = self.S.elements;
+                M = zeros(length(E), self.S.domainSize);
                 for i = 1:length(E)
                     M(i,:) = E{i};
                 end
@@ -44,10 +44,10 @@ classdef PermutationGroupLaws < replab.laws.FiniteGroupLaws
             end
         end
 
-        function law_toMatrix_fromMatrix_T(self, t)
+        function law_toMatrix_fromMatrix_S(self, t)
             M = replab.Permutation.toMatrix(t);
             t1 = replab.Permutation.fromMatrix(M);
-            self.T.assertEqv(t, t1);
+            self.S.assertEqv(t, t1);
         end
 
     end

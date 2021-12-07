@@ -6,21 +6,25 @@ classdef MixedRadix < replab.Str
     properties (SetAccess = protected)
         n % (integer): Number of base elements
         base % (integer(1,\*)): Base
-        isOneBased % (logical): Whether digits start at 1
-        isBigEndian % (logical): Whether the subindices are written with the most significant subindex first
+        oneBased % (logical): Whether digits start at 1
+        bigEndian % (logical): Whether the subindices are written with the most significant subindex first
     end
 
     methods
 
-        function self = MixedRadix(base, isOneBased, isBigEndian)
+        function self = MixedRadix(base, varargin)
         % Constructs a mixed radix basis
         %
         % Args:
         %   base (integer(1,\*)): Mixed radix basis
-        %   isOneBased (logical): Whether digits start at 1 (used for 1-based indexing), must be true
-        %   isBigEndian (logical): Whether the digits are written with the most significant digit first, must be true
-            self.isOneBased = isOneBased;
-            self.isBigEndian = isBigEndian;
+        %
+        % Keyword Args:
+        %   oneBased (logical): Whether digits start at 1 (used for 1-based indexing), default: true
+        %   bigEndian (logical): Whether the digits are written with the most significant digit first, default: true
+            args = struct('oneBased', true, 'bigEndian', true);
+            args = replab.util.populateStruct(args, varargin);
+            self.oneBased = args.oneBased;
+            self.bigEndian = args.bigEndian;
             self.base = base;
             self.n = length(base);
         end
@@ -35,20 +39,20 @@ classdef MixedRadix < replab.Str
         %   integer(1,\*): Digits in the mixed radix basis
             sub = zeros(1, self.n);
             base = self.base;
-            if self.isBigEndian
+            if self.bigEndian
                 base = fliplr(base);
             end
-            if self.isOneBased
+            if self.oneBased
                 ind = ind - 1;
             end
             for i = self.n:-1:1
                 r = mod(ind, base(i));
                 ind = (ind - r)/base(i);
-                if self.isOneBased
+                if self.oneBased
                     sub(i) = double(r) + 1;
                 end
             end
-            if self.isBigEndian
+            if self.bigEndian
                 sub = fliplr(sub);
             end
         end
@@ -61,12 +65,12 @@ classdef MixedRadix < replab.Str
         %
         % Returns:
         %   vpi: Integer
-            if self.isOneBased
+            if self.oneBased
                 sub = sub - 1;
             end
             ind = vpi(0);
             base = self.base;
-            if self.isBigEndian
+            if self.bigEndian
                 base = fliplr(base);
                 sub = fliplr(sub);
             end
@@ -74,7 +78,7 @@ classdef MixedRadix < replab.Str
                 ind = ind * base(i);
                 ind = ind + vpi(sub(i));
             end
-            if self.isOneBased
+            if self.oneBased
                 ind = ind + vpi(1);
             end
         end

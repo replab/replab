@@ -4,7 +4,7 @@ classdef Permutation
 % In RepLAB, permutations are represented using row vectors of integers, those integers being
 % encoded using the type ``double``; so this class does not have any instances.
 
-    methods (Static)
+    methods (Static) % Construction
 
         function p = fromCycles(n, varargin)
         % Constructs a permutation from a product of cycles.
@@ -28,6 +28,18 @@ classdef Permutation
             end
         end
 
+        function p = shift(n, i)
+        % Returns the cyclic permutation that shifts the domain indices by ``i``.
+        %
+        % Args:
+        %   n (integer): Domain size
+        %   i (nonnegative integer): Shift so that ``j`` is sent to ``j + i`` (wrapping around).
+        %
+        % Returns:
+        %   permutation: The constructed cyclic shift
+            p = mod((0:n-1)+i, n)+1;
+        end
+
         function p = transposition(n, i, j)
         % Returns the transposition permuting ``i`` and ``j``.
         %
@@ -45,42 +57,9 @@ classdef Permutation
             p([i j]) = [j i];
         end
 
-        function p = shift(n, i)
-        % Returns the cyclic permutation that shifts the domain indices by ``i``.
-        %
-        % Args:
-        %   n (integer): Domain size
-        %   i (nonnegative integer): Shift so that ``j`` is sent to ``j + i`` (wrapping around).
-        %
-        % Returns:
-        %   permutation: The constructed cyclic shift
-            p = mod((0:n-1)+i, n)+1;
-        end
+    end
 
-        function o = order(perm)
-        % Returns the order of the permutation
-        %
-        % Args:
-        %   perm (permutation): Permutation
-        %
-        % Returns:
-        %   integer: The order of ``perm``, i.e. the smallest ``o`` such that ``perm^o == identity``
-            if length(perm) < 2
-                o = 1;
-                return
-            end
-            orders = unique(replab.Permutation.cycleStructure(perm));
-            if isempty(orders)
-                o = 1;
-                return
-            end
-            o = orders(1);
-            i = 2;
-            for i = 2:length(orders)
-                assert(log2(o) + log2(orders(i)) < 53, 'Order of element too big to fit in a double');
-                o = lcm(o, orders(i));
-            end
-        end
+    methods (Static) % Properties
 
         function cycles = cycles(perm)
         % Returns the cycles of the given permutation
@@ -145,6 +124,46 @@ classdef Permutation
                 c = [c cycleSize];
             end
             c = fliplr(sort(c));
+        end
+
+        function c = lexCompare(lhs, rhs)
+        % Returns the comparison of two permutations by lexicographic order
+        %
+        % Args:
+        %   lhs (permutation): First permutation
+        %   rhs (permutation): Second permutation
+        %
+        % Returns:
+        %   integer: 1 if ``lhs > rhs``, 0 if ``lhs == rhs``, -1 if ``lhs < rhs``
+            v = lhs - rhs;
+            ind = find(v ~= 0, 1);
+            c = [sign(v(ind)) 0];
+            c = c(1);
+        end
+
+        function o = order(perm)
+        % Returns the order of the permutation
+        %
+        % Args:
+        %   perm (permutation): Permutation
+        %
+        % Returns:
+        %   integer: The order of ``perm``, i.e. the smallest ``o`` such that ``perm^o == identity``
+            if length(perm) < 2
+                o = 1;
+                return
+            end
+            orders = unique(replab.Permutation.cycleStructure(perm));
+            if isempty(orders)
+                o = 1;
+                return
+            end
+            o = orders(1);
+            i = 2;
+            for i = 2:length(orders)
+                assert(log2(o) + log2(orders(i)) < 53, 'Order of element too big to fit in a double');
+                o = lcm(o, orders(i));
+            end
         end
 
         function s = sign(perm)
@@ -218,36 +237,9 @@ classdef Permutation
             end
         end
 
-        function mat = toSparseMatrix(perm)
-        % Returns the sparse permutation matrix corresponding to the given permutation
-        %
-        % The returned matrix is such that matrix multiplication is compatible with composition of permutations.
-        % I.e. for ``Sn = replab.S(n)`` we have
-        % ``replab.Permutation.toMatrix(Sn.compose(x, y)) = replab.Permutation.toMatrix(x) * replab.Permutation.toMatrix(y)``
-        %
-        % Args:
-        %   perm (permutation): Permutation
-        %
-        % Returns:
-        %   The sparse permutation matrix corresponding to ``perm``.
-            n = length(perm);
-            mat = sparse(perm, 1:n, ones(1, n), n, n);
-        end
+    end
 
-        function mat = toMatrix(perm)
-        % Returns the permutation matrix corresponding to the given permutation
-        %
-        % The returned matrix is such that matrix multiplication is compatible with composition of
-        % permutations, i.e. for ``Sn = replab.S(domainSize)`` we have
-        % ``replab.permutation.toMatrix(Sn.compose(x, y)) = replab.Permutation.toMatrix(x) * replab.Permutation.toMatrix(y)``
-        %
-        % Args:
-        %   perm (permutation): Permutation
-        %
-        % Returns:
-        %   The permutation matrix corresponding to ``perm``.
-            mat = full(replab.Permutation.toSparseMatrix(perm));
-        end
+    methods (Static) % Matrix conversion
 
         function perm = fromMatrix(mat)
         % Returns the permutation corresponding to the given matrix representation
@@ -284,6 +276,37 @@ classdef Permutation
                 error('Not a monomial matrix');
             end
             perm = I(IJ);
+        end
+
+        function mat = toMatrix(perm)
+        % Returns the permutation matrix corresponding to the given permutation
+        %
+        % The returned matrix is such that matrix multiplication is compatible with composition of
+        % permutations, i.e. for ``Sn = replab.S(domainSize)`` we have
+        % ``replab.permutation.toMatrix(Sn.compose(x, y)) = replab.Permutation.toMatrix(x) * replab.Permutation.toMatrix(y)``
+        %
+        % Args:
+        %   perm (permutation): Permutation
+        %
+        % Returns:
+        %   The permutation matrix corresponding to ``perm``.
+            mat = full(replab.Permutation.toSparseMatrix(perm));
+        end
+
+        function mat = toSparseMatrix(perm)
+        % Returns the sparse permutation matrix corresponding to the given permutation
+        %
+        % The returned matrix is such that matrix multiplication is compatible with composition of permutations.
+        % I.e. for ``Sn = replab.S(n)`` we have
+        % ``replab.Permutation.toMatrix(Sn.compose(x, y)) = replab.Permutation.toMatrix(x) * replab.Permutation.toMatrix(y)``
+        %
+        % Args:
+        %   perm (permutation): Permutation
+        %
+        % Returns:
+        %   The sparse permutation matrix corresponding to ``perm``.
+            n = length(perm);
+            mat = sparse(perm, 1:n, ones(1, n), n, n);
         end
 
     end

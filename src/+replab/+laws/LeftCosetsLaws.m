@@ -18,31 +18,31 @@ classdef LeftCosetsLaws < replab.Laws
 
     methods
 
-        function l = laws_random_coset(self)
+        function l = laws_random_left_coset(self)
             g = self.G.sample;
             lc = self.H.leftCoset(g);
             l = lc.laws;
         end
 
-        function law_transversal_representatives_are_canonical_(self)
+        function law_left_transversal_representatives_are_canonical_(self)
             T = self.L.transversal;
             for i = 1:length(T)
                 self.G.assertEqv(T{i}, self.L.cosetRepresentative(T{i}));
             end
         end
 
-        function law_coset_representative_is_stable_G(self, g)
+        function law_left_coset_representative_is_stable_G(self, g)
             r1 = self.L.cosetRepresentative(g);
             r2 = self.L.cosetRepresentative(r1);
             self.G.assertEqv(r1, r2);
         end
 
-        function law_coset_representatives_are_unique_GH(self, g, h)
+        function law_left_coset_representatives_are_unique_GH(self, g, h)
             gh = self.G.compose(g, h);
             self.G.assertEqv(self.L.cosetRepresentative(g), self.L.cosetRepresentative(gh));
         end
 
-        function law_transversal_size_(self)
+        function law_left_transversal_size_(self)
             assertEqual(length(self.L.transversal), double(self.G.order/self.H.order));
         end
 
