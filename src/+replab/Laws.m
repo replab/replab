@@ -136,7 +136,7 @@ classdef Laws < replab.Str
                             err = lasterror;
                             switch err.identifier
                               case 'replab:skip'
-                                fprintf('skipping slow test');
+                                replab.msg(1, 'skipping slow test');
                                 continue
                               otherwise
                                 rethrow(err);
@@ -167,9 +167,9 @@ classdef Laws < replab.Str
         % Runs the randomized tests without using MOxUnit, and returns whether all tests passed
         %
         % Example:
-        %    >>> S10 = replab.S(10);
-        %    >>> S10laws = S10.laws;
-        %    >>> S10laws.checkSilent
+        %    >>> S3 = replab.S(3);
+        %    >>> S3laws = S3.laws;
+        %    >>> S3laws.checkSilent
         %        1
         %
         % Returns:
