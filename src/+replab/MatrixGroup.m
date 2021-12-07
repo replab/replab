@@ -1,4 +1,30 @@
 classdef MatrixGroup < replab.gen.FiniteGroup
+% Finite group of matrices with coefficients in the cyclotomic field
+%
+% The cyclotomic field includes the rational numbers, square roots of rational numbers, cosines and sines
+% of fractions of pi and complex roots of unity.
+%
+% The use of `.MatrixGroup` requires the availability of the Java Virtual Machine, as computations are done
+% in exact precision using a Scala/Java library.
+%
+% RepLAB implements matrix groups by enumerating all their elements explicitly, which is adequate for groups
+% with a few hundred elements.
+%
+% Matrix groups are constructed by calling the constructor of `.MatrixGroup` as below, specifying the dimension and
+% the matrix generators.
+% Note that generators are specified in any way that could be passed to the `.cyclotomic` constructor,
+% which includes a string representation. However, one should not pass a floating-point inexact matrix
+% such as ``[1/sqrt(2), 1/sqrt(2); -1/sqrt(2), 1/sqrt(2)]``, because RepLAB is not able to guess the
+% exact representation of ``0.7071...` then.
+%
+% Example:
+%   >>> m1 = [0 1; 1 0]; % doctest: +cyclotomic
+%   >>> m2 = '[1/sqrt(2), 1/sqrt(2); -1/sqrt(2), 1/sqrt(2)]';
+%   >>> M = replab.MatrixGroup(2, {m1, m2});
+%   >>> M.order
+%       16
+%
+% The natural representation of a matrix group is given by the matrix itself, see `.naturalRep` .
 
     methods
 
@@ -9,7 +35,7 @@ classdef MatrixGroup < replab.gen.FiniteGroup
         % but are not part of the public API.
         %
         % Args:
-        %   matrixSiye (integer): Siye of the matrices
+        %   matrixSize (integer): Siye of the matrices
         %   generators (cell(1,\*) of replab.cyclotomic(matrixSize,matrixSize)): Group generators
         %
         % Keyword Args:

@@ -1,5 +1,5 @@
 classdef PermutationGroup < replab.FiniteGroup
-% A base class for all permutation groups
+% Permutation group over the integer ``1, .., domainSize``
 
     properties (Access = protected)
         generatorNames_ % (cell(1,\*) of charstring): Generator names

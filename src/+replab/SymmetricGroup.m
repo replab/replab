@@ -1,5 +1,5 @@
 classdef SymmetricGroup < replab.PermutationGroup
-% Describes permutations over n = "domainSize" elements, i.e. the symmetric group Sn
+% The symmetric group ``S(n)``, i.e. all permutations over n = "domainSize" elements
 %
 % Example:
 %   >>> S5 = replab.S(5);
