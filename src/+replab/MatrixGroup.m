@@ -37,7 +37,7 @@ classdef MatrixGroup < replab.gen.FiniteGroup
         % The natural representation ``rho`` has images ``rho(g) = g``.
         %
         % Example:
-        %   >>> M = replab.MatrixGroup(2, {[0 1; 1 0], '[1/sqrt(2), 1/sqrt(2); -1/sqrt(2), 1/sqrt(2)]'}); % docttest: +cyclotomic
+        %   >>> M = replab.MatrixGroup(2, {[0 1; 1 0], '[1/sqrt(2), 1/sqrt(2); -1/sqrt(2), 1/sqrt(2)]'}); % doctest: +cyclotomic
         %   >>> M.naturalRep.isIrreducible
         %       1
         %
