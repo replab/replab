@@ -137,15 +137,17 @@ classdef Laws < replab.Str
                             switch err.identifier
                               case 'replab:skip'
                                 replab.msg(1, 'skipping slow test');
-                                continue
+                                newLaws = [];
                               otherwise
                                 rethrow(err);
                             end
                         end
-                        [newTestNames newTestFuns] = newLaws.getTestCases;
-                        newTestNames = cellfun(@(x) [prefix x], newTestNames, 'UniformOutput', false);
-                        testNames = horzcat(testNames, newTestNames);
-                        testFuns = horzcat(testFuns, newTestFuns);
+                        if ~isempty(newLaws)
+                            [newTestNames newTestFuns] = newLaws.getTestCases;
+                            newTestNames = cellfun(@(x) [prefix x], newTestNames, 'UniformOutput', false);
+                            testNames = horzcat(testNames, newTestNames);
+                            testFuns = horzcat(testFuns, newTestFuns);
+                        end
                       case 'law_'
                         % It is a method that describes a test case
                         [lawName domains] = replab.laws.parseLawMethodName(self, name);
