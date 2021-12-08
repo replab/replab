@@ -434,14 +434,6 @@ classdef FiniteGroup < replab.FiniteGroup & replab.gen.FiniteSet
 
     end
 
-    methods (Static)
-
-        function group = lambda(header, eqvFun, sampleFun, composeFun, identity, inverseFun)
-            group = lambda@replab.FiniteGroup(header, eqvFun, sampleFun, composeFun, identity, inverseFun);
-        end
-
-    end
-
     methods % Bugfix for Octave method selection
 
         function b = contains(self, el)

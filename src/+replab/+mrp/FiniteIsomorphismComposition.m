@@ -54,19 +54,7 @@ classdef FiniteIsomorphismComposition < replab.FiniteIsomorphism & replab.mrp.Fi
         end
         
     end
-    
-    methods (Static)
-        
-        function m = lambda(source, target, preimageElementFun, imageElementFun, torusMap)
-            m = lambda@replab.mrp.IsomorphismComposition(source, target, preimageElementFun, imageElementFun, torusMap);
-        end
 
-        function m = identity(group)
-            m = identity@replab.FiniteIsomorphism(group);
-        end
-
-    end
-    
     methods (Access = protected)
 
         function I = computeInverse(self)

@@ -26,14 +26,6 @@ classdef IsomorphismComposition < replab.Isomorphism & replab.mrp.Composition
         
     end
 
-    methods (Static)
-        
-        function m = lambda(source, target, preimageElementFun, imageElementFun, torusMap)
-            m = lambda@replab.Isomorphism(source, target, preimageElementFun, imageElementFun, torusMap);
-        end
-
-    end
-    
     methods (Access = protected) % Implementations
 
         function I = computeInverse(self)

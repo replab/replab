@@ -41,16 +41,4 @@ classdef WreathProductGroup_compact < replab.WreathProductGroup & replab.prods.S
 
     end
 
-    methods (Static) % Group construction
-
-        function w = make(H, A)
-            w = make@replab.WreathProductGroup(H, A);
-        end
-
-        function group = lambda(header, eqvFun, sampleFun, composeFun, identity, inverseFun)
-            group = lambda@replab.CompactGroup(header, eqvFun, sampleFun, composeFun, identity, inverseFun);
-        end
-
-    end
-
 end

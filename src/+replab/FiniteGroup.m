@@ -1629,12 +1629,4 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
 
     end
 
-    methods (Static)
-
-        function group = lambda(header, eqvFun, sampleFun, composeFun, identity, inverseFun)
-            group = lambda@replab.CompactGroup(header, eqvFun, sampleFun, composeFun, identity, inverseFun);
-        end
-
-    end
-
 end

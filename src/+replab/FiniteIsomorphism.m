@@ -83,10 +83,6 @@ classdef FiniteIsomorphism < replab.Isomorphism & replab.FiniteMorphism
             m = replab.mrp.FiniteIdentity(group);
         end
         
-        function m = lambda(source, target, preimageElementFun, imageElementFun, torusMap)
-            m = lambda@replab.Isomorphism.lambda(source, target, preimageElementFun, imageElementFun, torusMap);
-        end
-
     end
 
 end

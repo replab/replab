@@ -61,13 +61,4 @@ classdef SemidirectProductGroup_compact < replab.SemidirectProductGroup & replab
 
     end
 
-
-    methods (Static) % Group construction
-
-        function group = lambda(header, eqvFun, sampleFun, composeFun, identity, inverseFun)
-            group = lambda@replab.CompactGroup(header, eqvFun, sampleFun, composeFun, identity, inverseFun);
-        end
-
-    end
-
 end

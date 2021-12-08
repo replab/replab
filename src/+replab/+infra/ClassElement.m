@@ -47,7 +47,6 @@ classdef ClassElement < replab.infra.Element
         end
 
         function c = childrenNames(self)
-            disp('replab.infra.ClassElement');
             c = {};
         end
 

@@ -61,16 +61,4 @@ classdef FiniteIdentity < replab.FiniteIsomorphism & replab.mrp.Identity
 
     end
 
-    methods (Static)
-
-        function m = identity(group)
-            m = identity@replab.FiniteIsomorphism(group);
-        end
-        
-        function m = lambda(source, target, preimageElementFun, imageElementFun, torusMap)
-            m = lambda@replab.FiniteIsomorphism(source, target, preimageElementFun, imageElementFun, torusMap);
-        end
-
-    end
-
 end
