@@ -11,6 +11,12 @@ classdef FiniteIdentity < replab.FiniteIsomorphism & replab.mrp.Identity
 
     methods % Implementations
 
+        % Obj
+
+        function l = laws(self)
+            l = laws@replab.FiniteIsomorphism(self);
+        end
+        
         % Morphism
 
         function y = imageElement(self, x)
@@ -39,12 +45,30 @@ classdef FiniteIdentity < replab.FiniteIsomorphism & replab.mrp.Identity
             l = true;
         end
 
+        % Str
+
+        function [names, values] = additionalFields(self)
+            [names, values] = additionalFields@replab.FiniteIsomorphism(self);
+        end
+
     end
 
     methods (Access = protected) % Implementations
 
         function inv = computeInverse(self)
             inv = self;
+        end
+
+    end
+
+    methods (Static)
+
+        function m = identity(group)
+            m = identity@replab.FiniteIsomorphism(group);
+        end
+        
+        function m = lambda(source, target, preimageElementFun, imageElementFun, torusMap)
+            m = lambda@replab.FiniteIsomorphism(source, target, preimageElementFun, imageElementFun, torusMap);
         end
 
     end

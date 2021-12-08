@@ -45,6 +45,40 @@ classdef SemidirectProductGroup_finite < replab.SemidirectProductGroup & replab.
 
     methods % Implementations
 
+        % Str
+
+        function s = headerStr(self)
+            s = headerStr@replab.gen.FiniteGroup(self);
+        end
+
+        function [names, values] = additionalFields(self)
+            [names, values] = additionalFields@replab.FiniteGroup(self);
+        end
+
+        function names = hiddenFields(self)
+            names = hiddenFields@replab.gen.FiniteGroup(self);
+        end
+
+        % Obj
+
+        function l = laws(self)
+            l = laws@replab.FiniteGroup(self);
+        end
+
+        % Group
+
+        function m = innerAutomorphism(self, by)
+            m = innerAutomorphism@replab.FiniteGroup(self, by);
+        end
+
+        function m = isomorphismByFunctions(self, target, preimageElementFun, imageElementFun)
+            m = isomorphismByFunctions@replab.FiniteGroup(self, target, preimageElementFun, imageElementFun);
+        end
+
+        function m = morphismByFunction(self, target, imageElementFun, torusMap)
+            m = morphismByFunction@replab.FiniteGroup(self, target, imageElementFun, torusMap);
+        end
+
         % Domain
 
         function b = eqv(self, x, y)
@@ -82,6 +116,36 @@ classdef SemidirectProductGroup_finite < replab.SemidirectProductGroup & replab.
         function G = withGeneratorNames(self, newNames)
             nice1 = self.nice.withGeneratorNames(newNames);
             G = replab.prods.SemidirectProduct_finite(self.type, self.generators, nice1, self.niceIsomorphism);
+        end
+
+    end
+
+    methods (Static)
+
+        function group = lambda(header, eqvFun, sampleFun, composeFun, identity, inverseFun)
+            group = lambda@replab.FiniteGroup(header, eqvFun, sampleFun, composeFun, identity, inverseFun);
+        end
+
+    end
+
+    methods % Bugfix for Octave method selection
+
+        function b = isequal(lhs, rhs)
+            b = isequal@replab.FiniteGroup(lhs, rhs);
+        end
+
+    end
+
+    methods
+
+        % Workaround for Octave bug
+
+        function res = eq(self, rhs)
+            res = eq@replab.gen.FiniteGroup(self, rhs);
+        end
+
+        function res = ne(self, rhs)
+            res = ne@replab.gen.FiniteGroup(self, rhs);
         end
 
     end

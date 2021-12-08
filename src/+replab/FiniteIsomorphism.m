@@ -46,6 +46,12 @@ classdef FiniteIsomorphism < replab.Isomorphism & replab.FiniteMorphism
             m = replab.mrp.SourceRestrictedFiniteIsomorphism(self, newSource);
         end
 
+        % Str
+
+        function [names, values] = additionalFields(self)
+            [names, values] = additionalFields@replab.FiniteMorphism(self);
+        end
+
     end
 
     methods (Access = protected)
@@ -75,6 +81,10 @@ classdef FiniteIsomorphism < replab.Isomorphism & replab.FiniteMorphism
         % Returns:
         %   `.FiniteIsomorphism`: The identity automorphism on the given group
             m = replab.mrp.FiniteIdentity(group);
+        end
+        
+        function m = lambda(source, target, preimageElementFun, imageElementFun, torusMap)
+            m = lambda@replab.Isomorphism.lambda(source, target, preimageElementFun, imageElementFun, torusMap);
         end
 
     end

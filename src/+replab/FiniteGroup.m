@@ -134,6 +134,12 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
             g1 = f.imageGroup(self);
         end
 
+        % Domain
+
+        function b = eqv(self, lhs, rhs)
+            b = eqv@replab.FiniteSet(self, lhs, rhs);
+        end
+
     end
 
     methods % Conjugacy classes and character table
@@ -1619,6 +1625,14 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
 
         function b = isequal(lhs, rhs)
             b = isequal@replab.FiniteSet(lhs, rhs);
+        end
+
+    end
+
+    methods (Static)
+
+        function group = lambda(header, eqvFun, sampleFun, composeFun, identity, inverseFun)
+            group = lambda@replab.CompactGroup(header, eqvFun, sampleFun, composeFun, identity, inverseFun);
         end
 
     end

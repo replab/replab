@@ -16,6 +16,10 @@ classdef ConjugacyClass < replab.ConjugacyClass & replab.gen.FiniteSet
 
     methods % Implementations
 
+        function c1 = imap(self, f)
+            c1 = imap@replab.ConjugacyClass(self, f);
+        end
+        
         % ConjugacyClass
 
         function o = elementOrder(self)
@@ -28,6 +32,28 @@ classdef ConjugacyClass < replab.ConjugacyClass & replab.gen.FiniteSet
 
         function G = representativeCentralizer(self)
             G = self.niceIsomorphism.preimageGroup(self.nice.representativeCentralizer);
+        end
+
+        % Str
+
+        function names = hiddenFields(self)
+            names = hiddenFields@replab.gen.FiniteSet(self);
+        end
+
+        function s = shortStr(self, maxColumns)
+            s = shortStr@ConjugacyClass(self, maxColumns);
+        end
+
+        % Obj
+
+        function l = laws(self)
+            l = laws@ConjugacyClass(self);
+        end
+
+        % Domain
+
+        function s = sample(self)
+            s = sample@ConjugacyClass(self);
         end
 
     end

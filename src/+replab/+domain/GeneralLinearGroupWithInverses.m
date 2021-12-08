@@ -72,6 +72,20 @@ classdef GeneralLinearGroupWithInverses < replab.Group & replab.domain.VectorSpa
             Xinv = [Xinv X];
         end
 
+        % Obj
+
+        function l = laws(self)
+            l = laws@replab.Group(self);
+        end
+
+    end
+
+    methods (Static)
+
+        function group = lambda(header, eqvFun, sampleFun, composeFun, identity, inverseFun)
+            group = lambda@replab.Group(header, eqvFun, sampleFun, composeFun, identity, inverseFun);
+        end
+
     end
 
 end

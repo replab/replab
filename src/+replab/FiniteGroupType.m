@@ -92,5 +92,13 @@ classdef FiniteGroupType < replab.Group & replab.TotalOrder
         end
 
     end
+    
+    methods (Static)
+        
+        function group = lambda(header, eqvFun, sampleFun, composeFun, identity, inverseFun)
+            group = lambda@replab.Group(header, eqvFun, sampleFun, composeFun, identity, inverseFun);
+        end
+        
+    end
 
 end

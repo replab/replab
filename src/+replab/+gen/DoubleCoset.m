@@ -25,6 +25,28 @@ classdef DoubleCoset < replab.DoubleCoset & replab.gen.FiniteSet
                 self.rightSubgroup.compatibleWithNiceIsomorphism(iso);
         end
 
+        % Str
+
+        function names = hiddenFields(self)
+            names = hiddenFieldsreplab.gen.FiniteSet(self);
+        end
+
+        % Domain
+
+        function l = laws(self)
+            l = laws@replab.DoubleCoset(self);
+        end
+
+        function s = sample(self)
+            s = sample@replab.DoubleCoset(self);
+        end
+
+        % FiniteSet
+
+        function C = imap(self, f)
+            C = imap@replab.DoubleCoset(self, f);
+        end
+
     end
 
     methods
