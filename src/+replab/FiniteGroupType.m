@@ -68,7 +68,7 @@ classdef FiniteGroupType < replab.Group & replab.TotalOrder
         % Constructs a subgroup of a given group with the given parameters
         %
         % Args:
-        %   group (`.GenericFiniteGroup`): Finite group whose subgroup we are constructing
+        %   group (`.FiniteGroup`): Finite group whose subgroup we are constructing
         %   generators (cell(1,\*) of group elements): Subgroup generators
         %
         % Keyword Args:

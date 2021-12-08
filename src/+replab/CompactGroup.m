@@ -64,14 +64,11 @@ classdef CompactGroup < replab.Group
         %       216
         %
         % Args:
-        %   varargin: Variable number of arguments of type `+replab.CompactGroup`
+        %   varargin: Variable number of arguments of type `.CompactGroup`
         %
         % Returns:
         %   `.DirectProductGroup`: The direct product group
-        %                                 If all groups are of type `+replab.NiceFiniteGroup`, the return type
-        %                                 is `+replab.NiceFiniteGroup` as well.
-        %                                 If all groups are of type `+replab.FiniteGroup`, the return type
-        %                                 is `+replab.FiniteGroup` as well.
+        %                          If all groups are of type `.FiniteGroup`, the return type `.FiniteGroup` as well.
             prd = replab.DirectProductGroup.make(varargin);
         end
 
@@ -82,8 +79,8 @@ classdef CompactGroup < replab.Group
         %   n (integer): Number of copies
         %
         % Returns:
-        %   `.CompactGroup`: The direct product self ``x ...(n times)... x self``
-        %                    The return type is specialized as in `+replab.CompactGroup.directProduct`.
+        %   `.DirectProductGroup`: The direct product self ``x ...(n times)... x self``
+        %                          The return type is specialized as in `.directProduct`.
             factors = arrayfun(@(x) self, 1:n, 'uniform', 0);
             prd = replab.DirectProductGroup.make(factors);
         end
@@ -120,7 +117,7 @@ classdef CompactGroup < replab.Group
         %   phi (function_handle): Function describing a homomorphism as described above
         %
         % Returns:
-        %   `.CompactGroup`: Semidirect product group
+        %   `.SemidirectProductGroup`: Semidirect product group
             action = replab.Action.lambda('Semidirect homomorphism', self, N, phi);
             sd = replab.SemidirectProductGroup.make(action);
         end

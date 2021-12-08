@@ -486,8 +486,8 @@ classdef SubRep < replab.Rep
 
         function e = computeProjectorErrorBound(self)
             PiA = self.projector('double/sparse');
-            [S DS] = self.parent.commutant.project(PiA);
-            e = norm(S - PiA, 'fro'); % + DS; % TODO
+            [S, DS] = self.parent.commutant.project(PiA);
+            e = norm(S - PiA, 'fro') + DS;
         end
 
     end

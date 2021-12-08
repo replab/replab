@@ -15,7 +15,7 @@ classdef MatrixGroup < replab.gen.FiniteGroup
 % Note that generators are specified in any way that could be passed to the `.cyclotomic` constructor,
 % which includes a string representation. However, one should not pass a floating-point inexact matrix
 % such as ``[1/sqrt(2), 1/sqrt(2); -1/sqrt(2), 1/sqrt(2)]``, because RepLAB is not able to guess the
-% exact representation of ``0.7071...` then.
+% exact representation of ``0.7071...`` then.
 %
 % Example:
 %   >>> m1 = [0 1; 1 0]; % doctest: +cyclotomic
