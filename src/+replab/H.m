@@ -272,7 +272,15 @@ classdef H
         end
 
         function e = end(self, k, n)
-            e = builtin('end', self.X, k, n);
+            if replab.compat.isOctave
+                if k < n
+                    e = size(self.X, k);
+                else
+                    e = numel(self.X);
+                end
+            else
+                e = builtin('end', self.X, k, n);
+            end
         end
 
         function res = horzcat(varargin)
