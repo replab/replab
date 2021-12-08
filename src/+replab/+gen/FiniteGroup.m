@@ -432,35 +432,6 @@ classdef FiniteGroup < replab.FiniteGroup & replab.gen.FiniteSet
             self.nice.setRealCharacterTable(table.imap(self.niceIsomorphism));
         end
 
-% $$$         function res = withGeneratorNames(self, newNames)
-% $$$         % TODO
-% $$$         end
-
-
-        % FiniteGroup / Morphism
-
-% $$$         function A = abstractGroup(self, generatorNames)
-% $$$             if nargin < 2 || isempty(generatorNames)
-% $$$                 generatorNames = self.generatorNames;
-% $$$             end
-% $$$             A = self.genericGroup.abstractGroup(generatorNames);
-% $$$         end
-% $$$
-% $$$         function m = abstractMorphism(self, generatorNames)
-% $$$             if nargin < 2 || isempty(generatorNames)
-% $$$                 generatorNames = self.generatorNames;
-% $$$             end
-% $$$             m = self.genericIsomorphism.andThen(self.genericGroup.abstractMorphism(generatorNames));
-% $$$         end
-
-        % permutationIsomorphism
-
-        % Subgroups
-
-% $$$
-
-        % Cosets
-
     end
 
     methods (Static)
