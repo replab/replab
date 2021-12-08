@@ -39,7 +39,7 @@ classdef NiceIsomorphism < replab.FiniteIsomorphism
         % Returns whether the source of this morphism contains the given type element
         %
         % Args:
-        %   s (element of `.sourceType`): Element to check
+        %   s (element of ``.source.type``): Element to check
         %
         % Returns:
         %   logical: True if source contains the given element

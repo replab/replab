@@ -27,7 +27,13 @@ classdef FiniteGroupType < replab.FiniteGroupType
         function G = groupFromNiceImage_(self, generators, nice, niceIsomorphism)
         % Creates a generic group of this type
         %
-        % See `.constructGroup`, here the ``generators`` argument has been reconstructed if necessary
+        % See `.groupFromNiceImage`, here the ``generators`` argument has been reconstructed if necessary
+        %
+        % This method can be overloaded to provide specific instances
+        % (see, for example `+replab.SignedPermutationGroup` ).
+        %
+        % Returns:
+        %   `+replab.+gen.FiniteGroup`
             G = replab.gen.FiniteGroup(self, generators, 'nice', nice, 'niceIsomorphism', niceIsomorphism);
         end
 

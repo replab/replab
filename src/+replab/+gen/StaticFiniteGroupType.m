@@ -32,7 +32,7 @@ classdef StaticFiniteGroupType < replab.gen.FiniteGroupType
         % * It constructs the default nice isomorphism implementation, which will itself
         %
         % At the call site, the finite group type object will be partially constructed.
-        % This method needs that `.imageElement` and `.makeIsomorphismSourceGroup` work
+        % This method needs that `.imageElement` and `.makeParentGroup` work
         % at that point.
         %
         % This code path is a bit convoluted, as required by the construction of a graph of
