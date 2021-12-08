@@ -41,19 +41,19 @@ classdef ConjugacyClass < replab.ConjugacyClass & replab.gen.FiniteSet
         end
 
         function s = shortStr(self, maxColumns)
-            s = shortStr@ConjugacyClass(self, maxColumns);
+            s = shortStr@replab.ConjugacyClass(self, maxColumns);
         end
 
         % Obj
 
         function l = laws(self)
-            l = laws@ConjugacyClass(self);
+            l = laws@replab.ConjugacyClass(self);
         end
 
         % Domain
 
         function s = sample(self)
-            s = sample@ConjugacyClass(self);
+            s = sample@replab.ConjugacyClass(self);
         end
 
     end
