@@ -2,58 +2,30 @@ classdef NormalCoset < replab.LeftCoset & replab.RightCoset
 % Describes a coset in the normal subgroup of a finite group
 %
 % It is a left and right coset at the same time.
+%
+% See parent classes `.LeftCoset` and `.RightCoset`
 
-    methods
+    methods % Implementations
 
-        function self = NormalCoset(group, canonicalRepresentative, parent)
-            self@replab.LeftCoset(group, canonicalRepresentative, parent);
-            self@replab.RightCoset(group, canonicalRepresentative, parent);
+        % Obj
+
+        function l = laws(self)
+            l = replab.laws.NormalCosetLaws(self);
         end
 
-    end
-
-    methods (Static)
-
-        function c = make(group, element, parent)
-            if nargin < 3 || isempty(parent)
-                parent = group.closure(element);
-            end
-            chain = parent.niceMorphism.imageGroup(group).lexChain;
-            permRep = replab.bsgs.Cosets.leftRepresentative(chain, parent.niceMorphism.imageElement(element));
-            % left representative is faster
-            c = replab.NormalCoset(group, parent.niceMorphism.preimageElement(permRep), parent);
-        end
-
-    end
-
-    methods (Access = protected)
-
-        function E = computeElementsSequence(self)
-            E = computeElementsSequence@replab.LeftCoset(self);
-        end
-
-        function s = computeSetProduct(self)
-            s = computeSetProduct@replab.LeftCoset(self);
-        end
-
-    end
-
-    methods
+        % Domain
 
         function s = sample(self)
             s = sample@replab.LeftCoset(self);
         end
 
-        function s = nElements(self)
-            s = nElements@replab.LeftCoset(self);
-        end
+        % FiniteSet
 
-        function b = contains(self, el)
-            b = contains@replab.LeftCoset(self, el);
-        end
-
-        function [l, r] = factorizeShortRepresentativeLetters(self)
-            [l, r] = factorizeShortRepresentativeLetters@replab.LeftCoset(self);
+        function C = imap(self, f)
+            group1 = self.group.imap(f);
+            subgroup1 = self.subgroup.imap(f);
+            rep1 = f.imageElement(self.representative);
+            C = subgroup1.normalCoset(rep1, 'group', group1, 'isCanonical', f.preservesTypeOrder);
         end
 
     end

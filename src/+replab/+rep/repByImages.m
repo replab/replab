@@ -51,7 +51,7 @@ function rep = repByImages(group, field, dimension, varargin)
     for i = 1:n
         I = images{i};
         % detect generalized permutation matrices
-        [G g] = replab.perm.GeneralizedSymmetricGroup.fromMatrix(I);
+        [G, g] = replab.perm.GeneralizedSymmetricGroupType.fromMatrix(I);
         if isempty(G)
             isGenPerm = false;
             break
@@ -62,9 +62,9 @@ function rep = repByImages(group, field, dimension, varargin)
         end
     end
     if isGenPerm
-        G = replab.perm.GeneralizedSymmetricGroup(dimension, cycloOrder);
-        genPerms = arrayfun(@(i) GSG{i}.naturalMorphism(G).imageElement(GSG_element{i}), 1:n, 'uniform', 0);
-        rep = replab.rep.RepByImages_monomial(group, field, dimension, preimages, images, G, genPerms, repKWargs{:});
+        type = replab.perm.GeneralizedSymmetricGroupType(dimension, cycloOrder);
+        genPerms = arrayfun(@(i) GSG{i}.naturalMorphismTo(type).imageElement(GSG_element{i}), 1:n, 'uniform', 0);
+        rep = replab.rep.RepByImages_monomial(group, field, dimension, preimages, images, type, genPerms, repKWargs{:});
         return
     end
     rep = replab.rep.RepByImages_exact(group, field, dimension, preimages, images, repKWargs{:});

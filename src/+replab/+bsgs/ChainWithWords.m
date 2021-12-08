@@ -404,7 +404,7 @@ classdef ChainWithWords < replab.Str
             count = 0;
             while count < nRounds || ~self.tableFull
                 tw = self.next(tw);
-                t = self.group.composeLetters(self.generators, tw);
+                t = self.group.composeFlat(self.generators, tw);
                 self.round(l, 1, t, tw);
                 count = count + 1;
             end
@@ -438,7 +438,7 @@ classdef ChainWithWords < replab.Str
             count = 0;
             while count < nRounds || ~self.tableFull
                 tw = self.next(tw);
-                t = self.group.composeLetters(self.generators, tw);
+                t = self.group.composeFlat(self.generators, tw);
                 self.round(l, 1, t, tw);
                 if mod(count, s) == 0
                     self.improve(l);

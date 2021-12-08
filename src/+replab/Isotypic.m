@@ -389,7 +389,7 @@ classdef Isotypic < replab.SubRep
         % SubRep
 
         function [res, better] = nice(self)
-            res = replab.nice.niceIsotypic(self);
+            res = replab.rep.niceIsotypic(self);
             better = ~isempty(res);
             if ~better
                 res = self;

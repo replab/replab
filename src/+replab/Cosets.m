@@ -3,20 +3,18 @@ classdef Cosets < replab.Obj
     properties (SetAccess = protected)
         group % (`.FiniteGroup`): Group
         subgroup % (`.FiniteGroup`): Subgroup of `.group`
-        isomorphism % (`+replab.FiniteIsomorphism`): Isomorphism to a permutation group
-        groupChain % (`+replab.+bsgs.Chain`): Group chain with base in lexicographic order
-        subgroupChain % (`+replab.+bsgs.Chain`): Subgroup chain with base in lexicographic order
     end
 
     methods
 
-        function self = Cosets(group, subgroup)
-            assert(group.hasSameTypeAs(subgroup));
-            self.group = group;
-            self.subgroup = subgroup;
-            self.isomorphism = group.niceMorphism;
-            self.groupChain = group.niceGroup.lexChain;
-            self.subgroupChain = subgroup.niceGroup.lexChain;
+        function s = nElements(self)
+        % Returns the number of cosets
+        %
+        % Returns:
+        %   integer: Number of cosets
+            s = self.group.order / self.subgroup.order;
+            assert(s <= 2^53 - 1);
+            s = double(s);
         end
 
     end

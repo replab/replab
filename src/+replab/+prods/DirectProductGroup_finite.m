@@ -1,4 +1,4 @@
-classdef DirectProductGroup_finite < replab.DirectProductGroup & replab.NiceFiniteGroup
+classdef DirectProductGroup_finite < replab.DirectProductGroup & replab.gen.FiniteGroup
 % External direct product of finite groups
 %
 % In particular, the permutation image of an element of a direct product group
@@ -9,103 +9,60 @@ classdef DirectProductGroup_finite < replab.DirectProductGroup & replab.NiceFini
 
     methods
 
-        function self = DirectProductGroup_finite(factors)
-            assert(all(cellfun(@(x) isa(x, 'replab.FiniteGroup'), factors)));
-            identity = cellfun(@(f) f.identity, factors, 'uniform', 0);
-            % the generators of a direct product of finite groups is the union of the generators of the factors,
-            % lifted into the proper tuples
-            generators = {};
-            for i = 1:length(factors)
-                factor = factors{i};
-                for j = 1:factor.nGenerators
-                    generator = identity;
-                    generator{i} = factor.generator(j);
-                    generators{1, end+1} = generator;
-                end
-            end
-            generatorNames = cellfun(@(f) f.generatorNames, factors, 'uniform', 0);
-            generatorNames = [generatorNames{:}];
-            if length(unique(generatorNames)) ~= length(generatorNames) % names are not unique
-                generatorNames = [];
-            end
-            if all(cellfun(@(f) f.type == f, factors))
-                type = 'self';
-            else
-                type = replab.prods.DirectProductGroup_finite(cellfun(@(f) f.type, factors, 'uniform', 0));
-            end
-            self@replab.NiceFiniteGroup(identity, generators, type, 'generatorNames', generatorNames);
+        function self = DirectProductGroup_finite(factors, type, generators, nice, niceIsomorphism)
+            self@replab.gen.FiniteGroup(type, generators, 'nice', nice, 'niceIsomorphism', niceIsomorphism);
             self.factors = factors;
-        end
-
-        function res = hasSameTypeAs(self, rhs)
-            lhs = self.type;
-            rhs = rhs.type;
-            if isa(rhs, 'replab.DirectProductGroup') && isa(rhs, 'replab.FiniteGroup') && lhs.nFactors == rhs.nFactors
-                res = all(arrayfun(@(i) lhs.factor(i) == rhs.factor(i), 1:self.nFactors));
-            else
-                res = false;
-            end
         end
 
     end
 
-    methods (Access = protected) % Implementations
+    methods % Implementations
 
-        function g = atFun(self, ind)
-        % See comments in self.elementsSequence
-            g = self.identity;
-            ind = ind - 1;
-            for i = self.nFactors:-1:1
-                f = self.factor(i);
-                this = mod(ind, f.order);
-                ind = (ind - this)/f.order;
-                g{i} = f.elementsSequence.at(this + 1);
-            end
+        % Str
+
+        function s = headerStr(self)
+            s = headerStr@replab.DirectProductGroup(self);
         end
 
-        function ind = findFun(self, g)
-        % See comments in self.elementsSequence
-            ind = vpi(0);
-            for i = 1:self.nFactors
-                f = self.factor(i);
-                ind = ind * f.order;
-                ind = ind + f.elementsSequence.find(g{i}) - 1;
-            end
-            ind = ind + 1;
+        function names = hiddenFields(self)
+            names = replab.str.uniqueNames( ...
+                hiddenFields@replab.DirectProductGroup(self), ...
+                hiddenFields@replab.gen.FiniteGroup(self) ...
+                );
         end
 
-        function o = computeOrder(self)
-            o = vpi(1);
-            % The order of a direct product is the product of the
-            % order of the factors
-            for i = 1:self.nFactors
-                o = o * self.factor(i).order;
-            end
+        function [names values] = additionalFields(self)
+            [names1 values1] = additionalFields@replab.DirectProductGroup(self);
+            [names2 values2] = additionalFields@replab.gen.FiniteGroup(self);
+            names = replab.str.horzcatForce(names1, names2);
+            values = replab.str.horzcatForce(values1, values2);
         end
 
-        function c = computeCharacterTable(self, field)
-            c = replab.ct.directProduct(self, field);
+        % Domain
+
+        function b = eqv(self, x, y)
+            b = eqv@replab.DirectProductGroup(self, x, y);
         end
 
-        function c = computeConjugacyClasses(self)
-            classes = cellfun(@(f) f.conjugacyClasses.classRepresentatives, self.factors, 'uniform', 0);
-            reps = replab.util.cartesian(classes);
-            c = replab.ConjugacyClasses(self, cellfun(@(r) self.conjugacyClass(r), reps, 'uniform', 0));
+        function g = sample(self)
+            g = sample@replab.DirectProductGroup(self);
         end
 
-        function e = computeElementsSequence(self)
-            e = replab.Sequence.lambda(self.order, ...
-                                       @(ind) self.atFun(ind), ...
-                                       @(g) self.findFun(g));
-            % The elements of a direct product of finite groups can be
-            % enumerated by considering the direct product as a cartesian
-            % product of sets, and decomposing the index a la ind2sub/sub2ind
-            % which is the role of the `atFun` and `findFun` functions
+        % Monoid
 
-            % TODO: verify ordering
+        function z = compose(self, x, y)
+            z = compose@replab.DirectProductGroup(self, x, y);
         end
 
-        function s = computeSetProduct(self)
+        % Group
+
+        function xInv = inverse(self, x)
+            xInv = inverse@replab.DirectProductGroup(self, x);
+        end
+
+        % FiniteSet
+
+        function s = setProduct(self)
             T = {};
             % The decomposition of a direct product into sets
             % is simply the concatenation of the sequence of sets
@@ -129,65 +86,64 @@ classdef DirectProductGroup_finite < replab.DirectProductGroup & replab.NiceFini
             s = replab.SetProduct(self, T, true);
         end
 
-    end
-
-    methods % Implementations
-
-        % Str
-
-        function names = hiddenFields(self)
-            names = replab.str.uniqueNames( ...
-                hiddenFields@replab.DirectProductGroup(self), ...
-                hiddenFields@replab.NiceFiniteGroup(self) ...
-                );
-        end
-
-        function [names values] = additionalFields(self)
-            [names1 values1] = additionalFields@replab.DirectProductGroup(self);
-            [names2 values2] = additionalFields@replab.NiceFiniteGroup(self);
-            names = replab.str.horzcatForce(names1, names2);
-            values = replab.str.horzcatForce(values1, values2);
-        end
-
-        % Domain
-
-        function g = sample(self)
-            g = sample@replab.DirectProductGroup(self);
-        end
-
         % FiniteGroup
 
-        function l = contains(self, g)
-            for i = 1:self.nFactors
-                if ~self.factor(i).contains(g{i})
-                    l = false;
-                    return
-                end
-            end
-            l = true;
-        end
-
         function G = withGeneratorNames(self, newNames)
-            if isequal(self.generatorNames, newNames)
-                G = self;
-                return
-            end
-            G = replab.prods.DirectProductGroup_finite(self.factors, 'generatorNames', newNames);
-        end
-
-        % NiceFiniteGroup
-
-        function p = niceImage(self, g)
-            shift = 0;
-            p = [];
-            % concatenates the permutation images of the factors
-            for i = 1:self.nFactors
-                pf = self.factor(i).niceMorphism.imageElement(g{i});
-                p = [p pf+shift];
-                shift = shift + length(pf);
-            end
+            nice1 = self.nice.withGeneratorNames(newNames);
+            G = replab.prods.DirectProductGroup_finite(self.factors, self.type, self.generators, nice1, self.niceIsomorphism);
         end
 
     end
+
+
+% $$$     methods (Access = protected) % Implementations
+% $$$
+% $$$         function g = atFun(self, ind)
+% $$$        % See comments in self.elementsSequence
+% $$$             g = self.identity;
+% $$$             ind = ind - 1;
+% $$$             for i = self.nFactors:-1:1
+% $$$                 f = self.factor(i);
+% $$$                 this = mod(ind, f.order);
+% $$$                 ind = (ind - this)/f.order;
+% $$$                 g{i} = f.elementsSequence.at(this + 1);
+% $$$             end
+% $$$         end
+% $$$
+% $$$         function ind = findFun(self, g)
+% $$$         % See comments in self.elementsSequence
+% $$$             ind = vpi(0);
+% $$$             for i = 1:self.nFactors
+% $$$                 f = self.factor(i);
+% $$$                 ind = ind * f.order;
+% $$$                 ind = ind + f.elementsSequence.find(g{i}) - 1;
+% $$$             end
+% $$$             ind = ind + 1;
+% $$$         end
+% $$$
+% $$$         function c = computeCharacterTable(self, field)
+% $$$             c = replab.ct.directProduct(self, field);
+% $$$         end
+% $$$
+% $$$         function c = computeConjugacyClasses(self)
+% $$$             classes = cellfun(@(f) f.conjugacyClasses.classRepresentatives, self.factors, 'uniform', 0);
+% $$$             reps = replab.util.cartesian(classes);
+% $$$             c = replab.ConjugacyClasses(self, cellfun(@(r) self.conjugacyClass(r), reps, 'uniform', 0));
+% $$$         end
+% $$$
+% $$$         function e = computeElementsSequence(self)
+% $$$             e = replab.Sequence.lambda(self.order, ...
+% $$$                                        @(ind) self.atFun(ind), ...
+% $$$                                        @(g) self.findFun(g));
+% $$$             % The elements of a direct product of finite groups can be
+% $$$             % enumerated by considering the direct product as a cartesian
+% $$$             % product of sets, and decomposing the index a la ind2sub/sub2ind
+% $$$             % which is the role of the `atFun` and `findFun` functions
+% $$$
+% $$$             % TODO: verify ordering
+% $$$         end
+% $$$
+% $$$
+% $$$     end
 
 end

@@ -351,7 +351,7 @@ classdef SubRep < replab.Rep
         %      A subrepresentation of ``self.parent``
         %   better: logical
         %      Whether a nicer subrepresentation has been found
-            res = replab.nice.niceSubRep(self);
+            res = replab.rep.niceSubRep(self);
             better = ~isempty(res);
             if ~better
                 res = self;
@@ -486,8 +486,8 @@ classdef SubRep < replab.Rep
 
         function e = computeProjectorErrorBound(self)
             PiA = self.projector('double/sparse');
-            [S DS] = self.parent.commutant.project(PiA);
-            e = norm(S - PiA, 'fro'); % + DS; % TODO
+            [S, DS] = self.parent.commutant.project(PiA);
+            e = norm(S - PiA, 'fro') + DS;
         end
 
     end

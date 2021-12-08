@@ -251,6 +251,8 @@ classdef Parser
             parts = strsplit(str, '|');
             nameStr = parts{1};
             names = cellfun(@strtrim, strsplit(strtrim(nameStr), {' ', ','}), 'uniform', false);
+            mask = cellfun(@isempty, names);
+            names = names(~mask);
             if length(parts) < 2
                 relStr = '';
             else

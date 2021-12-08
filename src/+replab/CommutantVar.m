@@ -216,7 +216,7 @@ classdef CommutantVar < replab.Str
             self.field = field;
 
             % Representation decomposition
-            group = replab.SignedSymmetricGroup(n).subgroup(generators);
+            group = replab.SignedPermutationGroup(n, generators);
             irrDecomp = group.naturalRep.decomposition;
             assert(irrDecomp.isUnitary);
             assert(irrDecomp.mapsAreAdjoint);
@@ -678,7 +678,7 @@ classdef CommutantVar < replab.Str
                     pairsH = [reshape(imagesMatrix, d^2, 1) reshape(imagesMatrix', d^2, 1)];
                     pairsH = unique(sort(pairsH, 2), 'rows');
 
-                    [~, subsetsH] = replab.graph.connectedComponents(max(pairsH, [], 'all'), pairsH);
+                    [~, subsetsH] = replab.graph.connectedComponents(max(pairsH(:)), pairsH);
 
                     % We distinguish between images which are real, and
                     % images which are conjugated to each other

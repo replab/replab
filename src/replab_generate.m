@@ -55,7 +55,6 @@ function result = replab_generate(what)
 
     if isequal(what, 'sphinxsrc') || isequal(what, 'sphinx') || isequal(what, 'all') || isequal(what, 'clear')
         % Generate Sphinx preprocessed source files
-        srcRoot = fullfile(rp, 'src');
         sphinxRoot = fullfile(rp, 'sphinx');
         sphinxSrcRoot = fullfile(sphinxRoot, '_src');
         replab.infra.mkCleanDir(sphinxRoot, '_src', logFun);

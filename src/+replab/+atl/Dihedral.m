@@ -117,7 +117,7 @@ classdef Dihedral
                 if ~(G1.isCyclic && G1.order == n/2)
                     return
                 end
-                T = G.rightCosetsOf(G1).transversal;
+                T = G.rightCosets(G1).transversal;
                 good = false;
                 for i = 1:4
                     Zn = G1.closure(T{i});
@@ -186,12 +186,12 @@ classdef Dihedral
             [C, stop] = replab.atl.Dihedral.classReps(n);
             classList = cellfun(@(r) G.permutationGroup.conjugacyClass(r), C, 'uniform', 0);
             classes = replab.ConjugacyClasses(G.permutationGroup, classList);
-            G.cache('conjugacyClasses', classes.imap(G.niceMorphism.inverse), 'error');
+            G.setConjugacyClasses(classes.imap(G.niceIsomorphism.inverse));
             if replab.init.cyclolab().works
                 ctR = replab.atl.Dihedral.characterTable(G.permutationGroup, classes, stop, 'R');
                 ctC = replab.atl.Dihedral.characterTable(G.permutationGroup, classes, stop, 'C');
-                G.cache('realCharacterTable', ctR.imap(G.niceMorphism.inverse), 'error');
-                G.cache('complexCharacterTable', ctC.imap(G.niceMorphism.inverse), 'error');
+                G.setRealCharacterTable(ctR.imap(G.niceIsomorphism.inverse));
+                G.setComplexCharacterTable(ctC.imap(G.niceIsomorphism.inverse));
             end
         end
 

@@ -130,11 +130,24 @@ classdef Laws < replab.Str
                         % subinstance
                         nameParts = strsplit(name, '_');
                         prefix = [strjoin(nameParts(2:end), ' ') '->'];
-                        newLaws = self.(name);
-                        [newTestNames newTestFuns] = newLaws.getTestCases;
-                        newTestNames = cellfun(@(x) [prefix x], newTestNames, 'UniformOutput', false);
-                        testNames = horzcat(testNames, newTestNames);
-                        testFuns = horzcat(testFuns, newTestFuns);
+                        try
+                            newLaws = self.(name);
+                        catch
+                            err = lasterror;
+                            switch err.identifier
+                              case 'replab:skip'
+                                replab.msg(1, 'skipping slow test');
+                                newLaws = [];
+                              otherwise
+                                rethrow(err);
+                            end
+                        end
+                        if ~isempty(newLaws)
+                            [newTestNames newTestFuns] = newLaws.getTestCases;
+                            newTestNames = cellfun(@(x) [prefix x], newTestNames, 'UniformOutput', false);
+                            testNames = horzcat(testNames, newTestNames);
+                            testFuns = horzcat(testFuns, newTestFuns);
+                        end
                       case 'law_'
                         % It is a method that describes a test case
                         [lawName domains] = replab.laws.parseLawMethodName(self, name);
@@ -156,9 +169,9 @@ classdef Laws < replab.Str
         % Runs the randomized tests without using MOxUnit, and returns whether all tests passed
         %
         % Example:
-        %    >>> S10 = replab.S(10);
-        %    >>> S10laws = S10.laws;
-        %    >>> S10laws.checkSilent
+        %    >>> S3 = replab.S(3);
+        %    >>> S3laws = S3.laws;
+        %    >>> S3laws.checkSilent
         %        1
         %
         % Returns:
@@ -179,11 +192,31 @@ classdef Laws < replab.Str
         % Runs the randomized tests without using MOxUnit
         %
         % This method is useful from the REPL command line.
+        %
+        % This method stops at the first error.
             [testNames testFuns] = self.getTestCases;
             for i = 1:length(testNames)
                 disp(sprintf('Checking %s...', testNames{i}));
                 f = testFuns{i};
                 f();
+            end
+        end
+
+        function checkAndContinue(self)
+        % Runs the randomized tests without using MOxUnit
+        %
+        % This method is useful from the REPL command line.
+        %
+        % This method catches errors and does not throw.
+            [testNames testFuns] = self.getTestCases;
+            for i = 1:length(testNames)
+                disp(sprintf('Checking %s...', testNames{i}));
+                f = testFuns{i};
+                try
+                    f();
+                catch
+                    lasterror
+                end
             end
         end
 

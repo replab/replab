@@ -1,32 +1,38 @@
 classdef FiniteSet < replab.Domain
-% Describes a finite set of elements
+% Describes a subset of a finite group
 %
-% This is the base class for distinguished subsets of a `.FiniteGroup`, such as cosets or conjugacy classes.
+% Examples of finite subsets include:
 %
-% When non-empty, such sets have a distinguished `.representative` element, which is the element of the set
-% which is minimal under lexicographic ordering. For some finite sets, this element is used to explore the
-% entire structure on demand.
+% - left cosets (`.LeftCoset`),
+% - right cosets (`.RightCoset`),
+% - normal cosets (`.NormalCoset`),
+% - double cosets (`.DoubleCoset`),
+% - conjugacy classes (`.ConjugacyClass`),
+% - finite groups (`.FiniteGroup`).
+%
+% If the finite set is not empty (`.nElements` is nonzero), the set has a distinguished `.representative` element.
+% For permutation groups, this representative element is the minimal element under lexicographic ordering.
 
     properties (SetAccess = protected)
-        type % (`.FiniteGroup`): Set of all elements of the same type as this set; satisfies ``type.type == type``
-        representative % (element of `.type`): Minimal member of this set under lexicographic ordering. If the set is empty, value is undefined.
+        type % (`.FiniteGroupType`): Type of the contained elements
     end
 
-    methods (Access = protected)
-
-        function E = computeElementsSequence(self)
-        % See `.elementsSequence`
-            error('Abstract');
-        end
-
+    properties (Access = protected)
+        representative_ % (element of `.type`): Minimal member of this set under the `.type` ordering. If the set is empty, value is undefined.
     end
 
-    methods
+    methods % Elements
 
         function b = contains(self, el)
         % Tests whether this set contains the given element
         %
-        % The element must be part of ``self.parent.type``.
+        % The element must be part of `.type`, as in the example below: only permutations with the same domain size
+        % should be tested using `.contains`.
+        %
+        % Example:
+        %   >>> G = replab.PermutationGroup.of([2 3 4 1]);
+        %   >>> G.contains([4 3 2 1])
+        %       0
         %
         % Args:
         %   el (element of `.type`): Element to test for membership
@@ -36,16 +42,10 @@ classdef FiniteSet < replab.Domain
             error('Abstract');
         end
 
-        function E = elementsSequence(self)
-        % Returns a sequence corresponding to this set
-        %
-        % Returns:
-        %   `.Sequence`: An enumeration of the set elements
-            E = self.cached('elementsSequence', @() self.computeElementsSequence);
-        end
-
         function E = elements(self)
         % Returns a cell array containing all the elements of this set
+        %
+        % The sequence is sorted according to the total ordering defined by `.type`.
         %
         % Note: if the number of elements is bigger than `+replab.globals.maxElements`, an error is thrown.
         %
@@ -57,12 +57,30 @@ classdef FiniteSet < replab.Domain
             E = self.elementsSequence.toCell;
         end
 
-        function s = nElements(self)
+        function E = elementsSequence(self)
+        % Returns a sequence corresponding to this set
+        %
+        % The sequence is sorted according to the total ordering defined by `.type`.
+        %
+        % Returns:
+        %   `.Sequence`: An enumeration of the set elements
+            error('Abstract');
+        end
+
+        function n = nElements(self)
         % Returns the size of this set
         %
         % Returns:
         %   vpi: Set cardinality
             error('Abstract');
+        end
+
+        function r = representative(self)
+        % Returns the minimal element of this set under the type ordering
+        %
+        % Returns:
+        %   element: Canonical representative of this set
+            r = self.representative_;
         end
 
         function s = setProduct(self)
@@ -81,21 +99,64 @@ classdef FiniteSet < replab.Domain
         % Returns if this finite set has the same type as the given finite set
         %
         % In particular, it means that the `.contains` method of one set can be called with elements of the other set.
-        %x
+        %
         % Args:
         %   rhs (`+replab.FiniteSet`): Other finite set
         %
         % Returns:
         %   logical: True if the groups have compatible types
-            res = self.type.hasSameTypeAs(rhs.type); % we delegate to the types themselves
+            res = self.type.isSameTypeAs(rhs.type); % we delegate to the types themselves
         end
 
     end
 
+    methods % Image under isomorphism
+
+        function res = imap(self, f)
+        % Returns the image of this finite set under an isomorphism
+        %
+        % Args:
+        %   f (`.FiniteIsomorphism`): Isomorphism such that this finite set is contained in ``f.source``
+        %
+        % Returns:
+        %   `.FiniteSet`: This finite set mapped under ``f``, expressed as a subset of ``f.image``
+            error('Abstract');
+        end
+
+    end
+
+
     methods % Implementations
 
-        function res = mtimes(lhs, rhs)
-            res = replab.FiniteSet.multiply(lhs, rhs);
+        function res = isequal(self, rhs)
+        % Tests finite sets for equality
+        %
+        % Alternative syntax to `.eq`
+        %
+        % Example:
+        %   >>> G = replab.PermutationGroup.of([2 3 1], [2 1 3]);
+        %   >>> H = replab.PermutationGroup.of([2 1 3], [1 3 2]);
+        %   >>> isequal(G, H)
+        %       1
+            res = replab.finite.equality(self, rhs);
+        end
+
+        function res = mtimes(self, rhs)
+            res = replab.FiniteSet.multiply(self, rhs);
+        end
+
+        % Str
+
+        function [names, values] = additionalFields(self)
+            [names, values] = additionalFields@replab.Domain(self);
+            names{1, end+1} = 'representative';
+            values{1, end+1} = self.representative;
+        end
+
+        % Domain
+
+        function b = eqv(self, lhs, rhs)
+            b = self.type.eqv(lhs, rhs);
         end
 
     end
@@ -122,20 +183,16 @@ classdef FiniteSet < replab.Domain
             end
         end
 
-        function checkNormalizes(lhs, rhs)
-            assert(lhs.isNormalizedBy(rhs) || rhs.isNormalizedBy(lhs), 'This product requires a normalization condition');
-        end
-
         function res = multiply(lhs, rhs)
             switch [replab.FiniteSet.shortType(lhs) replab.FiniteSet.shortType(rhs)]
               case 'NG'
-                res = replab.DoubleCoset.make(lhs.group, lhs.representative, rhs);
+                res = lhs.group.doubleCoset(lhs.representative, rhs);
               case 'GN'
-                res = replab.DoubleCoset.make(lhs, rhs.representative, rhs.group);
+                res = lhs.doubleCoset(rhs.representative, rhs.group);
               case 'GL'
-                res = replab.DoubleCoset.make(lhs, rhs.representative, rhs.group);
+                res = lhs.doubleCoset(rhs.representative, rhs.group);
               case 'RG'
-                res = replab.DoubleCoset.make(lhs.group, lhs.representative, rhs);
+                res = lhs.group.doubleCoset(lhs.representative, rhs);
               case 'GE'
                 res = lhs.rightCoset(rhs);
               case 'EG'

@@ -1,7 +1,22 @@
 classdef FiniteIsomorphism < replab.Isomorphism & replab.FiniteMorphism
 % Describes an isomorphism between finite groups
-%
-% Adds the guarantee that `.target`/`.image` has for generators the images of the generators of `.source`
+
+    methods
+
+        function l = preservesTypeOrder(self)
+        % Returns whether, for sure, this isomorphism preserves element ordering
+        %
+        % * When this method returns true, we must have, for ``x`` and ``y`` in `.source`,
+        %   ``self.source.type.compare(x, y) == self.target.type.compare(self.imageElement(x), self.imageElement(y))``
+        % * When this method returns false, it does not necessarily means that there exists a pair ``(x, y)``
+        %   that violates the condition above. It simply means the order preservation is not known.
+        %
+        % Returns:
+        %   logical: Whether, for sure, this isomorphism preserves element ordering
+            l = false; % by default, if unknown
+        end
+
+    end
 
     methods % Implementations
 
@@ -9,6 +24,26 @@ classdef FiniteIsomorphism < replab.Isomorphism & replab.FiniteMorphism
 
         function l = laws(self)
             l = replab.laws.FiniteIsomorphismLaws(self);
+        end
+
+        % FiniteMorphism
+
+        function T = imageGroup(self, S)
+            images = cellfun(@(g) self.imageElement(g), S.generators, 'uniform', 0);
+            T = self.target.subgroupWithGenerators(images); % do not need to check for non-generators
+        end
+
+        function S = preimageGroup(self, T)
+            preimages = cellfun(@(g) self.preimageElement(g), T.generators, 'uniform', 0);
+            S = self.source.subgroupWithGenerators(preimages); % do not need to check for non-generators
+        end
+
+        function s = preimageRepresentative(self, t)
+            s = self.preimageElement(t);
+        end
+
+        function m = restrictedSource(self, newSource)
+            m = replab.mrp.SourceRestrictedFiniteIsomorphism(self, newSource);
         end
 
     end
@@ -25,30 +60,6 @@ classdef FiniteIsomorphism < replab.Isomorphism & replab.FiniteMorphism
 
         function K = computeKernel(self)
             K = self.source.trivialSubgroup;
-        end
-
-    end
-
-    methods % Implementations
-
-        % FiniteMorphism
-
-        function s = preimageRepresentative(self, t)
-            s = self.preimageElement(t);
-        end
-
-        function S = preimageGroup(self, T)
-            preimages = cellfun(@(g) self.preimageElement(g), T.generators, 'uniform', 0);
-            S = self.source.subgroupWithGenerators(preimages); % do not need to check for non-generators
-        end
-
-        function T = imageGroup(self, S)
-            images = cellfun(@(g) self.imageElement(g), S.generators, 'uniform', 0);
-            T = self.target.subgroupWithGenerators(images); % do not need to check for non-generators
-        end
-
-        function m = restrictedSource(self, newSource)
-            m = replab.mrp.SourceRestrictedFiniteIsomorphism(self, newSource);
         end
 
     end

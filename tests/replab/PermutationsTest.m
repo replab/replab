@@ -9,7 +9,7 @@ function test_suite = PermutationsTest()
     if ReplabTestParameters.onlyFastTests
         allNs = [10];
     else
-        allNs = [0 1 2 5 10];
+        allNs = [1 2 5 10];
     end
 
     for n = allNs

@@ -9,18 +9,18 @@ function test_suite = SignedPermutationsTest()
     if ReplabTestParameters.onlyFastTests
         allNs = [10];
     else
-        allNs = [0 1 2 10];
+        allNs = [1 2 10];
     end
 
     for n = allNs
-        G = replab.SignedSymmetricGroup(n);
+        G = replab.SignedPermutationGroup.signedSymmetric(n);
         test_suite = G.laws.addTestCases(test_suite);
     end
 end
 
 
 function test_niceFiniteGroup_implementations
-    G = replab.SignedSymmetricGroup(3);
+    G = replab.SignedPermutationGroup.signedSymmetric(3);
     rep = G.regularRep;
     assert(rep.dimension == 48);
     assert(~G.isSimple);

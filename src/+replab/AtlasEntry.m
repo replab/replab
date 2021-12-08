@@ -42,11 +42,11 @@ classdef AtlasEntry < replab.Obj
             if replab.init.cyclolab().works
                 if isfield(data, 'realCharacterTable')
                     realCharacterTable = replab.atl.parseCharacterTable(G, 'R', data.realCharacterTable);
-                    G.cache('realCharacterTable', realCharacterTable, 'error');
+                    G.setRealCharacterTable(realCharacterTable);
                 end
                 if isfield(data, 'complexCharacterTable')
                     complexCharacterTable = replab.atl.parseCharacterTable(G, 'C', data.complexCharacterTable);
-                    G.cache('complexCharacterTable', complexCharacterTable, 'error');
+                    G.setComplexCharacterTable(complexCharacterTable);
                 end
             end
         end
@@ -111,7 +111,6 @@ classdef AtlasEntry < replab.Obj
                 return
             end
             res = all(arrayfun(@(i) length(x{i}) == length(y{i}) && all(x{i} == y{i}), 1:length(x)));
-            % TODO: tests based on conjugacy classes
         end
 
         function m = match(self, group)

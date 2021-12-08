@@ -24,8 +24,20 @@ classdef FiniteInverse < replab.FiniteIsomorphism
             t = self.of.preimageElement(s);
         end
 
+        function T = imageGroup(self, S)
+            T = self.of.preimageGroup(S);
+        end
+
         function s = preimageElement(self, t)
             s = self.of.imageElement(t);
+        end
+
+        function S = preimageGroup(self, T)
+            S = self.of.imageGroup(T);
+        end
+
+        function l = preservesTypeOrder(self)
+            l = self.of.preservesTypeOrder;
         end
 
     end

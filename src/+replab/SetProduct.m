@@ -29,6 +29,46 @@ classdef SetProduct < replab.Domain
             self.identityFirst = identityFirst;
         end
 
+        function S = imap(self, isomorphism)
+        % Maps this multiset under an isomorphism
+        %
+        % Args:
+        %   isomorphism (`.Isomorphism`): Isomorphism with its containing all elements of this `.SetProduct`
+        %
+        % Returns:
+        %   `.SetProduct`: Multiset with elements in ``isomorphism.target``
+            sets1 = cellfun(@(s) cellfun(@(el) isomorphism.imageElement(el), s, 'uniform', 0), self.sets, 'uniform', 0);
+            S = replab.SetProduct(isomorphism.target, sets1, self.identityFirst);
+        end
+
+    end
+
+    methods % Implementations
+
+        % Obj
+
+        function l = laws(self, finiteSet)
+            if nargin == 1
+                l = replab.laws.SetProductLaws(self);
+            else
+                l = replab.laws.SetProductLaws(self, finiteSet);
+            end
+        end
+
+        % Domain
+
+        function l = eqv(self, x, y)
+            l = self.monoid.eqv(x, y);
+        end
+
+        function s = sample(self)
+            s = self.monoid.identity;
+            for i = 1:length(self.sets)
+                S = self.sets{i};
+                s = self.monoid.compose(s, S{randi(length(S))});
+            end
+        end
+
     end
 
     methods (Static)
@@ -42,32 +82,6 @@ classdef SetProduct < replab.Domain
         % Returns:
         %   `.SetProduct`: A singleton SetProduct
             P = replab.SetProduct(monoid, {{monoid.identity}}, true);
-        end
-
-        function P = fromFiniteSet(finiteSet, identityFirst)
-        % Constructs a SetProduct decomposition from a single set
-        %
-        % No efficiency gains are expected.
-        %
-        % Args:
-        %   finiteSet (`.FiniteSet`): Finite set to describe using a (trivial) `.SetProduct`
-        %   identityFirst (logical, optional): Whether to move the identity in the first place, if present, default: false
-        %
-        % Returns:
-        %   `.SetProduct`: The set product
-            if nargin < 2 || isempty(identityFirst)
-                identityFirst = false;
-            end
-            c = double(finiteSet.nElements);
-            S = finiteSet.elements;
-            group = finiteSet.type;
-            if identityFirst
-                ind = double(finiteSet.elementsSequence.find(group.identity));
-                if ind > 0 && ind ~= 1
-                    S([1 ind]) = S([ind 1]);
-                end
-            end
-            P = replab.SetProduct(group, {S}, identityFirst);
         end
 
     end
