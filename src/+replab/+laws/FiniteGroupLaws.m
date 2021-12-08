@@ -51,7 +51,7 @@ classdef FiniteGroupLaws < replab.laws.GroupLaws & replab.laws.FiniteSetLaws
         end
 
         function law_exponent_S(self, s)
-            self.red;
+            self.yellow;
             e = self.S.exponent;
             if e > 2^52
                 return
@@ -67,13 +67,14 @@ classdef FiniteGroupLaws < replab.laws.GroupLaws & replab.laws.FiniteSetLaws
         end
 
         function law_isCyclic_(self)
+            self.yellow;
             if self.S.isCyclic
                 self.assert(self.S.order == self.S.exponent);
             end
         end
 
         function law_isSimple_(self)
-            self.red;
+            self.yellow;
             if self.S.isSimple
                 self.assert(self.S.derivedSubgroup.isTrivial);
             end
@@ -89,6 +90,7 @@ classdef FiniteGroupLaws < replab.laws.GroupLaws & replab.laws.FiniteSetLaws
         end
 
         function law_order_(self)
+            self.yellow;
             o = self.S.order;
             e = self.S.exponent;
             % exponent divides the order
