@@ -140,7 +140,7 @@ classdef GeneralizedSymmetricGroupType < replab.gen.StaticFiniteGroupType
         % Returns
         % -------
         %   G:
-        %     `.GeneralizedSymmetricGroup` or ``[]``: Group the recognized element is part of, or ``[]`` if unsuccessful
+        %     `.GeneralizedSymmetricGroupType` or ``[]``: Group the recognized element is part of, or ``[]`` if unsuccessful
         %   g:
         %     group element or ``[]``: Group element if successful otherwise ``[]``
             G = [];
