@@ -200,8 +200,10 @@ classdef Class < replab.infra.SourceElement
                         name = names{j};
                         already.(name) = true;
                         se = sup.ownElementsStruct.(name);
-                        iel = replab.infra.InheritedClassElement(self.codeBase, self, name, se.kind, se.attributes);
-                        ie.(name) = iel;
+                        if ~isfield(se.attributes, 'Static') || ~se.attributes.Static % Static methods should not be used in children classes, so we don't document them there
+                            iel = replab.infra.InheritedClassElement(self.codeBase, self, name, se.kind, se.attributes);
+                            ie.(name) = iel;
+                        end
                     end
                 end
                 self.inheritedElementsStruct_ = ie;
