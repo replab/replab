@@ -8,7 +8,7 @@
 addpath([pwd, '/../..']);
 replab_init('verbose', 0);
 
-% ## Definition of the matrix to symmetrize
+% ## Matrix to be symmetrized
 %
 % Let us consider a random matrix
 
@@ -17,14 +17,14 @@ M = rand(5)
 % Our aim is to compute the average $\sum_{g\in G} M(g,g)$ over a group $G$,
 % where the group elements $g$ act on the rows and on the columns of our matrix.
 
-% ## Definition of the group
+% ## Group definition
 %
 % Let us consider the permutation group over which we wish to perform the average
 
 S5 = replab.S(5);
 group = S5.subgroup({[2 1 4 5 3]})
 
-% ## Averaging
+% ## Averaging over the group
 %
 % The averaging is done by projecting our matrix onto the commutant of the group's natural representation
 
