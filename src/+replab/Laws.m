@@ -109,12 +109,18 @@ classdef Laws < replab.Str
             end
         end
 
-        function [testNames testFuns] = getTestCases(self)
+        function testCases = getTestCases(self, namePrefix, location)
         % Enumerates the laws present in this instance by looking for methods with the correct prefix
         %
         % We look for the ``law_`` and ``laws_`` prefixes, see the `.Laws` class description.
-            testNames = {};
-            testFuns = {};
+        %
+        % Args:
+        %   namePrefix (charstring): Prefix to add in front of the test case name
+        %   location (charstring): Location of the `.addTestCases` call
+        %
+        % Returns:
+        %   Unit test case
+            testCases = {};
             M = replab.compat.methodList(metaclass(self));
             [~, I] = sort(cellfun(@(m) m.Name, M, 'uniform', 0));
             M = M(I);
@@ -143,23 +149,13 @@ classdef Laws < replab.Str
                             end
                         end
                         if ~isempty(newLaws)
-                            [newTestNames newTestFuns] = newLaws.getTestCases;
-                            newTestNames = cellfun(@(x) [prefix x], newTestNames, 'UniformOutput', false);
-                            testNames = horzcat(testNames, newTestNames);
-                            testFuns = horzcat(testFuns, newTestFuns);
+                            newTestCases = newLaws.getTestCases([namePrefix prefix], location);
+                            testCases = horzcat(testCases, newTestCases);
                         end
                       case 'law_'
                         % It is a method that describes a test case
-                        [lawName domains] = replab.laws.parseLawMethodName(self, name);
-                        if length(domains) > 0
-                            % has randomized arguments
-                            testFun = @() replab.laws.runNTimes(replab.Laws.nRuns, self, name, domains);
-                        else
-                            % does not have randomized arguments
-                            testFun = @() replab.laws.runNTimes(1, self, name, {});
-                        end
-                        testNames{end+1} = lawName;
-                        testFuns{end+1} = testFun;
+                        [lawName, domains] = replab.laws.parseLawMethodName(self, name);
+                        testCases{1, end+1} = replab_LawTestCase(self, [namePrefix lawName], name, location, domains);
                     end
                 end
             end
@@ -233,11 +229,9 @@ classdef Laws < replab.Str
             % location comes from the calling function
             [call_stack, idx] = dbstack('-completenames');
             location = call_stack(idx + 1).file;
-            [testNames testFuns] = self.getTestCases;
-            for i = 1:length(testNames)
-                caseName = [testName ': ' testNames{i}];
-                testCase = MOxUnitFunctionHandleTestCase(caseName, location, testFuns{i});
-                testSuite = addTest(testSuite, testCase);
+            testCases = self.getTestCases([testName ': '], location);
+            for i = 1:length(testCases)
+                testSuite = addTest(testSuite, testCases{i});
             end
         end
 
