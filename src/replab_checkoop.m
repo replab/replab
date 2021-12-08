@@ -4,7 +4,7 @@ function ok = replab_checkoop
 % The main reason for this function is the fact that inheritance rules are
 % a bit different between Matlab and Octave.
 %
-% This includes three kinds of checks, performed one after the other one
+% This includes two kinds of checks, performed one after the other one
 % upon success:
 %
 % 1. Check that inherited methods admit only one possible implementation.
@@ -18,9 +18,9 @@ function ok = replab_checkoop
 % which are not inherited by any other class contain no 'Abstract' method,
 % i.e. that no top class is abstract.
 %
-% 3. Finally, we check that all references to replab objects in the code
-% point to an existing definition (this is similar to what replab_checkhelp
-% does for the documentation).
+% Aditionally, we could also check that all references to replab objects in
+% the code point to an existing definition (similarly to what
+% replab_checkhelp does for the documentation).
 %
 % Returns:
 %   logical: True if no problems were detected
@@ -92,7 +92,7 @@ function ok = replab_checkoop
                         nbAmbiguousMethods = nbAmbiguousMethods + 1;
                         disp(['Method ', mts{j}.fullIdentifier, ' admits ', num2str(length(unique(implementations))), ' declarations:']);
                         for k = unique(implementations)
-                            disp(['  - in ', replab.infra.repl.linkOpen(decl{k}.fullIdentifier, decl{k}.fullIdentifier, decl{k}.absoluteFilename, decl{k}.startLineNumber)]);
+                            disp(['  - in ', decl{k}.linkOpen]);
                         end
                         disp(' ');
                     end
@@ -103,12 +103,69 @@ function ok = replab_checkoop
 
     ok = (nbAmbiguousMethods == 0);
     if ok
-        disp('No ambiguous method overloading encountered.')
+        disp('No ambiguous method overloading encountered.');
+        disp(' ');
     else
         warning([num2str(nbAmbiguousMethods), ' methods were found who could be ambiguous.']);
         return;
     end
     
     
-    
+    % Now we identify non-inherited classes, and make sure they contain no
+    % abstract methods
+    %
+    % Note: in principle we could encode whether a class is abstract or not
+    % into replab.CodeBase, but at the moment, priority is given there to
+    % methods resolution identifying the best method documentation.
+    % Typically, this comes from base classes whose methods are abstract
+    % (hence the labelling of the corresponding method as abstract in the
+    % codebase). What we need here is on the contrary to find the method
+    % which contains the latest possible implementation of the method,
+    % typically on top of the hierarchy class. But a proper way to solve
+    % this would require not seeing classes inheritance as a 1-dimensional
+    % structure, so we use a custom code here for now.
+    disp('Checking for abstract classes');
+    for i = 1:length(ac)
+        if isempty(ac{i}.allSubclasses)
+            % We identified a class without children, let us check whether
+            % all its methods admit a non-abstract implementation
+            allMethodsNames = cellfun(@(x) x.name, ac{i}.allMethods, 'UniformOutput', false);
+            implementationFound = zeros(1, length(allMethodsNames));
+
+            % We look through the class hierarchy for at least one
+            % implementation of the method
+            classes = ac{i};
+            classes = {classes, ac{i}.allSuperclasses{:}};
+            for j = 1:length(classes)
+                methodsHere = classes{j}.ownMethods;
+                for k = find(implementationFound == 0)
+                    for l = 1:length(methodsHere)
+                        if isequal(allMethodsNames{k}, methodsHere{l}.name)
+                            % Is the method abstract?
+                            if ~isfield(methodsHere{l}.attributes, 'Abstract') || ~methodsHere{l}.attributes.Abstract
+                                implementationFound(k) = 1;
+                                break;
+                            end
+                        end
+                    end
+                end
+            end
+            
+            if sum(1-implementationFound) > 0
+                disp([replab.infra.repl.linkOpen(ac{i}.fullIdentifier, ac{i}.fullIdentifier, ac{i}.absoluteFilename, 1), ' has ', num2str(sum(1-implementationFound)), ' abstract methods:']);
+                for k = find(implementationFound == 0)
+                    disp(['  - ', allMethodsNames{k}]);
+                end
+                ok = false;
+            end
+        end
+    end
+    if ok
+        disp('No abstract top class encountered.');
+        disp(' ');
+    else
+        warning(['Some top classes were found to contain abstract methods.']);
+        return;
+    end
+
 end
