@@ -135,7 +135,7 @@ classdef Laws < replab.Str
                         catch
                             err = lasterror;
                             switch err.identifier
-                              case 'replab:skip'
+                              case 'moxUnit:testSkipped'
                                 replab.msg(1, 'skipping slow test');
                                 newLaws = [];
                               otherwise
@@ -183,7 +183,13 @@ classdef Laws < replab.Str
                 try
                     f();
                 catch
-                    res = false;
+                    err = lasterror;
+                    if ~strcmp(err.identifier, 'moxUnit:testSkipped')
+                        res = false;
+                    end
+                end
+                if ~res
+                    return
                 end
             end
         end
@@ -198,7 +204,14 @@ classdef Laws < replab.Str
             for i = 1:length(testNames)
                 disp(sprintf('Checking %s...', testNames{i}));
                 f = testFuns{i};
-                f();
+                try
+                    f();
+                catch
+                    err = lasterror;
+                    if ~strcmp(err.identifier, 'moxUnit:testSkipped')
+                        rethrow(err);
+                    end
+                end
             end
         end
 
@@ -207,15 +220,18 @@ classdef Laws < replab.Str
         %
         % This method is useful from the REPL command line.
         %
-        % This method catches errors and does not throw.
-            [testNames testFuns] = self.getTestCases;
+        % This method catches errors, displays them but does not throw.
+            [testNames, testFuns] = self.getTestCases;
             for i = 1:length(testNames)
                 disp(sprintf('Checking %s...', testNames{i}));
                 f = testFuns{i};
                 try
                     f();
                 catch
-                    lasterror
+                    err = lasterror;
+                    if ~strcmp(err.identifier, 'moxUnit:testSkipped')
+                        err
+                    end
                 end
             end
         end
@@ -254,7 +270,7 @@ classdef Laws < replab.Str
         end
 
         function skip
-            errorId = 'replab:skip';
+            errorId = 'moxUnit:testSkipped';
             msg = 'Skipping slow test';
             if replab.compat.isOctave
                 error(errorId, msg);
@@ -264,7 +280,7 @@ classdef Laws < replab.Str
         end
 
         function out = inexistent(msg)
-            errorId = 'replab:inexistent';
+            errorId = 'moxUnit:testSkipped';
             if replab.compat.isOctave
                 error(errorId, msg);
             else
