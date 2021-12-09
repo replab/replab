@@ -17,7 +17,7 @@ classdef FiniteGroupType < replab.Group & replab.TotalOrder
 % Note:
 %   For implementations purposes, there are several families of group types in RepLAB.
 %
-%   * The first is `+replab.PermutationGroupType` where computational group theory algorithms
+%   * The first is `+replab.+perm.PermutationGroupType` where computational group theory algorithms
 %     are implemented and used directly.
 %
 %   * The second is `+replab.+gen.FiniteGroupType`, in which the constructed objects delegate all
