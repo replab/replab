@@ -13,10 +13,15 @@ function result = replab_runtests(varargin)
 % Results:
 %     logical: True if all tests passed.
 
+    if replab.compat.isOctave
+        % warm up Octave before testing
+        replab.compat.warmup;
+    end
+
     % Parse the arguments
     args = struct('slowtests', true, 'doctests', true, 'notebooks', true, 'withCoverage', false);
-    [args, restArgs] = replab.util.populateStruct(args, varargin);    
-    
+    [args, restArgs] = replab.util.populateStruct(args, varargin);
+
     % Make sure we are in the current path
     initialPath = pwd;
     [pathStr, name, extension] = fileparts(which(mfilename));
