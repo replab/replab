@@ -16,6 +16,7 @@ classdef CommutantVar < replab.Str
 % cannot be guaranteed when combining a `CommutantVar` object with another
 % class object on the left, such as a sdpvar. Doing so typically results in
 % an error. This can be avoided in two ways:
+%
 %  1. Always put the `CommutantVar` on the left of other class objects
 %     (e.g. write ``M >= N`` instead of ``N <= M`` if ``M`` is a `CommutantVar` and ``N`` a
 %     sdpvar object)
@@ -908,8 +909,8 @@ classdef CommutantVar < replab.Str
         % Args:
         %     d (integer, optional): specific dimension
         %
-        % Returns:
-        % --------
+        % Returns
+        % -------
         %     s1: integer
         %         The dimension array, or first dimension if s2 is also
         %         requested
@@ -1363,13 +1364,13 @@ classdef CommutantVar < replab.Str
         %     X (`CommutantVar`, sdpvar or double)
         %     Y (`CommutantVar`, sdpvar or double)
         %
-        % Returns:
-        % --------
-        %     integer:
-        %         0 if Y is not compatible with X
-        %         1 if Y has the block structure of X
-        %         2 if Y has the block structure of X and identical blocks
-        %             in X correspond to identical blocks in Y
+        % Returns
+        % -------
+        %   integer:
+        %       0 if Y is not compatible with X
+        %       1 if Y has the block structure of X
+        %       2 if Y has the block structure of X and identical blocks
+        %           in X correspond to identical blocks in Y
         %
         % Example:
         %     >>> matrix1 = replab.CommutantVar.fromPermutations({[2 3 1]}, 'symmetric', 'real');

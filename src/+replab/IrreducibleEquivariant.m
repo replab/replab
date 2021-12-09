@@ -165,12 +165,12 @@ classdef IrreducibleEquivariant < replab.SubEquivariant
         % It returns the decomposition of the projection.
         %
         % Args:
-        %   X (double(\*,\*) or `.cyclotomic`(\*,\*), may be sparse): Matrix in the isotypic component space to project
+        %   X (double(\*,\*) or `.cyclotomic` (\*,\*), may be sparse): Matrix in the isotypic component space to project
         %   type ('double', 'double/sparse' or 'exact', optional): Type of the returned value, default: 'double'
         %
         % Returns
         % -------
-        %   M: cell(\*,\*) of (``[]``, or cell(1,\*) of (double(\*,\*) or `.cyclotomic`(\*,\*)))
+        %   M: cell(\*,\*) of (``[]``, or cell(1,\*) of (double(\*,\*) or `.cyclotomic` (\*,\*)))
         %     The part containing the degrees of freedom of the commutant algebra
         %   err: double
         %     Estimation of the numerical error, expressed as the distance of the returned projection to the invariant subspace in Frobenius norm
@@ -210,12 +210,12 @@ classdef IrreducibleEquivariant < replab.SubEquivariant
         % It returns the decomposition of the projection.
         %
         % Args:
-        %   X (double(\*,\*) or `.cyclotomic`(\*,\*), may be sparse): Matrix in the parent representation space to project
+        %   X (double(\*,\*) or `.cyclotomic` (\*,\*), may be sparse): Matrix in the parent representation space to project
         %   type ('double', 'double/sparse' or 'exact', optional): Type of the returned value, default: 'double'
         %
         % Returns
         % -------
-        %   M: cell(\*,\*) of (``[]``, or cell(1,\*) of (double(\*,\*) or `.cyclotomic`(\*,\*)))
+        %   M: cell(\*,\*) of (``[]``, or cell(1,\*) of (double(\*,\*) or `.cyclotomic` (\*,\*)))
         %     The part containing the degrees of freedom of the commutant algebra
         %   err: double
         %     Estimation of the numerical error, expressed as the distance of the returned projection to the invariant subspace in Frobenius norm

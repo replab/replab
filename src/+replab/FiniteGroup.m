@@ -7,8 +7,7 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
 %
 % RepLAB implements group algorithms optimized for permutation groups using the BSGS (base and strong generating set) construction.
 %
-% Generators and equality
-% ~~~~~~~~~~~~~~~~~~~~~~~
+% **Generators and equality**
 %
 % The generating set of a group is a property of the group, and is used, for example:
 %
@@ -24,8 +23,7 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
 %
 % The exception is `.AbstractGroup` because the generator names are used in the group elements themselves.
 %
-% Finite group types
-% ~~~~~~~~~~~~~~~~~~
+% **Finite group types**
 %
 % Each finite group has a type (`.FiniteGroupType`), that describes the most general group embedding its elements.
 % The following are finite group types:
@@ -39,8 +37,7 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
 %
 % Types can be compared with the ``==`` operator.
 %
-% Implementations of finite groups
-% ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+% **Implementations of finite groups**
 %
 % `.FiniteGroup` has two main subclasses:
 %

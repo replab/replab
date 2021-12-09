@@ -10,9 +10,9 @@ function [T, P] = serreTensor(rep, irrep, type)
 %
 % Returns
 % -------
-%   T: double(D,D,d,d) or `+replab.cyclotomic`(D,D,d,d), may be sparse
+%   T: double(D,D,d,d) or `+replab.cyclotomic` (D,D,d,d), may be sparse
 %     Serre tensor
-%   P: double(D,D) or `+replab.cyclotomic`(D,D), may be sparse
+%   P: double(D,D) or `+replab.cyclotomic` (D,D), may be sparse
 %     Projector into the isotypic component
     if nargin < 3 || isempty(type)
         type = 'double';
