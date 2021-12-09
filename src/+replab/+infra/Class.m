@@ -200,8 +200,10 @@ classdef Class < replab.infra.SourceElement
                         name = names{j};
                         already.(name) = true;
                         se = sup.ownElementsStruct.(name);
-                        iel = replab.infra.InheritedClassElement(self.codeBase, self, name, se.kind, se.attributes);
-                        ie.(name) = iel;
+                        if ~strcmp(name, sup.name) % if it is not a constructor
+                            iel = replab.infra.InheritedClassElement(self.codeBase, self, name, se.kind, se.attributes);
+                            ie.(name) = iel;
+                        end
                     end
                 end
                 self.inheritedElementsStruct_ = ie;
