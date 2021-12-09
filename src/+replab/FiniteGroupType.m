@@ -11,7 +11,7 @@ classdef FiniteGroupType < replab.Group & replab.TotalOrder
 % - permutations of a given domain ``1..n`` (the set of such permutations is finite),
 % - invertible matrices of a given size with coefficients in the cyclotomic field
 %   (the set of such matrices is not finite, but we assume that any explicitly constructed group
-%    is finite),
+%   is finite),
 % - direct products of finite group types.
 %
 % Note:

@@ -1,6 +1,8 @@
 Finite group structures
 =======================
 
+.. module:: +replab
+
 Elements of finite groups all have a type described by a `.FiniteGroupType`.
 For example, permutations acting on a certain domain, matrices of a given dimension; direct products of those.
 

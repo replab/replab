@@ -1,5 +1,5 @@
 function a = abelianInvariants(group)
-% See `.abelianInvariants`
+% See `+replab.FiniteGroup.abelianInvariants`
 %
 % Inspired by GAP System "AbelianInvariants"
     if group.isTrivial
