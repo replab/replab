@@ -887,9 +887,9 @@ classdef cyclotomic
         %
         % Returns
         % -------
-        %   L: `.cyclotomic`(\*,\*)
+        %   L: `.cyclotomic` (\*,\*)
         %     Lower triangular matrix
-        %   U: `.cyclotomic`(\*,\*)
+        %   U: `.cyclotomic` (\*,\*)
         %     Upper triangular matrix
         %   p: integer(1,\*)
         %     Permutation vector

@@ -672,12 +672,14 @@ classdef Rep < replab.Obj
         %
         %
         % For real irreducible representations, the Frobenius-Schur indicator can take values:
+        %
         % * ``1`` if the representation is of real-type; its complexification is then also irreducible
         % * ``0`` if the representation is of complex-type; it decomposes into two conjugate irreducible
         %   representations over the complex numbers
         % * ``-2`` if the representation is of quaternion-type.
         %
         % For complex irreducible representations, it can take the values:
+        %
         % * ``1`` if the representation is of real-type,
         % * ``0`` if the representation is of complex-type, i.e. is not equivalent to its conjugate,
         % * ``-1`` if the representation is of quaternion-type.

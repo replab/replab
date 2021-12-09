@@ -609,6 +609,7 @@ classdef CommutantVar < replab.Str
         %
         % Creates a `CommutantVar` matrix with additional structure. The
         % produced sdpvar matrix:
+        %
         %  - is invariant under the permutation group
         %  - satisfies the structure imposed by the index matrix: two
         %    matrix elements with same index are equal to each other
@@ -780,9 +781,11 @@ classdef CommutantVar < replab.Str
         %
         % Imposes symmetry constraints onto an existing SDP matrix. This
         % creates a `CommutantVar` matrix which satisfies both:
+        %
         %     - the structure encoded into sdpMatrix
         %     - invariance under joint permutations of its lines and
         %       columns by the provided generators.
+        %
         % The type of matrix (full/symmetric/hermitian) as well as the
         % field (real/complex) is inferred from the provided matrix.
         %
@@ -1366,7 +1369,7 @@ classdef CommutantVar < replab.Str
         %
         % Returns
         % -------
-        %   integer:
+        %   integer: Measure of compatibility
         %       0 if Y is not compatible with X
         %       1 if Y has the block structure of X
         %       2 if Y has the block structure of X and identical blocks
