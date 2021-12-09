@@ -20,7 +20,7 @@ function result = replab_runtests(varargin)
 
     % Parse the arguments
     args = struct('slowtests', true, 'doctests', true, 'notebooks', true, 'withCoverage', false);
-    [args, restArgs] = replab.util.populateStruct(args, varargin);
+    args = replab.util.populateStruct(args, varargin);
 
     % Make sure we are in the current path
     initialPath = pwd;
