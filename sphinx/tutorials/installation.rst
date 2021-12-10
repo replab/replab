@@ -100,7 +100,6 @@ which should lead to the following output
     Initializing dependency YALMIP
     Initializing dependency sdpt3
     Adding embedded SDPT3 solver to the path
-    Initializing dependency MOcov
     Initializing dependency MOxUnit
     >>
 
