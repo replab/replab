@@ -14,6 +14,16 @@ classdef IsomorphismComposition < replab.Isomorphism & replab.mrp.Composition
             s = first.preimageElement(second.preimageElement(t));
         end
 
+        function t = imageElement(self, s)
+            t = imageElement@replab.mrp.Composition(self, s);
+        end
+        
+        % Obj
+
+        function l = laws(self)
+            l = laws@replab.Isomorphism(self);
+        end
+        
     end
 
     methods (Access = protected) % Implementations

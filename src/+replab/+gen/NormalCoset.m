@@ -18,10 +18,34 @@ classdef NormalCoset < replab.NormalCoset & replab.gen.FiniteSet
 
     methods % Implementations
 
+        % Str
+
+        function names = hiddenFields(self)
+            names = hiddenFields@replab.gen.FiniteSet(self);
+        end
+
         % gen.FiniteSet
 
         function l = compatibleWithNiceIsomorphism(self, iso)
             l = self.group.compatibleWithNiceIsomorphism(iso) && self.subgroup.compatibleWithNiceIsomorphism(iso);
+        end
+
+        % Obj
+
+        function l = laws(self)
+            l = laws@replab.NormalCoset(self);
+        end
+
+        % Domain
+
+        function s = sample(self)
+            s = sample@replab.NormalCoset(self);
+        end
+
+        % FiniteSet
+
+        function C = imap(self, f)
+            C = imap@replab.NormalCoset(self, f);
         end
 
     end

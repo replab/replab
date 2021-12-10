@@ -37,6 +37,42 @@ classdef DirectProductGroup_compact < replab.DirectProductGroup & replab.Compact
             mu = T.morphismByFunction(self, f);
         end
 
+        % Str
+
+        function names = hiddenFields(self)
+            names = hiddenFields@replab.DirectProductGroup(self);
+        end
+
+        function [names values] = additionalFields(self)
+            [names values] = additionalFields@replab.DirectProductGroup(self);
+        end
+
+        function s = headerStr(self)
+            s = headerStr@replab.DirectProductGroup(self);
+        end
+
+        % Domain
+
+        function b = eqv(self, x, y)
+            b = eqv@replab.DirectProductGroup(self, x, y);
+        end
+
+        function g = sample(self)
+            g = sample@replab.DirectProductGroup(self);
+        end
+
+        % Monoid
+
+        function z = compose(self, x, y)
+            z = compose@replab.DirectProductGroup(self, x, y);
+        end
+        
+        % Group
+
+        function xInv = inverse(self, x)
+            xInv = inverse@replab.DirectProductGroup(self, x);
+        end
+
     end
 
 end

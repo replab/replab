@@ -200,7 +200,7 @@ classdef Class < replab.infra.SourceElement
                         name = names{j};
                         already.(name) = true;
                         se = sup.ownElementsStruct.(name);
-                        if ~strcmp(name, sup.name) % if it is not a constructor
+                        if (~isfield(se.attributes, 'Static') || ~se.attributes.Static) && (~strcmp(name, sup.name)) % Static methods should not be used in children classes, so we don't document them there; also don't document constructors
                             iel = replab.infra.InheritedClassElement(self.codeBase, self, name, se.kind, se.attributes);
                             ie.(name) = iel;
                         end

@@ -15,6 +15,10 @@ classdef ConcreteClassElement < replab.infra.SourceElement & replab.infra.ClassE
             elementPath = {self.parentClass.name self.name};
         end
 
+        function c = childrenNames(self)
+            c = childrenNames@replab.infra.ClassElement(self);
+        end
+
     end
 
 end

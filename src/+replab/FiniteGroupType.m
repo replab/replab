@@ -92,5 +92,5 @@ classdef FiniteGroupType < replab.Group & replab.TotalOrder
         end
 
     end
-
+    
 end

@@ -89,10 +89,20 @@ classdef FiniteGroup < replab.FiniteGroup & replab.gen.FiniteSet
             end
         end
 
+        function [names, values] = additionalFields(self)
+            [names, values] = additionalFields@replab.FiniteGroup(self);
+        end
+
         function names = hiddenFields(self)
             names1 = hiddenFields@replab.gen.FiniteSet(self);
             names2 = hiddenFields@replab.FiniteGroup(self);
             names = union(names1, names2);
+        end
+
+        % Obj
+
+        function l = laws(self)
+            l = laws@replab.FiniteGroup(self);
         end
 
         % Domain
@@ -137,6 +147,12 @@ classdef FiniteGroup < replab.FiniteGroup & replab.gen.FiniteSet
                 end
             end
             l = true;
+        end
+
+        % FiniteSet
+
+        function g1 = imap(self, f)
+            g1 = imap@replab.FiniteGroup(self, f);
         end
 
         % FiniteGroup
@@ -442,6 +458,10 @@ classdef FiniteGroup < replab.FiniteGroup & replab.gen.FiniteSet
 
         function S = setProduct(self)
             S = setProduct@replab.gen.FiniteSet(self);
+        end
+
+        function b = isequal(lhs, rhs)
+            b = isequal@replab.FiniteGroup(lhs, rhs);
         end
 
     end

@@ -11,6 +11,12 @@ classdef FiniteIdentity < replab.FiniteIsomorphism & replab.mrp.Identity
 
     methods % Implementations
 
+        % Obj
+
+        function l = laws(self)
+            l = laws@replab.FiniteIsomorphism(self);
+        end
+        
         % Morphism
 
         function y = imageElement(self, x)
@@ -37,6 +43,12 @@ classdef FiniteIdentity < replab.FiniteIsomorphism & replab.mrp.Identity
 
         function l = preservesTypeOrder(self)
             l = true;
+        end
+
+        % Str
+
+        function [names, values] = additionalFields(self)
+            [names, values] = additionalFields@replab.FiniteIsomorphism(self);
         end
 
     end
