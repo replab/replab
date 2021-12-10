@@ -45,7 +45,7 @@ save decomposition_export_example.mat data
 
 % ### Load script
 
-clear all % pretend we start all over again
+clear G rep dec decToExport data % pretend we start all over again
 replab_init('verbose', 0);
 % we construct again the group and its representation
 G = replab.S(3);

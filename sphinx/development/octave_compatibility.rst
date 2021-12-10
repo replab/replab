@@ -1,7 +1,19 @@
-Octave bugs
-===========
+Octave compatibility
+====================
 
 .. module:: +replab
+
+
+We wish to keep RepLAB fully accessible for free. For this reason, the code
+is adapted to run within Octave's specificities. For instance, we avoid
+calling long chains of constructors which can cause problem. It is also
+important to avoid calling 'clear all' within the tests or in the
+documentation since this may clear test data while tests are running on
+some versions of Octave.
+
+Note that some limitations may also apply on Octave only. For instance, 
+Octave doesn't allow for clickable links to be created in the display, 
+and it does not support saving/loading class objects. It is also 
 
 Here is a list of Octave bugs that are problematic to the project. Their
 resolution will allow to improve the library.
@@ -20,12 +32,6 @@ Bugs affecting replab.CommutantVar:
 -  `44498 <https://savannah.gnu.org/bugs/?44498>`_:
    ``isscalar(sdpvar(3))`` returns ``1`` on octave
 
-Bugs affecting ``replab.dispatch``
-----------------------------------
-
-For errors to be propagated up in constructors, one has to call
-``error`` directly. The function ``assert`` does not work.
-
 Bugs affecting other parts
 --------------------------
 
@@ -33,3 +39,5 @@ Bugs affecting other parts
    our `replab.NiceFiniteGroup` base instance has
    ``self.parent.parent == self.parent`` and that throws Octave's
    ``isequal`` in a loop
+   
+
