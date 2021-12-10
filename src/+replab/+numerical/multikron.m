@@ -2,7 +2,7 @@ function res = multikron(factors, type)
 % Computes the Kronecker product of multiple factors with a given type
 %
 % Args:
-%   factors (cell(1,\*) of double(\*,\*) or `+replab.cyclotomic`(\*,\*)): Factors
+%   factors (cell(1,\*) of double(\*,\*) or `+replab.cyclotomic` (\*,\*)): Factors
 %   type ('double' 'double/sparse' or 'exact', optional): Type of the result, default: double
     if isempty(factors)
         if strcmp(type, 'exact')

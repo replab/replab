@@ -20,7 +20,7 @@ classdef NiceIsomorphism < replab.gen.NiceIsomorphism
             id = replab.cyclotomic.eye(d);
             cycloSet = replab.matrix.dimino(sourceGenerators, id);
             n = cycloSet.nElements;
-            targetType = replab.PermutationGroupType.make(n);
+            targetType = replab.perm.PermutationGroupType.make(n);
             sortedToEnum = sourceType.sort(cycloSet.elements);
             enumToSorted = targetType.inverse(sortedToEnum);
             permSet = replab.perm.Set(n, n);

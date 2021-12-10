@@ -1,4 +1,8 @@
 classdef Cosets < replab.Obj
+% Base class for the left/normal/right coset classes
+%
+% This class is necessary because `.NormalCosets` inherits from both `.LeftCosets` or `.RightCosets`,
+% and thus they share the `.group` and `.subgroup` properties.
 
     properties (SetAccess = protected)
         group % (`.FiniteGroup`): Group

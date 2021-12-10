@@ -26,8 +26,8 @@ classdef SubRep < replab.Rep
 
     properties (SetAccess = protected)
         parent % (`+replab.Rep`): Parent representation of dimension $D$
-        injection_internal % (double(D,d) or `.cyclotomic`(D,d), may be sparse): Injection map
-        projection_internal % (double(d,D) or `.cyclotomic`(d,D), may be sparse): Projection map
+        injection_internal % (double(D,d) or `.cyclotomic` (D,d), may be sparse): Injection map
+        projection_internal % (double(d,D) or `.cyclotomic` (d,D), may be sparse): Projection map
         mapsAreAdjoint % (logical): True if `.parent` is unitary (so the Hermitian adjoint makes sense)  and `.injection` is the conjugate transpose of `.projection`
         isSimilarRep % (logical): True if this `.SubRep` encodes a similarity transformation
     end
@@ -44,8 +44,8 @@ classdef SubRep < replab.Rep
         %
         % Args:
         %   parent (`+replab.Rep`): Parent representation of dimension $D$
-        %   injection_internal (double(D,d) or `.cyclotomic`(D,d), may be sparse): Injection map $I$
-        %   projection_internal (double(d,D) or `.cyclotomic`(d,D), may be sparse): Projection map $P$
+        %   injection_internal (double(D,d) or `.cyclotomic` (D,d), may be sparse): Injection map $I$
+        %   projection_internal (double(d,D) or `.cyclotomic` (d,D), may be sparse): Projection map $P$
         %
         % Keyword Args:
         %   isUnitary (logical, optional): Whether the resulting representation is unitary, may be omitted (see above)
@@ -145,8 +145,8 @@ classdef SubRep < replab.Rep
         % Additional keywords arguments are passed to the `.subRep` method of `.parent`.
         %
         % Args:
-        %   injection (double(D,d) or `.cyclotomic`(D,d), may be sparse): Injection map
-        %   projection (double(d,D) or `.cyclotomic`(d,D), may be sparse): Projection map
+        %   injection (double(D,d) or `.cyclotomic` (D,d), may be sparse): Injection map
+        %   projection (double(d,D) or `.cyclotomic` (d,D), may be sparse): Projection map
         %
         % Returns:
         %   `.SubRep`: The updated subrepresentation
@@ -277,7 +277,7 @@ classdef SubRep < replab.Rep
         %   type ('double', 'double/sparse' or 'exact', optional): Type of the returned value, default: 'double'
         %
         % Returns:
-        %   double(\*,\*) or `.cyclotomic`(\*,\*): The injection map
+        %   double(\*,\*) or `.cyclotomic` (\*,\*): The injection map
             if nargin < 2 || isempty(type)
                 type = 'double';
             end
@@ -294,7 +294,7 @@ classdef SubRep < replab.Rep
         %   type ('double', 'double/sparse' or 'exact', optional): Type of the returned value, default: 'double'
         %
         % Returns:
-        %   double(\*,\*) or `.cyclotomic`(\*,\*): The basis of the subrepresentation given as column vectors
+        %   double(\*,\*) or `.cyclotomic` (\*,\*): The basis of the subrepresentation given as column vectors
             if nargin < 3 || isempty(type)
                 type = 'double';
             end
@@ -312,7 +312,7 @@ classdef SubRep < replab.Rep
         %   type ('double', 'double/sparse' or 'exact', optional): Type of the returned value, default: 'double'
         %
         % Returns:
-        %   double(\*,\*) or `.cyclotomic`(\*,\*): The projection map
+        %   double(\*,\*) or `.cyclotomic` (\*,\*): The projection map
             if nargin < 2 || isempty(type)
                 type = 'double';
             end

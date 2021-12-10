@@ -24,7 +24,7 @@ function [P, n] = isotypicProjector(rep, varargin)
 %
 % Returns
 % -------
-%   P: double(D,D) or `+replab.cyclotomic`(D,D), may be sparse
+%   P: double(D,D) or `+replab.cyclotomic` (D,D), may be sparse
 %     Projector
 %   n: integer
 %     Returns the multiplicity of the given irreducible character

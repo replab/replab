@@ -109,7 +109,7 @@ classdef Equivariant < replab.Domain
         %   An error if `.isExact` is false.
         %
         % Args:
-        %   X (double(\*,\*) or `.cyclotomic`(\*,\*), may be sparse): Matrix to project; if double, should be converted to `.cyclotomic`
+        %   X (double(\*,\*) or `.cyclotomic` (\*,\*), may be sparse): Matrix to project; if double, should be converted to `.cyclotomic`
         %
         % Returns
         % -------
@@ -124,7 +124,7 @@ classdef Equivariant < replab.Domain
         % Implementation of `.project`
         %
         % Args:
-        %   X (double(\*,\*) or `.cyclotomic`(\*,\*), may be sparse): Matrix to project
+        %   X (double(\*,\*) or `.cyclotomic` (\*,\*), may be sparse): Matrix to project
         %
         % Returns
         % -------
@@ -152,12 +152,12 @@ classdef Equivariant < replab.Domain
         %   An error if ``type`` is ``'exact'`` and `.isExact` is false.
         %
         % Args:
-        %   X (double(\*,\*) or `.cyclotomic`(\*,\*), may be sparse): Matrix to project
+        %   X (double(\*,\*) or `.cyclotomic` (\*,\*), may be sparse): Matrix to project
         %   type ('double', 'double/sparse' or 'exact', optional): Type of the returned value, default: 'double'
         %
         % Returns
         % -------
-        %   X1: double(\*,\*) or `.cyclotomic`(\*,\*)
+        %   X1: double(\*,\*) or `.cyclotomic` (\*,\*)
         %     Projected matrix
         %   err: double
         %     Estimation of the numerical error, expressed as the distance of the returned ``X1`` to the invariant subspace in Frobenius norm

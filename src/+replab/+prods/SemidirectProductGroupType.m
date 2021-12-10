@@ -64,7 +64,7 @@ classdef SemidirectProductGroupType < replab.gen.StaticFiniteGroupType
                 generatorNames = [];
             end
             args = {'order', H.order*N.order, 'generatorNames', generatorNames};
-            niceType = replab.PermutationGroupType.make(H.orderPreservingPermutationIsomorphism.target.domainSize + double(N.order));
+            niceType = replab.perm.PermutationGroupType.make(H.orderPreservingPermutationIsomorphism.target.domainSize + double(N.order));
             self.finishConstruction(generators, args, niceType);
         end
 

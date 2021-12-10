@@ -3,8 +3,7 @@ classdef SemidirectProductGroup < replab.Group
 %
 % This is an abstract base class. Call `.CompactGroup.semidirectProduct` or `.make` to construct an instance.
 %
-% Construction and multiplication rule
-% ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+% **Construction and multiplication rule**
 %
 % An outer semidirect product constructs a group from two given groups, with its set of elements being the Cartesian
 % product of those two groups, and the multiplication operation given by the action of one group on the other.
@@ -50,14 +49,12 @@ classdef SemidirectProductGroup < replab.Group
 %
 % Thus, we interpret that group action $\phi$ as defining the conjugation of elements of $N$ by elements of $H$.
 %
-% Representations
-% ~~~~~~~~~~~~~~~
+% **Representations**
 %
 % Representations of semidirect products can be constructed using the `.semidirectProductRep` method, given compatible
 % representations of the groups $H$ and $N$.
 %
-% Implementation note
-% ~~~~~~~~~~~~~~~~~~~
+% **Implementation note**
 %
 % As semidirect product groups are used as a base for wreath product groups, the constructors are duplicated in subclasses
 % as to keep a simple hierarchy of constructor calls.
