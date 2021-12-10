@@ -32,4 +32,4 @@ For this, the ``sphinx`` subdirectory contains the file ``requirements.in`` whic
 
    pip-compile requirements.in > requirements.txt
 
-run from the ``sphinx/`` directory.
+to be run from the ``sphinx/`` directory.

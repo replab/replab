@@ -12,7 +12,7 @@ are thus used when user-defined groups are recognized.
   type of the group they just constructed. It is also used in exact decompositions, to retrieve the character
   table of a particular finite group.
 
-* `.AtlasEntry` contains a sketch of the structure of a finite group known by RepLAB. It is used to speed up
+* `.AtlasEntry` contains a sketch of the structure of a finite group known by **RepLAB**. It is used to speed up
   the recognition process.
 
 AbstractGroup

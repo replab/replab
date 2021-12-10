@@ -3,7 +3,7 @@ Convex programming
 
 .. module:: +replab
 
-A major application of RepLAB is symmetrizing convex problems to compute their optimum faster.
+A major application of **RepLAB** is symmetrizing convex problems to compute their optimum faster.
 
 In particular, it supports:
 

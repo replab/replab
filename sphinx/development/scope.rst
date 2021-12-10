@@ -8,7 +8,7 @@ longer term.
 Extent of the library
 ---------------------
 
-The **RepLAB** aims . It should:
+The first aim of **RepLAB** is to:
 
 -  Manage groups, including:
 

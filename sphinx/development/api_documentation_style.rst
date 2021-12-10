@@ -247,11 +247,6 @@ In order, the sections of a function comment are:
    to use further formatting such as LaTeX. The content from now on would
    then only be presented in the Sphinx API. (TODO: check this)
 
-   (TODO: should we allow the use of LaTeX equations with ``$``
-   delimitations there, as in the numpydoc guide stipulates?) (Is there a
-   way to filter out this section when the ``help`` function is called from
-   the REPL?)
-
 8. References (optional)
 
    (TODO: should we allow references for the **Notes** section here? see
@@ -323,8 +318,9 @@ Documenting types
 Other points
 ------------
 
--  Equations: we do not use currently LaTeX formatting. (TODO: should
-   we, in the future?)
+-  Equations: we allow the use of LaTeX equations within ``$`` delimitations,
+   as the numpydoc guide stipulates (to be used reasonably since equations
+   will not be interpreted in the REPL).
 
 -  We use sparingly the reST conventions for italics, bold and
    monospace, but not for variable names. Only package, method, function

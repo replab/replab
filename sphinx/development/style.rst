@@ -46,7 +46,7 @@ Other typeclasses
 Other typeclasses define relations between domains, such as `replab.Action`.
 
 Typeclasses that depend on other types contain the typeclasses of those types as properties.
-For example, an `replab.Action` typeclass contain a property ``G`` describing the group structure, and a property ``P`` describing the domain of elements being acted upon.
+For example, a `replab.Action` typeclass contain a property ``G`` describing the group structure, and a property ``P`` describing the domain of elements being acted upon.
 There, ``G`` and ``P`` are domains, while `~replab.Action` itself is not.
 
 Laws
