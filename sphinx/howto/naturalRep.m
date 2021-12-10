@@ -15,6 +15,8 @@ replab_init('verbose', 0);
 S5 = replab.S(5);
 group = S5.subgroup({[2 1 4 5 3]})
 
+% ## Representation
+%
 % The natural representation is 
 
 rep = group.naturalRep

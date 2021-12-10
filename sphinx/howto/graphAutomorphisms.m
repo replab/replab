@@ -1,4 +1,4 @@
-% # Graph automorphisms
+% # Graph automorphism group
 %
 % This document illustrated how *RepLAB* can be used to compute the automorphism group of a graph.
 %

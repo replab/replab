@@ -18,7 +18,7 @@ classdef PermutationGroupType < replab.FiniteGroupType
                 cache = cell(1, 0);
             end
             if domainSize+1 > length(cache) || isempty(cache{domainSize+1})
-                cache{1,domainSize+1} = replab.PermutationGroupType(domainSize);
+                cache{1,domainSize+1} = replab.perm.PermutationGroupType(domainSize);
             end
             G = cache{domainSize+1};
         end
@@ -99,7 +99,7 @@ classdef PermutationGroupType < replab.FiniteGroupType
         end
 
         function l = isSameTypeAs(self, otherType)
-            l = isa(otherType, 'replab.PermutationGroupType') && self.domainSize == otherType.domainSize;
+            l = isa(otherType, 'replab.perm.PermutationGroupType') && self.domainSize == otherType.domainSize;
         end
 
     end

@@ -18,7 +18,7 @@ classdef Character < replab.Obj
     properties (SetAccess = protected)
         group % (`.FiniteGroup`): Group on which this class function is defined
         conjugacyClasses % (`.ConjugacyClasses`): List of conjugacy classes for which the order of `.values` is defined
-        values % (`.cyclotomic`(1,\*)): Values of the character over the conjugacy classes
+        values % (`.cyclotomic` (1,\*)): Values of the character over the conjugacy classes
     end
 
     methods (Static)
@@ -192,7 +192,7 @@ classdef Character < replab.Obj
         %   rhs (`.Character`): Character
         %
         % Returns:
-        %   `.cyclotomic`: Value of the dot product
+        %   `.cyclotomic` : Value of the dot product
             if self.conjugacyClasses.id ~= rhs.conjugacyClasses.id
                 rhs = rhs.forClasses(self.conjugacyClasses);
             end

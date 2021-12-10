@@ -5,7 +5,7 @@ Miscellaneous functions/classes
 
 *  `.Partition`: describes an unordered partition of the integers :math:`\{1,...,n\}`,
 
-* `.IndexedFamily`: describes a lazily evaluated sequence of elements, with 1-based big integer indices, obeying `.IndexedFamilyLaws`
+* `.Sequence`: describes a lazily evaluated sequence of elements, with 1-based vpi (big integer) indices
 
 * `.msg`: Prints a diagnostic message
 
@@ -14,10 +14,10 @@ Partition
 
 .. autoclass:: Partition
 
-IndexedFamily
-+++++++++++++
+Sequence
+++++++++
 
-.. autoclass:: IndexedFamily
+.. autoclass:: Sequence
 
 msg
 +++

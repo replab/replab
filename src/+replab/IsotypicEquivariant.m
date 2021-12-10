@@ -45,7 +45,7 @@ classdef IsotypicEquivariant < replab.SubEquivariant
 %       1
 
     properties (SetAccess = protected)
-        R_internal % (double(\*,\*,\*) or `.cyclotomic`(\*,\*,\*)): Representation space basis
+        R_internal % (double(\*,\*,\*) or `.cyclotomic` (\*,\*,\*)): Representation space basis
         divisionAlgebraName % ('', 'C->R', 'H->R:equivariant'): Division algebra
     end
 
@@ -163,7 +163,7 @@ classdef IsotypicEquivariant < replab.SubEquivariant
         %   type ('double', 'double/sparse' or 'exact', optional): Type of the returned value, default: 'double'
         %
         % Returns:
-        %   double(\*,\*,\*) or `.cyclotomic`(\*,\*,\*): The representation space basis
+        %   double(\*,\*,\*) or `.cyclotomic` (\*,\*,\*): The representation space basis
             if nargin < 2 || isempty(type)
                 type = 'double';
             end
@@ -177,7 +177,7 @@ classdef IsotypicEquivariant < replab.SubEquivariant
         %   type ('double', 'double/sparse' or 'exact', optional): Type of the returned value, default: 'double'
         %
         % Returns:
-        %  double(\*,\*) or `.cyclotomic`(\*,\*): The division algebra basis
+        %  double(\*,\*) or `.cyclotomic` (\*,\*): The division algebra basis
             if nargin < 2 || isempty(type)
                 type = 'double';
             end
@@ -285,12 +285,12 @@ classdef IsotypicEquivariant < replab.SubEquivariant
         % It returns the decomposition of the projection.
         %
         % Args:
-        %   X (double(\*,\*) or `.cyclotomic`(\*,\*), may be sparse): Matrix in the isotypic component space to project
+        %   X (double(\*,\*) or `.cyclotomic` (\*,\*), may be sparse): Matrix in the isotypic component space to project
         %   type ('double', 'double/sparse' or 'exact', optional): Type of the returned value, default: 'double'
         %
         % Returns
         % -------
-        %   M: double(\*,\*,\*) or `.cyclotomic`(\*,\*,\*)
+        %   M: double(\*,\*,\*) or `.cyclotomic` (\*,\*,\*)
         %     The part containing the degrees of freedom of the commutant algebra
         %   err: double
         %     Estimation of the numerical error, expressed as the distance of the returned projection to the invariant subspace in Frobenius norm
@@ -336,12 +336,12 @@ classdef IsotypicEquivariant < replab.SubEquivariant
         % It returns the decomposition of the projection.
         %
         % Args:
-        %   parentX (double(\*,\*) or `.cyclotomic`(\*,\*), may be sparse): Matrix in the parent representation space to project
+        %   parentX (double(\*,\*) or `.cyclotomic` (\*,\*), may be sparse): Matrix in the parent representation space to project
         %   type ('double', 'double/sparse' or 'exact', optional): Type of the returned value, default: 'double'
         %
         % Returns
         % -------
-        %   M: double(\*,\*,\*) or `.cyclotomic`(\*,\*,\*)
+        %   M: double(\*,\*,\*) or `.cyclotomic` (\*,\*,\*)
         %     The part containing the degrees of freedom of the commutant algebra
         %   err: double
         %     Estimation of the numerical error, expressed as the distance of the returned projection to the invariant subspace in Frobenius norm

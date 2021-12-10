@@ -25,7 +25,7 @@ Further tools and guidelines useful for development can be found here:
    scope
    docker
    sphinx
-   octave_bugs
+   octave_compatibility
    project_ideas
 
 .. |Travis CI| image:: https://travis-ci.com/replab/replab.svg?branch=master

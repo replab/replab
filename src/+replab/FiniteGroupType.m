@@ -11,13 +11,13 @@ classdef FiniteGroupType < replab.Group & replab.TotalOrder
 % - permutations of a given domain ``1..n`` (the set of such permutations is finite),
 % - invertible matrices of a given size with coefficients in the cyclotomic field
 %   (the set of such matrices is not finite, but we assume that any explicitly constructed group
-%    is finite),
+%   is finite),
 % - direct products of finite group types.
 %
 % Note:
 %   For implementations purposes, there are several families of group types in RepLAB.
 %
-%   * The first is `+replab.PermutationGroupType` where computational group theory algorithms
+%   * The first is `+replab.+perm.PermutationGroupType` where computational group theory algorithms
 %     are implemented and used directly.
 %
 %   * The second is `+replab.+gen.FiniteGroupType`, in which the constructed objects delegate all

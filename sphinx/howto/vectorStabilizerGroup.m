@@ -1,4 +1,4 @@
-% # Vector Stabilizer group
+% # Vector stabilizer group
 %
 % This document illustrated how to define groups which leave a vector invariant in *RepLAB*.
 %

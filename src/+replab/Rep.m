@@ -644,7 +644,7 @@ classdef Rep < replab.Obj
         %
         % Returns
         % -------
-        %   proj: double(\*,\*) or `.cyclotomic`(\*,\*)
+        %   proj: double(\*,\*) or `.cyclotomic` (\*,\*)
         %     Projector
         %   err: double
         %     Estimated error in Frobenius norm
@@ -672,12 +672,14 @@ classdef Rep < replab.Obj
         %
         %
         % For real irreducible representations, the Frobenius-Schur indicator can take values:
+        %
         % * ``1`` if the representation is of real-type; its complexification is then also irreducible
         % * ``0`` if the representation is of complex-type; it decomposes into two conjugate irreducible
         %   representations over the complex numbers
         % * ``-2`` if the representation is of quaternion-type.
         %
         % For complex irreducible representations, it can take the values:
+        %
         % * ``1`` if the representation is of real-type,
         % * ``0`` if the representation is of complex-type, i.e. is not equivalent to its conjugate,
         % * ``-1`` if the representation is of quaternion-type.
@@ -1170,11 +1172,11 @@ classdef Rep < replab.Obj
         %
         % Args:
         %   g (`group` element): Group element acting
-        %   M (double(\*,\*) or `.cyclotomic`(\*,\*)): Matrix acted upon
+        %   M (double(\*,\*) or `.cyclotomic` (\*,\*)): Matrix acted upon
         %   type ('double', 'double/sparse' or 'exact', optional): Type of the returned value, default: 'double'.
         %
         % Returns:
-        %   double(\*,\*) or `.cyclotomic`(\*,\*): The matrix ``self.image(g) * M``
+        %   double(\*,\*) or `.cyclotomic` (\*,\*): The matrix ``self.image(g) * M``
             if nargin < 4
                 type = 'double';
             end
@@ -1601,10 +1603,10 @@ classdef Rep < replab.Obj
         % that $I$ and $P$ are the exact injections/projections closest to $\tilde{I}$ and $\tilde{P}$.
         %
         % Args:
-        %   injection (double(D,d) or `cyclotomic`(D,d), may be sparse): Basis / Injection map
+        %   injection (double(D,d) or `cyclotomic` (D,d), may be sparse): Basis / Injection map
         %
         % Keyword Args:
-        %   projection (double(D,d) or `cyclotomic`(D,d), may be sparse, optional): Projection map
+        %   projection (double(D,d) or `cyclotomic` (D,d), may be sparse, optional): Projection map
         %   mapErrorBound (double, optional): Upper bound as described above
         %   mapConditionNumberEstimate (double, optional): Upper bound on the condition number of both $P$ and $I$
         %   isUnitary (logical, optional): Whether the resulting representation is unitary, may be omitted
@@ -1705,10 +1707,10 @@ classdef Rep < replab.Obj
         % representation and the change of basis is unitary.
         %
         % Args:
-        %   A (double(\*,\*) or `.cyclotomic`(\*,\*)): Change of basis matrix
+        %   A (double(\*,\*) or `.cyclotomic` (\*,\*)): Change of basis matrix
         %
         % Keywords Args:
-        %   inverse (double(\*,\*) or `.cyclotomic`(\*,\*)): Inverse of the change of basis matrix
+        %   inverse (double(\*,\*) or `.cyclotomic` (\*,\*)): Inverse of the change of basis matrix
         %
         % Returns:
         %   `+replab.SubRep`: The similar representation
