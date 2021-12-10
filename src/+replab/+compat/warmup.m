@@ -7,6 +7,7 @@ function warmup
 % However, loading and using the affected classes before running the test suite corrects the problem.
 %
 % This is what we do here.
+    rehash;
     G = replab.PermutationGroup.of([2 1 3 4], [1 2 4 3]);
     G.abelianInvariants;
     h = [2 3 4 1];
