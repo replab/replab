@@ -15,7 +15,7 @@
   <link rel="stylesheet" type="text/css" href="../_static/css/bootstrap-theme.min.css" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-    <title>Tutorial for quantum information people &#8212; RepLAB 0.9.5-SNAP documentation</title>
+    <title>Tutorial for physicists &#8212; RepLAB 1.0.0 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/guzzle.css" />
     <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
@@ -79,9 +79,9 @@
         <li class="right" >
           <a href="S3.html" title="Tutorial for mathematicians"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.9.5-SNAP documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 1.0.0 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">Tutorials</a> &#187;</li>
-        <li class="nav-item nav-item-this"><a href="">Tutorial for quantum information people</a></li> 
+        <li class="nav-item nav-item-this"><a href="">Tutorial for physicists</a></li> 
       </ul>
     </div>
     <div class="container-wrapper">
@@ -94,7 +94,7 @@
   <a href="
     ../index.html">RepLAB</a>&nbsp;&nbsp;
   <a href="https://github.com/replab/replab"><i class="fab fa-github"></i></a>&nbsp;
-  <a href="https://github.com/replab/replab/archive/v0.9.5-SNAP.zip"><i class="fa fa-download"></i></a>&nbsp;
+  <a href="https://github.com/replab/replab/archive/v1.0.0.zip"><i class="fa fa-download"></i></a>&nbsp;
   <a href="https://gitter.im/replab/replab"><i class="fab fa-gitter"></i></a>&nbsp;
   <a href="https://travis-ci.com/replab/replab"><i class="fas fa-sync-alt"></i></a>&nbsp;
   <a href="https://codecov.io/gh/replab/replab"><i class="fas fa-umbrella"></i></a>
@@ -106,7 +106,7 @@
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">Tutorials</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="installation.html">Installation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="S3.html">Tutorial for mathematicians</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Tutorial for quantum information people</a><ul>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Tutorial for physicists</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#The-unitary-group-representation">The unitary group representation</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#Tensor-product-of-two-representations">Tensor product of two representations</a></li>
 </ul>
@@ -151,7 +151,7 @@
               
                 <li><a href="index.html">Tutorials</a></li>
               
-              <li>Tutorial for quantum information people</li>
+              <li>Tutorial for physicists</li>
             </ol>
           </div>
           
@@ -404,12 +404,12 @@ div.rendered_html tbody tr:hover {
   background: rgba(66, 165, 245, 0.2);
 }
 </style>
-<section id="Tutorial-for-quantum-information-people">
-<h1>Tutorial for quantum information people<a class="headerlink" href="#Tutorial-for-quantum-information-people" title="Permalink to this headline">¶</a></h1>
+<section id="Tutorial-for-physicists">
+<h1>Tutorial for physicists<a class="headerlink" href="#Tutorial-for-physicists" title="Permalink to this headline">¶</a></h1>
 <p>The unitary group <span class="math notranslate nohighlight">\(U(n)\)</span> describes the possible change of basis in the complex Hilbert space of dimension <span class="math notranslate nohighlight">\(n\)</span>. For <span class="math notranslate nohighlight">\(n=2\)</span>, this captures the possible choices of basis in the qubit space <span class="math notranslate nohighlight">\(C^2\)</span>. For a system composed of two qubits, we can similarly define the effect of a joint change of basis performed on both subsystems simultaneously. It is known that a single state is invariant under such joint change of basis. Here, we identify this state by extracting the subspace of
 <span class="math notranslate nohighlight">\((C^2)^{\otimes 2}\)</span> which is invariant under the joint change of basis for both subsystems.</p>
 <p>Before trying any of the <em>RepLAB</em> commands, we must initialize the library:</p>
-<div class="nbinput nblast docutils container">
+<div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
 </pre></div>
 </div>
@@ -418,6 +418,14 @@ div.rendered_html tbody tr:hover {
 <span class="n">replab_init</span><span class="p">(</span><span class="s">&#39;verbose&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
 </pre></div>
 </div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+replab_init: Initialization done.
+</pre></div></div>
 </div>
 <section id="The-unitary-group-representation">
 <h2>The unitary group representation<a class="headerlink" href="#The-unitary-group-representation" title="Permalink to this headline">¶</a></h2>
@@ -590,9 +598,9 @@ rest =
         <li class="right" >
           <a href="S3.html" title="Tutorial for mathematicians"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.9.5-SNAP documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 1.0.0 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="index.html" >Tutorials</a> &#187;</li>
-        <li class="nav-item nav-item-this"><a href="">Tutorial for quantum information people</a></li> 
+        <li class="nav-item nav-item-this"><a href="">Tutorial for physicists</a></li> 
       </ul>
     </div>
 <script type="text/javascript">

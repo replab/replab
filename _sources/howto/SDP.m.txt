@@ -1,6 +1,6 @@
 % # Symmetric SDPs
 %
-% This document shows how to define an SDP variable with *RepLAB* which satisfies some symmetries constraints.
+% This document shows how to define an SDP variable with *RepLAB* which satisfies some symmetry constraints.
 
 % ## Preparation
 % As always, before using *RepLAB* commands, initialize the library:
@@ -21,7 +21,7 @@ permutation = [2 3 1];
 M = replab.CommutantVar.fromPermutations({permutation}, 'symmetric', 'real')
 
 % Here, we additionally require the matrix to be symmetric and real.
-% The SDP matrix $M$ contains involves only 2 variables, corresponding to the only degrees of freedom left by the constraints. Here is their parametrization:
+% The SDP matrix $M$ involves only 2 variables, corresponding to the only degrees of freedom left by the constraints. Here is their parametrization:
 
 see(M.fullMatrix)
 

@@ -9,7 +9,6 @@ at the heart of **RepLAB** and how the library works.
 .. toctree::
    :maxdepth: 2
 
-   nonlocality/index
    membrane/index
    SDP
 

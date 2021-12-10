@@ -15,7 +15,7 @@
   <link rel="stylesheet" type="text/css" href="../_static/css/bootstrap-theme.min.css" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-    <title>Group product constructions &#8212; RepLAB 0.9.5-SNAP documentation</title>
+    <title>Group product constructions &#8212; RepLAB 1.0.0 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/guzzle.css" />
     <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
@@ -79,7 +79,7 @@
         <li class="right" >
           <a href="abstract_groups.html" title="Abstract groups and atlas"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.9.5-SNAP documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 1.0.0 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">Technical Reference</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">Group product constructions</a></li> 
       </ul>
@@ -94,7 +94,7 @@
   <a href="
     ../index.html">RepLAB</a>&nbsp;&nbsp;
   <a href="https://github.com/replab/replab"><i class="fab fa-github"></i></a>&nbsp;
-  <a href="https://github.com/replab/replab/archive/v0.9.5-SNAP.zip"><i class="fa fa-download"></i></a>&nbsp;
+  <a href="https://github.com/replab/replab/archive/v1.0.0.zip"><i class="fa fa-download"></i></a>&nbsp;
   <a href="https://gitter.im/replab/replab"><i class="fab fa-gitter"></i></a>&nbsp;
   <a href="https://travis-ci.com/replab/replab"><i class="fas fa-sync-alt"></i></a>&nbsp;
   <a href="https://codecov.io/gh/replab/replab"><i class="fas fa-umbrella"></i></a>
@@ -113,6 +113,7 @@
 <li class="toctree-l2"><a class="reference internal" href="numerics.html">Numerics</a></li>
 <li class="toctree-l2"><a class="reference internal" href="groups.html">Base group structures</a></li>
 <li class="toctree-l2"><a class="reference internal" href="continuous_groups.html">Continuous groups</a></li>
+<li class="toctree-l2"><a class="reference internal" href="finite_groups.html">Finite group structures</a></li>
 <li class="toctree-l2"><a class="reference internal" href="permutation_groups.html">Permutation groups</a></li>
 <li class="toctree-l2"><a class="reference internal" href="named_discrete_groups.html">Named discrete groups</a></li>
 <li class="toctree-l2"><a class="reference internal" href="abstract_groups.html">Abstract groups and atlas</a></li>
@@ -217,13 +218,15 @@
 <p><strong>Laws</strong></p>
 <ul class="simple">
 <li><p><a class="reference internal" href="#+replab.DirectProductGroup.check" title="+replab.DirectProductGroup.check"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">check</span></code></a> – Checks the consistency of this object</p></li>
+<li><p><a class="reference internal" href="#+replab.DirectProductGroup.checkAndContinue" title="+replab.DirectProductGroup.checkAndContinue"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">checkAndContinue</span></code></a> – Checks the consistency of this object</p></li>
 <li><p><a class="reference internal" href="#+replab.DirectProductGroup.laws" title="+replab.DirectProductGroup.laws"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">laws</span></code></a> – Returns the laws that this object obeys</p></li>
 </ul>
 <p><strong>Unique ID</strong></p>
 <ul class="simple">
-<li><p><a class="reference internal" href="#+replab.DirectProductGroup.eq" title="+replab.DirectProductGroup.eq"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">eq</span></code></a> – Equality test (deprecated)</p></li>
+<li><p><a class="reference internal" href="#+replab.DirectProductGroup.eq" title="+replab.DirectProductGroup.eq"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">eq</span></code></a> – Equality test</p></li>
 <li><p><a class="reference internal" href="#+replab.DirectProductGroup.id" title="+replab.DirectProductGroup.id"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">id</span></code></a> – Returns the unique ID of this object (deprecated)</p></li>
-<li><p><a class="reference internal" href="#+replab.DirectProductGroup.ne" title="+replab.DirectProductGroup.ne"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">ne</span></code></a> – Non-equality test (deprecated)</p></li>
+<li><p><a class="reference internal" href="#+replab.DirectProductGroup.isequal" title="+replab.DirectProductGroup.isequal"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">isequal</span></code></a> – Equality test</p></li>
+<li><p><a class="reference internal" href="#+replab.DirectProductGroup.ne" title="+replab.DirectProductGroup.ne"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">ne</span></code></a> – Non-equality test</p></li>
 </ul>
 <p><strong>Test helpers</strong></p>
 <ul class="simple">
@@ -262,7 +265,7 @@
 <p><strong>Group methods</strong></p>
 <ul class="simple">
 <li><p><a class="reference internal" href="#+replab.DirectProductGroup.commutator" title="+replab.DirectProductGroup.commutator"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">commutator</span></code></a> – Returns the commutator of two group elements</p></li>
-<li><p><a class="reference internal" href="#+replab.DirectProductGroup.composeLetters" title="+replab.DirectProductGroup.composeLetters"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">composeLetters</span></code></a> – Returns the composition of elements from an array picked according to the given indices/letters</p></li>
+<li><p><a class="reference internal" href="#+replab.DirectProductGroup.composeFlat" title="+replab.DirectProductGroup.composeFlat"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">composeFlat</span></code></a> – Returns the composition of elements from an array picked according to the given indices/letters</p></li>
 <li><p><a class="reference internal" href="#+replab.DirectProductGroup.composeWithInverse" title="+replab.DirectProductGroup.composeWithInverse"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">composeWithInverse</span></code></a> – Returns the composition of an element with the inverse of another element</p></li>
 <li><p><a class="reference internal" href="#+replab.DirectProductGroup.inverse" title="+replab.DirectProductGroup.inverse"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">inverse</span></code></a> – Computes the inverse of an element</p></li>
 <li><p><a class="reference internal" href="#+replab.DirectProductGroup.leftConjugate" title="+replab.DirectProductGroup.leftConjugate"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">leftConjugate</span></code></a> – Returns the left conjugate of a group element</p></li>
@@ -366,6 +369,12 @@
 </dd></dl>
 
 <dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.DirectProductGroup.checkAndContinue">
+<span class="sig-name descname"><span class="pre">checkAndContinue</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.DirectProductGroup.checkAndContinue" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="base.html#+replab.Obj.checkAndContinue" title="+replab.Obj.checkAndContinue"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Obj.checkAndContinue()</span></code></a></p>
+</dd></dl>
+
+<dl class="mat method">
 <dt class="sig sig-object mat" id="+replab.DirectProductGroup.commutator">
 <span class="sig-name descname"><span class="pre">commutator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">x</span></em>, <em class="sig-param"><span class="pre">y</span></em>, <em class="sig-param"><span class="pre">startWithInverse</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.DirectProductGroup.commutator" title="Permalink to this definition">¶</a></dt>
 <dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.Group.commutator" title="+replab.Group.commutator"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Group.commutator()</span></code></a></p>
@@ -396,9 +405,9 @@
 </dd></dl>
 
 <dl class="mat method">
-<dt class="sig sig-object mat" id="+replab.DirectProductGroup.composeLetters">
-<span class="sig-name descname"><span class="pre">composeLetters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">array</span></em>, <em class="sig-param"><span class="pre">letters</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.DirectProductGroup.composeLetters" title="Permalink to this definition">¶</a></dt>
-<dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.Group.composeLetters" title="+replab.Group.composeLetters"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Group.composeLetters()</span></code></a></p>
+<dt class="sig sig-object mat" id="+replab.DirectProductGroup.composeFlat">
+<span class="sig-name descname"><span class="pre">composeFlat</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">array</span></em>, <em class="sig-param"><span class="pre">letters</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.DirectProductGroup.composeFlat" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.Group.composeFlat" title="+replab.Group.composeFlat"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Group.composeFlat()</span></code></a></p>
 </dd></dl>
 
 <dl class="mat method">
@@ -501,6 +510,12 @@
 <dt class="sig sig-object mat" id="+replab.DirectProductGroup.isIdentity">
 <span class="sig-name descname"><span class="pre">isIdentity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">x</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.DirectProductGroup.isIdentity" title="Permalink to this definition">¶</a></dt>
 <dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.Monoid.isIdentity" title="+replab.Monoid.isIdentity"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Monoid.isIdentity()</span></code></a></p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.DirectProductGroup.isequal">
+<span class="sig-name descname"><span class="pre">isequal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">lhs</span></em>, <em class="sig-param"><span class="pre">rhs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.DirectProductGroup.isequal" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="base.html#+replab.Obj.isequal" title="+replab.Obj.isequal"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Obj.isequal()</span></code></a></p>
 </dd></dl>
 
 <dl class="mat method">
@@ -866,6 +881,7 @@ to one of its representations</p></li>
 <dd><p>Bases: <a class="reference internal" href="groups.html#+replab.Group" title="+replab.Group"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">replab.Group</span></code></a></p>
 <p>Semidirect product of compact groups through the external/outer construction</p>
 <p>This is an abstract base class. Call <a class="reference internal" href="groups.html#+replab.CompactGroup.semidirectProduct" title="+replab.CompactGroup.semidirectProduct"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">CompactGroup.semidirectProduct</span></code></a> or <a class="reference internal" href="#+replab.SemidirectProductGroup.make" title="+replab.SemidirectProductGroup.make"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">make</span></code></a> to construct an instance.</p>
+<p><strong>Construction and multiplication rule</strong></p>
 <p>An outer semidirect product constructs a group from two given groups, with its set of elements being the Cartesian
 product of those two groups, and the multiplication operation given by the action of one group on the other.</p>
 <p>Formally, we have two groups, <span class="math notranslate nohighlight">\(H\)</span> and <span class="math notranslate nohighlight">\(N\)</span>, with <span class="math notranslate nohighlight">\(H\)</span> acting on <span class="math notranslate nohighlight">\(N\)</span> in the following way. We have a group
@@ -895,9 +911,11 @@ We can embed elements of <span class="math notranslate nohighlight">\(N\)</span>
 <span class="math notranslate nohighlight">\(h_2^{-1} n_1 h_2 = \phi(h_2^{-1}, n_1)\)</span>.</p>
 <p>Thus, <span class="math notranslate nohighlight">\(h_1 n_1 h_2 n_2 = (h_1 h_2) (\phi(h_2^{-1}, n_1) n_2) = (h_1 h_2, \phi(h_2^{-1}, n_1) n_2)\)</span>.</p>
 <p>Thus, we interpret that group action <span class="math notranslate nohighlight">\(\phi\)</span> as defining the conjugation of elements of <span class="math notranslate nohighlight">\(N\)</span> by elements of <span class="math notranslate nohighlight">\(H\)</span>.</p>
+<p><strong>Representations</strong></p>
 <p>Representations of semidirect products can be constructed using the <a class="reference internal" href="#+replab.SemidirectProductGroup.semidirectProductRep" title="+replab.SemidirectProductGroup.semidirectProductRep"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">semidirectProductRep</span></code></a> method, given compatible
 representations of the groups <span class="math notranslate nohighlight">\(H\)</span> and <span class="math notranslate nohighlight">\(N\)</span>.</p>
-<p>As semidirect product groups are used as a base for wreath product groups,  the constructors are duplicated in subclasses
+<p><strong>Implementation note</strong></p>
+<p>As semidirect product groups are used as a base for wreath product groups, the constructors are duplicated in subclasses
 as to keep a simple hierarchy of constructor calls.</p>
 <p class="rubric">Example</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">N</span> <span class="o">=</span> <span class="n">replab</span><span class="o">.</span><span class="n">S</span><span class="p">(</span><span class="mi">3</span><span class="p">);</span>
@@ -938,13 +956,15 @@ as to keep a simple hierarchy of constructor calls.</p>
 <p><strong>Laws</strong></p>
 <ul class="simple">
 <li><p><a class="reference internal" href="#+replab.SemidirectProductGroup.check" title="+replab.SemidirectProductGroup.check"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">check</span></code></a> – Checks the consistency of this object</p></li>
+<li><p><a class="reference internal" href="#+replab.SemidirectProductGroup.checkAndContinue" title="+replab.SemidirectProductGroup.checkAndContinue"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">checkAndContinue</span></code></a> – Checks the consistency of this object</p></li>
 <li><p><a class="reference internal" href="#+replab.SemidirectProductGroup.laws" title="+replab.SemidirectProductGroup.laws"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">laws</span></code></a> – Returns the laws that this object obeys</p></li>
 </ul>
 <p><strong>Unique ID</strong></p>
 <ul class="simple">
-<li><p><a class="reference internal" href="#+replab.SemidirectProductGroup.eq" title="+replab.SemidirectProductGroup.eq"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">eq</span></code></a> – Equality test (deprecated)</p></li>
+<li><p><a class="reference internal" href="#+replab.SemidirectProductGroup.eq" title="+replab.SemidirectProductGroup.eq"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">eq</span></code></a> – Equality test</p></li>
 <li><p><a class="reference internal" href="#+replab.SemidirectProductGroup.id" title="+replab.SemidirectProductGroup.id"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">id</span></code></a> – Returns the unique ID of this object (deprecated)</p></li>
-<li><p><a class="reference internal" href="#+replab.SemidirectProductGroup.ne" title="+replab.SemidirectProductGroup.ne"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">ne</span></code></a> – Non-equality test (deprecated)</p></li>
+<li><p><a class="reference internal" href="#+replab.SemidirectProductGroup.isequal" title="+replab.SemidirectProductGroup.isequal"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">isequal</span></code></a> – Equality test</p></li>
+<li><p><a class="reference internal" href="#+replab.SemidirectProductGroup.ne" title="+replab.SemidirectProductGroup.ne"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">ne</span></code></a> – Non-equality test</p></li>
 </ul>
 <p><strong>Test helpers</strong></p>
 <ul class="simple">
@@ -982,7 +1002,7 @@ as to keep a simple hierarchy of constructor calls.</p>
 <p><strong>Group methods</strong></p>
 <ul class="simple">
 <li><p><a class="reference internal" href="#+replab.SemidirectProductGroup.commutator" title="+replab.SemidirectProductGroup.commutator"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">commutator</span></code></a> – Returns the commutator of two group elements</p></li>
-<li><p><a class="reference internal" href="#+replab.SemidirectProductGroup.composeLetters" title="+replab.SemidirectProductGroup.composeLetters"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">composeLetters</span></code></a> – Returns the composition of elements from an array picked according to the given indices/letters</p></li>
+<li><p><a class="reference internal" href="#+replab.SemidirectProductGroup.composeFlat" title="+replab.SemidirectProductGroup.composeFlat"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">composeFlat</span></code></a> – Returns the composition of elements from an array picked according to the given indices/letters</p></li>
 <li><p><a class="reference internal" href="#+replab.SemidirectProductGroup.composeWithInverse" title="+replab.SemidirectProductGroup.composeWithInverse"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">composeWithInverse</span></code></a> – Returns the composition of an element with the inverse of another element</p></li>
 <li><p><a class="reference internal" href="#+replab.SemidirectProductGroup.inverse" title="+replab.SemidirectProductGroup.inverse"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">inverse</span></code></a> – Computes the inverse of an element</p></li>
 <li><p><a class="reference internal" href="#+replab.SemidirectProductGroup.leftConjugate" title="+replab.SemidirectProductGroup.leftConjugate"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">leftConjugate</span></code></a> – Returns the left conjugate of a group element</p></li>
@@ -1059,6 +1079,12 @@ as to keep a simple hierarchy of constructor calls.</p>
 </dd></dl>
 
 <dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.SemidirectProductGroup.checkAndContinue">
+<span class="sig-name descname"><span class="pre">checkAndContinue</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.SemidirectProductGroup.checkAndContinue" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="base.html#+replab.Obj.checkAndContinue" title="+replab.Obj.checkAndContinue"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Obj.checkAndContinue()</span></code></a></p>
+</dd></dl>
+
+<dl class="mat method">
 <dt class="sig sig-object mat" id="+replab.SemidirectProductGroup.commutator">
 <span class="sig-name descname"><span class="pre">commutator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">x</span></em>, <em class="sig-param"><span class="pre">y</span></em>, <em class="sig-param"><span class="pre">startWithInverse</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.SemidirectProductGroup.commutator" title="Permalink to this definition">¶</a></dt>
 <dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.Group.commutator" title="+replab.Group.commutator"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Group.commutator()</span></code></a></p>
@@ -1083,9 +1109,9 @@ as to keep a simple hierarchy of constructor calls.</p>
 </dd></dl>
 
 <dl class="mat method">
-<dt class="sig sig-object mat" id="+replab.SemidirectProductGroup.composeLetters">
-<span class="sig-name descname"><span class="pre">composeLetters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">array</span></em>, <em class="sig-param"><span class="pre">letters</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.SemidirectProductGroup.composeLetters" title="Permalink to this definition">¶</a></dt>
-<dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.Group.composeLetters" title="+replab.Group.composeLetters"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Group.composeLetters()</span></code></a></p>
+<dt class="sig sig-object mat" id="+replab.SemidirectProductGroup.composeFlat">
+<span class="sig-name descname"><span class="pre">composeFlat</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">array</span></em>, <em class="sig-param"><span class="pre">letters</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.SemidirectProductGroup.composeFlat" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.Group.composeFlat" title="+replab.Group.composeFlat"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Group.composeFlat()</span></code></a></p>
 </dd></dl>
 
 <dl class="mat method">
@@ -1164,6 +1190,12 @@ as to keep a simple hierarchy of constructor calls.</p>
 <dt class="sig sig-object mat" id="+replab.SemidirectProductGroup.isIdentity">
 <span class="sig-name descname"><span class="pre">isIdentity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">x</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.SemidirectProductGroup.isIdentity" title="Permalink to this definition">¶</a></dt>
 <dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.Monoid.isIdentity" title="+replab.Monoid.isIdentity"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Monoid.isIdentity()</span></code></a></p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.SemidirectProductGroup.isequal">
+<span class="sig-name descname"><span class="pre">isequal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">lhs</span></em>, <em class="sig-param"><span class="pre">rhs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.SemidirectProductGroup.isequal" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="base.html#+replab.Obj.isequal" title="+replab.Obj.isequal"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Obj.isequal()</span></code></a></p>
 </dd></dl>
 
 <dl class="mat method">
@@ -1395,13 +1427,15 @@ imprimitive wreath product action and the primitive wreath product action.</p>
 <p><strong>Laws</strong></p>
 <ul class="simple">
 <li><p><a class="reference internal" href="#+replab.WreathProductGroup.check" title="+replab.WreathProductGroup.check"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">check</span></code></a> – Checks the consistency of this object</p></li>
+<li><p><a class="reference internal" href="#+replab.WreathProductGroup.checkAndContinue" title="+replab.WreathProductGroup.checkAndContinue"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">checkAndContinue</span></code></a> – Checks the consistency of this object</p></li>
 <li><p><a class="reference internal" href="#+replab.WreathProductGroup.laws" title="+replab.WreathProductGroup.laws"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">laws</span></code></a> – Returns the laws that this object obeys</p></li>
 </ul>
 <p><strong>Unique ID</strong></p>
 <ul class="simple">
-<li><p><a class="reference internal" href="#+replab.WreathProductGroup.eq" title="+replab.WreathProductGroup.eq"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">eq</span></code></a> – Equality test (deprecated)</p></li>
+<li><p><a class="reference internal" href="#+replab.WreathProductGroup.eq" title="+replab.WreathProductGroup.eq"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">eq</span></code></a> – Equality test</p></li>
 <li><p><a class="reference internal" href="#+replab.WreathProductGroup.id" title="+replab.WreathProductGroup.id"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">id</span></code></a> – Returns the unique ID of this object (deprecated)</p></li>
-<li><p><a class="reference internal" href="#+replab.WreathProductGroup.ne" title="+replab.WreathProductGroup.ne"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">ne</span></code></a> – Non-equality test (deprecated)</p></li>
+<li><p><a class="reference internal" href="#+replab.WreathProductGroup.isequal" title="+replab.WreathProductGroup.isequal"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">isequal</span></code></a> – Equality test</p></li>
+<li><p><a class="reference internal" href="#+replab.WreathProductGroup.ne" title="+replab.WreathProductGroup.ne"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">ne</span></code></a> – Non-equality test</p></li>
 </ul>
 <p><strong>Test helpers</strong></p>
 <ul class="simple">
@@ -1439,7 +1473,7 @@ imprimitive wreath product action and the primitive wreath product action.</p>
 <p><strong>Group methods</strong></p>
 <ul class="simple">
 <li><p><a class="reference internal" href="#+replab.WreathProductGroup.commutator" title="+replab.WreathProductGroup.commutator"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">commutator</span></code></a> – Returns the commutator of two group elements</p></li>
-<li><p><a class="reference internal" href="#+replab.WreathProductGroup.composeLetters" title="+replab.WreathProductGroup.composeLetters"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">composeLetters</span></code></a> – Returns the composition of elements from an array picked according to the given indices/letters</p></li>
+<li><p><a class="reference internal" href="#+replab.WreathProductGroup.composeFlat" title="+replab.WreathProductGroup.composeFlat"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">composeFlat</span></code></a> – Returns the composition of elements from an array picked according to the given indices/letters</p></li>
 <li><p><a class="reference internal" href="#+replab.WreathProductGroup.composeWithInverse" title="+replab.WreathProductGroup.composeWithInverse"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">composeWithInverse</span></code></a> – Returns the composition of an element with the inverse of another element</p></li>
 <li><p><a class="reference internal" href="#+replab.WreathProductGroup.inverse" title="+replab.WreathProductGroup.inverse"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">inverse</span></code></a> – Computes the inverse of an element</p></li>
 <li><p><a class="reference internal" href="#+replab.WreathProductGroup.leftConjugate" title="+replab.WreathProductGroup.leftConjugate"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">leftConjugate</span></code></a> – Returns the left conjugate of a group element</p></li>
@@ -1555,6 +1589,12 @@ imprimitive wreath product action and the primitive wreath product action.</p>
 </dd></dl>
 
 <dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.WreathProductGroup.checkAndContinue">
+<span class="sig-name descname"><span class="pre">checkAndContinue</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.WreathProductGroup.checkAndContinue" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="base.html#+replab.Obj.checkAndContinue" title="+replab.Obj.checkAndContinue"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Obj.checkAndContinue()</span></code></a></p>
+</dd></dl>
+
+<dl class="mat method">
 <dt class="sig sig-object mat" id="+replab.WreathProductGroup.commutator">
 <span class="sig-name descname"><span class="pre">commutator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">x</span></em>, <em class="sig-param"><span class="pre">y</span></em>, <em class="sig-param"><span class="pre">startWithInverse</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.WreathProductGroup.commutator" title="Permalink to this definition">¶</a></dt>
 <dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.Group.commutator" title="+replab.Group.commutator"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Group.commutator()</span></code></a></p>
@@ -1579,9 +1619,9 @@ imprimitive wreath product action and the primitive wreath product action.</p>
 </dd></dl>
 
 <dl class="mat method">
-<dt class="sig sig-object mat" id="+replab.WreathProductGroup.composeLetters">
-<span class="sig-name descname"><span class="pre">composeLetters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">array</span></em>, <em class="sig-param"><span class="pre">letters</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.WreathProductGroup.composeLetters" title="Permalink to this definition">¶</a></dt>
-<dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.Group.composeLetters" title="+replab.Group.composeLetters"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Group.composeLetters()</span></code></a></p>
+<dt class="sig sig-object mat" id="+replab.WreathProductGroup.composeFlat">
+<span class="sig-name descname"><span class="pre">composeFlat</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">array</span></em>, <em class="sig-param"><span class="pre">letters</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.WreathProductGroup.composeFlat" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.Group.composeFlat" title="+replab.Group.composeFlat"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Group.composeFlat()</span></code></a></p>
 </dd></dl>
 
 <dl class="mat method">
@@ -1660,6 +1700,12 @@ imprimitive wreath product action and the primitive wreath product action.</p>
 <dt class="sig sig-object mat" id="+replab.WreathProductGroup.isIdentity">
 <span class="sig-name descname"><span class="pre">isIdentity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">x</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.WreathProductGroup.isIdentity" title="Permalink to this definition">¶</a></dt>
 <dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.Monoid.isIdentity" title="+replab.Monoid.isIdentity"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Monoid.isIdentity()</span></code></a></p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.WreathProductGroup.isequal">
+<span class="sig-name descname"><span class="pre">isequal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">lhs</span></em>, <em class="sig-param"><span class="pre">rhs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.WreathProductGroup.isequal" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="base.html#+replab.Obj.isequal" title="+replab.Obj.isequal"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Obj.isequal()</span></code></a></p>
 </dd></dl>
 
 <dl class="mat method">
@@ -1936,7 +1982,7 @@ when called on <a class="reference internal" href="#+replab.WreathProductGroup.A
         <li class="right" >
           <a href="abstract_groups.html" title="Abstract groups and atlas"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.9.5-SNAP documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 1.0.0 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="index.html" >Technical Reference</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">Group product constructions</a></li> 
       </ul>

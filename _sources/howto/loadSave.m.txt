@@ -20,7 +20,7 @@
 %
 % For now, the following objects implement a pair of ``import``/``export`` methods:
 %
-% - `+replab.Irreducible` implements `~+replab.Irreducible.import` and `~+replab.Irreducible.export`. Their usage is documented below.
+% - `+replab.Irreducible` implements `+replab.Irreducible.import` and `+replab.Irreducible.export`. Their usage is documented below.
 %
 % Beyond those, some of our users report that loading/saving RepLAB objects to ``.mat`` files work in recent versions of MATLAB. Please be careful as the use of ``load`` and ``save`` is currently unsupported. However, if you wish to export computed information about RepLAB objects and those objects are not in the list above, please file an [issue](https://github.com/replab/replab/issues), and we may consider extending our ``import`` / ``export`` mechanism.
 %
@@ -45,11 +45,10 @@ save decomposition_export_example.mat data
 
 % ### Load script
 
-clear all % pretend we start all over again
+clear data G rep dec decToExport % pretend we start all over again
 replab_init('verbose', 0);
 % we construct again the group and its representation
 G = replab.S(3);
 rep = G.naturalRep; % representation to decompose
 data = load('decomposition_export_example.mat');
 importedDec = replab.Irreducible.import(rep, data.data)
-

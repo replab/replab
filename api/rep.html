@@ -15,7 +15,7 @@
   <link rel="stylesheet" type="text/css" href="../_static/css/bootstrap-theme.min.css" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-    <title>Representations &#8212; RepLAB 0.9.5-SNAP documentation</title>
+    <title>Representations &#8212; RepLAB 1.0.0 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/guzzle.css" />
     <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
@@ -79,7 +79,7 @@
         <li class="right" >
           <a href="group_morphisms.html" title="Group morphisms"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.9.5-SNAP documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 1.0.0 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">Technical Reference</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">Representations</a></li> 
       </ul>
@@ -94,7 +94,7 @@
   <a href="
     ../index.html">RepLAB</a>&nbsp;&nbsp;
   <a href="https://github.com/replab/replab"><i class="fab fa-github"></i></a>&nbsp;
-  <a href="https://github.com/replab/replab/archive/v0.9.5-SNAP.zip"><i class="fa fa-download"></i></a>&nbsp;
+  <a href="https://github.com/replab/replab/archive/v1.0.0.zip"><i class="fa fa-download"></i></a>&nbsp;
   <a href="https://gitter.im/replab/replab"><i class="fab fa-gitter"></i></a>&nbsp;
   <a href="https://travis-ci.com/replab/replab"><i class="fas fa-sync-alt"></i></a>&nbsp;
   <a href="https://codecov.io/gh/replab/replab"><i class="fas fa-umbrella"></i></a>
@@ -113,6 +113,7 @@
 <li class="toctree-l2"><a class="reference internal" href="numerics.html">Numerics</a></li>
 <li class="toctree-l2"><a class="reference internal" href="groups.html">Base group structures</a></li>
 <li class="toctree-l2"><a class="reference internal" href="continuous_groups.html">Continuous groups</a></li>
+<li class="toctree-l2"><a class="reference internal" href="finite_groups.html">Finite group structures</a></li>
 <li class="toctree-l2"><a class="reference internal" href="permutation_groups.html">Permutation groups</a></li>
 <li class="toctree-l2"><a class="reference internal" href="named_discrete_groups.html">Named discrete groups</a></li>
 <li class="toctree-l2"><a class="reference internal" href="abstract_groups.html">Abstract groups and atlas</a></li>
@@ -245,13 +246,15 @@ methods which can be overloaded for performance.</p>
 <p><strong>Laws</strong></p>
 <ul class="simple">
 <li><p><a class="reference internal" href="#+replab.Rep.check" title="+replab.Rep.check"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">check</span></code></a> – Checks the consistency of this object</p></li>
+<li><p><a class="reference internal" href="#+replab.Rep.checkAndContinue" title="+replab.Rep.checkAndContinue"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">checkAndContinue</span></code></a> – Checks the consistency of this object</p></li>
 <li><p><a class="reference internal" href="#+replab.Rep.laws" title="+replab.Rep.laws"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">laws</span></code></a> – Returns the laws that this object obeys</p></li>
 </ul>
 <p><strong>Unique ID</strong></p>
 <ul class="simple">
-<li><p><a class="reference internal" href="#+replab.Rep.eq" title="+replab.Rep.eq"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">eq</span></code></a> – Equality test (deprecated)</p></li>
+<li><p><a class="reference internal" href="#+replab.Rep.eq" title="+replab.Rep.eq"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">eq</span></code></a> – Equality test</p></li>
 <li><p><a class="reference internal" href="#+replab.Rep.id" title="+replab.Rep.id"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">id</span></code></a> – Returns the unique ID of this object (deprecated)</p></li>
-<li><p><a class="reference internal" href="#+replab.Rep.ne" title="+replab.Rep.ne"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">ne</span></code></a> – Non-equality test (deprecated)</p></li>
+<li><p><a class="reference internal" href="#+replab.Rep.isequal" title="+replab.Rep.isequal"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">isequal</span></code></a> – Equality test</p></li>
+<li><p><a class="reference internal" href="#+replab.Rep.ne" title="+replab.Rep.ne"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">ne</span></code></a> – Non-equality test</p></li>
 </ul>
 <p><strong>General</strong></p>
 <ul class="simple">
@@ -385,6 +388,12 @@ methods which can be overloaded for performance.</p>
 </dd></dl>
 
 <dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.Rep.checkAndContinue">
+<span class="sig-name descname"><span class="pre">checkAndContinue</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.Rep.checkAndContinue" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="base.html#+replab.Obj.checkAndContinue" title="+replab.Obj.checkAndContinue"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Obj.checkAndContinue()</span></code></a></p>
+</dd></dl>
+
+<dl class="mat method">
 <dt class="sig sig-object mat" id="+replab.Rep.disp">
 <span class="sig-name descname"><span class="pre">disp</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.Rep.disp" title="Permalink to this definition">¶</a></dt>
 <dd><p>Documentation in <a class="reference internal" href="base.html#+replab.Str.disp" title="+replab.Str.disp"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Str.disp()</span></code></a></p>
@@ -418,6 +427,12 @@ methods which can be overloaded for performance.</p>
 <dt class="sig sig-object mat" id="+replab.Rep.inCache">
 <span class="sig-name descname"><span class="pre">inCache</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">name</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.Rep.inCache" title="Permalink to this definition">¶</a></dt>
 <dd><p>Documentation in <a class="reference internal" href="base.html#+replab.Obj.inCache" title="+replab.Obj.inCache"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Obj.inCache()</span></code></a></p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.Rep.isequal">
+<span class="sig-name descname"><span class="pre">isequal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">lhs</span></em>, <em class="sig-param"><span class="pre">rhs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.Rep.isequal" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="base.html#+replab.Obj.isequal" title="+replab.Obj.isequal"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Obj.isequal()</span></code></a></p>
 </dd></dl>
 
 <dl class="mat method">
@@ -875,19 +890,19 @@ this representation’s <a class="reference internal" href="#+replab.Rep.group" 
 <dd><p>Returns the Frobenius-Schur indicator of this representation</p>
 <p>It is an integer corresponding to the value <span class="math notranslate nohighlight">\(\iota = \int_{g \in G} tr[\rho_g^2] d \mu\)</span> or
 <span class="math notranslate nohighlight">\(\iota = \frac{1}{|G|} \sum_{g \in G} tr[\rho_g^2]\)</span>.</p>
-<p>For real irreducible representations, the Frobenius-Schur indicator can take values:
-* <code class="docutils literal notranslate"><span class="pre">1</span></code> if the representation is of real-type; its complexification is then also irreducible
-* <code class="docutils literal notranslate"><span class="pre">0</span></code> if the representation is of complex-type; it decomposes into two conjugate irreducible</p>
-<blockquote>
-<div><p>representations over the complex numbers</p>
-</div></blockquote>
+<p>For real irreducible representations, the Frobenius-Schur indicator can take values:</p>
 <ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">1</span></code> if the representation is of real-type; its complexification is then also irreducible</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">0</span></code> if the representation is of complex-type; it decomposes into two conjugate irreducible
+representations over the complex numbers</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">-2</span></code> if the representation is of quaternion-type.</p></li>
 </ul>
-<p>For complex irreducible representations, it can take the values:
-* <code class="docutils literal notranslate"><span class="pre">1</span></code> if the representation is of real-type,
-* <code class="docutils literal notranslate"><span class="pre">0</span></code> if the representation is of complex-type, i.e. is not equivalent to its conjugate,
-* <code class="docutils literal notranslate"><span class="pre">-1</span></code> if the representation is of quaternion-type.</p>
+<p>For complex irreducible representations, it can take the values:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">1</span></code> if the representation is of real-type,</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">0</span></code> if the representation is of complex-type, i.e. is not equivalent to its conjugate,</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">-1</span></code> if the representation is of quaternion-type.</p></li>
+</ul>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>Value of the indicator</p>
@@ -1109,7 +1124,7 @@ and matches the encoded <a class="reference internal" href="#+replab.Rep.divisio
 <dd class="field-odd"><p>The group <code class="docutils literal notranslate"><span class="pre">K</span></code> such that <code class="docutils literal notranslate"><span class="pre">rho.image(k)</span> <span class="pre">==</span> <span class="pre">id</span></code> for all <code class="docutils literal notranslate"><span class="pre">k</span></code> in <code class="docutils literal notranslate"><span class="pre">K</span></code></p>
 </dd>
 <dt class="field-even">Return type</dt>
-<dd class="field-even"><p><a class="reference internal" href="groups.html#+replab.FiniteGroup" title="+replab.FiniteGroup"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">replab.FiniteGroup</span></code></a></p>
+<dd class="field-even"><p><a class="reference internal" href="finite_groups.html#+replab.FiniteGroup" title="+replab.FiniteGroup"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">replab.FiniteGroup</span></code></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1221,7 +1236,7 @@ and matches the encoded <a class="reference internal" href="#+replab.Rep.divisio
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>g</strong> (<a class="reference internal" href="#+replab.Rep.group" title="+replab.Rep.group"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">group</span></code></a> element) – Group element acting</p></li>
-<li><p><strong>M</strong> (double(*,*) or <a href="#id1"><span class="problematic" id="id2">`</span></a>.cyclotomic`(*,*)) – Matrix acted upon</p></li>
+<li><p><strong>M</strong> (double(*,*) or <a class="reference internal" href="numerics.html#+replab.cyclotomic" title="+replab.cyclotomic"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">cyclotomic</span></code></a> (*,*)) – Matrix acted upon</p></li>
 <li><p><strong>type</strong> (<span><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">'double',</span> <span class="pre">'double/sparse'</span> <span class="pre">or</span> <span class="pre">'exact',</span> <span class="pre">optional</span></code></span>) – Type of the returned value, default: ‘double’.</p></li>
 </ul>
 </dd>
@@ -1229,7 +1244,7 @@ and matches the encoded <a class="reference internal" href="#+replab.Rep.divisio
 <dd class="field-even"><p>The matrix <code class="docutils literal notranslate"><span class="pre">self.image(g)</span> <span class="pre">*</span> <span class="pre">M</span></code></p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>double(*,*) or <a href="#id3"><span class="problematic" id="id4">`</span></a>.cyclotomic`(*,*)</p>
+<dd class="field-odd"><p>double(*,*) or <a class="reference internal" href="numerics.html#+replab.cyclotomic" title="+replab.cyclotomic"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">cyclotomic</span></code></a> (*,*)</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1387,11 +1402,11 @@ this map by a matrix <code class="docutils literal notranslate"><span class="pre
 representation and the change of basis is unitary.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>A</strong> (double(*,*) or <a href="#id5"><span class="problematic" id="id6">`</span></a>.cyclotomic`(*,*)) – Change of basis matrix</p>
+<dd class="field-odd"><p><strong>A</strong> (double(*,*) or <a class="reference internal" href="numerics.html#+replab.cyclotomic" title="+replab.cyclotomic"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">cyclotomic</span></code></a> (*,*)) – Change of basis matrix</p>
 </dd>
 </dl>
 <dl class="simple">
-<dt>Keywords Args:</dt><dd><p>inverse (double(*,*) or <a href="#id7"><span class="problematic" id="id8">`</span></a>.cyclotomic`(*,*)): Inverse of the change of basis matrix</p>
+<dt>Keywords Args:</dt><dd><p>inverse (double(*,*) or <a class="reference internal" href="numerics.html#+replab.cyclotomic" title="+replab.cyclotomic"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">cyclotomic</span></code></a> (*,*)): Inverse of the change of basis matrix</p>
 </dd>
 </dl>
 <dl class="field-list simple">
@@ -1483,7 +1498,7 @@ that <span class="math notranslate nohighlight">\(I\)</span> and <span class="ma
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>injection</strong> (double(D,d) or <a href="#id9"><span class="problematic" id="id10">`</span></a>cyclotomic`(D,d), may be sparse) – Basis / Injection map</p></li>
+<li><p><strong>injection</strong> (double(D,d) or <a class="reference internal" href="numerics.html#+replab.cyclotomic" title="+replab.cyclotomic"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">cyclotomic</span></code></a> (D,d), may be sparse) – Basis / Injection map</p></li>
 <li><p><strong>projection</strong> – Projection map</p></li>
 <li><p><strong>mapErrorBound</strong> – Upper bound as described above</p></li>
 <li><p><strong>mapConditionNumberEstimate</strong> – Upper bound on the condition number of both <span class="math notranslate nohighlight">\(P\)</span> and <span class="math notranslate nohighlight">\(I\)</span></p></li>
@@ -1495,7 +1510,7 @@ that <span class="math notranslate nohighlight">\(I\)</span> and <span class="ma
 </ul>
 </dd>
 <dt class="field-even">Kwtype projection</dt>
-<dd class="field-even"><p>double(D,d) or <a href="#id11"><span class="problematic" id="id12">`</span></a>cyclotomic`(D,d), may be sparse, optional</p>
+<dd class="field-even"><p>double(D,d) or <a class="reference internal" href="numerics.html#+replab.cyclotomic" title="+replab.cyclotomic"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">cyclotomic</span></code></a> (D,d), may be sparse, optional</p>
 </dd>
 <dt class="field-odd">Kwtype mapErrorBound</dt>
 <dd class="field-odd"><p>double, optional</p>
@@ -1664,7 +1679,7 @@ all <span class="math notranslate nohighlight">\(s \in S\)</span>.</p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p><ul class="simple">
-<li><p><strong>proj</strong> (double(*,*) or <a href="#id13"><span class="problematic" id="id14">`</span></a>.cyclotomic`(*,*)) – Projector</p></li>
+<li><p><strong>proj</strong> (double(*,*) or <a class="reference internal" href="numerics.html#+replab.cyclotomic" title="+replab.cyclotomic"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">cyclotomic</span></code></a> (*,*)) – Projector</p></li>
 <li><p><strong>err</strong> (<em>double</em>) – Estimated error in Frobenius norm</p></li>
 </ul>
 </p>
@@ -1810,13 +1825,15 @@ R. W. Farebrother, J. Groß, and S.-O. Troschke, “Matrix representation of qua
 <p><strong>Laws</strong></p>
 <ul class="simple">
 <li><p><a class="reference internal" href="#+replab.DivisionAlgebra.check" title="+replab.DivisionAlgebra.check"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">check</span></code></a> – Checks the consistency of this object</p></li>
+<li><p><a class="reference internal" href="#+replab.DivisionAlgebra.checkAndContinue" title="+replab.DivisionAlgebra.checkAndContinue"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">checkAndContinue</span></code></a> – Checks the consistency of this object</p></li>
 <li><p><a class="reference internal" href="#+replab.DivisionAlgebra.laws" title="+replab.DivisionAlgebra.laws"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">laws</span></code></a> – Returns the laws that this object obeys</p></li>
 </ul>
 <p><strong>Unique ID</strong></p>
 <ul class="simple">
-<li><p><a class="reference internal" href="#+replab.DivisionAlgebra.eq" title="+replab.DivisionAlgebra.eq"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">eq</span></code></a> – Equality test (deprecated)</p></li>
+<li><p><a class="reference internal" href="#+replab.DivisionAlgebra.eq" title="+replab.DivisionAlgebra.eq"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">eq</span></code></a> – Equality test</p></li>
 <li><p><a class="reference internal" href="#+replab.DivisionAlgebra.id" title="+replab.DivisionAlgebra.id"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">id</span></code></a> – Returns the unique ID of this object (deprecated)</p></li>
-<li><p><a class="reference internal" href="#+replab.DivisionAlgebra.ne" title="+replab.DivisionAlgebra.ne"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">ne</span></code></a> – Non-equality test (deprecated)</p></li>
+<li><p><a class="reference internal" href="#+replab.DivisionAlgebra.isequal" title="+replab.DivisionAlgebra.isequal"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">isequal</span></code></a> – Equality test</p></li>
+<li><p><a class="reference internal" href="#+replab.DivisionAlgebra.ne" title="+replab.DivisionAlgebra.ne"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">ne</span></code></a> – Non-equality test</p></li>
 </ul>
 <p><strong>Test helpers</strong></p>
 <ul class="simple">
@@ -1901,6 +1918,12 @@ R. W. Farebrother, J. Groß, and S.-O. Troschke, “Matrix representation of qua
 </dd></dl>
 
 <dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.DivisionAlgebra.checkAndContinue">
+<span class="sig-name descname"><span class="pre">checkAndContinue</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.DivisionAlgebra.checkAndContinue" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="base.html#+replab.Obj.checkAndContinue" title="+replab.Obj.checkAndContinue"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Obj.checkAndContinue()</span></code></a></p>
+</dd></dl>
+
+<dl class="mat method">
 <dt class="sig sig-object mat" id="+replab.DivisionAlgebra.dimension">
 <span class="sig-name descname"><span class="pre">dimension</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#+replab.DivisionAlgebra.dimension" title="Permalink to this definition">¶</a></dt>
 <dd><p>No documentation</p>
@@ -1952,6 +1975,12 @@ R. W. Farebrother, J. Groß, and S.-O. Troschke, “Matrix representation of qua
 <dt class="sig sig-object mat" id="+replab.DivisionAlgebra.inCache">
 <span class="sig-name descname"><span class="pre">inCache</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">name</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.DivisionAlgebra.inCache" title="Permalink to this definition">¶</a></dt>
 <dd><p>Documentation in <a class="reference internal" href="base.html#+replab.Obj.inCache" title="+replab.Obj.inCache"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Obj.inCache()</span></code></a></p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.DivisionAlgebra.isequal">
+<span class="sig-name descname"><span class="pre">isequal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">lhs</span></em>, <em class="sig-param"><span class="pre">rhs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.DivisionAlgebra.isequal" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="base.html#+replab.Obj.isequal" title="+replab.Obj.isequal"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Obj.isequal()</span></code></a></p>
 </dd></dl>
 
 <dl class="mat method">
@@ -2154,17 +2183,18 @@ on each <code class="docutils literal notranslate"><span class="pre">ms</span> <
 <p><strong>Laws</strong></p>
 <ul class="simple">
 <li><p><a class="reference internal" href="#+replab.RepByImages.check" title="+replab.RepByImages.check"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">check</span></code></a> – Checks the consistency of this object</p></li>
+<li><p><a class="reference internal" href="#+replab.RepByImages.checkAndContinue" title="+replab.RepByImages.checkAndContinue"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">checkAndContinue</span></code></a> – Checks the consistency of this object</p></li>
 <li><p><a class="reference internal" href="#+replab.RepByImages.laws" title="+replab.RepByImages.laws"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">laws</span></code></a> – Returns the laws that this object obeys</p></li>
 </ul>
 <p><strong>Unique ID</strong></p>
 <ul class="simple">
-<li><p><a class="reference internal" href="#+replab.RepByImages.eq" title="+replab.RepByImages.eq"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">eq</span></code></a> – Equality test (deprecated)</p></li>
+<li><p><a class="reference internal" href="#+replab.RepByImages.eq" title="+replab.RepByImages.eq"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">eq</span></code></a> – Equality test</p></li>
 <li><p><a class="reference internal" href="#+replab.RepByImages.id" title="+replab.RepByImages.id"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">id</span></code></a> – Returns the unique ID of this object (deprecated)</p></li>
-<li><p><a class="reference internal" href="#+replab.RepByImages.ne" title="+replab.RepByImages.ne"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">ne</span></code></a> – Non-equality test (deprecated)</p></li>
+<li><p><a class="reference internal" href="#+replab.RepByImages.isequal" title="+replab.RepByImages.isequal"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">isequal</span></code></a> – Equality test</p></li>
+<li><p><a class="reference internal" href="#+replab.RepByImages.ne" title="+replab.RepByImages.ne"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">ne</span></code></a> – Non-equality test</p></li>
 </ul>
 <p><strong>General</strong></p>
 <ul class="simple">
-<li><p><a class="reference internal" href="#+replab.RepByImages.Rep" title="+replab.RepByImages.Rep"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">Rep</span></code></a> – Constructs a finite dimension representation</p></li>
 <li><p><a class="reference internal" href="#+replab.RepByImages.RepByImages" title="+replab.RepByImages.RepByImages"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">RepByImages</span></code></a> –</p></li>
 <li><p><a class="reference internal" href="#+replab.RepByImages.fromExactRep" title="+replab.RepByImages.fromExactRep"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">fromExactRep</span></code></a> – Constructs a <a class="reference internal" href="#+replab.RepByImages" title="+replab.RepByImages"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">replab.RepByImages</span></code></a> from an existing representation with exact images</p></li>
 </ul>
@@ -2265,12 +2295,6 @@ on each <code class="docutils literal notranslate"><span class="pre">ms</span> <
 <div class="dropdown admonition">
 <p class="admonition-title">Inherited elements</p>
 <dl class="mat method">
-<dt class="sig sig-object mat" id="+replab.RepByImages.Rep">
-<span class="sig-name descname"><span class="pre">Rep</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">group</span></em>, <em class="sig-param"><span class="pre">field</span></em>, <em class="sig-param"><span class="pre">dimension</span></em>, <em class="sig-param"><span class="pre">varargin</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.RepByImages.Rep" title="Permalink to this definition">¶</a></dt>
-<dd><p>Documentation in <a class="reference internal" href="#+replab.Rep.Rep" title="+replab.Rep.Rep"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Rep.Rep()</span></code></a></p>
-</dd></dl>
-
-<dl class="mat method">
 <dt class="sig sig-object mat" id="+replab.RepByImages.RepByImages">
 <span class="sig-name descname"><span class="pre">RepByImages</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#+replab.RepByImages.RepByImages" title="Permalink to this definition">¶</a></dt>
 <dd><p>No documentation</p>
@@ -2346,6 +2370,12 @@ on each <code class="docutils literal notranslate"><span class="pre">ms</span> <
 <dt class="sig sig-object mat" id="+replab.RepByImages.check">
 <span class="sig-name descname"><span class="pre">check</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.RepByImages.check" title="Permalink to this definition">¶</a></dt>
 <dd><p>Documentation in <a class="reference internal" href="base.html#+replab.Obj.check" title="+replab.Obj.check"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Obj.check()</span></code></a></p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.RepByImages.checkAndContinue">
+<span class="sig-name descname"><span class="pre">checkAndContinue</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.RepByImages.checkAndContinue" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="base.html#+replab.Obj.checkAndContinue" title="+replab.Obj.checkAndContinue"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Obj.checkAndContinue()</span></code></a></p>
 </dd></dl>
 
 <dl class="mat method">
@@ -2550,6 +2580,12 @@ on each <code class="docutils literal notranslate"><span class="pre">ms</span> <
 <dt class="sig sig-object mat" id="+replab.RepByImages.isUnitary">
 <span class="sig-name descname"><span class="pre">isUnitary</span></span><a class="headerlink" href="#+replab.RepByImages.isUnitary" title="Permalink to this definition">¶</a></dt>
 <dd><p>Documentation in <a class="reference internal" href="#+replab.Rep.isUnitary" title="+replab.Rep.isUnitary"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">replab.Rep.isUnitary</span></code></a></p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.RepByImages.isequal">
+<span class="sig-name descname"><span class="pre">isequal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">lhs</span></em>, <em class="sig-param"><span class="pre">rhs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.RepByImages.isequal" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="base.html#+replab.Obj.isequal" title="+replab.Obj.isequal"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Obj.isequal()</span></code></a></p>
 </dd></dl>
 
 <dl class="mat method">
@@ -2865,17 +2901,18 @@ store a measure of the error associated with those maps in <a class="reference i
 <p><strong>Laws</strong></p>
 <ul class="simple">
 <li><p><a class="reference internal" href="#+replab.SubRep.check" title="+replab.SubRep.check"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">check</span></code></a> – Checks the consistency of this object</p></li>
+<li><p><a class="reference internal" href="#+replab.SubRep.checkAndContinue" title="+replab.SubRep.checkAndContinue"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">checkAndContinue</span></code></a> – Checks the consistency of this object</p></li>
 <li><p><a class="reference internal" href="#+replab.SubRep.laws" title="+replab.SubRep.laws"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">laws</span></code></a> – Returns the laws that this object obeys</p></li>
 </ul>
 <p><strong>Unique ID</strong></p>
 <ul class="simple">
-<li><p><a class="reference internal" href="#+replab.SubRep.eq" title="+replab.SubRep.eq"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">eq</span></code></a> – Equality test (deprecated)</p></li>
+<li><p><a class="reference internal" href="#+replab.SubRep.eq" title="+replab.SubRep.eq"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">eq</span></code></a> – Equality test</p></li>
 <li><p><a class="reference internal" href="#+replab.SubRep.id" title="+replab.SubRep.id"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">id</span></code></a> – Returns the unique ID of this object (deprecated)</p></li>
-<li><p><a class="reference internal" href="#+replab.SubRep.ne" title="+replab.SubRep.ne"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">ne</span></code></a> – Non-equality test (deprecated)</p></li>
+<li><p><a class="reference internal" href="#+replab.SubRep.isequal" title="+replab.SubRep.isequal"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">isequal</span></code></a> – Equality test</p></li>
+<li><p><a class="reference internal" href="#+replab.SubRep.ne" title="+replab.SubRep.ne"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">ne</span></code></a> – Non-equality test</p></li>
 </ul>
 <p><strong>General</strong></p>
 <ul class="simple">
-<li><p><a class="reference internal" href="#+replab.SubRep.Rep" title="+replab.SubRep.Rep"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">Rep</span></code></a> – Constructs a finite dimension representation</p></li>
 <li><p><a class="reference internal" href="#+replab.SubRep.SubRep" title="+replab.SubRep.SubRep"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">SubRep</span></code></a> – Constructs a subrepresentation of a parent representation</p></li>
 <li><p><a class="reference internal" href="#+replab.SubRep.basis" title="+replab.SubRep.basis"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">basis</span></code></a> – Returns (part of) the basis of the subrepresentation in the parent representation</p></li>
 <li><p><a class="reference internal" href="#+replab.SubRep.biorthogonalityErrorBound" title="+replab.SubRep.biorthogonalityErrorBound"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">biorthogonalityErrorBound</span></code></a> – Returns an upper bound on the biorthogonality of the injection/projection maps</p></li>
@@ -2994,12 +3031,6 @@ store a measure of the error associated with those maps in <a class="reference i
 <div class="dropdown admonition">
 <p class="admonition-title">Inherited elements</p>
 <dl class="mat method">
-<dt class="sig sig-object mat" id="+replab.SubRep.Rep">
-<span class="sig-name descname"><span class="pre">Rep</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">group</span></em>, <em class="sig-param"><span class="pre">field</span></em>, <em class="sig-param"><span class="pre">dimension</span></em>, <em class="sig-param"><span class="pre">varargin</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.SubRep.Rep" title="Permalink to this definition">¶</a></dt>
-<dd><p>Documentation in <a class="reference internal" href="#+replab.Rep.Rep" title="+replab.Rep.Rep"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Rep.Rep()</span></code></a></p>
-</dd></dl>
-
-<dl class="mat method">
 <dt class="sig sig-object mat" id="+replab.SubRep.additionalFields">
 <span class="sig-name descname"><span class="pre">additionalFields</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.SubRep.additionalFields" title="Permalink to this definition">¶</a></dt>
 <dd><p>Documentation in <a class="reference internal" href="base.html#+replab.Str.additionalFields" title="+replab.Str.additionalFields"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Str.additionalFields()</span></code></a></p>
@@ -3069,6 +3100,12 @@ store a measure of the error associated with those maps in <a class="reference i
 <dt class="sig sig-object mat" id="+replab.SubRep.check">
 <span class="sig-name descname"><span class="pre">check</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.SubRep.check" title="Permalink to this definition">¶</a></dt>
 <dd><p>Documentation in <a class="reference internal" href="base.html#+replab.Obj.check" title="+replab.Obj.check"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Obj.check()</span></code></a></p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.SubRep.checkAndContinue">
+<span class="sig-name descname"><span class="pre">checkAndContinue</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.SubRep.checkAndContinue" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="base.html#+replab.Obj.checkAndContinue" title="+replab.Obj.checkAndContinue"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Obj.checkAndContinue()</span></code></a></p>
 </dd></dl>
 
 <dl class="mat method">
@@ -3273,6 +3310,12 @@ store a measure of the error associated with those maps in <a class="reference i
 <dt class="sig sig-object mat" id="+replab.SubRep.isUnitary">
 <span class="sig-name descname"><span class="pre">isUnitary</span></span><a class="headerlink" href="#+replab.SubRep.isUnitary" title="Permalink to this definition">¶</a></dt>
 <dd><p>Documentation in <a class="reference internal" href="#+replab.Rep.isUnitary" title="+replab.Rep.isUnitary"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">replab.Rep.isUnitary</span></code></a></p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.SubRep.isequal">
+<span class="sig-name descname"><span class="pre">isequal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">lhs</span></em>, <em class="sig-param"><span class="pre">rhs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.SubRep.isequal" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="base.html#+replab.Obj.isequal" title="+replab.Obj.isequal"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Obj.isequal()</span></code></a></p>
 </dd></dl>
 
 <dl class="mat method">
@@ -3492,7 +3535,7 @@ store a measure of the error associated with those maps in <a class="reference i
 <dd><p>Injection map</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
-<dd class="field-odd"><p>double(D,d) or <a href="#id15"><span class="problematic" id="id16">`</span></a>.cyclotomic`(D,d), may be sparse</p>
+<dd class="field-odd"><p>double(D,d) or <a class="reference internal" href="numerics.html#+replab.cyclotomic" title="+replab.cyclotomic"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">cyclotomic</span></code></a> (D,d), may be sparse</p>
 </dd>
 </dl>
 </dd></dl>
@@ -3536,7 +3579,7 @@ store a measure of the error associated with those maps in <a class="reference i
 <dd><p>Projection map</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
-<dd class="field-odd"><p>double(d,D) or <a href="#id17"><span class="problematic" id="id18">`</span></a>.cyclotomic`(d,D), may be sparse</p>
+<dd class="field-odd"><p>double(d,D) or <a class="reference internal" href="numerics.html#+replab.cyclotomic" title="+replab.cyclotomic"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">cyclotomic</span></code></a> (d,D), may be sparse</p>
 </dd>
 </dl>
 </dd></dl>
@@ -3545,15 +3588,15 @@ store a measure of the error associated with those maps in <a class="reference i
 <dt class="sig sig-object mat" id="+replab.SubRep.SubRep">
 <span class="sig-name descname"><span class="pre">SubRep</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">parent</span></em>, <em class="sig-param"><span class="pre">injection_internal</span></em>, <em class="sig-param"><span class="pre">projection_internal</span></em>, <em class="sig-param"><span class="pre">varargin</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.SubRep.SubRep" title="Permalink to this definition">¶</a></dt>
 <dd><p>Constructs a subrepresentation of a parent representation</p>
-<p>Additional keyword arguments are passed to the <a class="reference internal" href="#+replab.SubRep.Rep" title="+replab.SubRep.Rep"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">Rep</span></code></a> constructor.</p>
+<p>Additional keyword arguments are passed to the <a class="reference internal" href="#+replab.Rep" title="+replab.Rep"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">Rep</span></code></a> constructor.</p>
 <p>If both <a class="reference internal" href="#+replab.SubRep.parent" title="+replab.SubRep.parent"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">parent</span></code></a> is unitary, and <a class="reference internal" href="#+replab.SubRep.injection_internal" title="+replab.SubRep.injection_internal"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">injection_internal</span></code></a> is adjoint to <a class="reference internal" href="#+replab.SubRep.projection_internal" title="+replab.SubRep.projection_internal"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">projection_internal</span></code></a>, then
 the <a class="reference internal" href="#+replab.SubRep.isUnitary" title="+replab.SubRep.isUnitary"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">isUnitary</span></code></a> argument may be omitted as it can be deduced to be true.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>parent</strong> (<a class="reference internal" href="#+replab.Rep" title="+replab.Rep"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">replab.Rep</span></code></a>) – Parent representation of dimension <span class="math notranslate nohighlight">\(D\)</span></p></li>
-<li><p><strong>injection_internal</strong> (double(D,d) or <a href="#id19"><span class="problematic" id="id20">`</span></a>.cyclotomic`(D,d), may be sparse) – Injection map <span class="math notranslate nohighlight">\(I\)</span></p></li>
-<li><p><strong>projection_internal</strong> (double(d,D) or <a href="#id21"><span class="problematic" id="id22">`</span></a>.cyclotomic`(d,D), may be sparse) – Projection map <span class="math notranslate nohighlight">\(P\)</span></p></li>
+<li><p><strong>injection_internal</strong> (double(D,d) or <a class="reference internal" href="numerics.html#+replab.cyclotomic" title="+replab.cyclotomic"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">cyclotomic</span></code></a> (D,d), may be sparse) – Injection map <span class="math notranslate nohighlight">\(I\)</span></p></li>
+<li><p><strong>projection_internal</strong> (double(d,D) or <a class="reference internal" href="numerics.html#+replab.cyclotomic" title="+replab.cyclotomic"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">cyclotomic</span></code></a> (d,D), may be sparse) – Projection map <span class="math notranslate nohighlight">\(P\)</span></p></li>
 <li><p><strong>isUnitary</strong> – Whether the resulting representation is unitary, may be omitted (see above)</p></li>
 <li><p><strong>projectorErrorBound</strong> – Upper bound on || I P - tilde{I} tilde{P} ||_F</p></li>
 <li><p><strong>injectionConditionNumberEstimate</strong> – Upper bound of the condition number of <span class="math notranslate nohighlight">\(\tilde{I}\)</span> (and thus <span class="math notranslate nohighlight">\(\tilde{P}\)</span>)</p></li>
@@ -3587,7 +3630,7 @@ the <a class="reference internal" href="#+replab.SubRep.isUnitary" title="+repla
 <dd class="field-even"><p>The basis of the subrepresentation given as column vectors</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>double(*,*) or <a href="#id23"><span class="problematic" id="id24">`</span></a>.cyclotomic`(*,*)</p>
+<dd class="field-odd"><p>double(*,*) or <a class="reference internal" href="numerics.html#+replab.cyclotomic" title="+replab.cyclotomic"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">cyclotomic</span></code></a> (*,*)</p>
 </dd>
 </dl>
 </dd></dl>
@@ -3669,7 +3712,7 @@ the <a class="reference internal" href="#+replab.SubRep.isUnitary" title="+repla
 <dd class="field-even"><p>The injection map</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>double(*,*) or <a href="#id25"><span class="problematic" id="id26">`</span></a>.cyclotomic`(*,*)</p>
+<dd class="field-odd"><p>double(*,*) or <a class="reference internal" href="numerics.html#+replab.cyclotomic" title="+replab.cyclotomic"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">cyclotomic</span></code></a> (*,*)</p>
 </dd>
 </dl>
 </dd></dl>
@@ -3762,7 +3805,7 @@ coefficients.</p>
 <dd class="field-even"><p>The projection map</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>double(*,*) or <a href="#id27"><span class="problematic" id="id28">`</span></a>.cyclotomic`(*,*)</p>
+<dd class="field-odd"><p>double(*,*) or <a class="reference internal" href="numerics.html#+replab.cyclotomic" title="+replab.cyclotomic"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">cyclotomic</span></code></a> (*,*)</p>
 </dd>
 </dl>
 </dd></dl>
@@ -3983,8 +4026,8 @@ so that <code class="docutils literal notranslate"><span class="pre">injection1<
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>injection</strong> (double(D,d) or <a href="#id29"><span class="problematic" id="id30">`</span></a>.cyclotomic`(D,d), may be sparse) – Injection map</p></li>
-<li><p><strong>projection</strong> (double(d,D) or <a href="#id31"><span class="problematic" id="id32">`</span></a>.cyclotomic`(d,D), may be sparse) – Projection map</p></li>
+<li><p><strong>injection</strong> (double(D,d) or <a class="reference internal" href="numerics.html#+replab.cyclotomic" title="+replab.cyclotomic"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">cyclotomic</span></code></a> (D,d), may be sparse) – Injection map</p></li>
+<li><p><strong>projection</strong> (double(d,D) or <a class="reference internal" href="numerics.html#+replab.cyclotomic" title="+replab.cyclotomic"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">cyclotomic</span></code></a> (d,D), may be sparse) – Projection map</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -4028,7 +4071,7 @@ irreps:</p>
 <li><p><a class="reference internal" href="#+replab.Isotypic.group" title="+replab.Isotypic.group"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">group</span></code></a> – Group being represented</p></li>
 <li><p><a class="reference internal" href="#+replab.Isotypic.injection_internal" title="+replab.Isotypic.injection_internal"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">injection_internal</span></code></a> – Injection map</p></li>
 <li><p><a class="reference internal" href="#+replab.Isotypic.irreps" title="+replab.Isotypic.irreps"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">irreps</span></code></a> – Equivalent irreducible subrepresentations in this isotypic component</p></li>
-<li><p><a class="reference internal" href="#+replab.Isotypic.isSimilarRep" title="+replab.Isotypic.isSimilarRep"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">isSimilarRep</span></code></a> – True if this <a class="reference internal" href="#+replab.Isotypic.SubRep" title="+replab.Isotypic.SubRep"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">SubRep</span></code></a> encodes a similarity transformation</p></li>
+<li><p><a class="reference internal" href="#+replab.Isotypic.isSimilarRep" title="+replab.Isotypic.isSimilarRep"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">isSimilarRep</span></code></a> – True if this <a class="reference internal" href="#+replab.SubRep" title="+replab.SubRep"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">SubRep</span></code></a> encodes a similarity transformation</p></li>
 <li><p><a class="reference internal" href="#+replab.Isotypic.isUnitary" title="+replab.Isotypic.isUnitary"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">isUnitary</span></code></a> – Whether the representation is unitary</p></li>
 <li><p><a class="reference internal" href="#+replab.Isotypic.mapsAreAdjoint" title="+replab.Isotypic.mapsAreAdjoint"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">mapsAreAdjoint</span></code></a> – True if <a class="reference internal" href="#+replab.Isotypic.parent" title="+replab.Isotypic.parent"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">parent</span></code></a> is unitary (so the Hermitian adjoint makes sense)  and <a class="reference internal" href="#+replab.Isotypic.injection" title="+replab.Isotypic.injection"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">injection</span></code></a> is the conjugate transpose of <a class="reference internal" href="#+replab.Isotypic.projection" title="+replab.Isotypic.projection"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">projection</span></code></a></p></li>
 <li><p><a class="reference internal" href="#+replab.Isotypic.modelIrrep" title="+replab.Isotypic.modelIrrep"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">modelIrrep</span></code></a> – Irreducible representation identical to the subrepresentations present in this isotypic component</p></li>
@@ -4055,19 +4098,19 @@ irreps:</p>
 <p><strong>Laws</strong></p>
 <ul class="simple">
 <li><p><a class="reference internal" href="#+replab.Isotypic.check" title="+replab.Isotypic.check"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">check</span></code></a> – Checks the consistency of this object</p></li>
+<li><p><a class="reference internal" href="#+replab.Isotypic.checkAndContinue" title="+replab.Isotypic.checkAndContinue"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">checkAndContinue</span></code></a> – Checks the consistency of this object</p></li>
 <li><p><a class="reference internal" href="#+replab.Isotypic.laws" title="+replab.Isotypic.laws"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">laws</span></code></a> – Returns the laws that this object obeys</p></li>
 </ul>
 <p><strong>Unique ID</strong></p>
 <ul class="simple">
-<li><p><a class="reference internal" href="#+replab.Isotypic.eq" title="+replab.Isotypic.eq"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">eq</span></code></a> – Equality test (deprecated)</p></li>
+<li><p><a class="reference internal" href="#+replab.Isotypic.eq" title="+replab.Isotypic.eq"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">eq</span></code></a> – Equality test</p></li>
 <li><p><a class="reference internal" href="#+replab.Isotypic.id" title="+replab.Isotypic.id"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">id</span></code></a> – Returns the unique ID of this object (deprecated)</p></li>
-<li><p><a class="reference internal" href="#+replab.Isotypic.ne" title="+replab.Isotypic.ne"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">ne</span></code></a> – Non-equality test (deprecated)</p></li>
+<li><p><a class="reference internal" href="#+replab.Isotypic.isequal" title="+replab.Isotypic.isequal"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">isequal</span></code></a> – Equality test</p></li>
+<li><p><a class="reference internal" href="#+replab.Isotypic.ne" title="+replab.Isotypic.ne"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">ne</span></code></a> – Non-equality test</p></li>
 </ul>
 <p><strong>General</strong></p>
 <ul class="simple">
 <li><p><a class="reference internal" href="#+replab.Isotypic.Isotypic" title="+replab.Isotypic.Isotypic"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">Isotypic</span></code></a> – Constructs an isotypic component of a parent representation</p></li>
-<li><p><a class="reference internal" href="#+replab.Isotypic.Rep" title="+replab.Isotypic.Rep"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">Rep</span></code></a> – Constructs a finite dimension representation</p></li>
-<li><p><a class="reference internal" href="#+replab.Isotypic.SubRep" title="+replab.Isotypic.SubRep"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">SubRep</span></code></a> – Constructs a subrepresentation of a parent representation</p></li>
 <li><p><a class="reference internal" href="#+replab.Isotypic.basis" title="+replab.Isotypic.basis"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">basis</span></code></a> – Returns (part of) the basis of the subrepresentation in the parent representation</p></li>
 <li><p><a class="reference internal" href="#+replab.Isotypic.biorthogonalityErrorBound" title="+replab.Isotypic.biorthogonalityErrorBound"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">biorthogonalityErrorBound</span></code></a> – Returns an upper bound on the biorthogonality of the injection/projection maps</p></li>
 <li><p><a class="reference internal" href="#+replab.Isotypic.collapse" title="+replab.Isotypic.collapse"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">collapse</span></code></a> – Simplifies a SubRep of a SubRep</p></li>
@@ -4194,18 +4237,6 @@ irreps:</p>
 <div class="dropdown admonition">
 <p class="admonition-title">Inherited elements</p>
 <dl class="mat method">
-<dt class="sig sig-object mat" id="+replab.Isotypic.Rep">
-<span class="sig-name descname"><span class="pre">Rep</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">group</span></em>, <em class="sig-param"><span class="pre">field</span></em>, <em class="sig-param"><span class="pre">dimension</span></em>, <em class="sig-param"><span class="pre">varargin</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.Isotypic.Rep" title="Permalink to this definition">¶</a></dt>
-<dd><p>Documentation in <a class="reference internal" href="#+replab.Rep.Rep" title="+replab.Rep.Rep"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Rep.Rep()</span></code></a></p>
-</dd></dl>
-
-<dl class="mat method">
-<dt class="sig sig-object mat" id="+replab.Isotypic.SubRep">
-<span class="sig-name descname"><span class="pre">SubRep</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">parent</span></em>, <em class="sig-param"><span class="pre">injection_internal</span></em>, <em class="sig-param"><span class="pre">projection_internal</span></em>, <em class="sig-param"><span class="pre">varargin</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.Isotypic.SubRep" title="Permalink to this definition">¶</a></dt>
-<dd><p>Documentation in <a class="reference internal" href="#+replab.SubRep.SubRep" title="+replab.SubRep.SubRep"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.SubRep.SubRep()</span></code></a></p>
-</dd></dl>
-
-<dl class="mat method">
 <dt class="sig sig-object mat" id="+replab.Isotypic.additionalFields">
 <span class="sig-name descname"><span class="pre">additionalFields</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.Isotypic.additionalFields" title="Permalink to this definition">¶</a></dt>
 <dd><p>Documentation in <a class="reference internal" href="base.html#+replab.Str.additionalFields" title="+replab.Str.additionalFields"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Str.additionalFields()</span></code></a></p>
@@ -4287,6 +4318,12 @@ irreps:</p>
 <dt class="sig sig-object mat" id="+replab.Isotypic.check">
 <span class="sig-name descname"><span class="pre">check</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.Isotypic.check" title="Permalink to this definition">¶</a></dt>
 <dd><p>Documentation in <a class="reference internal" href="base.html#+replab.Obj.check" title="+replab.Obj.check"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Obj.check()</span></code></a></p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.Isotypic.checkAndContinue">
+<span class="sig-name descname"><span class="pre">checkAndContinue</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.Isotypic.checkAndContinue" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="base.html#+replab.Obj.checkAndContinue" title="+replab.Obj.checkAndContinue"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Obj.checkAndContinue()</span></code></a></p>
 </dd></dl>
 
 <dl class="mat method">
@@ -4539,6 +4576,12 @@ irreps:</p>
 <dt class="sig sig-object mat" id="+replab.Isotypic.isUnitary">
 <span class="sig-name descname"><span class="pre">isUnitary</span></span><a class="headerlink" href="#+replab.Isotypic.isUnitary" title="Permalink to this definition">¶</a></dt>
 <dd><p>Documentation in <a class="reference internal" href="#+replab.Rep.isUnitary" title="+replab.Rep.isUnitary"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">replab.Rep.isUnitary</span></code></a></p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.Isotypic.isequal">
+<span class="sig-name descname"><span class="pre">isequal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">lhs</span></em>, <em class="sig-param"><span class="pre">rhs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.Isotypic.isequal" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="base.html#+replab.Obj.isequal" title="+replab.Obj.isequal"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Obj.isequal()</span></code></a></p>
 </dd></dl>
 
 <dl class="mat method">
@@ -4836,7 +4879,7 @@ irreps:</p>
 <dd><p>Equivalent irreducible subrepresentations in this isotypic component</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
-<dd class="field-odd"><p>cell(1,*) of <a class="reference internal" href="#+replab.Isotypic.SubRep" title="+replab.Isotypic.SubRep"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">SubRep</span></code></a></p>
+<dd class="field-odd"><p>cell(1,*) of <a class="reference internal" href="#+replab.SubRep" title="+replab.SubRep"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">SubRep</span></code></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -4847,7 +4890,7 @@ irreps:</p>
 <dd><p>Irreducible representation identical to the subrepresentations present in this isotypic component</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="#+replab.Isotypic.Rep" title="+replab.Isotypic.Rep"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">Rep</span></code></a></p>
+<dd class="field-odd"><p><a class="reference internal" href="#+replab.Rep" title="+replab.Rep"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">Rep</span></code></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -4859,7 +4902,7 @@ irreps:</p>
 <p>The injection map of the isotypic component comes from the sum of the injection maps of the irreps,
 while its projection map is supplied as an argument.</p>
 <p>The static method <a class="reference internal" href="#+replab.Isotypic.fromIrreps" title="+replab.Isotypic.fromIrreps"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">fromIrreps</span></code></a> computes this projection map if necessary.</p>
-<p>Additional keyword arguments are passed to the <a class="reference internal" href="#+replab.Isotypic.Rep" title="+replab.Isotypic.Rep"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">Rep</span></code></a> constructor.</p>
+<p>Additional keyword arguments are passed to the <a class="reference internal" href="#+replab.Rep" title="+replab.Rep"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">Rep</span></code></a> constructor.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -4879,9 +4922,9 @@ while its projection map is supplied as an argument.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>parent</strong> (<a class="reference internal" href="#+replab.Isotypic.Rep" title="+replab.Isotypic.Rep"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">Rep</span></code></a>) – Parent representation</p></li>
-<li><p><strong>irreps</strong> (cell(1,*) of <a class="reference internal" href="#+replab.Isotypic.SubRep" title="+replab.Isotypic.SubRep"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">SubRep</span></code></a>) – Irreducible equivalent subrepresentations of <code class="docutils literal notranslate"><span class="pre">parent</span></code></p></li>
-<li><p><strong>modelIrrep</strong> (<a class="reference internal" href="#+replab.Isotypic.Rep" title="+replab.Isotypic.Rep"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">Rep</span></code></a> or <code class="docutils literal notranslate"><span class="pre">[]</span></code>) – Model of the irreducible representation in this component (can be empty, and is then set to <code class="docutils literal notranslate"><span class="pre">irreps{1}</span></code>)</p></li>
+<li><p><strong>parent</strong> (<a class="reference internal" href="#+replab.Rep" title="+replab.Rep"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">Rep</span></code></a>) – Parent representation</p></li>
+<li><p><strong>irreps</strong> (cell(1,*) of <a class="reference internal" href="#+replab.SubRep" title="+replab.SubRep"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">SubRep</span></code></a>) – Irreducible equivalent subrepresentations of <code class="docutils literal notranslate"><span class="pre">parent</span></code></p></li>
+<li><p><strong>modelIrrep</strong> (<a class="reference internal" href="#+replab.Rep" title="+replab.Rep"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">Rep</span></code></a> or <code class="docutils literal notranslate"><span class="pre">[]</span></code>) – Model of the irreducible representation in this component (can be empty, and is then set to <code class="docutils literal notranslate"><span class="pre">irreps{1}</span></code>)</p></li>
 <li><p><strong>irrepsAreBiorthogonal</strong> – True if the irreps injection/projection are biorthogonal, default: false</p></li>
 <li><p><strong>irrepsAreHarmonized</strong> – True if the irreps are in the same basis as <code class="docutils literal notranslate"><span class="pre">modelIrrep</span></code>, default: false</p></li>
 </ul>
@@ -4909,7 +4952,7 @@ while its projection map is supplied as an argument.</p>
 action of the representation.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>trivial</strong> (<a class="reference internal" href="#+replab.Isotypic.SubRep" title="+replab.Isotypic.SubRep"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">SubRep</span></code></a>) – Maximal trivial subrepresentation of <code class="docutils literal notranslate"><span class="pre">parent</span></code></p>
+<dd class="field-odd"><p><strong>trivial</strong> (<a class="reference internal" href="#+replab.SubRep" title="+replab.SubRep"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">SubRep</span></code></a>) – Maximal trivial subrepresentation of <code class="docutils literal notranslate"><span class="pre">parent</span></code></p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>The corresponding trivial isotypic component</p>
@@ -4929,7 +4972,7 @@ action of the representation.</p>
 <dd class="field-odd"><p>Irreducible subrepresentation of <a class="reference internal" href="#+replab.Isotypic.parent" title="+replab.Isotypic.parent"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">parent</span></code></a></p>
 </dd>
 <dt class="field-even">Return type</dt>
-<dd class="field-even"><p><a class="reference internal" href="#+replab.Isotypic.SubRep" title="+replab.Isotypic.SubRep"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">SubRep</span></code></a></p>
+<dd class="field-even"><p><a class="reference internal" href="#+replab.SubRep" title="+replab.SubRep"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">SubRep</span></code></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -5112,7 +5155,7 @@ Those empty components can be stripped using the <a class="reference internal" h
 <li><p><a class="reference internal" href="#+replab.Irreducible.field" title="+replab.Irreducible.field"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">field</span></code></a> – Vector space defined on real (R) or complex (C) field</p></li>
 <li><p><a class="reference internal" href="#+replab.Irreducible.group" title="+replab.Irreducible.group"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">group</span></code></a> – Group being represented</p></li>
 <li><p><a class="reference internal" href="#+replab.Irreducible.injection_internal" title="+replab.Irreducible.injection_internal"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">injection_internal</span></code></a> – Injection map</p></li>
-<li><p><a class="reference internal" href="#+replab.Irreducible.isSimilarRep" title="+replab.Irreducible.isSimilarRep"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">isSimilarRep</span></code></a> – True if this <a class="reference internal" href="#+replab.Irreducible.SubRep" title="+replab.Irreducible.SubRep"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">SubRep</span></code></a> encodes a similarity transformation</p></li>
+<li><p><a class="reference internal" href="#+replab.Irreducible.isSimilarRep" title="+replab.Irreducible.isSimilarRep"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">isSimilarRep</span></code></a> – True if this <a class="reference internal" href="#+replab.SubRep" title="+replab.SubRep"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">SubRep</span></code></a> encodes a similarity transformation</p></li>
 <li><p><a class="reference internal" href="#+replab.Irreducible.isUnitary" title="+replab.Irreducible.isUnitary"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">isUnitary</span></code></a> – Whether the representation is unitary</p></li>
 <li><p><a class="reference internal" href="#+replab.Irreducible.mapsAreAdjoint" title="+replab.Irreducible.mapsAreAdjoint"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">mapsAreAdjoint</span></code></a> – True if <a class="reference internal" href="#+replab.Irreducible.parent" title="+replab.Irreducible.parent"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">parent</span></code></a> is unitary (so the Hermitian adjoint makes sense)  and <a class="reference internal" href="#+replab.Irreducible.injection" title="+replab.Irreducible.injection"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">injection</span></code></a> is the conjugate transpose of <a class="reference internal" href="#+replab.Irreducible.projection" title="+replab.Irreducible.projection"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">projection</span></code></a></p></li>
 <li><p><a class="reference internal" href="#+replab.Irreducible.parent" title="+replab.Irreducible.parent"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">parent</span></code></a> – Parent representation of dimension <span class="math notranslate nohighlight">\(D\)</span></p></li>
@@ -5138,19 +5181,19 @@ Those empty components can be stripped using the <a class="reference internal" h
 <p><strong>Laws</strong></p>
 <ul class="simple">
 <li><p><a class="reference internal" href="#+replab.Irreducible.check" title="+replab.Irreducible.check"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">check</span></code></a> – Checks the consistency of this object</p></li>
+<li><p><a class="reference internal" href="#+replab.Irreducible.checkAndContinue" title="+replab.Irreducible.checkAndContinue"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">checkAndContinue</span></code></a> – Checks the consistency of this object</p></li>
 <li><p><a class="reference internal" href="#+replab.Irreducible.laws" title="+replab.Irreducible.laws"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">laws</span></code></a> – Returns the laws that this object obeys</p></li>
 </ul>
 <p><strong>Unique ID</strong></p>
 <ul class="simple">
-<li><p><a class="reference internal" href="#+replab.Irreducible.eq" title="+replab.Irreducible.eq"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">eq</span></code></a> – Equality test (deprecated)</p></li>
+<li><p><a class="reference internal" href="#+replab.Irreducible.eq" title="+replab.Irreducible.eq"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">eq</span></code></a> – Equality test</p></li>
 <li><p><a class="reference internal" href="#+replab.Irreducible.id" title="+replab.Irreducible.id"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">id</span></code></a> – Returns the unique ID of this object (deprecated)</p></li>
-<li><p><a class="reference internal" href="#+replab.Irreducible.ne" title="+replab.Irreducible.ne"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">ne</span></code></a> – Non-equality test (deprecated)</p></li>
+<li><p><a class="reference internal" href="#+replab.Irreducible.isequal" title="+replab.Irreducible.isequal"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">isequal</span></code></a> – Equality test</p></li>
+<li><p><a class="reference internal" href="#+replab.Irreducible.ne" title="+replab.Irreducible.ne"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">ne</span></code></a> – Non-equality test</p></li>
 </ul>
 <p><strong>General</strong></p>
 <ul class="simple">
 <li><p><a class="reference internal" href="#+replab.Irreducible.Irreducible" title="+replab.Irreducible.Irreducible"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">Irreducible</span></code></a> –</p></li>
-<li><p><a class="reference internal" href="#+replab.Irreducible.Rep" title="+replab.Irreducible.Rep"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">Rep</span></code></a> – Constructs a finite dimension representation</p></li>
-<li><p><a class="reference internal" href="#+replab.Irreducible.SubRep" title="+replab.Irreducible.SubRep"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">SubRep</span></code></a> – Constructs a subrepresentation of a parent representation</p></li>
 <li><p><a class="reference internal" href="#+replab.Irreducible.basis" title="+replab.Irreducible.basis"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">basis</span></code></a> – Returns (part of) the basis of the subrepresentation in the parent representation</p></li>
 <li><p><a class="reference internal" href="#+replab.Irreducible.biorthogonalityErrorBound" title="+replab.Irreducible.biorthogonalityErrorBound"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">biorthogonalityErrorBound</span></code></a> – Returns an upper bound on the biorthogonality of the injection/projection maps</p></li>
 <li><p><a class="reference internal" href="#+replab.Irreducible.collapse" title="+replab.Irreducible.collapse"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">collapse</span></code></a> – Simplifies a SubRep of a SubRep</p></li>
@@ -5283,18 +5326,6 @@ Those empty components can be stripped using the <a class="reference internal" h
 </dd></dl>
 
 <dl class="mat method">
-<dt class="sig sig-object mat" id="+replab.Irreducible.Rep">
-<span class="sig-name descname"><span class="pre">Rep</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">group</span></em>, <em class="sig-param"><span class="pre">field</span></em>, <em class="sig-param"><span class="pre">dimension</span></em>, <em class="sig-param"><span class="pre">varargin</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.Irreducible.Rep" title="Permalink to this definition">¶</a></dt>
-<dd><p>Documentation in <a class="reference internal" href="#+replab.Rep.Rep" title="+replab.Rep.Rep"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Rep.Rep()</span></code></a></p>
-</dd></dl>
-
-<dl class="mat method">
-<dt class="sig sig-object mat" id="+replab.Irreducible.SubRep">
-<span class="sig-name descname"><span class="pre">SubRep</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">parent</span></em>, <em class="sig-param"><span class="pre">injection_internal</span></em>, <em class="sig-param"><span class="pre">projection_internal</span></em>, <em class="sig-param"><span class="pre">varargin</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.Irreducible.SubRep" title="Permalink to this definition">¶</a></dt>
-<dd><p>Documentation in <a class="reference internal" href="#+replab.SubRep.SubRep" title="+replab.SubRep.SubRep"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.SubRep.SubRep()</span></code></a></p>
-</dd></dl>
-
-<dl class="mat method">
 <dt class="sig sig-object mat" id="+replab.Irreducible.additionalFields">
 <span class="sig-name descname"><span class="pre">additionalFields</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.Irreducible.additionalFields" title="Permalink to this definition">¶</a></dt>
 <dd><p>Documentation in <a class="reference internal" href="base.html#+replab.Str.additionalFields" title="+replab.Str.additionalFields"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Str.additionalFields()</span></code></a></p>
@@ -5376,6 +5407,12 @@ Those empty components can be stripped using the <a class="reference internal" h
 <dt class="sig sig-object mat" id="+replab.Irreducible.check">
 <span class="sig-name descname"><span class="pre">check</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.Irreducible.check" title="Permalink to this definition">¶</a></dt>
 <dd><p>Documentation in <a class="reference internal" href="base.html#+replab.Obj.check" title="+replab.Obj.check"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Obj.check()</span></code></a></p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.Irreducible.checkAndContinue">
+<span class="sig-name descname"><span class="pre">checkAndContinue</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.Irreducible.checkAndContinue" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="base.html#+replab.Obj.checkAndContinue" title="+replab.Obj.checkAndContinue"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Obj.checkAndContinue()</span></code></a></p>
 </dd></dl>
 
 <dl class="mat method">
@@ -5628,6 +5665,12 @@ Those empty components can be stripped using the <a class="reference internal" h
 <dt class="sig sig-object mat" id="+replab.Irreducible.isUnitary">
 <span class="sig-name descname"><span class="pre">isUnitary</span></span><a class="headerlink" href="#+replab.Irreducible.isUnitary" title="Permalink to this definition">¶</a></dt>
 <dd><p>Documentation in <a class="reference internal" href="#+replab.Rep.isUnitary" title="+replab.Rep.isUnitary"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">replab.Rep.isUnitary</span></code></a></p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.Irreducible.isequal">
+<span class="sig-name descname"><span class="pre">isequal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">lhs</span></em>, <em class="sig-param"><span class="pre">rhs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.Irreducible.isequal" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="base.html#+replab.Obj.isequal" title="+replab.Obj.isequal"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Obj.isequal()</span></code></a></p>
 </dd></dl>
 
 <dl class="mat method">
@@ -5976,7 +6019,7 @@ Those empty components can be stripped using the <a class="reference internal" h
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>parent</strong> (<a class="reference internal" href="#+replab.Irreducible.Rep" title="+replab.Irreducible.Rep"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">Rep</span></code></a>) – Representation to decompose</p></li>
+<li><p><strong>parent</strong> (<a class="reference internal" href="#+replab.Rep" title="+replab.Rep"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">Rep</span></code></a>) – Representation to decompose</p></li>
 <li><p><strong>data</strong> (<span><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">struct</span></code></span>) – Plain data resulting from <a class="reference internal" href="#+replab.Irreducible.export" title="+replab.Irreducible.export"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">export</span></code></a></p></li>
 </ul>
 </dd>
@@ -6110,8 +6153,8 @@ decomposed representation.</p>
 <dt class="sig sig-object mat" id="+replab.Irreducible.toSubRep">
 <span class="sig-name descname"><span class="pre">toSubRep</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.Irreducible.toSubRep" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the block-diagonal similar representation corresponding to this decomposition</p>
-<p>Both this <a class="reference internal" href="#+replab.Irreducible.Irreducible" title="+replab.Irreducible.Irreducible"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">Irreducible</span></code></a> object and the returned representation will be instances of <a class="reference internal" href="#+replab.Irreducible.SubRep" title="+replab.Irreducible.SubRep"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">SubRep</span></code></a>.
-This method helps us test the implementation of <a class="reference internal" href="#+replab.Irreducible.Irreducible" title="+replab.Irreducible.Irreducible"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">Irreducible</span></code></a> as the returned <a class="reference internal" href="#+replab.Irreducible.SubRep" title="+replab.Irreducible.SubRep"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">SubRep</span></code></a> loses
+<p>Both this <a class="reference internal" href="#+replab.Irreducible.Irreducible" title="+replab.Irreducible.Irreducible"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">Irreducible</span></code></a> object and the returned representation will be instances of <a class="reference internal" href="#+replab.SubRep" title="+replab.SubRep"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">SubRep</span></code></a>.
+This method helps us test the implementation of <a class="reference internal" href="#+replab.Irreducible.Irreducible" title="+replab.Irreducible.Irreducible"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">Irreducible</span></code></a> as the returned <a class="reference internal" href="#+replab.SubRep" title="+replab.SubRep"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">SubRep</span></code></a> loses
 its particular structure.</p>
 <p>The returned representation is the parent representation with an explicit change of basis, so it does
 not look as clean as this <a class="reference internal" href="#+replab.Irreducible.Irreducible" title="+replab.Irreducible.Irreducible"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">Irreducible</span></code></a>.</p>
@@ -6166,7 +6209,7 @@ not look as clean as this <a class="reference internal" href="#+replab.Irreducib
         <li class="right" >
           <a href="group_morphisms.html" title="Group morphisms"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.9.5-SNAP documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 1.0.0 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="index.html" >Technical Reference</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">Representations</a></li> 
       </ul>

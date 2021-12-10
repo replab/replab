@@ -15,7 +15,7 @@
   <link rel="stylesheet" type="text/css" href="../_static/css/bootstrap-theme.min.css" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-    <title>Equivariant spaces &#8212; RepLAB 0.9.5-SNAP documentation</title>
+    <title>Equivariant spaces &#8212; RepLAB 1.0.0 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/guzzle.css" />
     <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
@@ -79,7 +79,7 @@
         <li class="right" >
           <a href="rep.html" title="Representations"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.9.5-SNAP documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 1.0.0 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">Technical Reference</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">Equivariant spaces</a></li> 
       </ul>
@@ -94,7 +94,7 @@
   <a href="
     ../index.html">RepLAB</a>&nbsp;&nbsp;
   <a href="https://github.com/replab/replab"><i class="fab fa-github"></i></a>&nbsp;
-  <a href="https://github.com/replab/replab/archive/v0.9.5-SNAP.zip"><i class="fa fa-download"></i></a>&nbsp;
+  <a href="https://github.com/replab/replab/archive/v1.0.0.zip"><i class="fa fa-download"></i></a>&nbsp;
   <a href="https://gitter.im/replab/replab"><i class="fab fa-gitter"></i></a>&nbsp;
   <a href="https://travis-ci.com/replab/replab"><i class="fas fa-sync-alt"></i></a>&nbsp;
   <a href="https://codecov.io/gh/replab/replab"><i class="fas fa-umbrella"></i></a>
@@ -113,6 +113,7 @@
 <li class="toctree-l2"><a class="reference internal" href="numerics.html">Numerics</a></li>
 <li class="toctree-l2"><a class="reference internal" href="groups.html">Base group structures</a></li>
 <li class="toctree-l2"><a class="reference internal" href="continuous_groups.html">Continuous groups</a></li>
+<li class="toctree-l2"><a class="reference internal" href="finite_groups.html">Finite group structures</a></li>
 <li class="toctree-l2"><a class="reference internal" href="permutation_groups.html">Permutation groups</a></li>
 <li class="toctree-l2"><a class="reference internal" href="named_discrete_groups.html">Named discrete groups</a></li>
 <li class="toctree-l2"><a class="reference internal" href="abstract_groups.html">Abstract groups and atlas</a></li>
@@ -298,13 +299,15 @@ They are distinguished by the <a class="reference internal" href="#+replab.Equiv
 <p><strong>Laws</strong></p>
 <ul class="simple">
 <li><p><a class="reference internal" href="#+replab.Equivariant.check" title="+replab.Equivariant.check"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">check</span></code></a> – Checks the consistency of this object</p></li>
+<li><p><a class="reference internal" href="#+replab.Equivariant.checkAndContinue" title="+replab.Equivariant.checkAndContinue"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">checkAndContinue</span></code></a> – Checks the consistency of this object</p></li>
 <li><p><a class="reference internal" href="#+replab.Equivariant.laws" title="+replab.Equivariant.laws"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">laws</span></code></a> – Returns the laws that this object obeys</p></li>
 </ul>
 <p><strong>Unique ID</strong></p>
 <ul class="simple">
-<li><p><a class="reference internal" href="#+replab.Equivariant.eq" title="+replab.Equivariant.eq"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">eq</span></code></a> – Equality test (deprecated)</p></li>
+<li><p><a class="reference internal" href="#+replab.Equivariant.eq" title="+replab.Equivariant.eq"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">eq</span></code></a> – Equality test</p></li>
 <li><p><a class="reference internal" href="#+replab.Equivariant.id" title="+replab.Equivariant.id"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">id</span></code></a> – Returns the unique ID of this object (deprecated)</p></li>
-<li><p><a class="reference internal" href="#+replab.Equivariant.ne" title="+replab.Equivariant.ne"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">ne</span></code></a> – Non-equality test (deprecated)</p></li>
+<li><p><a class="reference internal" href="#+replab.Equivariant.isequal" title="+replab.Equivariant.isequal"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">isequal</span></code></a> – Equality test</p></li>
+<li><p><a class="reference internal" href="#+replab.Equivariant.ne" title="+replab.Equivariant.ne"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">ne</span></code></a> – Non-equality test</p></li>
 </ul>
 <p><strong>Test helpers</strong></p>
 <ul class="simple">
@@ -390,6 +393,12 @@ They are distinguished by the <a class="reference internal" href="#+replab.Equiv
 </dd></dl>
 
 <dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.Equivariant.checkAndContinue">
+<span class="sig-name descname"><span class="pre">checkAndContinue</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.Equivariant.checkAndContinue" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="base.html#+replab.Obj.checkAndContinue" title="+replab.Obj.checkAndContinue"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Obj.checkAndContinue()</span></code></a></p>
+</dd></dl>
+
+<dl class="mat method">
 <dt class="sig sig-object mat" id="+replab.Equivariant.disp">
 <span class="sig-name descname"><span class="pre">disp</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.Equivariant.disp" title="Permalink to this definition">¶</a></dt>
 <dd><p>Documentation in <a class="reference internal" href="base.html#+replab.Str.disp" title="+replab.Str.disp"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Str.disp()</span></code></a></p>
@@ -429,6 +438,12 @@ They are distinguished by the <a class="reference internal" href="#+replab.Equiv
 <dt class="sig sig-object mat" id="+replab.Equivariant.inCache">
 <span class="sig-name descname"><span class="pre">inCache</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">name</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.Equivariant.inCache" title="Permalink to this definition">¶</a></dt>
 <dd><p>Documentation in <a class="reference internal" href="base.html#+replab.Obj.inCache" title="+replab.Obj.inCache"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Obj.inCache()</span></code></a></p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.Equivariant.isequal">
+<span class="sig-name descname"><span class="pre">isequal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">lhs</span></em>, <em class="sig-param"><span class="pre">rhs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.Equivariant.isequal" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="base.html#+replab.Obj.isequal" title="+replab.Obj.isequal"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Obj.isequal()</span></code></a></p>
 </dd></dl>
 
 <dl class="mat method">
@@ -621,13 +636,13 @@ They are distinguished by the <a class="reference internal" href="#+replab.Equiv
 </dd>
 <dt class="field-even">Parameters</dt>
 <dd class="field-even"><ul class="simple">
-<li><p><strong>X</strong> (double(*,*) or <a href="#id1"><span class="problematic" id="id2">`</span></a>.cyclotomic`(*,*), may be sparse) – Matrix to project</p></li>
+<li><p><strong>X</strong> (double(*,*) or <a class="reference internal" href="numerics.html#+replab.cyclotomic" title="+replab.cyclotomic"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">cyclotomic</span></code></a> (*,*), may be sparse) – Matrix to project</p></li>
 <li><p><strong>type</strong> (<span><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">'double',</span> <span class="pre">'double/sparse'</span> <span class="pre">or</span> <span class="pre">'exact',</span> <span class="pre">optional</span></code></span>) – Type of the returned value, default: ‘double’</p></li>
 </ul>
 </dd>
 <dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p><ul class="simple">
-<li><p><strong>X1</strong> (double(*,*) or <a href="#id3"><span class="problematic" id="id4">`</span></a>.cyclotomic`(*,*)) – Projected matrix</p></li>
+<li><p><strong>X1</strong> (double(*,*) or <a class="reference internal" href="numerics.html#+replab.cyclotomic" title="+replab.cyclotomic"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">cyclotomic</span></code></a> (*,*)) – Projected matrix</p></li>
 <li><p><strong>err</strong> (<em>double</em>) – Estimation of the numerical error, expressed as the distance of the returned <code class="docutils literal notranslate"><span class="pre">X1</span></code> to the invariant subspace in Frobenius norm</p></li>
 </ul>
 </p>
@@ -751,13 +766,15 @@ automatically.</p>
 <p><strong>Laws</strong></p>
 <ul class="simple">
 <li><p><a class="reference internal" href="#+replab.SubEquivariant.check" title="+replab.SubEquivariant.check"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">check</span></code></a> – Checks the consistency of this object</p></li>
+<li><p><a class="reference internal" href="#+replab.SubEquivariant.checkAndContinue" title="+replab.SubEquivariant.checkAndContinue"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">checkAndContinue</span></code></a> – Checks the consistency of this object</p></li>
 <li><p><a class="reference internal" href="#+replab.SubEquivariant.laws" title="+replab.SubEquivariant.laws"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">laws</span></code></a> – Returns the laws that this object obeys</p></li>
 </ul>
 <p><strong>Unique ID</strong></p>
 <ul class="simple">
-<li><p><a class="reference internal" href="#+replab.SubEquivariant.eq" title="+replab.SubEquivariant.eq"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">eq</span></code></a> – Equality test (deprecated)</p></li>
+<li><p><a class="reference internal" href="#+replab.SubEquivariant.eq" title="+replab.SubEquivariant.eq"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">eq</span></code></a> – Equality test</p></li>
 <li><p><a class="reference internal" href="#+replab.SubEquivariant.id" title="+replab.SubEquivariant.id"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">id</span></code></a> – Returns the unique ID of this object (deprecated)</p></li>
-<li><p><a class="reference internal" href="#+replab.SubEquivariant.ne" title="+replab.SubEquivariant.ne"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">ne</span></code></a> – Non-equality test (deprecated)</p></li>
+<li><p><a class="reference internal" href="#+replab.SubEquivariant.isequal" title="+replab.SubEquivariant.isequal"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">isequal</span></code></a> – Equality test</p></li>
+<li><p><a class="reference internal" href="#+replab.SubEquivariant.ne" title="+replab.SubEquivariant.ne"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">ne</span></code></a> – Non-equality test</p></li>
 </ul>
 <p><strong>Test helpers</strong></p>
 <ul class="simple">
@@ -847,6 +864,12 @@ automatically.</p>
 </dd></dl>
 
 <dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.SubEquivariant.checkAndContinue">
+<span class="sig-name descname"><span class="pre">checkAndContinue</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.SubEquivariant.checkAndContinue" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="base.html#+replab.Obj.checkAndContinue" title="+replab.Obj.checkAndContinue"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Obj.checkAndContinue()</span></code></a></p>
+</dd></dl>
+
+<dl class="mat method">
 <dt class="sig sig-object mat" id="+replab.SubEquivariant.decomposition">
 <span class="sig-name descname"><span class="pre">decomposition</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.SubEquivariant.decomposition" title="Permalink to this definition">¶</a></dt>
 <dd><p>Documentation in <a class="reference internal" href="#+replab.Equivariant.decomposition" title="+replab.Equivariant.decomposition"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Equivariant.decomposition()</span></code></a></p>
@@ -910,6 +933,12 @@ automatically.</p>
 <dt class="sig sig-object mat" id="+replab.SubEquivariant.isExact">
 <span class="sig-name descname"><span class="pre">isExact</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.SubEquivariant.isExact" title="Permalink to this definition">¶</a></dt>
 <dd><p>Documentation in <a class="reference internal" href="#+replab.Equivariant.isExact" title="+replab.Equivariant.isExact"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Equivariant.isExact()</span></code></a></p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.SubEquivariant.isequal">
+<span class="sig-name descname"><span class="pre">isequal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">lhs</span></em>, <em class="sig-param"><span class="pre">rhs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.SubEquivariant.isequal" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="base.html#+replab.Obj.isequal" title="+replab.Obj.isequal"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Obj.isequal()</span></code></a></p>
 </dd></dl>
 
 <dl class="mat method">
@@ -1052,13 +1081,13 @@ automatically.</p>
 </dd>
 <dt class="field-even">Parameters</dt>
 <dd class="field-even"><ul class="simple">
-<li><p><strong>X</strong> (double(*,*) or <a href="#id5"><span class="problematic" id="id6">`</span></a>.cyclotomic`(*,*), may be sparse) – Matrix to project</p></li>
+<li><p><strong>X</strong> (double(*,*) or <a class="reference internal" href="numerics.html#+replab.cyclotomic" title="+replab.cyclotomic"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">cyclotomic</span></code></a> (*,*), may be sparse) – Matrix to project</p></li>
 <li><p><strong>type</strong> (<span><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">'double',</span> <span class="pre">'double/sparse'</span> <span class="pre">or</span> <span class="pre">'exact',</span> <span class="pre">optional</span></code></span>) – Type of the returned value, default: ‘double’</p></li>
 </ul>
 </dd>
 <dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p><ul class="simple">
-<li><p><strong>X1</strong> (double(*,*) or <a href="#id7"><span class="problematic" id="id8">`</span></a>.cyclotomic`(*,*)) – Projected matrix</p></li>
+<li><p><strong>X1</strong> (double(*,*) or <a class="reference internal" href="numerics.html#+replab.cyclotomic" title="+replab.cyclotomic"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">cyclotomic</span></code></a> (*,*)) – Projected matrix</p></li>
 <li><p><strong>err</strong> (<em>double</em>) – Estimation of the numerical error, expressed as the distance of the returned <code class="docutils literal notranslate"><span class="pre">X1</span></code> to the invariant subspace in Frobenius norm</p></li>
 </ul>
 </p>
@@ -1151,13 +1180,15 @@ and <code class="docutils literal notranslate"><span class="pre">R</span></code>
 <p><strong>Laws</strong></p>
 <ul class="simple">
 <li><p><a class="reference internal" href="#+replab.IsotypicEquivariant.check" title="+replab.IsotypicEquivariant.check"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">check</span></code></a> – Checks the consistency of this object</p></li>
+<li><p><a class="reference internal" href="#+replab.IsotypicEquivariant.checkAndContinue" title="+replab.IsotypicEquivariant.checkAndContinue"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">checkAndContinue</span></code></a> – Checks the consistency of this object</p></li>
 <li><p><a class="reference internal" href="#+replab.IsotypicEquivariant.laws" title="+replab.IsotypicEquivariant.laws"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">laws</span></code></a> – Returns the laws that this object obeys</p></li>
 </ul>
 <p><strong>Unique ID</strong></p>
 <ul class="simple">
-<li><p><a class="reference internal" href="#+replab.IsotypicEquivariant.eq" title="+replab.IsotypicEquivariant.eq"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">eq</span></code></a> – Equality test (deprecated)</p></li>
+<li><p><a class="reference internal" href="#+replab.IsotypicEquivariant.eq" title="+replab.IsotypicEquivariant.eq"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">eq</span></code></a> – Equality test</p></li>
 <li><p><a class="reference internal" href="#+replab.IsotypicEquivariant.id" title="+replab.IsotypicEquivariant.id"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">id</span></code></a> – Returns the unique ID of this object (deprecated)</p></li>
-<li><p><a class="reference internal" href="#+replab.IsotypicEquivariant.ne" title="+replab.IsotypicEquivariant.ne"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">ne</span></code></a> – Non-equality test (deprecated)</p></li>
+<li><p><a class="reference internal" href="#+replab.IsotypicEquivariant.isequal" title="+replab.IsotypicEquivariant.isequal"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">isequal</span></code></a> – Equality test</p></li>
+<li><p><a class="reference internal" href="#+replab.IsotypicEquivariant.ne" title="+replab.IsotypicEquivariant.ne"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">ne</span></code></a> – Non-equality test</p></li>
 </ul>
 <p><strong>Test helpers</strong></p>
 <ul class="simple">
@@ -1271,6 +1302,12 @@ and <code class="docutils literal notranslate"><span class="pre">R</span></code>
 </dd></dl>
 
 <dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.IsotypicEquivariant.checkAndContinue">
+<span class="sig-name descname"><span class="pre">checkAndContinue</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.IsotypicEquivariant.checkAndContinue" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="base.html#+replab.Obj.checkAndContinue" title="+replab.Obj.checkAndContinue"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Obj.checkAndContinue()</span></code></a></p>
+</dd></dl>
+
+<dl class="mat method">
 <dt class="sig sig-object mat" id="+replab.IsotypicEquivariant.decomposition">
 <span class="sig-name descname"><span class="pre">decomposition</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.IsotypicEquivariant.decomposition" title="Permalink to this definition">¶</a></dt>
 <dd><p>Documentation in <a class="reference internal" href="#+replab.Equivariant.decomposition" title="+replab.Equivariant.decomposition"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Equivariant.decomposition()</span></code></a></p>
@@ -1334,6 +1371,12 @@ and <code class="docutils literal notranslate"><span class="pre">R</span></code>
 <dt class="sig sig-object mat" id="+replab.IsotypicEquivariant.isExact">
 <span class="sig-name descname"><span class="pre">isExact</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.IsotypicEquivariant.isExact" title="Permalink to this definition">¶</a></dt>
 <dd><p>Documentation in <a class="reference internal" href="#+replab.Equivariant.isExact" title="+replab.Equivariant.isExact"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Equivariant.isExact()</span></code></a></p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.IsotypicEquivariant.isequal">
+<span class="sig-name descname"><span class="pre">isequal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">lhs</span></em>, <em class="sig-param"><span class="pre">rhs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.IsotypicEquivariant.isequal" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="base.html#+replab.Obj.isequal" title="+replab.Obj.isequal"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Obj.isequal()</span></code></a></p>
 </dd></dl>
 
 <dl class="mat method">
@@ -1439,7 +1482,7 @@ and <code class="docutils literal notranslate"><span class="pre">R</span></code>
 <dd><p>Representation space basis</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
-<dd class="field-odd"><p>double(*,*,*) or <a href="#id9"><span class="problematic" id="id10">`</span></a>.cyclotomic`(*,*,*)</p>
+<dd class="field-odd"><p>double(*,*,*) or <a class="reference internal" href="numerics.html#+replab.cyclotomic" title="+replab.cyclotomic"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">cyclotomic</span></code></a> (*,*,*)</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1467,7 +1510,7 @@ and <code class="docutils literal notranslate"><span class="pre">R</span></code>
 <dd class="field-even"><p>The division algebra basis</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>double(*,*) or <a href="#id11"><span class="problematic" id="id12">`</span></a>.cyclotomic`(*,*)</p>
+<dd class="field-odd"><p>double(*,*) or <a class="reference internal" href="numerics.html#+replab.cyclotomic" title="+replab.cyclotomic"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">cyclotomic</span></code></a> (*,*)</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1484,7 +1527,7 @@ and <code class="docutils literal notranslate"><span class="pre">R</span></code>
 <dd class="field-even"><p>The representation space basis</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>double(*,*,*) or <a href="#id13"><span class="problematic" id="id14">`</span></a>.cyclotomic`(*,*,*)</p>
+<dd class="field-odd"><p>double(*,*,*) or <a class="reference internal" href="numerics.html#+replab.cyclotomic" title="+replab.cyclotomic"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">cyclotomic</span></code></a> (*,*,*)</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1649,13 +1692,13 @@ this estimates the factor <code class="docutils literal notranslate"><span class
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>X</strong> (double(*,*) or <a href="#id15"><span class="problematic" id="id16">`</span></a>.cyclotomic`(*,*), may be sparse) – Matrix in the isotypic component space to project</p></li>
+<li><p><strong>X</strong> (double(*,*) or <a class="reference internal" href="numerics.html#+replab.cyclotomic" title="+replab.cyclotomic"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">cyclotomic</span></code></a> (*,*), may be sparse) – Matrix in the isotypic component space to project</p></li>
 <li><p><strong>type</strong> (<span><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">'double',</span> <span class="pre">'double/sparse'</span> <span class="pre">or</span> <span class="pre">'exact',</span> <span class="pre">optional</span></code></span>) – Type of the returned value, default: ‘double’</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p><ul class="simple">
-<li><p><strong>M</strong> (double(*,*,*) or <a href="#id17"><span class="problematic" id="id18">`</span></a>.cyclotomic`(*,*,*)) – The part containing the degrees of freedom of the commutant algebra</p></li>
+<li><p><strong>M</strong> (double(*,*,*) or <a class="reference internal" href="numerics.html#+replab.cyclotomic" title="+replab.cyclotomic"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">cyclotomic</span></code></a> (*,*,*)) – The part containing the degrees of freedom of the commutant algebra</p></li>
 <li><p><strong>err</strong> (<em>double</em>) – Estimation of the numerical error, expressed as the distance of the returned projection to the invariant subspace in Frobenius norm</p></li>
 </ul>
 </p>
@@ -1671,13 +1714,13 @@ this estimates the factor <code class="docutils literal notranslate"><span class
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>parentX</strong> (double(*,*) or <a href="#id19"><span class="problematic" id="id20">`</span></a>.cyclotomic`(*,*), may be sparse) – Matrix in the parent representation space to project</p></li>
+<li><p><strong>parentX</strong> (double(*,*) or <a class="reference internal" href="numerics.html#+replab.cyclotomic" title="+replab.cyclotomic"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">cyclotomic</span></code></a> (*,*), may be sparse) – Matrix in the parent representation space to project</p></li>
 <li><p><strong>type</strong> (<span><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">'double',</span> <span class="pre">'double/sparse'</span> <span class="pre">or</span> <span class="pre">'exact',</span> <span class="pre">optional</span></code></span>) – Type of the returned value, default: ‘double’</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p><ul class="simple">
-<li><p><strong>M</strong> (double(*,*,*) or <a href="#id21"><span class="problematic" id="id22">`</span></a>.cyclotomic`(*,*,*)) – The part containing the degrees of freedom of the commutant algebra</p></li>
+<li><p><strong>M</strong> (double(*,*,*) or <a class="reference internal" href="numerics.html#+replab.cyclotomic" title="+replab.cyclotomic"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">cyclotomic</span></code></a> (*,*,*)) – The part containing the degrees of freedom of the commutant algebra</p></li>
 <li><p><strong>err</strong> (<em>double</em>) – Estimation of the numerical error, expressed as the distance of the returned projection to the invariant subspace in Frobenius norm</p></li>
 </ul>
 </p>
@@ -1758,13 +1801,15 @@ this estimates the factor <code class="docutils literal notranslate"><span class
 <p><strong>Laws</strong></p>
 <ul class="simple">
 <li><p><a class="reference internal" href="#+replab.IrreducibleEquivariant.check" title="+replab.IrreducibleEquivariant.check"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">check</span></code></a> – Checks the consistency of this object</p></li>
+<li><p><a class="reference internal" href="#+replab.IrreducibleEquivariant.checkAndContinue" title="+replab.IrreducibleEquivariant.checkAndContinue"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">checkAndContinue</span></code></a> – Checks the consistency of this object</p></li>
 <li><p><a class="reference internal" href="#+replab.IrreducibleEquivariant.laws" title="+replab.IrreducibleEquivariant.laws"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">laws</span></code></a> – Returns the laws that this object obeys</p></li>
 </ul>
 <p><strong>Unique ID</strong></p>
 <ul class="simple">
-<li><p><a class="reference internal" href="#+replab.IrreducibleEquivariant.eq" title="+replab.IrreducibleEquivariant.eq"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">eq</span></code></a> – Equality test (deprecated)</p></li>
+<li><p><a class="reference internal" href="#+replab.IrreducibleEquivariant.eq" title="+replab.IrreducibleEquivariant.eq"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">eq</span></code></a> – Equality test</p></li>
 <li><p><a class="reference internal" href="#+replab.IrreducibleEquivariant.id" title="+replab.IrreducibleEquivariant.id"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">id</span></code></a> – Returns the unique ID of this object (deprecated)</p></li>
-<li><p><a class="reference internal" href="#+replab.IrreducibleEquivariant.ne" title="+replab.IrreducibleEquivariant.ne"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">ne</span></code></a> – Non-equality test (deprecated)</p></li>
+<li><p><a class="reference internal" href="#+replab.IrreducibleEquivariant.isequal" title="+replab.IrreducibleEquivariant.isequal"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">isequal</span></code></a> – Equality test</p></li>
+<li><p><a class="reference internal" href="#+replab.IrreducibleEquivariant.ne" title="+replab.IrreducibleEquivariant.ne"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">ne</span></code></a> – Non-equality test</p></li>
 </ul>
 <p><strong>Test helpers</strong></p>
 <ul class="simple">
@@ -1870,6 +1915,12 @@ this estimates the factor <code class="docutils literal notranslate"><span class
 </dd></dl>
 
 <dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.IrreducibleEquivariant.checkAndContinue">
+<span class="sig-name descname"><span class="pre">checkAndContinue</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.IrreducibleEquivariant.checkAndContinue" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="base.html#+replab.Obj.checkAndContinue" title="+replab.Obj.checkAndContinue"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Obj.checkAndContinue()</span></code></a></p>
+</dd></dl>
+
+<dl class="mat method">
 <dt class="sig sig-object mat" id="+replab.IrreducibleEquivariant.decomposition">
 <span class="sig-name descname"><span class="pre">decomposition</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.IrreducibleEquivariant.decomposition" title="Permalink to this definition">¶</a></dt>
 <dd><p>Documentation in <a class="reference internal" href="#+replab.Equivariant.decomposition" title="+replab.Equivariant.decomposition"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Equivariant.decomposition()</span></code></a></p>
@@ -1933,6 +1984,12 @@ this estimates the factor <code class="docutils literal notranslate"><span class
 <dt class="sig sig-object mat" id="+replab.IrreducibleEquivariant.isExact">
 <span class="sig-name descname"><span class="pre">isExact</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.IrreducibleEquivariant.isExact" title="Permalink to this definition">¶</a></dt>
 <dd><p>Documentation in <a class="reference internal" href="#+replab.Equivariant.isExact" title="+replab.Equivariant.isExact"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Equivariant.isExact()</span></code></a></p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.IrreducibleEquivariant.isequal">
+<span class="sig-name descname"><span class="pre">isequal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">lhs</span></em>, <em class="sig-param"><span class="pre">rhs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.IrreducibleEquivariant.isequal" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="base.html#+replab.Obj.isequal" title="+replab.Obj.isequal"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Obj.isequal()</span></code></a></p>
 </dd></dl>
 
 <dl class="mat method">
@@ -2152,13 +2209,13 @@ this estimates the factor <code class="docutils literal notranslate"><span class
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>X</strong> (double(*,*) or <a href="#id23"><span class="problematic" id="id24">`</span></a>.cyclotomic`(*,*), may be sparse) – Matrix in the isotypic component space to project</p></li>
+<li><p><strong>X</strong> (double(*,*) or <a class="reference internal" href="numerics.html#+replab.cyclotomic" title="+replab.cyclotomic"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">cyclotomic</span></code></a> (*,*), may be sparse) – Matrix in the isotypic component space to project</p></li>
 <li><p><strong>type</strong> (<span><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">'double',</span> <span class="pre">'double/sparse'</span> <span class="pre">or</span> <span class="pre">'exact',</span> <span class="pre">optional</span></code></span>) – Type of the returned value, default: ‘double’</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p><ul class="simple">
-<li><p><strong>M</strong> (cell(*,*) of (<code class="docutils literal notranslate"><span class="pre">[]</span></code>, or cell(1,*) of (double(*,*) or <a href="#id25"><span class="problematic" id="id26">`</span></a>.cyclotomic`(*,*)))) – The part containing the degrees of freedom of the commutant algebra</p></li>
+<li><p><strong>M</strong> (cell(*,*) of (<code class="docutils literal notranslate"><span class="pre">[]</span></code>, or cell(1,*) of (double(*,*) or <a class="reference internal" href="numerics.html#+replab.cyclotomic" title="+replab.cyclotomic"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">cyclotomic</span></code></a> (*,*)))) – The part containing the degrees of freedom of the commutant algebra</p></li>
 <li><p><strong>err</strong> (<em>double</em>) – Estimation of the numerical error, expressed as the distance of the returned projection to the invariant subspace in Frobenius norm</p></li>
 </ul>
 </p>
@@ -2174,13 +2231,13 @@ this estimates the factor <code class="docutils literal notranslate"><span class
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>X</strong> (double(*,*) or <a href="#id27"><span class="problematic" id="id28">`</span></a>.cyclotomic`(*,*), may be sparse) – Matrix in the parent representation space to project</p></li>
+<li><p><strong>X</strong> (double(*,*) or <a class="reference internal" href="numerics.html#+replab.cyclotomic" title="+replab.cyclotomic"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">cyclotomic</span></code></a> (*,*), may be sparse) – Matrix in the parent representation space to project</p></li>
 <li><p><strong>type</strong> (<span><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">'double',</span> <span class="pre">'double/sparse'</span> <span class="pre">or</span> <span class="pre">'exact',</span> <span class="pre">optional</span></code></span>) – Type of the returned value, default: ‘double’</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p><ul class="simple">
-<li><p><strong>M</strong> (cell(*,*) of (<code class="docutils literal notranslate"><span class="pre">[]</span></code>, or cell(1,*) of (double(*,*) or <a href="#id29"><span class="problematic" id="id30">`</span></a>.cyclotomic`(*,*)))) – The part containing the degrees of freedom of the commutant algebra</p></li>
+<li><p><strong>M</strong> (cell(*,*) of (<code class="docutils literal notranslate"><span class="pre">[]</span></code>, or cell(1,*) of (double(*,*) or <a class="reference internal" href="numerics.html#+replab.cyclotomic" title="+replab.cyclotomic"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">cyclotomic</span></code></a> (*,*)))) – The part containing the degrees of freedom of the commutant algebra</p></li>
 <li><p><strong>err</strong> (<em>double</em>) – Estimation of the numerical error, expressed as the distance of the returned projection to the invariant subspace in Frobenius norm</p></li>
 </ul>
 </p>
@@ -2263,7 +2320,7 @@ this estimates the factor <code class="docutils literal notranslate"><span class
         <li class="right" >
           <a href="rep.html" title="Representations"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.9.5-SNAP documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 1.0.0 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="index.html" >Technical Reference</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">Equivariant spaces</a></li> 
       </ul>

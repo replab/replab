@@ -15,7 +15,7 @@
   <link rel="stylesheet" type="text/css" href="../_static/css/bootstrap-theme.min.css" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-    <title>Base object types and functions &#8212; RepLAB 0.9.5-SNAP documentation</title>
+    <title>Base object types and functions &#8212; RepLAB 1.0.0 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/guzzle.css" />
     <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
@@ -77,7 +77,7 @@
         <li class="right" >
           <a href="commands.html" title="Commands"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.9.5-SNAP documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 1.0.0 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">Technical Reference</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">Base object types and functions</a></li> 
       </ul>
@@ -92,7 +92,7 @@
   <a href="
     ../index.html">RepLAB</a>&nbsp;&nbsp;
   <a href="https://github.com/replab/replab"><i class="fab fa-github"></i></a>&nbsp;
-  <a href="https://github.com/replab/replab/archive/v0.9.5-SNAP.zip"><i class="fa fa-download"></i></a>&nbsp;
+  <a href="https://github.com/replab/replab/archive/v1.0.0.zip"><i class="fa fa-download"></i></a>&nbsp;
   <a href="https://gitter.im/replab/replab"><i class="fab fa-gitter"></i></a>&nbsp;
   <a href="https://travis-ci.com/replab/replab"><i class="fas fa-sync-alt"></i></a>&nbsp;
   <a href="https://codecov.io/gh/replab/replab"><i class="fas fa-umbrella"></i></a>
@@ -120,6 +120,7 @@
 <li class="toctree-l2"><a class="reference internal" href="numerics.html">Numerics</a></li>
 <li class="toctree-l2"><a class="reference internal" href="groups.html">Base group structures</a></li>
 <li class="toctree-l2"><a class="reference internal" href="continuous_groups.html">Continuous groups</a></li>
+<li class="toctree-l2"><a class="reference internal" href="finite_groups.html">Finite group structures</a></li>
 <li class="toctree-l2"><a class="reference internal" href="permutation_groups.html">Permutation groups</a></li>
 <li class="toctree-l2"><a class="reference internal" href="named_discrete_groups.html">Named discrete groups</a></li>
 <li class="toctree-l2"><a class="reference internal" href="abstract_groups.html">Abstract groups and atlas</a></li>
@@ -417,13 +418,15 @@ Optional parameter with default value given in <a class="reference internal" hre
 <p><strong>Laws</strong></p>
 <ul class="simple">
 <li><p><a class="reference internal" href="#+replab.Obj.check" title="+replab.Obj.check"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">check</span></code></a> – Checks the consistency of this object</p></li>
+<li><p><a class="reference internal" href="#+replab.Obj.checkAndContinue" title="+replab.Obj.checkAndContinue"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">checkAndContinue</span></code></a> – Checks the consistency of this object</p></li>
 <li><p><a class="reference internal" href="#+replab.Obj.laws" title="+replab.Obj.laws"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">laws</span></code></a> – Returns the laws that this object obeys</p></li>
 </ul>
 <p><strong>Unique ID</strong></p>
 <ul class="simple">
-<li><p><a class="reference internal" href="#+replab.Obj.eq" title="+replab.Obj.eq"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">eq</span></code></a> – Equality test (deprecated)</p></li>
+<li><p><a class="reference internal" href="#+replab.Obj.eq" title="+replab.Obj.eq"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">eq</span></code></a> – Equality test</p></li>
 <li><p><a class="reference internal" href="#+replab.Obj.id" title="+replab.Obj.id"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">id</span></code></a> – Returns the unique ID of this object (deprecated)</p></li>
-<li><p><a class="reference internal" href="#+replab.Obj.ne" title="+replab.Obj.ne"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">ne</span></code></a> – Non-equality test (deprecated)</p></li>
+<li><p><a class="reference internal" href="#+replab.Obj.isequal" title="+replab.Obj.isequal"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">isequal</span></code></a> – Equality test</p></li>
+<li><p><a class="reference internal" href="#+replab.Obj.ne" title="+replab.Obj.ne"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">ne</span></code></a> – Non-equality test</p></li>
 </ul>
 </div>
 <div class="dropdown admonition">
@@ -517,8 +520,7 @@ called once when the property is requested.</p>
 <dt class="sig sig-object mat" id="+replab.Obj.cached">
 <span class="sig-name descname"><span class="pre">cached</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">name</span></em>, <em class="sig-param"><span class="pre">fun</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.Obj.cached" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the cached property if it exists, computing it if necessary</p>
-<p>If the property is not known, it will call the given function handle and
-cache the result.</p>
+<p>If the property is not known, it will call the given function handle and cache the result.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -571,13 +573,28 @@ cache the result.</p>
 <span class="sig-name descname"><span class="pre">check</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.Obj.check" title="Permalink to this definition">¶</a></dt>
 <dd><p>Checks the consistency of this object</p>
 <p>The default implementation checks the declared laws.</p>
+<p>This method is useful in conjonction with <code class="docutils literal notranslate"><span class="pre">dbstop</span> <span class="pre">if</span> <span class="pre">error</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><p><span><code class="xref mat mat-exc docutils literal notranslate"><span class="pre">An</span> <span class="pre">error</span> <span class="pre">if</span> <span class="pre">any</span> <span class="pre">law</span> <span class="pre">fails.</span></code></span> – </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.Obj.checkAndContinue">
+<span class="sig-name descname"><span class="pre">checkAndContinue</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.Obj.checkAndContinue" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks the consistency of this object</p>
+<p>The default implementation checks the declared laws.</p>
+<p>This method is useful to see how many laws fail, as it catches errors and continues.
+For use with a debugger, <a class="reference internal" href="#+replab.Obj.check" title="+replab.Obj.check"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">check</span></code></a> is better.</p>
 </dd></dl>
 
 <dl class="mat method">
 <dt class="sig sig-object mat" id="+replab.Obj.eq">
 <span class="sig-name descname"><span class="pre">eq</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">rhs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.Obj.eq" title="Permalink to this definition">¶</a></dt>
-<dd><p>Equality test (deprecated)</p>
-<p>Workaround bug of == not implemented for handles in Octave</p>
+<dd><p>Equality test</p>
+<p>Do not overload this, instead, overload <a class="reference internal" href="#+replab.Obj.isequal" title="+replab.Obj.isequal"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">isequal</span></code></a>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -618,6 +635,26 @@ cache the result.</p>
 </dd></dl>
 
 <dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.Obj.isequal">
+<span class="sig-name descname"><span class="pre">isequal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">lhs</span></em>, <em class="sig-param"><span class="pre">rhs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.Obj.isequal" title="Permalink to this definition">¶</a></dt>
+<dd><p>Equality test</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>self</strong> (<span><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">object</span></code></span>) – first object</p></li>
+<li><p><strong>rhs</strong> (<span><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">object</span></code></span>) – second object to compare to</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>true iff both objects are the same</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>logical</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="mat method">
 <dt class="sig sig-object mat" id="+replab.Obj.laws">
 <span class="sig-name descname"><span class="pre">laws</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.Obj.laws" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the laws that this object obeys</p>
@@ -634,8 +671,8 @@ cache the result.</p>
 <dl class="mat method">
 <dt class="sig sig-object mat" id="+replab.Obj.ne">
 <span class="sig-name descname"><span class="pre">ne</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">rhs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.Obj.ne" title="Permalink to this definition">¶</a></dt>
-<dd><p>Non-equality test (deprecated)</p>
-<p>Workaround bug of == not implemented for handles in Octave</p>
+<dd><p>Non-equality test</p>
+<p>Do not overload this, instead, overload <a class="reference internal" href="#+replab.Obj.isequal" title="+replab.Obj.isequal"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">isequal</span></code></a>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -691,13 +728,15 @@ passing the method implementations as function handles.</p>
 <p><strong>Laws</strong></p>
 <ul class="simple">
 <li><p><a class="reference internal" href="#+replab.Domain.check" title="+replab.Domain.check"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">check</span></code></a> – Checks the consistency of this object</p></li>
+<li><p><a class="reference internal" href="#+replab.Domain.checkAndContinue" title="+replab.Domain.checkAndContinue"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">checkAndContinue</span></code></a> – Checks the consistency of this object</p></li>
 <li><p><a class="reference internal" href="#+replab.Domain.laws" title="+replab.Domain.laws"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">laws</span></code></a> – Returns the laws that this object obeys</p></li>
 </ul>
 <p><strong>Unique ID</strong></p>
 <ul class="simple">
-<li><p><a class="reference internal" href="#+replab.Domain.eq" title="+replab.Domain.eq"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">eq</span></code></a> – Equality test (deprecated)</p></li>
+<li><p><a class="reference internal" href="#+replab.Domain.eq" title="+replab.Domain.eq"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">eq</span></code></a> – Equality test</p></li>
 <li><p><a class="reference internal" href="#+replab.Domain.id" title="+replab.Domain.id"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">id</span></code></a> – Returns the unique ID of this object (deprecated)</p></li>
-<li><p><a class="reference internal" href="#+replab.Domain.ne" title="+replab.Domain.ne"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">ne</span></code></a> – Non-equality test (deprecated)</p></li>
+<li><p><a class="reference internal" href="#+replab.Domain.isequal" title="+replab.Domain.isequal"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">isequal</span></code></a> – Equality test</p></li>
+<li><p><a class="reference internal" href="#+replab.Domain.ne" title="+replab.Domain.ne"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">ne</span></code></a> – Non-equality test</p></li>
 </ul>
 <p><strong>Test helpers</strong></p>
 <ul class="simple">
@@ -753,6 +792,12 @@ passing the method implementations as function handles.</p>
 </dd></dl>
 
 <dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.Domain.checkAndContinue">
+<span class="sig-name descname"><span class="pre">checkAndContinue</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.Domain.checkAndContinue" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="#+replab.Obj.checkAndContinue" title="+replab.Obj.checkAndContinue"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Obj.checkAndContinue()</span></code></a></p>
+</dd></dl>
+
+<dl class="mat method">
 <dt class="sig sig-object mat" id="+replab.Domain.disp">
 <span class="sig-name descname"><span class="pre">disp</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.Domain.disp" title="Permalink to this definition">¶</a></dt>
 <dd><p>Documentation in <a class="reference internal" href="#+replab.Str.disp" title="+replab.Str.disp"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Str.disp()</span></code></a></p>
@@ -786,6 +831,12 @@ passing the method implementations as function handles.</p>
 <dt class="sig sig-object mat" id="+replab.Domain.inCache">
 <span class="sig-name descname"><span class="pre">inCache</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">name</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.Domain.inCache" title="Permalink to this definition">¶</a></dt>
 <dd><p>Documentation in <a class="reference internal" href="#+replab.Obj.inCache" title="+replab.Obj.inCache"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Obj.inCache()</span></code></a></p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.Domain.isequal">
+<span class="sig-name descname"><span class="pre">isequal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">lhs</span></em>, <em class="sig-param"><span class="pre">rhs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.Domain.isequal" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="#+replab.Obj.isequal" title="+replab.Obj.isequal"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Obj.isequal()</span></code></a></p>
 </dd></dl>
 
 <dl class="mat method">
@@ -927,7 +978,7 @@ those samplable sets will be used to sample the random instances passed to the l
 Note that a law that does not require any arguments corresponds to a method name ending with an underscore.</p></li>
 <li><p>Methods that start with a <code class="docutils literal notranslate"><span class="pre">laws_</span></code> prefix must return another <a class="reference internal" href="#+replab.Laws" title="+replab.Laws"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">Laws</span></code></a> instance (see also <code class="xref mat mat-obj docutils literal notranslate"><span class="pre">replab.laws.Collection</span></code>).
 It enables delegation of checks when a tested object has subparts.
-For example, a <a class="reference internal" href="groups.html#+replab.FiniteGroup" title="+replab.FiniteGroup"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">FiniteGroup</span></code></a> has a <a class="reference internal" href="groups.html#+replab.FiniteGroup.elementsSequence" title="+replab.FiniteGroup.elementsSequence"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">elementsSequence</span></code></a> method of type <code class="xref mat mat-obj docutils literal notranslate"><span class="pre">Sequence</span></code>,
+For example, a <a class="reference internal" href="finite_groups.html#+replab.FiniteGroup" title="+replab.FiniteGroup"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">FiniteGroup</span></code></a> has a <a class="reference internal" href="finite_groups.html#+replab.FiniteGroup.elementsSequence" title="+replab.FiniteGroup.elementsSequence"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">elementsSequence</span></code></a> method of type <a class="reference internal" href="misc.html#+replab.Sequence" title="+replab.Sequence"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">Sequence</span></code></a>,
 that is conveniently checked by <code class="xref mat mat-obj docutils literal notranslate"><span class="pre">replab.laws.SequenceLaws</span></code>, see <code class="xref mat mat-obj docutils literal notranslate"><span class="pre">replab.laws.FiniteGroupLaws</span></code>).</p></li>
 </ul>
 <p class="rubric">Example</p>
@@ -966,6 +1017,7 @@ that is conveniently checked by <code class="xref mat mat-obj docutils literal n
 <li><p><a class="reference internal" href="#+replab.Laws.assert" title="+replab.Laws.assert"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">assert</span></code></a> – Assert function with a verbose error message</p></li>
 <li><p><a class="reference internal" href="#+replab.Laws.assertApproxEqual" title="+replab.Laws.assertApproxEqual"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">assertApproxEqual</span></code></a> –</p></li>
 <li><p><a class="reference internal" href="#+replab.Laws.check" title="+replab.Laws.check"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">check</span></code></a> – Runs the randomized tests without using MOxUnit</p></li>
+<li><p><a class="reference internal" href="#+replab.Laws.checkAndContinue" title="+replab.Laws.checkAndContinue"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">checkAndContinue</span></code></a> – Runs the randomized tests without using MOxUnit</p></li>
 <li><p><a class="reference internal" href="#+replab.Laws.checkSilent" title="+replab.Laws.checkSilent"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">checkSilent</span></code></a> – Runs the randomized tests without using MOxUnit, and returns whether all tests passed</p></li>
 <li><p><a class="reference internal" href="#+replab.Laws.empty" title="+replab.Laws.empty"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">empty</span></code></a> – Returns an empty set of laws</p></li>
 <li><p><a class="reference internal" href="#+replab.Laws.getTestCases" title="+replab.Laws.getTestCases"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">getTestCases</span></code></a> – Enumerates the laws present in this instance by looking for methods with the correct prefix</p></li>
@@ -1069,6 +1121,15 @@ that is conveniently checked by <code class="xref mat mat-obj docutils literal n
 <span class="sig-name descname"><span class="pre">check</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.Laws.check" title="Permalink to this definition">¶</a></dt>
 <dd><p>Runs the randomized tests without using MOxUnit</p>
 <p>This method is useful from the REPL command line.</p>
+<p>This method stops at the first error.</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.Laws.checkAndContinue">
+<span class="sig-name descname"><span class="pre">checkAndContinue</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.Laws.checkAndContinue" title="Permalink to this definition">¶</a></dt>
+<dd><p>Runs the randomized tests without using MOxUnit</p>
+<p>This method is useful from the REPL command line.</p>
+<p>This method catches errors, displays them but does not throw.</p>
 </dd></dl>
 
 <dl class="mat method">
@@ -1076,9 +1137,9 @@ that is conveniently checked by <code class="xref mat mat-obj docutils literal n
 <span class="sig-name descname"><span class="pre">checkSilent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.Laws.checkSilent" title="Permalink to this definition">¶</a></dt>
 <dd><p>Runs the randomized tests without using MOxUnit, and returns whether all tests passed</p>
 <p class="rubric">Example</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">S10</span> <span class="o">=</span> <span class="n">replab</span><span class="o">.</span><span class="n">S</span><span class="p">(</span><span class="mi">10</span><span class="p">);</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">S10laws</span> <span class="o">=</span> <span class="n">S10</span><span class="o">.</span><span class="n">laws</span><span class="p">;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">S10laws</span><span class="o">.</span><span class="n">checkSilent</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">S3</span> <span class="o">=</span> <span class="n">replab</span><span class="o">.</span><span class="n">S</span><span class="p">(</span><span class="mi">3</span><span class="p">);</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">S3laws</span> <span class="o">=</span> <span class="n">S3</span><span class="o">.</span><span class="n">laws</span><span class="p">;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">S3laws</span><span class="o">.</span><span class="n">checkSilent</span>
 <span class="go">    1</span>
 </pre></div>
 </div>
@@ -1183,7 +1244,7 @@ that is conveniently checked by <code class="xref mat mat-obj docutils literal n
         <li class="right" >
           <a href="commands.html" title="Commands"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.9.5-SNAP documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 1.0.0 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="index.html" >Technical Reference</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">Base object types and functions</a></li> 
       </ul>

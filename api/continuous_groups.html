@@ -15,7 +15,7 @@
   <link rel="stylesheet" type="text/css" href="../_static/css/bootstrap-theme.min.css" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-    <title>Continuous groups &#8212; RepLAB 0.9.5-SNAP documentation</title>
+    <title>Continuous groups &#8212; RepLAB 1.0.0 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/guzzle.css" />
     <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
@@ -31,7 +31,7 @@
     <script src="../_static/js/collapse_helper.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Permutation groups" href="permutation_groups.html" />
+    <link rel="next" title="Finite group structures" href="finite_groups.html" />
     <link rel="prev" title="Base group structures" href="groups.html" /> 
   
    
@@ -72,12 +72,12 @@
           <a href="../mat-modindex.html" title="MATLAB Module Index"
              >matlab index</a> |</li>
         <li class="right" >
-          <a href="permutation_groups.html" title="Permutation groups"
+          <a href="finite_groups.html" title="Finite group structures"
              accesskey="N">next</a> |</li>
         <li class="right" >
           <a href="groups.html" title="Base group structures"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.9.5-SNAP documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 1.0.0 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">Technical Reference</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">Continuous groups</a></li> 
       </ul>
@@ -92,7 +92,7 @@
   <a href="
     ../index.html">RepLAB</a>&nbsp;&nbsp;
   <a href="https://github.com/replab/replab"><i class="fab fa-github"></i></a>&nbsp;
-  <a href="https://github.com/replab/replab/archive/v0.9.5-SNAP.zip"><i class="fa fa-download"></i></a>&nbsp;
+  <a href="https://github.com/replab/replab/archive/v1.0.0.zip"><i class="fa fa-download"></i></a>&nbsp;
   <a href="https://gitter.im/replab/replab"><i class="fab fa-gitter"></i></a>&nbsp;
   <a href="https://travis-ci.com/replab/replab"><i class="fas fa-sync-alt"></i></a>&nbsp;
   <a href="https://codecov.io/gh/replab/replab"><i class="fas fa-umbrella"></i></a>
@@ -121,6 +121,7 @@
 <li class="toctree-l3"><a class="reference internal" href="#sp">Sp</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="finite_groups.html">Finite group structures</a></li>
 <li class="toctree-l2"><a class="reference internal" href="permutation_groups.html">Permutation groups</a></li>
 <li class="toctree-l2"><a class="reference internal" href="named_discrete_groups.html">Named discrete groups</a></li>
 <li class="toctree-l2"><a class="reference internal" href="abstract_groups.html">Abstract groups and atlas</a></li>
@@ -253,13 +254,15 @@ while the equations are written multiplicatively in symbolic form.</p>
 <p><strong>Laws</strong></p>
 <ul class="simple">
 <li><p><a class="reference internal" href="#+replab.TorusGroup.check" title="+replab.TorusGroup.check"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">check</span></code></a> – Checks the consistency of this object</p></li>
+<li><p><a class="reference internal" href="#+replab.TorusGroup.checkAndContinue" title="+replab.TorusGroup.checkAndContinue"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">checkAndContinue</span></code></a> – Checks the consistency of this object</p></li>
 <li><p><a class="reference internal" href="#+replab.TorusGroup.laws" title="+replab.TorusGroup.laws"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">laws</span></code></a> – Returns the laws that this object obeys</p></li>
 </ul>
 <p><strong>Unique ID</strong></p>
 <ul class="simple">
-<li><p><a class="reference internal" href="#+replab.TorusGroup.eq" title="+replab.TorusGroup.eq"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">eq</span></code></a> – Equality test (deprecated)</p></li>
+<li><p><a class="reference internal" href="#+replab.TorusGroup.eq" title="+replab.TorusGroup.eq"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">eq</span></code></a> – Equality test</p></li>
 <li><p><a class="reference internal" href="#+replab.TorusGroup.id" title="+replab.TorusGroup.id"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">id</span></code></a> – Returns the unique ID of this object (deprecated)</p></li>
-<li><p><a class="reference internal" href="#+replab.TorusGroup.ne" title="+replab.TorusGroup.ne"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">ne</span></code></a> – Non-equality test (deprecated)</p></li>
+<li><p><a class="reference internal" href="#+replab.TorusGroup.isequal" title="+replab.TorusGroup.isequal"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">isequal</span></code></a> – Equality test</p></li>
+<li><p><a class="reference internal" href="#+replab.TorusGroup.ne" title="+replab.TorusGroup.ne"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">ne</span></code></a> – Non-equality test</p></li>
 </ul>
 <p><strong>Test helpers</strong></p>
 <ul class="simple">
@@ -297,7 +300,7 @@ while the equations are written multiplicatively in symbolic form.</p>
 <p><strong>Group methods</strong></p>
 <ul class="simple">
 <li><p><a class="reference internal" href="#+replab.TorusGroup.commutator" title="+replab.TorusGroup.commutator"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">commutator</span></code></a> – Returns the commutator of two group elements</p></li>
-<li><p><a class="reference internal" href="#+replab.TorusGroup.composeLetters" title="+replab.TorusGroup.composeLetters"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">composeLetters</span></code></a> – Returns the composition of elements from an array picked according to the given indices/letters</p></li>
+<li><p><a class="reference internal" href="#+replab.TorusGroup.composeFlat" title="+replab.TorusGroup.composeFlat"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">composeFlat</span></code></a> – Returns the composition of elements from an array picked according to the given indices/letters</p></li>
 <li><p><a class="reference internal" href="#+replab.TorusGroup.composeWithInverse" title="+replab.TorusGroup.composeWithInverse"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">composeWithInverse</span></code></a> – Returns the composition of an element with the inverse of another element</p></li>
 <li><p><a class="reference internal" href="#+replab.TorusGroup.inverse" title="+replab.TorusGroup.inverse"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">inverse</span></code></a> – Computes the inverse of an element</p></li>
 <li><p><a class="reference internal" href="#+replab.TorusGroup.leftConjugate" title="+replab.TorusGroup.leftConjugate"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">leftConjugate</span></code></a> – Returns the left conjugate of a group element</p></li>
@@ -405,6 +408,12 @@ while the equations are written multiplicatively in symbolic form.</p>
 </dd></dl>
 
 <dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.TorusGroup.checkAndContinue">
+<span class="sig-name descname"><span class="pre">checkAndContinue</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.TorusGroup.checkAndContinue" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="base.html#+replab.Obj.checkAndContinue" title="+replab.Obj.checkAndContinue"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Obj.checkAndContinue()</span></code></a></p>
+</dd></dl>
+
+<dl class="mat method">
 <dt class="sig sig-object mat" id="+replab.TorusGroup.commutator">
 <span class="sig-name descname"><span class="pre">commutator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">x</span></em>, <em class="sig-param"><span class="pre">y</span></em>, <em class="sig-param"><span class="pre">startWithInverse</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.TorusGroup.commutator" title="Permalink to this definition">¶</a></dt>
 <dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.Group.commutator" title="+replab.Group.commutator"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Group.commutator()</span></code></a></p>
@@ -435,9 +444,9 @@ while the equations are written multiplicatively in symbolic form.</p>
 </dd></dl>
 
 <dl class="mat method">
-<dt class="sig sig-object mat" id="+replab.TorusGroup.composeLetters">
-<span class="sig-name descname"><span class="pre">composeLetters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">array</span></em>, <em class="sig-param"><span class="pre">letters</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.TorusGroup.composeLetters" title="Permalink to this definition">¶</a></dt>
-<dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.Group.composeLetters" title="+replab.Group.composeLetters"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Group.composeLetters()</span></code></a></p>
+<dt class="sig sig-object mat" id="+replab.TorusGroup.composeFlat">
+<span class="sig-name descname"><span class="pre">composeFlat</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">array</span></em>, <em class="sig-param"><span class="pre">letters</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.TorusGroup.composeFlat" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.Group.composeFlat" title="+replab.Group.composeFlat"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Group.composeFlat()</span></code></a></p>
 </dd></dl>
 
 <dl class="mat method">
@@ -540,6 +549,12 @@ while the equations are written multiplicatively in symbolic form.</p>
 <dt class="sig sig-object mat" id="+replab.TorusGroup.isIdentity">
 <span class="sig-name descname"><span class="pre">isIdentity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">x</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.TorusGroup.isIdentity" title="Permalink to this definition">¶</a></dt>
 <dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.Monoid.isIdentity" title="+replab.Monoid.isIdentity"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Monoid.isIdentity()</span></code></a></p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.TorusGroup.isequal">
+<span class="sig-name descname"><span class="pre">isequal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">lhs</span></em>, <em class="sig-param"><span class="pre">rhs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.TorusGroup.isequal" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="base.html#+replab.Obj.isequal" title="+replab.Obj.isequal"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Obj.isequal()</span></code></a></p>
 </dd></dl>
 
 <dl class="mat method">
@@ -843,7 +858,7 @@ describing the torus map.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>group</strong> (<a class="reference internal" href="groups.html#+replab.FiniteGroup" title="+replab.FiniteGroup"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">FiniteGroup</span></code></a>) – Finite group acting on this torus group</p></li>
+<li><p><strong>group</strong> (<a class="reference internal" href="finite_groups.html#+replab.FiniteGroup" title="+replab.FiniteGroup"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">FiniteGroup</span></code></a>) – Finite group acting on this torus group</p></li>
 <li><p><strong>preimages</strong> – Preimages of the morphism which generate <code class="docutils literal notranslate"><span class="pre">group</span></code>, defaults to <code class="docutils literal notranslate"><span class="pre">group.generators</span></code></p></li>
 <li><p><strong>images</strong> – Action on the torus for the given preimages, defaults to a permutation action if <code class="docutils literal notranslate"><span class="pre">group</span></code> is a permutation group</p></li>
 </ul>
@@ -1063,13 +1078,15 @@ the usual group laws, we compare group elements up to a certain tolerance, defin
 <p><strong>Laws</strong></p>
 <ul class="simple">
 <li><p><a class="reference internal" href="#+replab.ClassicalCompactGroup.check" title="+replab.ClassicalCompactGroup.check"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">check</span></code></a> – Checks the consistency of this object</p></li>
+<li><p><a class="reference internal" href="#+replab.ClassicalCompactGroup.checkAndContinue" title="+replab.ClassicalCompactGroup.checkAndContinue"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">checkAndContinue</span></code></a> – Checks the consistency of this object</p></li>
 <li><p><a class="reference internal" href="#+replab.ClassicalCompactGroup.laws" title="+replab.ClassicalCompactGroup.laws"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">laws</span></code></a> – Returns the laws that this object obeys</p></li>
 </ul>
 <p><strong>Unique ID</strong></p>
 <ul class="simple">
-<li><p><a class="reference internal" href="#+replab.ClassicalCompactGroup.eq" title="+replab.ClassicalCompactGroup.eq"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">eq</span></code></a> – Equality test (deprecated)</p></li>
+<li><p><a class="reference internal" href="#+replab.ClassicalCompactGroup.eq" title="+replab.ClassicalCompactGroup.eq"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">eq</span></code></a> – Equality test</p></li>
 <li><p><a class="reference internal" href="#+replab.ClassicalCompactGroup.id" title="+replab.ClassicalCompactGroup.id"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">id</span></code></a> – Returns the unique ID of this object (deprecated)</p></li>
-<li><p><a class="reference internal" href="#+replab.ClassicalCompactGroup.ne" title="+replab.ClassicalCompactGroup.ne"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">ne</span></code></a> – Non-equality test (deprecated)</p></li>
+<li><p><a class="reference internal" href="#+replab.ClassicalCompactGroup.isequal" title="+replab.ClassicalCompactGroup.isequal"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">isequal</span></code></a> – Equality test</p></li>
+<li><p><a class="reference internal" href="#+replab.ClassicalCompactGroup.ne" title="+replab.ClassicalCompactGroup.ne"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">ne</span></code></a> – Non-equality test</p></li>
 </ul>
 <p><strong>Test helpers</strong></p>
 <ul class="simple">
@@ -1104,7 +1121,7 @@ the usual group laws, we compare group elements up to a certain tolerance, defin
 <p><strong>Group methods</strong></p>
 <ul class="simple">
 <li><p><a class="reference internal" href="#+replab.ClassicalCompactGroup.commutator" title="+replab.ClassicalCompactGroup.commutator"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">commutator</span></code></a> – Returns the commutator of two group elements</p></li>
-<li><p><a class="reference internal" href="#+replab.ClassicalCompactGroup.composeLetters" title="+replab.ClassicalCompactGroup.composeLetters"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">composeLetters</span></code></a> – Returns the composition of elements from an array picked according to the given indices/letters</p></li>
+<li><p><a class="reference internal" href="#+replab.ClassicalCompactGroup.composeFlat" title="+replab.ClassicalCompactGroup.composeFlat"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">composeFlat</span></code></a> – Returns the composition of elements from an array picked according to the given indices/letters</p></li>
 <li><p><a class="reference internal" href="#+replab.ClassicalCompactGroup.composeWithInverse" title="+replab.ClassicalCompactGroup.composeWithInverse"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">composeWithInverse</span></code></a> – Returns the composition of an element with the inverse of another element</p></li>
 <li><p><a class="reference internal" href="#+replab.ClassicalCompactGroup.inverse" title="+replab.ClassicalCompactGroup.inverse"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">inverse</span></code></a> – Computes the inverse of an element</p></li>
 <li><p><a class="reference internal" href="#+replab.ClassicalCompactGroup.leftConjugate" title="+replab.ClassicalCompactGroup.leftConjugate"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">leftConjugate</span></code></a> – Returns the left conjugate of a group element</p></li>
@@ -1197,6 +1214,12 @@ the usual group laws, we compare group elements up to a certain tolerance, defin
 </dd></dl>
 
 <dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.ClassicalCompactGroup.checkAndContinue">
+<span class="sig-name descname"><span class="pre">checkAndContinue</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.ClassicalCompactGroup.checkAndContinue" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="base.html#+replab.Obj.checkAndContinue" title="+replab.Obj.checkAndContinue"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Obj.checkAndContinue()</span></code></a></p>
+</dd></dl>
+
+<dl class="mat method">
 <dt class="sig sig-object mat" id="+replab.ClassicalCompactGroup.commutator">
 <span class="sig-name descname"><span class="pre">commutator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">x</span></em>, <em class="sig-param"><span class="pre">y</span></em>, <em class="sig-param"><span class="pre">startWithInverse</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.ClassicalCompactGroup.commutator" title="Permalink to this definition">¶</a></dt>
 <dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.Group.commutator" title="+replab.Group.commutator"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Group.commutator()</span></code></a></p>
@@ -1227,9 +1250,9 @@ the usual group laws, we compare group elements up to a certain tolerance, defin
 </dd></dl>
 
 <dl class="mat method">
-<dt class="sig sig-object mat" id="+replab.ClassicalCompactGroup.composeLetters">
-<span class="sig-name descname"><span class="pre">composeLetters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">array</span></em>, <em class="sig-param"><span class="pre">letters</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.ClassicalCompactGroup.composeLetters" title="Permalink to this definition">¶</a></dt>
-<dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.Group.composeLetters" title="+replab.Group.composeLetters"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Group.composeLetters()</span></code></a></p>
+<dt class="sig sig-object mat" id="+replab.ClassicalCompactGroup.composeFlat">
+<span class="sig-name descname"><span class="pre">composeFlat</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">array</span></em>, <em class="sig-param"><span class="pre">letters</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.ClassicalCompactGroup.composeFlat" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.Group.composeFlat" title="+replab.Group.composeFlat"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Group.composeFlat()</span></code></a></p>
 </dd></dl>
 
 <dl class="mat method">
@@ -1332,6 +1355,12 @@ the usual group laws, we compare group elements up to a certain tolerance, defin
 <dt class="sig sig-object mat" id="+replab.ClassicalCompactGroup.isIdentity">
 <span class="sig-name descname"><span class="pre">isIdentity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">x</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.ClassicalCompactGroup.isIdentity" title="Permalink to this definition">¶</a></dt>
 <dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.Monoid.isIdentity" title="+replab.Monoid.isIdentity"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Monoid.isIdentity()</span></code></a></p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.ClassicalCompactGroup.isequal">
+<span class="sig-name descname"><span class="pre">isequal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">lhs</span></em>, <em class="sig-param"><span class="pre">rhs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.ClassicalCompactGroup.isequal" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="base.html#+replab.Obj.isequal" title="+replab.Obj.isequal"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Obj.isequal()</span></code></a></p>
 </dd></dl>
 
 <dl class="mat method">
@@ -1555,7 +1584,7 @@ the complex representation can be encoded into a real representation, doubling i
       </div>
     
       <div class="pull-right">
-        <a class="btn btn-default" href="permutation_groups.html" title="next chapter (use the right arrow)">Permutation groups</a>
+        <a class="btn btn-default" href="finite_groups.html" title="next chapter (use the right arrow)">Finite group structures</a>
       </div>
     </div>
     <div class="clearer"></div>
@@ -1573,12 +1602,12 @@ the complex representation can be encoded into a real representation, doubling i
           <a href="../mat-modindex.html" title="MATLAB Module Index"
              >matlab index</a> |</li>
         <li class="right" >
-          <a href="permutation_groups.html" title="Permutation groups"
+          <a href="finite_groups.html" title="Finite group structures"
              >next</a> |</li>
         <li class="right" >
           <a href="groups.html" title="Base group structures"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.9.5-SNAP documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 1.0.0 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="index.html" >Technical Reference</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">Continuous groups</a></li> 
       </ul>

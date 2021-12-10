@@ -16,6 +16,7 @@ An API Reference, as described in the table of contents below:
    numerics
    groups
    continuous_groups
+   finite_groups
    permutation_groups
    named_discrete_groups
    abstract_groups

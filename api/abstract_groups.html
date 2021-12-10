@@ -15,7 +15,7 @@
   <link rel="stylesheet" type="text/css" href="../_static/css/bootstrap-theme.min.css" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-    <title>Abstract groups and atlas &#8212; RepLAB 0.9.5-SNAP documentation</title>
+    <title>Abstract groups and atlas &#8212; RepLAB 1.0.0 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/guzzle.css" />
     <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
@@ -77,7 +77,7 @@
         <li class="right" >
           <a href="named_discrete_groups.html" title="Named discrete groups"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.9.5-SNAP documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 1.0.0 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">Technical Reference</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">Abstract groups and atlas</a></li> 
       </ul>
@@ -92,7 +92,7 @@
   <a href="
     ../index.html">RepLAB</a>&nbsp;&nbsp;
   <a href="https://github.com/replab/replab"><i class="fab fa-github"></i></a>&nbsp;
-  <a href="https://github.com/replab/replab/archive/v0.9.5-SNAP.zip"><i class="fa fa-download"></i></a>&nbsp;
+  <a href="https://github.com/replab/replab/archive/v1.0.0.zip"><i class="fa fa-download"></i></a>&nbsp;
   <a href="https://gitter.im/replab/replab"><i class="fab fa-gitter"></i></a>&nbsp;
   <a href="https://travis-ci.com/replab/replab"><i class="fas fa-sync-alt"></i></a>&nbsp;
   <a href="https://codecov.io/gh/replab/replab"><i class="fas fa-umbrella"></i></a>
@@ -111,6 +111,7 @@
 <li class="toctree-l2"><a class="reference internal" href="numerics.html">Numerics</a></li>
 <li class="toctree-l2"><a class="reference internal" href="groups.html">Base group structures</a></li>
 <li class="toctree-l2"><a class="reference internal" href="continuous_groups.html">Continuous groups</a></li>
+<li class="toctree-l2"><a class="reference internal" href="finite_groups.html">Finite group structures</a></li>
 <li class="toctree-l2"><a class="reference internal" href="permutation_groups.html">Permutation groups</a></li>
 <li class="toctree-l2"><a class="reference internal" href="named_discrete_groups.html">Named discrete groups</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Abstract groups and atlas</a><ul>
@@ -175,7 +176,7 @@
 <h1>Abstract groups and atlas<a class="headerlink" href="#abstract-groups-and-atlas" title="Permalink to this headline">¶</a></h1>
 <p>Abstract groups are defined using a presentation, without direct reference to a concrete realization. They
 are thus used when user-defined groups are recognized.</p>
-<ul class="simple">
+<span class="target" id="module-+replab"></span><ul class="simple">
 <li><p><a class="reference internal" href="#+replab.AbstractGroup" title="+replab.AbstractGroup"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">AbstractGroup</span></code></a> is a finite group whose elements are written as words composed of products of generators.</p></li>
 <li><p><a class="reference internal" href="#+replab.Atlas" title="+replab.Atlas"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">Atlas</span></code></a> is the infrastructure that recognizes groups. In particular, it is used to tip the user of the
 type of the group they just constructed. It is also used in exact decompositions, to retrieve the character
@@ -183,12 +184,12 @@ table of a particular finite group.</p></li>
 <li><p><a class="reference internal" href="#+replab.AtlasEntry" title="+replab.AtlasEntry"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">AtlasEntry</span></code></a> contains a sketch of the structure of a finite group known by RepLAB. It is used to speed up
 the recognition process.</p></li>
 </ul>
-<span class="target" id="module-+replab"></span><section id="abstractgroup">
+<section id="abstractgroup">
 <h2>AbstractGroup<a class="headerlink" href="#abstractgroup" title="Permalink to this headline">¶</a></h2>
 <dl class="mat class">
 <dt class="sig sig-object mat" id="+replab.AbstractGroup">
 <em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">replab.</span></span><span class="sig-name descname"><span class="pre">AbstractGroup</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">generatorNames</span></em>, <em class="sig-param"><span class="pre">relators</span></em>, <em class="sig-param"><span class="pre">varargin</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.AbstractGroup" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="groups.html#+replab.NiceFiniteGroup" title="+replab.NiceFiniteGroup"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">replab.NiceFiniteGroup</span></code></a></p>
+<dd><p>Bases: <code class="xref mat mat-class docutils literal notranslate"><span class="pre">replab.gen.FiniteGroup</span></code></p>
 <p>Finite group defined using a presentation: a set of generators and a set of relations among generators</p>
 <p>The name of generator always start with a letter (a-z or A-Z), and then contain either letters (a-z or A-Z),
 digits (0-9) or underscores. Words in the generators are strings (charstring) containing generators separated
@@ -222,8 +223,9 @@ to that permutation group.</p>
 </div>
 <p>Abstract groups can also be created by isomorphisms from an explicit group.</p>
 <p class="rubric">Example</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">G</span> <span class="o">=</span> <span class="n">replab</span><span class="o">.</span><span class="n">S</span><span class="p">(</span><span class="mi">3</span><span class="p">);</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">f</span> <span class="o">=</span> <span class="n">G</span><span class="o">.</span><span class="n">abstractMorphism</span><span class="p">({</span><span class="s1">&#39;s&#39;</span> <span class="s1">&#39;t&#39;</span><span class="p">});</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">S3</span> <span class="o">=</span> <span class="n">replab</span><span class="o">.</span><span class="n">S</span><span class="p">(</span><span class="mi">3</span><span class="p">);</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">G</span> <span class="o">=</span> <span class="n">S3</span><span class="o">.</span><span class="n">withGeneratorNames</span><span class="p">({</span><span class="s1">&#39;s&#39;</span><span class="p">,</span> <span class="s1">&#39;t&#39;</span><span class="p">});</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">f</span> <span class="o">=</span> <span class="n">G</span><span class="o">.</span><span class="n">abstractIsomorphism</span><span class="p">;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">f</span><span class="o">.</span><span class="n">imageElement</span><span class="p">([</span><span class="mi">2</span> <span class="mi">3</span> <span class="mi">1</span><span class="p">])</span>
 <span class="go">    &#39;s&#39;</span>
 </pre></div>
@@ -232,13 +234,13 @@ to that permutation group.</p>
 <p class="admonition-title">Class members list</p>
 <p><strong>Properties</strong></p>
 <ul class="simple">
-<li><p><a class="reference internal" href="#+replab.AbstractGroup.generatorNames" title="+replab.AbstractGroup.generatorNames"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">generatorNames</span></code></a> – Generator names</p></li>
 <li><p><a class="reference internal" href="#+replab.AbstractGroup.generators" title="+replab.AbstractGroup.generators"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">generators</span></code></a> – Group generators</p></li>
 <li><p><a class="reference internal" href="#+replab.AbstractGroup.identity" title="+replab.AbstractGroup.identity"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">identity</span></code></a> – Monoid identity element</p></li>
 <li><p><a class="reference internal" href="#+replab.AbstractGroup.inAtlas" title="+replab.AbstractGroup.inAtlas"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">inAtlas</span></code></a> – Whether this group is already part of the atlas</p></li>
 <li><p><a class="reference internal" href="#+replab.AbstractGroup.name" title="+replab.AbstractGroup.name"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">name</span></code></a> – Group name</p></li>
-<li><p><a class="reference internal" href="#+replab.AbstractGroup.representative" title="+replab.AbstractGroup.representative"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">representative</span></code></a> – Minimal member of this set under lexicographic ordering. If the set is empty, value is undefined.</p></li>
-<li><p><a class="reference internal" href="#+replab.AbstractGroup.type" title="+replab.AbstractGroup.type"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">type</span></code></a> – Set of all elements of the same type as this set; satisfies <code class="docutils literal notranslate"><span class="pre">type.type</span> <span class="pre">==</span> <span class="pre">type</span></code></p></li>
+<li><p><a class="reference internal" href="#+replab.AbstractGroup.nice" title="+replab.AbstractGroup.nice"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">nice</span></code></a> – Nice object where computations are done</p></li>
+<li><p><a class="reference internal" href="#+replab.AbstractGroup.niceIsomorphism" title="+replab.AbstractGroup.niceIsomorphism"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">niceIsomorphism</span></code></a> – Order-preserving isomorphism from a group containing <code class="docutils literal notranslate"><span class="pre">self</span></code> to a group containing <a class="reference internal" href="#+replab.AbstractGroup.nice" title="+replab.AbstractGroup.nice"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">nice</span></code></a></p></li>
+<li><p><a class="reference internal" href="#+replab.AbstractGroup.type" title="+replab.AbstractGroup.type"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">type</span></code></a> – Type of the contained elements</p></li>
 </ul>
 <p><strong>Prettyprinting</strong></p>
 <ul class="simple">
@@ -266,6 +268,7 @@ to that permutation group.</p>
 <p><strong>Laws</strong></p>
 <ul class="simple">
 <li><p><a class="reference internal" href="#+replab.AbstractGroup.check" title="+replab.AbstractGroup.check"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">check</span></code></a> – Checks the consistency of this object</p></li>
+<li><p><a class="reference internal" href="#+replab.AbstractGroup.checkAndContinue" title="+replab.AbstractGroup.checkAndContinue"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">checkAndContinue</span></code></a> – Checks the consistency of this object</p></li>
 <li><p><a class="reference internal" href="#+replab.AbstractGroup.laws" title="+replab.AbstractGroup.laws"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">laws</span></code></a> – Returns the laws that this object obeys</p></li>
 </ul>
 <p><strong>Property cache</strong></p>
@@ -278,9 +281,10 @@ to that permutation group.</p>
 </ul>
 <p><strong>Unique ID</strong></p>
 <ul class="simple">
-<li><p><a class="reference internal" href="#+replab.AbstractGroup.eq" title="+replab.AbstractGroup.eq"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">eq</span></code></a> – Equality test (deprecated)</p></li>
+<li><p><a class="reference internal" href="#+replab.AbstractGroup.eq" title="+replab.AbstractGroup.eq"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">eq</span></code></a> – Equality test</p></li>
 <li><p><a class="reference internal" href="#+replab.AbstractGroup.id" title="+replab.AbstractGroup.id"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">id</span></code></a> – Returns the unique ID of this object (deprecated)</p></li>
-<li><p><a class="reference internal" href="#+replab.AbstractGroup.ne" title="+replab.AbstractGroup.ne"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">ne</span></code></a> – Non-equality test (deprecated)</p></li>
+<li><p><a class="reference internal" href="#+replab.AbstractGroup.isequal" title="+replab.AbstractGroup.isequal"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">isequal</span></code></a> – Tests finite sets for equality</p></li>
+<li><p><a class="reference internal" href="#+replab.AbstractGroup.ne" title="+replab.AbstractGroup.ne"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">ne</span></code></a> – Non-equality test</p></li>
 </ul>
 <p><strong>Monoid operations</strong></p>
 <ul class="simple">
@@ -292,53 +296,54 @@ to that permutation group.</p>
 </ul>
 <p><strong>Morphisms</strong></p>
 <ul class="simple">
-<li><p><a class="reference internal" href="#+replab.AbstractGroup.abstractMorphism" title="+replab.AbstractGroup.abstractMorphism"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">abstractMorphism</span></code></a> – Returns an isomorphism to an abstract group</p></li>
+<li><p><a class="reference internal" href="#+replab.AbstractGroup.abstractIsomorphism" title="+replab.AbstractGroup.abstractIsomorphism"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">abstractIsomorphism</span></code></a> – Returns an isomorphism to an abstract group</p></li>
 <li><p><a class="reference internal" href="#+replab.AbstractGroup.automorphismGroup" title="+replab.AbstractGroup.automorphismGroup"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">automorphismGroup</span></code></a> – Returns the automorphism group of this group</p></li>
 <li><p><a class="reference internal" href="#+replab.AbstractGroup.commutingMorphismsMorphism" title="+replab.AbstractGroup.commutingMorphismsMorphism"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">commutingMorphismsMorphism</span></code></a> – Constructs a morphism from morphisms with commuting images</p></li>
 <li><p><a class="reference internal" href="#+replab.AbstractGroup.conjugatingAutomorphism" title="+replab.AbstractGroup.conjugatingAutomorphism"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">conjugatingAutomorphism</span></code></a> – Returns the morphism that corresponds to left conjugation by an element</p></li>
 <li><p><a class="reference internal" href="#+replab.AbstractGroup.findIsomorphism" title="+replab.AbstractGroup.findIsomorphism"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">findIsomorphism</span></code></a> – Finds an isomorphism from this finite group to another finite group, if it exists</p></li>
 <li><p><a class="reference internal" href="#+replab.AbstractGroup.findIsomorphisms" title="+replab.AbstractGroup.findIsomorphisms"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">findIsomorphisms</span></code></a> – Finds all the isomorphisms from this finite group to another finite group</p></li>
 <li><p><a class="reference internal" href="#+replab.AbstractGroup.findMorphisms" title="+replab.AbstractGroup.findMorphisms"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">findMorphisms</span></code></a> – Finds all the morphisms from this finite group to another finite group</p></li>
-<li><p><a class="reference internal" href="#+replab.AbstractGroup.imap" title="+replab.AbstractGroup.imap"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">imap</span></code></a> – Maps this finite group through an isomorphism</p></li>
-<li><p><a class="reference internal" href="#+replab.AbstractGroup.innerAutomorphism" title="+replab.AbstractGroup.innerAutomorphism"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">innerAutomorphism</span></code></a> – Returns the morphism that corresponds to left conjugation by an element</p></li>
+<li><p><a class="reference internal" href="#+replab.AbstractGroup.innerAutomorphism" title="+replab.AbstractGroup.innerAutomorphism"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">innerAutomorphism</span></code></a> – Returns the inner automorphism given using conjugation by the given element</p></li>
 <li><p><a class="reference internal" href="#+replab.AbstractGroup.isMorphismByImages" title="+replab.AbstractGroup.isMorphismByImages"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">isMorphismByImages</span></code></a> – Checks whether the given images describe a group morphism</p></li>
-<li><p><a class="reference internal" href="#+replab.AbstractGroup.isomorphismByFunction" title="+replab.AbstractGroup.isomorphismByFunction"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">isomorphismByFunction</span></code></a> – Constructs an isomorphism to a group using an image function</p></li>
+<li><p><a class="reference internal" href="#+replab.AbstractGroup.isomorphismByFunction" title="+replab.AbstractGroup.isomorphismByFunction"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">isomorphismByFunction</span></code></a> – Constructs an isomorphism to a finite group using an image function</p></li>
 <li><p><a class="reference internal" href="#+replab.AbstractGroup.isomorphismByFunctions" title="+replab.AbstractGroup.isomorphismByFunctions"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">isomorphismByFunctions</span></code></a> – Constructs a group isomorphism using preimage/image functions</p></li>
 <li><p><a class="reference internal" href="#+replab.AbstractGroup.isomorphismByImages" title="+replab.AbstractGroup.isomorphismByImages"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">isomorphismByImages</span></code></a> – Constructs an isomorphism to a group using images of generators</p></li>
 <li><p><a class="reference internal" href="#+replab.AbstractGroup.morphismByFunction" title="+replab.AbstractGroup.morphismByFunction"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">morphismByFunction</span></code></a> – Constructs a group morphism using an image function</p></li>
 <li><p><a class="reference internal" href="#+replab.AbstractGroup.morphismByImages" title="+replab.AbstractGroup.morphismByImages"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">morphismByImages</span></code></a> – Constructs a morphism to a group using images of generators</p></li>
-<li><p><a class="reference internal" href="#+replab.AbstractGroup.niceMorphism" title="+replab.AbstractGroup.niceMorphism"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">niceMorphism</span></code></a> – Returns the isomorphism from this group to a permutation group</p></li>
+<li><p><a class="reference internal" href="#+replab.AbstractGroup.orderPreservingPermutationIsomorphism" title="+replab.AbstractGroup.orderPreservingPermutationIsomorphism"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">orderPreservingPermutationIsomorphism</span></code></a> – Returns an isomorphism from this group to a permutation group, which preserves element order</p></li>
+<li><p><a class="reference internal" href="#+replab.AbstractGroup.permutationIsomorphism" title="+replab.AbstractGroup.permutationIsomorphism"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">permutationIsomorphism</span></code></a> – Returns an isomorphism from this group to a permutation group</p></li>
+<li><p><a class="reference internal" href="#+replab.AbstractGroup.regularIsomorphism" title="+replab.AbstractGroup.regularIsomorphism"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">regularIsomorphism</span></code></a> – Returns an isomorphism from this group to a permutation group whose degree matches the order of this group</p></li>
 </ul>
 <p><strong>Group methods</strong></p>
 <ul class="simple">
 <li><p><a class="reference internal" href="#+replab.AbstractGroup.commutator" title="+replab.AbstractGroup.commutator"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">commutator</span></code></a> – Returns the commutator of two group elements</p></li>
-<li><p><a class="reference internal" href="#+replab.AbstractGroup.composeLetters" title="+replab.AbstractGroup.composeLetters"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">composeLetters</span></code></a> – Returns the composition of elements from an array picked according to the given indices/letters</p></li>
+<li><p><a class="reference internal" href="#+replab.AbstractGroup.composeFlat" title="+replab.AbstractGroup.composeFlat"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">composeFlat</span></code></a> – Returns the composition of elements from an array picked according to the given indices/letters</p></li>
 <li><p><a class="reference internal" href="#+replab.AbstractGroup.composeWithInverse" title="+replab.AbstractGroup.composeWithInverse"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">composeWithInverse</span></code></a> – Returns the composition of an element with the inverse of another element</p></li>
 <li><p><a class="reference internal" href="#+replab.AbstractGroup.inverse" title="+replab.AbstractGroup.inverse"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">inverse</span></code></a> – Computes the inverse of an element</p></li>
 <li><p><a class="reference internal" href="#+replab.AbstractGroup.leftConjugate" title="+replab.AbstractGroup.leftConjugate"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">leftConjugate</span></code></a> – Returns the left conjugate of a group element</p></li>
 </ul>
-<p><strong>General</strong></p>
+<p><strong>Elements</strong></p>
 <ul class="simple">
-<li><p><a class="reference internal" href="#+replab.AbstractGroup.AbstractGroup" title="+replab.AbstractGroup.AbstractGroup"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">AbstractGroup</span></code></a> – Creates an abstract group from generator names and relators</p></li>
-<li><p><a class="reference internal" href="#+replab.AbstractGroup.FiniteGroup" title="+replab.AbstractGroup.FiniteGroup"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">FiniteGroup</span></code></a> – Constructs a finite group</p></li>
-<li><p><a class="reference internal" href="#+replab.AbstractGroup.NiceFiniteGroup" title="+replab.AbstractGroup.NiceFiniteGroup"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">NiceFiniteGroup</span></code></a> – Constructs a nice finite group</p></li>
-<li><p><a class="reference internal" href="#+replab.AbstractGroup.checkNormalizes" title="+replab.AbstractGroup.checkNormalizes"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">checkNormalizes</span></code></a> –</p></li>
-<li><p><a class="reference internal" href="#+replab.AbstractGroup.computeImage" title="+replab.AbstractGroup.computeImage"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">computeImage</span></code></a> – Computes the image of this word using the given generator images</p></li>
-<li><p><a class="reference internal" href="#+replab.AbstractGroup.defaultGeneratorNames" title="+replab.AbstractGroup.defaultGeneratorNames"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">defaultGeneratorNames</span></code></a> – Returns default generator names</p></li>
-<li><p><a class="reference internal" href="#+replab.AbstractGroup.elements" title="+replab.AbstractGroup.elements"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">elements</span></code></a> – Returns a cell array containing all the elements of this set</p></li>
-<li><p><a class="reference internal" href="#+replab.AbstractGroup.elementsSequence" title="+replab.AbstractGroup.elementsSequence"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">elementsSequence</span></code></a> – Returns a sequence corresponding to this set</p></li>
-<li><p><a class="reference internal" href="#+replab.AbstractGroup.fromPresentation" title="+replab.AbstractGroup.fromPresentation"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">fromPresentation</span></code></a> – Creates an abstract group from a presentation string</p></li>
-<li><p><a class="reference internal" href="#+replab.AbstractGroup.isequal" title="+replab.AbstractGroup.isequal"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">isequal</span></code></a> –</p></li>
-<li><p><a class="reference internal" href="#+replab.AbstractGroup.mtimes" title="+replab.AbstractGroup.mtimes"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">mtimes</span></code></a> –</p></li>
-<li><p><a class="reference internal" href="#+replab.AbstractGroup.multiply" title="+replab.AbstractGroup.multiply"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">multiply</span></code></a> –</p></li>
-<li><p><a class="reference internal" href="#+replab.AbstractGroup.permutationGroup" title="+replab.AbstractGroup.permutationGroup"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">permutationGroup</span></code></a> – Returns a realization of this abstract group using a permutation group</p></li>
-<li><p><a class="reference internal" href="#+replab.AbstractGroup.renamingMorphism" title="+replab.AbstractGroup.renamingMorphism"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">renamingMorphism</span></code></a> – Returns a morphism from this abstract group with the generators renamed</p></li>
-<li><p><a class="reference internal" href="#+replab.AbstractGroup.shortType" title="+replab.AbstractGroup.shortType"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">shortType</span></code></a> –</p></li>
-<li><p><a class="reference internal" href="#+replab.AbstractGroup.simplify" title="+replab.AbstractGroup.simplify"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">simplify</span></code></a> – Attempts to simplify the given word</p></li>
+<li><p><a class="reference internal" href="#+replab.AbstractGroup.elementOrder" title="+replab.AbstractGroup.elementOrder"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">elementOrder</span></code></a> – Returns the order of a group element</p></li>
+<li><p><a class="reference internal" href="#+replab.AbstractGroup.smallGeneratingSet" title="+replab.AbstractGroup.smallGeneratingSet"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">smallGeneratingSet</span></code></a> – Returns a small set of elements generating the group</p></li>
 </ul>
 <p><strong>Relations to other sets</strong></p>
 <ul class="simple">
-<li><p><a class="reference internal" href="#+replab.AbstractGroup.hasSameTypeAs" title="+replab.AbstractGroup.hasSameTypeAs"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">hasSameTypeAs</span></code></a> –  Returns if this finite set has the same type as the given finite set</p></li>
+<li><p><a class="reference internal" href="#+replab.AbstractGroup.hasSameTypeAs" title="+replab.AbstractGroup.hasSameTypeAs"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">hasSameTypeAs</span></code></a> – Returns if this finite set has the same type as the given finite set</p></li>
+</ul>
+<p><strong>Image under isomorphism</strong></p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#+replab.AbstractGroup.imap" title="+replab.AbstractGroup.imap"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">imap</span></code></a> – Returns the image of this finite set under an isomorphism</p></li>
+</ul>
+<p><strong>General</strong></p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#+replab.AbstractGroup.AbstractGroup" title="+replab.AbstractGroup.AbstractGroup"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">AbstractGroup</span></code></a> – Creates an abstract group from generator names and relators</p></li>
+<li><p><a class="reference internal" href="#+replab.AbstractGroup.compatibleWithNiceIsomorphism" title="+replab.AbstractGroup.compatibleWithNiceIsomorphism"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">compatibleWithNiceIsomorphism</span></code></a> – Returns whether the given finite isomorphism is compatible with this object isomorphism</p></li>
+<li><p><a class="reference internal" href="#+replab.AbstractGroup.fromPresentation" title="+replab.AbstractGroup.fromPresentation"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">fromPresentation</span></code></a> – Creates an abstract group from a presentation string</p></li>
+<li><p><a class="reference internal" href="#+replab.AbstractGroup.mtimes" title="+replab.AbstractGroup.mtimes"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">mtimes</span></code></a> –</p></li>
+<li><p><a class="reference internal" href="#+replab.AbstractGroup.multiply" title="+replab.AbstractGroup.multiply"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">multiply</span></code></a> –</p></li>
+<li><p><a class="reference internal" href="#+replab.AbstractGroup.shortType" title="+replab.AbstractGroup.shortType"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">shortType</span></code></a> –</p></li>
+<li><p><a class="reference internal" href="#+replab.AbstractGroup.simplify" title="+replab.AbstractGroup.simplify"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">simplify</span></code></a> – Attempts to simplify the given word</p></li>
 </ul>
 <p><strong>Representations</strong></p>
 <ul class="simple">
@@ -360,9 +365,6 @@ to that permutation group.</p>
 <p><strong>Group properties</strong></p>
 <ul class="simple">
 <li><p><a class="reference internal" href="#+replab.AbstractGroup.abelianInvariants" title="+replab.AbstractGroup.abelianInvariants"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">abelianInvariants</span></code></a> – Returns the group abelian invariants</p></li>
-<li><p><a class="reference internal" href="#+replab.AbstractGroup.characterTable" title="+replab.AbstractGroup.characterTable"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">characterTable</span></code></a> – Returns the (real or complex) character table of this group</p></li>
-<li><p><a class="reference internal" href="#+replab.AbstractGroup.conjugacyClass" title="+replab.AbstractGroup.conjugacyClass"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">conjugacyClass</span></code></a> – Returns the conjugacy class corresponding to the given element</p></li>
-<li><p><a class="reference internal" href="#+replab.AbstractGroup.conjugacyClasses" title="+replab.AbstractGroup.conjugacyClasses"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">conjugacyClasses</span></code></a> – Returns the conjugacy classes of this group</p></li>
 <li><p><a class="reference internal" href="#+replab.AbstractGroup.exponent" title="+replab.AbstractGroup.exponent"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">exponent</span></code></a> – Returns the group exponent</p></li>
 <li><p><a class="reference internal" href="#+replab.AbstractGroup.fastRecognize" title="+replab.AbstractGroup.fastRecognize"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">fastRecognize</span></code></a> – Attempts to recognize this group in the standard atlas</p></li>
 <li><p><a class="reference internal" href="#+replab.AbstractGroup.hasReconstruction" title="+replab.AbstractGroup.hasReconstruction"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">hasReconstruction</span></code></a> – Returns whether the group has a “reconstruction”</p></li>
@@ -370,111 +372,115 @@ to that permutation group.</p>
 <li><p><a class="reference internal" href="#+replab.AbstractGroup.isCyclic" title="+replab.AbstractGroup.isCyclic"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">isCyclic</span></code></a> – Returns whether this group is a cyclic group</p></li>
 <li><p><a class="reference internal" href="#+replab.AbstractGroup.isSimple" title="+replab.AbstractGroup.isSimple"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">isSimple</span></code></a> – Returns whether this group is simple</p></li>
 <li><p><a class="reference internal" href="#+replab.AbstractGroup.isTrivial" title="+replab.AbstractGroup.isTrivial"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">isTrivial</span></code></a> – Tests whether this group is trivial</p></li>
+<li><p><a class="reference internal" href="#+replab.AbstractGroup.knownOrder" title="+replab.AbstractGroup.knownOrder"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">knownOrder</span></code></a> – Returns whether the order of this group has already been computed</p></li>
 <li><p><a class="reference internal" href="#+replab.AbstractGroup.maximalTorusDimension" title="+replab.AbstractGroup.maximalTorusDimension"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">maximalTorusDimension</span></code></a> – Returns, if available, the dimension of the maximal torus contained in the connected component of this group</p></li>
-<li><p><a class="reference internal" href="#+replab.AbstractGroup.nElements" title="+replab.AbstractGroup.nElements"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">nElements</span></code></a> – Returns the size of this set</p></li>
 <li><p><a class="reference internal" href="#+replab.AbstractGroup.order" title="+replab.AbstractGroup.order"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">order</span></code></a> – Returns the group order</p></li>
 <li><p><a class="reference internal" href="#+replab.AbstractGroup.presentation" title="+replab.AbstractGroup.presentation"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">presentation</span></code></a> – Returns a presentation of this group as a string</p></li>
 <li><p><a class="reference internal" href="#+replab.AbstractGroup.recognize" title="+replab.AbstractGroup.recognize"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">recognize</span></code></a> – Attempts to recognize this group in the standard atlas</p></li>
 <li><p><a class="reference internal" href="#+replab.AbstractGroup.reconstruction" title="+replab.AbstractGroup.reconstruction"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">reconstruction</span></code></a> – Returns a reconstruction of the group used to speed up group averaging</p></li>
-<li><p><a class="reference internal" href="#+replab.AbstractGroup.relators" title="+replab.AbstractGroup.relators"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">relators</span></code></a> – Returns the relators of a presentation of this finite group</p></li>
-<li><p><a class="reference internal" href="#+replab.AbstractGroup.setProduct" title="+replab.AbstractGroup.setProduct"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">setProduct</span></code></a> – Returns a decomposition of this group as a product of sets</p></li>
 </ul>
 <p><strong>Isomorphic groups</strong></p>
 <ul class="simple">
 <li><p><a class="reference internal" href="#+replab.AbstractGroup.abstractGroup" title="+replab.AbstractGroup.abstractGroup"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">abstractGroup</span></code></a> – Returns an abstract group isomorphic to this finite gorup</p></li>
-<li><p><a class="reference internal" href="#+replab.AbstractGroup.niceGroup" title="+replab.AbstractGroup.niceGroup"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">niceGroup</span></code></a> – Returns the permutation group isomorphic to this finite group</p></li>
+<li><p><a class="reference internal" href="#+replab.AbstractGroup.permutationGroup" title="+replab.AbstractGroup.permutationGroup"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">permutationGroup</span></code></a> – Returns the permutation group isomorphic to this finite group</p></li>
 </ul>
 <p><strong>Subgroups</strong></p>
 <ul class="simple">
 <li><p><a class="reference internal" href="#+replab.AbstractGroup.center" title="+replab.AbstractGroup.center"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">center</span></code></a> – Returns the center of this group</p></li>
 <li><p><a class="reference internal" href="#+replab.AbstractGroup.centralizer" title="+replab.AbstractGroup.centralizer"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">centralizer</span></code></a> – Returns the centralizer of the given object in this group</p></li>
-<li><p><a class="reference internal" href="#+replab.AbstractGroup.derivedSeries" title="+replab.AbstractGroup.derivedSeries"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">derivedSeries</span></code></a> –</p></li>
+<li><p><a class="reference internal" href="#+replab.AbstractGroup.derivedSeries" title="+replab.AbstractGroup.derivedSeries"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">derivedSeries</span></code></a> – Returns the derived series of this group</p></li>
 <li><p><a class="reference internal" href="#+replab.AbstractGroup.derivedSubgroup" title="+replab.AbstractGroup.derivedSubgroup"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">derivedSubgroup</span></code></a> – Computes the derived subgroup of this group</p></li>
 <li><p><a class="reference internal" href="#+replab.AbstractGroup.intersection" title="+replab.AbstractGroup.intersection"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">intersection</span></code></a> – Computes the intersection of two groups</p></li>
 <li><p><a class="reference internal" href="#+replab.AbstractGroup.randomProperSubgroup" title="+replab.AbstractGroup.randomProperSubgroup"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">randomProperSubgroup</span></code></a> – Constructs a random proper subgroup of this group</p></li>
+<li><p><a class="reference internal" href="#+replab.AbstractGroup.randomSubgroup" title="+replab.AbstractGroup.randomSubgroup"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">randomSubgroup</span></code></a> – Constructs a random subgroup of this group</p></li>
 <li><p><a class="reference internal" href="#+replab.AbstractGroup.subgroup" title="+replab.AbstractGroup.subgroup"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">subgroup</span></code></a> – Constructs a subgroup of the current group from elements</p></li>
 <li><p><a class="reference internal" href="#+replab.AbstractGroup.subgroupWithGenerators" title="+replab.AbstractGroup.subgroupWithGenerators"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">subgroupWithGenerators</span></code></a> – Constructs a subgroup of the current group from generators</p></li>
 <li><p><a class="reference internal" href="#+replab.AbstractGroup.trivialSubgroup" title="+replab.AbstractGroup.trivialSubgroup"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">trivialSubgroup</span></code></a> – Returns the trivial subgroup of this group</p></li>
 </ul>
+<p><strong>Conjugacy classes and character table</strong></p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#+replab.AbstractGroup.characterTable" title="+replab.AbstractGroup.characterTable"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">characterTable</span></code></a> – Alias for <a class="reference internal" href="#+replab.AbstractGroup.complexCharacterTable" title="+replab.AbstractGroup.complexCharacterTable"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">complexCharacterTable</span></code></a></p></li>
+<li><p><a class="reference internal" href="#+replab.AbstractGroup.complexCharacterTable" title="+replab.AbstractGroup.complexCharacterTable"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">complexCharacterTable</span></code></a> – Returns the complex character table of this group</p></li>
+<li><p><a class="reference internal" href="#+replab.AbstractGroup.conjugacyClass" title="+replab.AbstractGroup.conjugacyClass"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">conjugacyClass</span></code></a> – Returns the conjugacy class corresponding to the given element</p></li>
+<li><p><a class="reference internal" href="#+replab.AbstractGroup.conjugacyClasses" title="+replab.AbstractGroup.conjugacyClasses"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">conjugacyClasses</span></code></a> – Returns the conjugacy classes of this group</p></li>
+<li><p><a class="reference internal" href="#+replab.AbstractGroup.findLeftConjugations" title="+replab.AbstractGroup.findLeftConjugations"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">findLeftConjugations</span></code></a> – Returns the set of all elements that left conjugates an element to another element</p></li>
+<li><p><a class="reference internal" href="#+replab.AbstractGroup.knownComplexCharacterTable" title="+replab.AbstractGroup.knownComplexCharacterTable"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">knownComplexCharacterTable</span></code></a> – Returns whether the complex character table of this group is already known or computed</p></li>
+<li><p><a class="reference internal" href="#+replab.AbstractGroup.knownRealCharacterTable" title="+replab.AbstractGroup.knownRealCharacterTable"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">knownRealCharacterTable</span></code></a> – Returns whether the real character table of this group is already known or computed</p></li>
+<li><p><a class="reference internal" href="#+replab.AbstractGroup.realCharacterTable" title="+replab.AbstractGroup.realCharacterTable"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">realCharacterTable</span></code></a> – Returns the real character table of this group</p></li>
+<li><p><a class="reference internal" href="#+replab.AbstractGroup.setComplexCharacterTable" title="+replab.AbstractGroup.setComplexCharacterTable"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">setComplexCharacterTable</span></code></a> – Sets the complex character table of this group</p></li>
+<li><p><a class="reference internal" href="#+replab.AbstractGroup.setConjugacyClasses" title="+replab.AbstractGroup.setConjugacyClasses"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">setConjugacyClasses</span></code></a> – Sets the conjugacy classes of this group</p></li>
+<li><p><a class="reference internal" href="#+replab.AbstractGroup.setRealCharacterTable" title="+replab.AbstractGroup.setRealCharacterTable"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">setRealCharacterTable</span></code></a> – Sets the real character table of this group</p></li>
+</ul>
 <p><strong>Construction of groups</strong></p>
 <ul class="simple">
-<li><p><a class="reference internal" href="#+replab.AbstractGroup.closure" title="+replab.AbstractGroup.closure"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">closure</span></code></a> – Computes the group generated by the elements of this group and another object</p></li>
+<li><p><a class="reference internal" href="#+replab.AbstractGroup.closure" title="+replab.AbstractGroup.closure"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">closure</span></code></a> – Computes the group generated by the elements of this group and other elements/groups</p></li>
 <li><p><a class="reference internal" href="#+replab.AbstractGroup.leftConjugateGroup" title="+replab.AbstractGroup.leftConjugateGroup"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">leftConjugateGroup</span></code></a> – Returns the left conjugate of the current group by the given element</p></li>
 <li><p><a class="reference internal" href="#+replab.AbstractGroup.normalClosure" title="+replab.AbstractGroup.normalClosure"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">normalClosure</span></code></a> – Computes the normal closure of an object in the closure of this group and this object</p></li>
-<li><p><a class="reference internal" href="#+replab.AbstractGroup.withGeneratorNames" title="+replab.AbstractGroup.withGeneratorNames"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">withGeneratorNames</span></code></a> – Returns a modified copy of this abstract group with the generators renamed</p></li>
-</ul>
-<p><strong>Group elements</strong></p>
-<ul class="simple">
-<li><p><a class="reference internal" href="#+replab.AbstractGroup.contains" title="+replab.AbstractGroup.contains"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">contains</span></code></a> – Tests whether this group contains the given element</p></li>
-<li><p><a class="reference internal" href="#+replab.AbstractGroup.elementOrder" title="+replab.AbstractGroup.elementOrder"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">elementOrder</span></code></a> – Returns the order of a group element</p></li>
-<li><p><a class="reference internal" href="#+replab.AbstractGroup.factorizeLetters" title="+replab.AbstractGroup.factorizeLetters"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">factorizeLetters</span></code></a> – Parses word letters from word as a string</p></li>
-<li><p><a class="reference internal" href="#+replab.AbstractGroup.factorizeWord" title="+replab.AbstractGroup.factorizeWord"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">factorizeWord</span></code></a> – Factorizes an element as a word in the generators (returns word)</p></li>
-<li><p><a class="reference internal" href="#+replab.AbstractGroup.generator" title="+replab.AbstractGroup.generator"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">generator</span></code></a> – Returns the i-th group generator</p></li>
-<li><p><a class="reference internal" href="#+replab.AbstractGroup.generatorInverse" title="+replab.AbstractGroup.generatorInverse"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">generatorInverse</span></code></a> – Returns the inverse of the i-th group generator</p></li>
-<li><p><a class="reference internal" href="#+replab.AbstractGroup.imageLetters" title="+replab.AbstractGroup.imageLetters"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">imageLetters</span></code></a> – Prints a word formed of letters as a string</p></li>
-<li><p><a class="reference internal" href="#+replab.AbstractGroup.imageWord" title="+replab.AbstractGroup.imageWord"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">imageWord</span></code></a> – Computes the image of a word in the group generators</p></li>
-<li><p><a class="reference internal" href="#+replab.AbstractGroup.lettersToWord" title="+replab.AbstractGroup.lettersToWord"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">lettersToWord</span></code></a> – Prints a word described by letters into a string</p></li>
-<li><p><a class="reference internal" href="#+replab.AbstractGroup.nGenerators" title="+replab.AbstractGroup.nGenerators"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">nGenerators</span></code></a> – Returns the number of group generators</p></li>
-<li><p><a class="reference internal" href="#+replab.AbstractGroup.smallGeneratingSet" title="+replab.AbstractGroup.smallGeneratingSet"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">smallGeneratingSet</span></code></a> – Returns a small set of elements generating the group</p></li>
-<li><p><a class="reference internal" href="#+replab.AbstractGroup.wordToLetters" title="+replab.AbstractGroup.wordToLetters"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">wordToLetters</span></code></a> – Parses a word into generator letters</p></li>
+<li><p><a class="reference internal" href="#+replab.AbstractGroup.withGeneratorNames" title="+replab.AbstractGroup.withGeneratorNames"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">withGeneratorNames</span></code></a> – Returns a modified copy of this finite group with renamed generators</p></li>
 </ul>
 <p><strong>Cosets</strong></p>
 <ul class="simple">
 <li><p><a class="reference internal" href="#+replab.AbstractGroup.doubleCoset" title="+replab.AbstractGroup.doubleCoset"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">doubleCoset</span></code></a> – Returns a double coset</p></li>
 <li><p><a class="reference internal" href="#+replab.AbstractGroup.doubleCosets" title="+replab.AbstractGroup.doubleCosets"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">doubleCosets</span></code></a> – Returns the set of double cosets in this group by the given groups</p></li>
-<li><p><a class="reference internal" href="#+replab.AbstractGroup.findLeftConjugations" title="+replab.AbstractGroup.findLeftConjugations"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">findLeftConjugations</span></code></a> – Returns the set of all elements that left conjugates an element to another element</p></li>
 <li><p><a class="reference internal" href="#+replab.AbstractGroup.isNormalizedBy" title="+replab.AbstractGroup.isNormalizedBy"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">isNormalizedBy</span></code></a> – Returns whether a given element/group normalizes this group</p></li>
 <li><p><a class="reference internal" href="#+replab.AbstractGroup.leftCoset" title="+replab.AbstractGroup.leftCoset"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">leftCoset</span></code></a> – Returns a left coset</p></li>
-<li><p><a class="reference internal" href="#+replab.AbstractGroup.leftCosetsOf" title="+replab.AbstractGroup.leftCosetsOf"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">leftCosetsOf</span></code></a> – Returns the set of left cosets of the given subgroup in this group</p></li>
-<li><p><a class="reference internal" href="#+replab.AbstractGroup.mldivide" title="+replab.AbstractGroup.mldivide"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">mldivide</span></code></a> – Shorthand for <a class="reference internal" href="#+replab.AbstractGroup.rightCosetsOf" title="+replab.AbstractGroup.rightCosetsOf"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">rightCosetsOf</span></code></a></p></li>
-<li><p><a class="reference internal" href="#+replab.AbstractGroup.mrdivide" title="+replab.AbstractGroup.mrdivide"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">mrdivide</span></code></a> – Shorthand for <a class="reference internal" href="#+replab.AbstractGroup.leftCosetsOf" title="+replab.AbstractGroup.leftCosetsOf"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">leftCosetsOf</span></code></a></p></li>
+<li><p><a class="reference internal" href="#+replab.AbstractGroup.leftCosets" title="+replab.AbstractGroup.leftCosets"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">leftCosets</span></code></a> – Returns the set of left cosets of the given subgroup in this group</p></li>
+<li><p><a class="reference internal" href="#+replab.AbstractGroup.mldivide" title="+replab.AbstractGroup.mldivide"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">mldivide</span></code></a> – Shorthand for <a class="reference internal" href="#+replab.AbstractGroup.rightCosets" title="+replab.AbstractGroup.rightCosets"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">rightCosets</span></code></a></p></li>
+<li><p><a class="reference internal" href="#+replab.AbstractGroup.mrdivide" title="+replab.AbstractGroup.mrdivide"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">mrdivide</span></code></a> – Shorthand for <a class="reference internal" href="#+replab.AbstractGroup.leftCosets" title="+replab.AbstractGroup.leftCosets"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">leftCosets</span></code></a></p></li>
 <li><p><a class="reference internal" href="#+replab.AbstractGroup.normalCoset" title="+replab.AbstractGroup.normalCoset"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">normalCoset</span></code></a> – Returns a normal coset</p></li>
-<li><p><a class="reference internal" href="#+replab.AbstractGroup.normalCosetsOf" title="+replab.AbstractGroup.normalCosetsOf"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">normalCosetsOf</span></code></a> – Returns the set of normal cosets of the given subgroup in this group</p></li>
+<li><p><a class="reference internal" href="#+replab.AbstractGroup.normalCosets" title="+replab.AbstractGroup.normalCosets"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">normalCosets</span></code></a> – Returns the set of normal cosets of the given subgroup in this group</p></li>
 <li><p><a class="reference internal" href="#+replab.AbstractGroup.rightCoset" title="+replab.AbstractGroup.rightCoset"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">rightCoset</span></code></a> – Returns a right coset</p></li>
-<li><p><a class="reference internal" href="#+replab.AbstractGroup.rightCosetsOf" title="+replab.AbstractGroup.rightCosetsOf"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">rightCosetsOf</span></code></a> – Returns the set of right cosets of the given subgroup in this group</p></li>
+<li><p><a class="reference internal" href="#+replab.AbstractGroup.rightCosets" title="+replab.AbstractGroup.rightCosets"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">rightCosets</span></code></a> – Returns the set of right cosets of the given subgroup in this group</p></li>
+</ul>
+<p><strong>Generators-related methods</strong></p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#+replab.AbstractGroup.factorizeFlat" title="+replab.AbstractGroup.factorizeFlat"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">factorizeFlat</span></code></a> – Factorizes an element or a coset as a flat sequence in the generators</p></li>
+<li><p><a class="reference internal" href="#+replab.AbstractGroup.factorizeWord" title="+replab.AbstractGroup.factorizeWord"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">factorizeWord</span></code></a> – Factorizes an element or a coset as a word in the generators</p></li>
+<li><p><a class="reference internal" href="#+replab.AbstractGroup.flatToWord" title="+replab.AbstractGroup.flatToWord"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">flatToWord</span></code></a> – Prints a word described by letters into a string</p></li>
+<li><p><a class="reference internal" href="#+replab.AbstractGroup.generator" title="+replab.AbstractGroup.generator"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">generator</span></code></a> – Returns the i-th group generator</p></li>
+<li><p><a class="reference internal" href="#+replab.AbstractGroup.generatorInverse" title="+replab.AbstractGroup.generatorInverse"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">generatorInverse</span></code></a> – Returns the inverse of the i-th group generator</p></li>
+<li><p><a class="reference internal" href="#+replab.AbstractGroup.generatorNames" title="+replab.AbstractGroup.generatorNames"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">generatorNames</span></code></a> – Returns the names of the group generators</p></li>
+<li><p><a class="reference internal" href="#+replab.AbstractGroup.imageFlat" title="+replab.AbstractGroup.imageFlat"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">imageFlat</span></code></a> – Returns the image of a flat word in the group generators</p></li>
+<li><p><a class="reference internal" href="#+replab.AbstractGroup.imageWord" title="+replab.AbstractGroup.imageWord"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">imageWord</span></code></a> – Computes the image of a word in the group generators</p></li>
+<li><p><a class="reference internal" href="#+replab.AbstractGroup.knownRelators" title="+replab.AbstractGroup.knownRelators"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">knownRelators</span></code></a> – Returns whether the relators of this group are known</p></li>
+<li><p><a class="reference internal" href="#+replab.AbstractGroup.nGenerators" title="+replab.AbstractGroup.nGenerators"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">nGenerators</span></code></a> – Returns the number of group generators</p></li>
+<li><p><a class="reference internal" href="#+replab.AbstractGroup.relatorsFlat" title="+replab.AbstractGroup.relatorsFlat"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">relatorsFlat</span></code></a> – Returns the relators of a presentation of this finite group in the flat format</p></li>
+<li><p><a class="reference internal" href="#+replab.AbstractGroup.relatorsWord" title="+replab.AbstractGroup.relatorsWord"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">relatorsWord</span></code></a> – Returns the relators of a presentation of this finite group</p></li>
+<li><p><a class="reference internal" href="#+replab.AbstractGroup.wordToFlat" title="+replab.AbstractGroup.wordToFlat"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">wordToFlat</span></code></a> – Parses a word into generator letters</p></li>
 </ul>
 <p><strong>Relations to other groups</strong></p>
 <ul class="simple">
 <li><p><a class="reference internal" href="#+replab.AbstractGroup.isNormalSubgroupOf" title="+replab.AbstractGroup.isNormalSubgroupOf"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">isNormalSubgroupOf</span></code></a> – Returns whether this group is a normal subgroup of another group</p></li>
 <li><p><a class="reference internal" href="#+replab.AbstractGroup.isSubgroupOf" title="+replab.AbstractGroup.isSubgroupOf"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">isSubgroupOf</span></code></a> – Returns whether this group is a subgroup of another group</p></li>
 </ul>
-<p><strong>Nice monomorphism support</strong></p>
+<p><strong>Bugfix for Octave method selection</strong></p>
 <ul class="simple">
-<li><p><a class="reference internal" href="#+replab.AbstractGroup.niceImage" title="+replab.AbstractGroup.niceImage"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">niceImage</span></code></a> – Returns a permutation image of the given group element</p></li>
-<li><p><a class="reference internal" href="#+replab.AbstractGroup.nicePreimage" title="+replab.AbstractGroup.nicePreimage"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">nicePreimage</span></code></a> – Default implementation of chain</p></li>
-<li><p><a class="reference internal" href="#+replab.AbstractGroup.niceSubgroup" title="+replab.AbstractGroup.niceSubgroup"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">niceSubgroup</span></code></a> – Constructs a subgroup of this group with a small optional optimization</p></li>
+<li><p><a class="reference internal" href="#+replab.AbstractGroup.contains" title="+replab.AbstractGroup.contains"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">contains</span></code></a> – Tests whether this set contains the given element</p></li>
+<li><p><a class="reference internal" href="#+replab.AbstractGroup.elements" title="+replab.AbstractGroup.elements"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">elements</span></code></a> – Returns a cell array containing all the elements of this set</p></li>
+<li><p><a class="reference internal" href="#+replab.AbstractGroup.elementsSequence" title="+replab.AbstractGroup.elementsSequence"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">elementsSequence</span></code></a> – Returns a sequence corresponding to this set</p></li>
+<li><p><a class="reference internal" href="#+replab.AbstractGroup.nElements" title="+replab.AbstractGroup.nElements"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">nElements</span></code></a> – Returns the size of this set</p></li>
+<li><p><a class="reference internal" href="#+replab.AbstractGroup.representative" title="+replab.AbstractGroup.representative"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">representative</span></code></a> – Returns the minimal element of this set under the type ordering</p></li>
+<li><p><a class="reference internal" href="#+replab.AbstractGroup.setProduct" title="+replab.AbstractGroup.setProduct"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">setProduct</span></code></a> – Returns a description of this set as a product of sets</p></li>
 </ul>
 </div>
 <div class="dropdown admonition">
 <p class="admonition-title">Inherited elements</p>
 <dl class="mat method">
-<dt class="sig sig-object mat" id="+replab.AbstractGroup.FiniteGroup">
-<span class="sig-name descname"><span class="pre">FiniteGroup</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">identity</span></em>, <em class="sig-param"><span class="pre">generators</span></em>, <em class="sig-param"><span class="pre">type</span></em>, <em class="sig-param"><span class="pre">varargin</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.AbstractGroup.FiniteGroup" title="Permalink to this definition">¶</a></dt>
-<dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.FiniteGroup.FiniteGroup" title="+replab.FiniteGroup.FiniteGroup"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.FiniteGroup.FiniteGroup()</span></code></a></p>
-</dd></dl>
-
-<dl class="mat method">
-<dt class="sig sig-object mat" id="+replab.AbstractGroup.NiceFiniteGroup">
-<span class="sig-name descname"><span class="pre">NiceFiniteGroup</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">identity</span></em>, <em class="sig-param"><span class="pre">generators</span></em>, <em class="sig-param"><span class="pre">type</span></em>, <em class="sig-param"><span class="pre">varargin</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.AbstractGroup.NiceFiniteGroup" title="Permalink to this definition">¶</a></dt>
-<dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.NiceFiniteGroup.NiceFiniteGroup" title="+replab.NiceFiniteGroup.NiceFiniteGroup"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.NiceFiniteGroup.NiceFiniteGroup()</span></code></a></p>
-</dd></dl>
-
-<dl class="mat method">
 <dt class="sig sig-object mat" id="+replab.AbstractGroup.abelianInvariants">
 <span class="sig-name descname"><span class="pre">abelianInvariants</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.AbstractGroup.abelianInvariants" title="Permalink to this definition">¶</a></dt>
-<dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.FiniteGroup.abelianInvariants" title="+replab.FiniteGroup.abelianInvariants"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.FiniteGroup.abelianInvariants()</span></code></a></p>
+<dd><p>Documentation in <a class="reference internal" href="finite_groups.html#+replab.FiniteGroup.abelianInvariants" title="+replab.FiniteGroup.abelianInvariants"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.FiniteGroup.abelianInvariants()</span></code></a></p>
 </dd></dl>
 
 <dl class="mat method">
 <dt class="sig sig-object mat" id="+replab.AbstractGroup.abstractGroup">
-<span class="sig-name descname"><span class="pre">abstractGroup</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">generatorNames</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.AbstractGroup.abstractGroup" title="Permalink to this definition">¶</a></dt>
-<dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.FiniteGroup.abstractGroup" title="+replab.FiniteGroup.abstractGroup"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.FiniteGroup.abstractGroup()</span></code></a></p>
+<span class="sig-name descname"><span class="pre">abstractGroup</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.AbstractGroup.abstractGroup" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="finite_groups.html#+replab.FiniteGroup.abstractGroup" title="+replab.FiniteGroup.abstractGroup"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.FiniteGroup.abstractGroup()</span></code></a></p>
 </dd></dl>
 
 <dl class="mat method">
-<dt class="sig sig-object mat" id="+replab.AbstractGroup.abstractMorphism">
-<span class="sig-name descname"><span class="pre">abstractMorphism</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">names</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.AbstractGroup.abstractMorphism" title="Permalink to this definition">¶</a></dt>
-<dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.FiniteGroup.abstractMorphism" title="+replab.FiniteGroup.abstractMorphism"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.FiniteGroup.abstractMorphism()</span></code></a></p>
+<dt class="sig sig-object mat" id="+replab.AbstractGroup.abstractIsomorphism">
+<span class="sig-name descname"><span class="pre">abstractIsomorphism</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.AbstractGroup.abstractIsomorphism" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="finite_groups.html#+replab.FiniteGroup.abstractIsomorphism" title="+replab.FiniteGroup.abstractIsomorphism"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.FiniteGroup.abstractIsomorphism()</span></code></a></p>
 </dd></dl>
 
 <dl class="mat method">
@@ -534,19 +540,19 @@ to that permutation group.</p>
 <dl class="mat method">
 <dt class="sig sig-object mat" id="+replab.AbstractGroup.center">
 <span class="sig-name descname"><span class="pre">center</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.AbstractGroup.center" title="Permalink to this definition">¶</a></dt>
-<dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.FiniteGroup.center" title="+replab.FiniteGroup.center"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.FiniteGroup.center()</span></code></a></p>
+<dd><p>Documentation in <a class="reference internal" href="finite_groups.html#+replab.FiniteGroup.center" title="+replab.FiniteGroup.center"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.FiniteGroup.center()</span></code></a></p>
 </dd></dl>
 
 <dl class="mat method">
 <dt class="sig sig-object mat" id="+replab.AbstractGroup.centralizer">
 <span class="sig-name descname"><span class="pre">centralizer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">arg</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.AbstractGroup.centralizer" title="Permalink to this definition">¶</a></dt>
-<dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.FiniteGroup.centralizer" title="+replab.FiniteGroup.centralizer"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.FiniteGroup.centralizer()</span></code></a></p>
+<dd><p>Documentation in <a class="reference internal" href="finite_groups.html#+replab.FiniteGroup.centralizer" title="+replab.FiniteGroup.centralizer"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.FiniteGroup.centralizer()</span></code></a></p>
 </dd></dl>
 
 <dl class="mat method">
 <dt class="sig sig-object mat" id="+replab.AbstractGroup.characterTable">
-<span class="sig-name descname"><span class="pre">characterTable</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">field</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.AbstractGroup.characterTable" title="Permalink to this definition">¶</a></dt>
-<dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.FiniteGroup.characterTable" title="+replab.FiniteGroup.characterTable"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.FiniteGroup.characterTable()</span></code></a></p>
+<span class="sig-name descname"><span class="pre">characterTable</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.AbstractGroup.characterTable" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="finite_groups.html#+replab.FiniteGroup.characterTable" title="+replab.FiniteGroup.characterTable"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.FiniteGroup.characterTable()</span></code></a></p>
 </dd></dl>
 
 <dl class="mat method">
@@ -556,15 +562,15 @@ to that permutation group.</p>
 </dd></dl>
 
 <dl class="mat method">
-<dt class="sig sig-object mat" id="+replab.AbstractGroup.checkNormalizes">
-<span class="sig-name descname"><span class="pre">checkNormalizes</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#+replab.AbstractGroup.checkNormalizes" title="Permalink to this definition">¶</a></dt>
-<dd><p>No documentation</p>
+<dt class="sig sig-object mat" id="+replab.AbstractGroup.checkAndContinue">
+<span class="sig-name descname"><span class="pre">checkAndContinue</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.AbstractGroup.checkAndContinue" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="base.html#+replab.Obj.checkAndContinue" title="+replab.Obj.checkAndContinue"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Obj.checkAndContinue()</span></code></a></p>
 </dd></dl>
 
 <dl class="mat method">
 <dt class="sig sig-object mat" id="+replab.AbstractGroup.closure">
-<span class="sig-name descname"><span class="pre">closure</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">obj</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.AbstractGroup.closure" title="Permalink to this definition">¶</a></dt>
-<dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.FiniteGroup.closure" title="+replab.FiniteGroup.closure"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.FiniteGroup.closure()</span></code></a></p>
+<span class="sig-name descname"><span class="pre">closure</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">varargin</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.AbstractGroup.closure" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="finite_groups.html#+replab.FiniteGroup.closure" title="+replab.FiniteGroup.closure"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.FiniteGroup.closure()</span></code></a></p>
 </dd></dl>
 
 <dl class="mat method">
@@ -586,6 +592,18 @@ to that permutation group.</p>
 </dd></dl>
 
 <dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.AbstractGroup.compatibleWithNiceIsomorphism">
+<span class="sig-name descname"><span class="pre">compatibleWithNiceIsomorphism</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">iso</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.AbstractGroup.compatibleWithNiceIsomorphism" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.gen.FiniteSet.compatibleWithNiceIsomorphism()</span></code></p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.AbstractGroup.complexCharacterTable">
+<span class="sig-name descname"><span class="pre">complexCharacterTable</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.AbstractGroup.complexCharacterTable" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="finite_groups.html#+replab.FiniteGroup.complexCharacterTable" title="+replab.FiniteGroup.complexCharacterTable"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.FiniteGroup.complexCharacterTable()</span></code></a></p>
+</dd></dl>
+
+<dl class="mat method">
 <dt class="sig sig-object mat" id="+replab.AbstractGroup.compose">
 <span class="sig-name descname"><span class="pre">compose</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">x</span></em>, <em class="sig-param"><span class="pre">y</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.AbstractGroup.compose" title="Permalink to this definition">¶</a></dt>
 <dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.Monoid.compose" title="+replab.Monoid.compose"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Monoid.compose()</span></code></a></p>
@@ -598,9 +616,9 @@ to that permutation group.</p>
 </dd></dl>
 
 <dl class="mat method">
-<dt class="sig sig-object mat" id="+replab.AbstractGroup.composeLetters">
-<span class="sig-name descname"><span class="pre">composeLetters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">array</span></em>, <em class="sig-param"><span class="pre">letters</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.AbstractGroup.composeLetters" title="Permalink to this definition">¶</a></dt>
-<dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.Group.composeLetters" title="+replab.Group.composeLetters"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Group.composeLetters()</span></code></a></p>
+<dt class="sig sig-object mat" id="+replab.AbstractGroup.composeFlat">
+<span class="sig-name descname"><span class="pre">composeFlat</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">array</span></em>, <em class="sig-param"><span class="pre">letters</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.AbstractGroup.composeFlat" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.Group.composeFlat" title="+replab.Group.composeFlat"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Group.composeFlat()</span></code></a></p>
 </dd></dl>
 
 <dl class="mat method">
@@ -617,44 +635,38 @@ to that permutation group.</p>
 
 <dl class="mat method">
 <dt class="sig sig-object mat" id="+replab.AbstractGroup.conjugacyClass">
-<span class="sig-name descname"><span class="pre">conjugacyClass</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">g</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.AbstractGroup.conjugacyClass" title="Permalink to this definition">¶</a></dt>
-<dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.FiniteGroup.conjugacyClass" title="+replab.FiniteGroup.conjugacyClass"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.FiniteGroup.conjugacyClass()</span></code></a></p>
+<span class="sig-name descname"><span class="pre">conjugacyClass</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">g</span></em>, <em class="sig-param"><span class="pre">varargin</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.AbstractGroup.conjugacyClass" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="finite_groups.html#+replab.FiniteGroup.conjugacyClass" title="+replab.FiniteGroup.conjugacyClass"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.FiniteGroup.conjugacyClass()</span></code></a></p>
 </dd></dl>
 
 <dl class="mat method">
 <dt class="sig sig-object mat" id="+replab.AbstractGroup.conjugacyClasses">
 <span class="sig-name descname"><span class="pre">conjugacyClasses</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.AbstractGroup.conjugacyClasses" title="Permalink to this definition">¶</a></dt>
-<dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.FiniteGroup.conjugacyClasses" title="+replab.FiniteGroup.conjugacyClasses"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.FiniteGroup.conjugacyClasses()</span></code></a></p>
+<dd><p>Documentation in <a class="reference internal" href="finite_groups.html#+replab.FiniteGroup.conjugacyClasses" title="+replab.FiniteGroup.conjugacyClasses"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.FiniteGroup.conjugacyClasses()</span></code></a></p>
 </dd></dl>
 
 <dl class="mat method">
 <dt class="sig sig-object mat" id="+replab.AbstractGroup.conjugatingAutomorphism">
 <span class="sig-name descname"><span class="pre">conjugatingAutomorphism</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">by</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.AbstractGroup.conjugatingAutomorphism" title="Permalink to this definition">¶</a></dt>
-<dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.FiniteGroup.conjugatingAutomorphism" title="+replab.FiniteGroup.conjugatingAutomorphism"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.FiniteGroup.conjugatingAutomorphism()</span></code></a></p>
+<dd><p>Documentation in <a class="reference internal" href="finite_groups.html#+replab.FiniteGroup.conjugatingAutomorphism" title="+replab.FiniteGroup.conjugatingAutomorphism"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.FiniteGroup.conjugatingAutomorphism()</span></code></a></p>
 </dd></dl>
 
 <dl class="mat method">
 <dt class="sig sig-object mat" id="+replab.AbstractGroup.contains">
-<span class="sig-name descname"><span class="pre">contains</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">g</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.AbstractGroup.contains" title="Permalink to this definition">¶</a></dt>
-<dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.FiniteGroup.contains" title="+replab.FiniteGroup.contains"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.FiniteGroup.contains()</span></code></a></p>
-</dd></dl>
-
-<dl class="mat method">
-<dt class="sig sig-object mat" id="+replab.AbstractGroup.defaultGeneratorNames">
-<span class="sig-name descname"><span class="pre">defaultGeneratorNames</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">n</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.AbstractGroup.defaultGeneratorNames" title="Permalink to this definition">¶</a></dt>
-<dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.FiniteGroup.defaultGeneratorNames" title="+replab.FiniteGroup.defaultGeneratorNames"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.FiniteGroup.defaultGeneratorNames()</span></code></a></p>
+<span class="sig-name descname"><span class="pre">contains</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">el</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.AbstractGroup.contains" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="group_subsets.html#+replab.FiniteSet.contains" title="+replab.FiniteSet.contains"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.FiniteSet.contains()</span></code></a></p>
 </dd></dl>
 
 <dl class="mat method">
 <dt class="sig sig-object mat" id="+replab.AbstractGroup.derivedSeries">
-<span class="sig-name descname"><span class="pre">derivedSeries</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#+replab.AbstractGroup.derivedSeries" title="Permalink to this definition">¶</a></dt>
-<dd><p>No documentation</p>
+<span class="sig-name descname"><span class="pre">derivedSeries</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.AbstractGroup.derivedSeries" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="finite_groups.html#+replab.FiniteGroup.derivedSeries" title="+replab.FiniteGroup.derivedSeries"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.FiniteGroup.derivedSeries()</span></code></a></p>
 </dd></dl>
 
 <dl class="mat method">
 <dt class="sig sig-object mat" id="+replab.AbstractGroup.derivedSubgroup">
 <span class="sig-name descname"><span class="pre">derivedSubgroup</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.AbstractGroup.derivedSubgroup" title="Permalink to this definition">¶</a></dt>
-<dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.FiniteGroup.derivedSubgroup" title="+replab.FiniteGroup.derivedSubgroup"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.FiniteGroup.derivedSubgroup()</span></code></a></p>
+<dd><p>Documentation in <a class="reference internal" href="finite_groups.html#+replab.FiniteGroup.derivedSubgroup" title="+replab.FiniteGroup.derivedSubgroup"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.FiniteGroup.derivedSubgroup()</span></code></a></p>
 </dd></dl>
 
 <dl class="mat method">
@@ -683,20 +695,20 @@ to that permutation group.</p>
 
 <dl class="mat method">
 <dt class="sig sig-object mat" id="+replab.AbstractGroup.doubleCoset">
-<span class="sig-name descname"><span class="pre">doubleCoset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">element</span></em>, <em class="sig-param"><span class="pre">K</span></em>, <em class="sig-param"><span class="pre">parent</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.AbstractGroup.doubleCoset" title="Permalink to this definition">¶</a></dt>
-<dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.FiniteGroup.doubleCoset" title="+replab.FiniteGroup.doubleCoset"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.FiniteGroup.doubleCoset()</span></code></a></p>
+<span class="sig-name descname"><span class="pre">doubleCoset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">element</span></em>, <em class="sig-param"><span class="pre">rightSubgroup</span></em>, <em class="sig-param"><span class="pre">varargin</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.AbstractGroup.doubleCoset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="finite_groups.html#+replab.FiniteGroup.doubleCoset" title="+replab.FiniteGroup.doubleCoset"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.FiniteGroup.doubleCoset()</span></code></a></p>
 </dd></dl>
 
 <dl class="mat method">
 <dt class="sig sig-object mat" id="+replab.AbstractGroup.doubleCosets">
-<span class="sig-name descname"><span class="pre">doubleCosets</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">H</span></em>, <em class="sig-param"><span class="pre">K</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.AbstractGroup.doubleCosets" title="Permalink to this definition">¶</a></dt>
-<dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.FiniteGroup.doubleCosets" title="+replab.FiniteGroup.doubleCosets"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.FiniteGroup.doubleCosets()</span></code></a></p>
+<span class="sig-name descname"><span class="pre">doubleCosets</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">leftSubgroup</span></em>, <em class="sig-param"><span class="pre">rightSubgroup</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.AbstractGroup.doubleCosets" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="finite_groups.html#+replab.FiniteGroup.doubleCosets" title="+replab.FiniteGroup.doubleCosets"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.FiniteGroup.doubleCosets()</span></code></a></p>
 </dd></dl>
 
 <dl class="mat method">
 <dt class="sig sig-object mat" id="+replab.AbstractGroup.elementOrder">
 <span class="sig-name descname"><span class="pre">elementOrder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">g</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.AbstractGroup.elementOrder" title="Permalink to this definition">¶</a></dt>
-<dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.FiniteGroup.elementOrder" title="+replab.FiniteGroup.elementOrder"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.FiniteGroup.elementOrder()</span></code></a></p>
+<dd><p>Documentation in <a class="reference internal" href="finite_groups.html#+replab.FiniteGroup.elementOrder" title="+replab.FiniteGroup.elementOrder"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.FiniteGroup.elementOrder()</span></code></a></p>
 </dd></dl>
 
 <dl class="mat method">
@@ -726,67 +738,79 @@ to that permutation group.</p>
 <dl class="mat method">
 <dt class="sig sig-object mat" id="+replab.AbstractGroup.exponent">
 <span class="sig-name descname"><span class="pre">exponent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.AbstractGroup.exponent" title="Permalink to this definition">¶</a></dt>
-<dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.FiniteGroup.exponent" title="+replab.FiniteGroup.exponent"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.FiniteGroup.exponent()</span></code></a></p>
+<dd><p>Documentation in <a class="reference internal" href="finite_groups.html#+replab.FiniteGroup.exponent" title="+replab.FiniteGroup.exponent"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.FiniteGroup.exponent()</span></code></a></p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.AbstractGroup.factorizeFlat">
+<span class="sig-name descname"><span class="pre">factorizeFlat</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">elementOrCoset</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.AbstractGroup.factorizeFlat" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="finite_groups.html#+replab.FiniteGroup.factorizeFlat" title="+replab.FiniteGroup.factorizeFlat"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.FiniteGroup.factorizeFlat()</span></code></a></p>
 </dd></dl>
 
 <dl class="mat method">
 <dt class="sig sig-object mat" id="+replab.AbstractGroup.factorizeWord">
-<span class="sig-name descname"><span class="pre">factorizeWord</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">element</span></em>, <em class="sig-param"><span class="pre">generatorNames</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.AbstractGroup.factorizeWord" title="Permalink to this definition">¶</a></dt>
-<dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.FiniteGroup.factorizeWord" title="+replab.FiniteGroup.factorizeWord"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.FiniteGroup.factorizeWord()</span></code></a></p>
+<span class="sig-name descname"><span class="pre">factorizeWord</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">elementOrCoset</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.AbstractGroup.factorizeWord" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="finite_groups.html#+replab.FiniteGroup.factorizeWord" title="+replab.FiniteGroup.factorizeWord"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.FiniteGroup.factorizeWord()</span></code></a></p>
 </dd></dl>
 
 <dl class="mat method">
 <dt class="sig sig-object mat" id="+replab.AbstractGroup.fastRecognize">
 <span class="sig-name descname"><span class="pre">fastRecognize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.AbstractGroup.fastRecognize" title="Permalink to this definition">¶</a></dt>
-<dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.FiniteGroup.fastRecognize" title="+replab.FiniteGroup.fastRecognize"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.FiniteGroup.fastRecognize()</span></code></a></p>
+<dd><p>Documentation in <a class="reference internal" href="finite_groups.html#+replab.FiniteGroup.fastRecognize" title="+replab.FiniteGroup.fastRecognize"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.FiniteGroup.fastRecognize()</span></code></a></p>
 </dd></dl>
 
 <dl class="mat method">
 <dt class="sig sig-object mat" id="+replab.AbstractGroup.findIsomorphism">
 <span class="sig-name descname"><span class="pre">findIsomorphism</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">to</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.AbstractGroup.findIsomorphism" title="Permalink to this definition">¶</a></dt>
-<dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.FiniteGroup.findIsomorphism" title="+replab.FiniteGroup.findIsomorphism"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.FiniteGroup.findIsomorphism()</span></code></a></p>
+<dd><p>Documentation in <a class="reference internal" href="finite_groups.html#+replab.FiniteGroup.findIsomorphism" title="+replab.FiniteGroup.findIsomorphism"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.FiniteGroup.findIsomorphism()</span></code></a></p>
 </dd></dl>
 
 <dl class="mat method">
 <dt class="sig sig-object mat" id="+replab.AbstractGroup.findIsomorphisms">
 <span class="sig-name descname"><span class="pre">findIsomorphisms</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">to</span></em>, <em class="sig-param"><span class="pre">varargin</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.AbstractGroup.findIsomorphisms" title="Permalink to this definition">¶</a></dt>
-<dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.FiniteGroup.findIsomorphisms" title="+replab.FiniteGroup.findIsomorphisms"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.FiniteGroup.findIsomorphisms()</span></code></a></p>
+<dd><p>Documentation in <a class="reference internal" href="finite_groups.html#+replab.FiniteGroup.findIsomorphisms" title="+replab.FiniteGroup.findIsomorphisms"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.FiniteGroup.findIsomorphisms()</span></code></a></p>
 </dd></dl>
 
 <dl class="mat method">
 <dt class="sig sig-object mat" id="+replab.AbstractGroup.findLeftConjugations">
-<span class="sig-name descname"><span class="pre">findLeftConjugations</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">s</span></em>, <em class="sig-param"><span class="pre">t</span></em>, <em class="sig-param"><span class="pre">sCentralizer</span></em>, <em class="sig-param"><span class="pre">tCentralizer</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.AbstractGroup.findLeftConjugations" title="Permalink to this definition">¶</a></dt>
-<dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.FiniteGroup.findLeftConjugations" title="+replab.FiniteGroup.findLeftConjugations"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.FiniteGroup.findLeftConjugations()</span></code></a></p>
+<span class="sig-name descname"><span class="pre">findLeftConjugations</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">s</span></em>, <em class="sig-param"><span class="pre">t</span></em>, <em class="sig-param"><span class="pre">varargin</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.AbstractGroup.findLeftConjugations" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="finite_groups.html#+replab.FiniteGroup.findLeftConjugations" title="+replab.FiniteGroup.findLeftConjugations"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.FiniteGroup.findLeftConjugations()</span></code></a></p>
 </dd></dl>
 
 <dl class="mat method">
 <dt class="sig sig-object mat" id="+replab.AbstractGroup.findMorphisms">
 <span class="sig-name descname"><span class="pre">findMorphisms</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">to</span></em>, <em class="sig-param"><span class="pre">varargin</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.AbstractGroup.findMorphisms" title="Permalink to this definition">¶</a></dt>
-<dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.FiniteGroup.findMorphisms" title="+replab.FiniteGroup.findMorphisms"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.FiniteGroup.findMorphisms()</span></code></a></p>
+<dd><p>Documentation in <a class="reference internal" href="finite_groups.html#+replab.FiniteGroup.findMorphisms" title="+replab.FiniteGroup.findMorphisms"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.FiniteGroup.findMorphisms()</span></code></a></p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.AbstractGroup.flatToWord">
+<span class="sig-name descname"><span class="pre">flatToWord</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">letters</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.AbstractGroup.flatToWord" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="finite_groups.html#+replab.FiniteGroup.flatToWord" title="+replab.FiniteGroup.flatToWord"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.FiniteGroup.flatToWord()</span></code></a></p>
 </dd></dl>
 
 <dl class="mat method">
 <dt class="sig sig-object mat" id="+replab.AbstractGroup.generator">
 <span class="sig-name descname"><span class="pre">generator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">i</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.AbstractGroup.generator" title="Permalink to this definition">¶</a></dt>
-<dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.FiniteGroup.generator" title="+replab.FiniteGroup.generator"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.FiniteGroup.generator()</span></code></a></p>
+<dd><p>Documentation in <a class="reference internal" href="finite_groups.html#+replab.FiniteGroup.generator" title="+replab.FiniteGroup.generator"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.FiniteGroup.generator()</span></code></a></p>
 </dd></dl>
 
 <dl class="mat method">
 <dt class="sig sig-object mat" id="+replab.AbstractGroup.generatorInverse">
 <span class="sig-name descname"><span class="pre">generatorInverse</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">i</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.AbstractGroup.generatorInverse" title="Permalink to this definition">¶</a></dt>
-<dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.FiniteGroup.generatorInverse" title="+replab.FiniteGroup.generatorInverse"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.FiniteGroup.generatorInverse()</span></code></a></p>
+<dd><p>Documentation in <a class="reference internal" href="finite_groups.html#+replab.FiniteGroup.generatorInverse" title="+replab.FiniteGroup.generatorInverse"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.FiniteGroup.generatorInverse()</span></code></a></p>
 </dd></dl>
 
-<dl class="mat attribute">
+<dl class="mat method">
 <dt class="sig sig-object mat" id="+replab.AbstractGroup.generatorNames">
-<span class="sig-name descname"><span class="pre">generatorNames</span></span><a class="headerlink" href="#+replab.AbstractGroup.generatorNames" title="Permalink to this definition">¶</a></dt>
-<dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.FiniteGroup.generatorNames" title="+replab.FiniteGroup.generatorNames"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">replab.FiniteGroup.generatorNames</span></code></a></p>
+<span class="sig-name descname"><span class="pre">generatorNames</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.AbstractGroup.generatorNames" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="finite_groups.html#+replab.FiniteGroup.generatorNames" title="+replab.FiniteGroup.generatorNames"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.FiniteGroup.generatorNames()</span></code></a></p>
 </dd></dl>
 
 <dl class="mat attribute">
 <dt class="sig sig-object mat" id="+replab.AbstractGroup.generators">
 <span class="sig-name descname"><span class="pre">generators</span></span><a class="headerlink" href="#+replab.AbstractGroup.generators" title="Permalink to this definition">¶</a></dt>
-<dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.FiniteGroup.generators" title="+replab.FiniteGroup.generators"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">replab.FiniteGroup.generators</span></code></a></p>
+<dd><p>Documentation in <a class="reference internal" href="finite_groups.html#+replab.FiniteGroup.generators" title="+replab.FiniteGroup.generators"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">replab.FiniteGroup.generators</span></code></a></p>
 </dd></dl>
 
 <dl class="mat method">
@@ -826,15 +850,21 @@ to that permutation group.</p>
 </dd></dl>
 
 <dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.AbstractGroup.imageFlat">
+<span class="sig-name descname"><span class="pre">imageFlat</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">letters</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.AbstractGroup.imageFlat" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="finite_groups.html#+replab.FiniteGroup.imageFlat" title="+replab.FiniteGroup.imageFlat"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.FiniteGroup.imageFlat()</span></code></a></p>
+</dd></dl>
+
+<dl class="mat method">
 <dt class="sig sig-object mat" id="+replab.AbstractGroup.imageWord">
-<span class="sig-name descname"><span class="pre">imageWord</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">word</span></em>, <em class="sig-param"><span class="pre">generatorNames</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.AbstractGroup.imageWord" title="Permalink to this definition">¶</a></dt>
-<dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.FiniteGroup.imageWord" title="+replab.FiniteGroup.imageWord"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.FiniteGroup.imageWord()</span></code></a></p>
+<span class="sig-name descname"><span class="pre">imageWord</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">word</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.AbstractGroup.imageWord" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="finite_groups.html#+replab.FiniteGroup.imageWord" title="+replab.FiniteGroup.imageWord"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.FiniteGroup.imageWord()</span></code></a></p>
 </dd></dl>
 
 <dl class="mat method">
 <dt class="sig sig-object mat" id="+replab.AbstractGroup.imap">
 <span class="sig-name descname"><span class="pre">imap</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">f</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.AbstractGroup.imap" title="Permalink to this definition">¶</a></dt>
-<dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.FiniteGroup.imap" title="+replab.FiniteGroup.imap"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.FiniteGroup.imap()</span></code></a></p>
+<dd><p>Documentation in <a class="reference internal" href="group_subsets.html#+replab.FiniteSet.imap" title="+replab.FiniteSet.imap"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.FiniteSet.imap()</span></code></a></p>
 </dd></dl>
 
 <dl class="mat method">
@@ -846,13 +876,13 @@ to that permutation group.</p>
 <dl class="mat method">
 <dt class="sig sig-object mat" id="+replab.AbstractGroup.innerAutomorphism">
 <span class="sig-name descname"><span class="pre">innerAutomorphism</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">by</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.AbstractGroup.innerAutomorphism" title="Permalink to this definition">¶</a></dt>
-<dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.FiniteGroup.innerAutomorphism" title="+replab.FiniteGroup.innerAutomorphism"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.FiniteGroup.innerAutomorphism()</span></code></a></p>
+<dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.Group.innerAutomorphism" title="+replab.Group.innerAutomorphism"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Group.innerAutomorphism()</span></code></a></p>
 </dd></dl>
 
 <dl class="mat method">
 <dt class="sig sig-object mat" id="+replab.AbstractGroup.intersection">
 <span class="sig-name descname"><span class="pre">intersection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">G</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.AbstractGroup.intersection" title="Permalink to this definition">¶</a></dt>
-<dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.FiniteGroup.intersection" title="+replab.FiniteGroup.intersection"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.FiniteGroup.intersection()</span></code></a></p>
+<dd><p>Documentation in <a class="reference internal" href="finite_groups.html#+replab.FiniteGroup.intersection" title="+replab.FiniteGroup.intersection"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.FiniteGroup.intersection()</span></code></a></p>
 </dd></dl>
 
 <dl class="mat method">
@@ -864,13 +894,13 @@ to that permutation group.</p>
 <dl class="mat method">
 <dt class="sig sig-object mat" id="+replab.AbstractGroup.isCommutative">
 <span class="sig-name descname"><span class="pre">isCommutative</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.AbstractGroup.isCommutative" title="Permalink to this definition">¶</a></dt>
-<dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.FiniteGroup.isCommutative" title="+replab.FiniteGroup.isCommutative"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.FiniteGroup.isCommutative()</span></code></a></p>
+<dd><p>Documentation in <a class="reference internal" href="finite_groups.html#+replab.FiniteGroup.isCommutative" title="+replab.FiniteGroup.isCommutative"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.FiniteGroup.isCommutative()</span></code></a></p>
 </dd></dl>
 
 <dl class="mat method">
 <dt class="sig sig-object mat" id="+replab.AbstractGroup.isCyclic">
 <span class="sig-name descname"><span class="pre">isCyclic</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.AbstractGroup.isCyclic" title="Permalink to this definition">¶</a></dt>
-<dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.FiniteGroup.isCyclic" title="+replab.FiniteGroup.isCyclic"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.FiniteGroup.isCyclic()</span></code></a></p>
+<dd><p>Documentation in <a class="reference internal" href="finite_groups.html#+replab.FiniteGroup.isCyclic" title="+replab.FiniteGroup.isCyclic"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.FiniteGroup.isCyclic()</span></code></a></p>
 </dd></dl>
 
 <dl class="mat method">
@@ -882,61 +912,85 @@ to that permutation group.</p>
 <dl class="mat method">
 <dt class="sig sig-object mat" id="+replab.AbstractGroup.isMorphismByImages">
 <span class="sig-name descname"><span class="pre">isMorphismByImages</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">target</span></em>, <em class="sig-param"><span class="pre">varargin</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.AbstractGroup.isMorphismByImages" title="Permalink to this definition">¶</a></dt>
-<dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.FiniteGroup.isMorphismByImages" title="+replab.FiniteGroup.isMorphismByImages"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.FiniteGroup.isMorphismByImages()</span></code></a></p>
+<dd><p>Documentation in <a class="reference internal" href="finite_groups.html#+replab.FiniteGroup.isMorphismByImages" title="+replab.FiniteGroup.isMorphismByImages"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.FiniteGroup.isMorphismByImages()</span></code></a></p>
 </dd></dl>
 
 <dl class="mat method">
 <dt class="sig sig-object mat" id="+replab.AbstractGroup.isNormalSubgroupOf">
 <span class="sig-name descname"><span class="pre">isNormalSubgroupOf</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">rhs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.AbstractGroup.isNormalSubgroupOf" title="Permalink to this definition">¶</a></dt>
-<dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.FiniteGroup.isNormalSubgroupOf" title="+replab.FiniteGroup.isNormalSubgroupOf"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.FiniteGroup.isNormalSubgroupOf()</span></code></a></p>
+<dd><p>Documentation in <a class="reference internal" href="finite_groups.html#+replab.FiniteGroup.isNormalSubgroupOf" title="+replab.FiniteGroup.isNormalSubgroupOf"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.FiniteGroup.isNormalSubgroupOf()</span></code></a></p>
 </dd></dl>
 
 <dl class="mat method">
 <dt class="sig sig-object mat" id="+replab.AbstractGroup.isNormalizedBy">
 <span class="sig-name descname"><span class="pre">isNormalizedBy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">element</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.AbstractGroup.isNormalizedBy" title="Permalink to this definition">¶</a></dt>
-<dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.FiniteGroup.isNormalizedBy" title="+replab.FiniteGroup.isNormalizedBy"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.FiniteGroup.isNormalizedBy()</span></code></a></p>
+<dd><p>Documentation in <a class="reference internal" href="finite_groups.html#+replab.FiniteGroup.isNormalizedBy" title="+replab.FiniteGroup.isNormalizedBy"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.FiniteGroup.isNormalizedBy()</span></code></a></p>
 </dd></dl>
 
 <dl class="mat method">
 <dt class="sig sig-object mat" id="+replab.AbstractGroup.isSimple">
 <span class="sig-name descname"><span class="pre">isSimple</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.AbstractGroup.isSimple" title="Permalink to this definition">¶</a></dt>
-<dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.FiniteGroup.isSimple" title="+replab.FiniteGroup.isSimple"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.FiniteGroup.isSimple()</span></code></a></p>
+<dd><p>Documentation in <a class="reference internal" href="finite_groups.html#+replab.FiniteGroup.isSimple" title="+replab.FiniteGroup.isSimple"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.FiniteGroup.isSimple()</span></code></a></p>
 </dd></dl>
 
 <dl class="mat method">
 <dt class="sig sig-object mat" id="+replab.AbstractGroup.isSubgroupOf">
 <span class="sig-name descname"><span class="pre">isSubgroupOf</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">rhs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.AbstractGroup.isSubgroupOf" title="Permalink to this definition">¶</a></dt>
-<dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.FiniteGroup.isSubgroupOf" title="+replab.FiniteGroup.isSubgroupOf"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.FiniteGroup.isSubgroupOf()</span></code></a></p>
+<dd><p>Documentation in <a class="reference internal" href="finite_groups.html#+replab.FiniteGroup.isSubgroupOf" title="+replab.FiniteGroup.isSubgroupOf"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.FiniteGroup.isSubgroupOf()</span></code></a></p>
 </dd></dl>
 
 <dl class="mat method">
 <dt class="sig sig-object mat" id="+replab.AbstractGroup.isTrivial">
 <span class="sig-name descname"><span class="pre">isTrivial</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.AbstractGroup.isTrivial" title="Permalink to this definition">¶</a></dt>
-<dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.FiniteGroup.isTrivial" title="+replab.FiniteGroup.isTrivial"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.FiniteGroup.isTrivial()</span></code></a></p>
+<dd><p>Documentation in <a class="reference internal" href="finite_groups.html#+replab.FiniteGroup.isTrivial" title="+replab.FiniteGroup.isTrivial"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.FiniteGroup.isTrivial()</span></code></a></p>
 </dd></dl>
 
 <dl class="mat method">
 <dt class="sig sig-object mat" id="+replab.AbstractGroup.isequal">
-<span class="sig-name descname"><span class="pre">isequal</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#+replab.AbstractGroup.isequal" title="Permalink to this definition">¶</a></dt>
-<dd><p>No documentation</p>
+<span class="sig-name descname"><span class="pre">isequal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">rhs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.AbstractGroup.isequal" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="group_subsets.html#+replab.FiniteSet.isequal" title="+replab.FiniteSet.isequal"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.FiniteSet.isequal()</span></code></a></p>
 </dd></dl>
 
 <dl class="mat method">
 <dt class="sig sig-object mat" id="+replab.AbstractGroup.isomorphismByFunction">
-<span class="sig-name descname"><span class="pre">isomorphismByFunction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">target</span></em>, <em class="sig-param"><span class="pre">imageElementFun</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.AbstractGroup.isomorphismByFunction" title="Permalink to this definition">¶</a></dt>
-<dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.FiniteGroup.isomorphismByFunction" title="+replab.FiniteGroup.isomorphismByFunction"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.FiniteGroup.isomorphismByFunction()</span></code></a></p>
+<span class="sig-name descname"><span class="pre">isomorphismByFunction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">target</span></em>, <em class="sig-param"><span class="pre">imageElementFun</span></em>, <em class="sig-param"><span class="pre">varargin</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.AbstractGroup.isomorphismByFunction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="finite_groups.html#+replab.FiniteGroup.isomorphismByFunction" title="+replab.FiniteGroup.isomorphismByFunction"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.FiniteGroup.isomorphismByFunction()</span></code></a></p>
 </dd></dl>
 
 <dl class="mat method">
 <dt class="sig sig-object mat" id="+replab.AbstractGroup.isomorphismByFunctions">
-<span class="sig-name descname"><span class="pre">isomorphismByFunctions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">target</span></em>, <em class="sig-param"><span class="pre">preimageElementFun</span></em>, <em class="sig-param"><span class="pre">imageElementFun</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.AbstractGroup.isomorphismByFunctions" title="Permalink to this definition">¶</a></dt>
-<dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.FiniteGroup.isomorphismByFunctions" title="+replab.FiniteGroup.isomorphismByFunctions"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.FiniteGroup.isomorphismByFunctions()</span></code></a></p>
+<span class="sig-name descname"><span class="pre">isomorphismByFunctions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">target</span></em>, <em class="sig-param"><span class="pre">preimageElementFun</span></em>, <em class="sig-param"><span class="pre">imageElementFun</span></em>, <em class="sig-param"><span class="pre">torusMap</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.AbstractGroup.isomorphismByFunctions" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.Group.isomorphismByFunctions" title="+replab.Group.isomorphismByFunctions"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Group.isomorphismByFunctions()</span></code></a></p>
 </dd></dl>
 
 <dl class="mat method">
 <dt class="sig sig-object mat" id="+replab.AbstractGroup.isomorphismByImages">
 <span class="sig-name descname"><span class="pre">isomorphismByImages</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">target</span></em>, <em class="sig-param"><span class="pre">varargin</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.AbstractGroup.isomorphismByImages" title="Permalink to this definition">¶</a></dt>
-<dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.FiniteGroup.isomorphismByImages" title="+replab.FiniteGroup.isomorphismByImages"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.FiniteGroup.isomorphismByImages()</span></code></a></p>
+<dd><p>Documentation in <a class="reference internal" href="finite_groups.html#+replab.FiniteGroup.isomorphismByImages" title="+replab.FiniteGroup.isomorphismByImages"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.FiniteGroup.isomorphismByImages()</span></code></a></p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.AbstractGroup.knownComplexCharacterTable">
+<span class="sig-name descname"><span class="pre">knownComplexCharacterTable</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.AbstractGroup.knownComplexCharacterTable" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="finite_groups.html#+replab.FiniteGroup.knownComplexCharacterTable" title="+replab.FiniteGroup.knownComplexCharacterTable"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.FiniteGroup.knownComplexCharacterTable()</span></code></a></p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.AbstractGroup.knownOrder">
+<span class="sig-name descname"><span class="pre">knownOrder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.AbstractGroup.knownOrder" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="finite_groups.html#+replab.FiniteGroup.knownOrder" title="+replab.FiniteGroup.knownOrder"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.FiniteGroup.knownOrder()</span></code></a></p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.AbstractGroup.knownRealCharacterTable">
+<span class="sig-name descname"><span class="pre">knownRealCharacterTable</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.AbstractGroup.knownRealCharacterTable" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="finite_groups.html#+replab.FiniteGroup.knownRealCharacterTable" title="+replab.FiniteGroup.knownRealCharacterTable"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.FiniteGroup.knownRealCharacterTable()</span></code></a></p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.AbstractGroup.knownRelators">
+<span class="sig-name descname"><span class="pre">knownRelators</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.AbstractGroup.knownRelators" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="finite_groups.html#+replab.FiniteGroup.knownRelators" title="+replab.FiniteGroup.knownRelators"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.FiniteGroup.knownRelators()</span></code></a></p>
 </dd></dl>
 
 <dl class="mat method">
@@ -960,25 +1014,19 @@ to that permutation group.</p>
 <dl class="mat method">
 <dt class="sig sig-object mat" id="+replab.AbstractGroup.leftConjugateGroup">
 <span class="sig-name descname"><span class="pre">leftConjugateGroup</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">by</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.AbstractGroup.leftConjugateGroup" title="Permalink to this definition">¶</a></dt>
-<dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.FiniteGroup.leftConjugateGroup" title="+replab.FiniteGroup.leftConjugateGroup"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.FiniteGroup.leftConjugateGroup()</span></code></a></p>
+<dd><p>Documentation in <a class="reference internal" href="finite_groups.html#+replab.FiniteGroup.leftConjugateGroup" title="+replab.FiniteGroup.leftConjugateGroup"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.FiniteGroup.leftConjugateGroup()</span></code></a></p>
 </dd></dl>
 
 <dl class="mat method">
 <dt class="sig sig-object mat" id="+replab.AbstractGroup.leftCoset">
-<span class="sig-name descname"><span class="pre">leftCoset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">element</span></em>, <em class="sig-param"><span class="pre">parent</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.AbstractGroup.leftCoset" title="Permalink to this definition">¶</a></dt>
-<dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.FiniteGroup.leftCoset" title="+replab.FiniteGroup.leftCoset"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.FiniteGroup.leftCoset()</span></code></a></p>
+<span class="sig-name descname"><span class="pre">leftCoset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">element</span></em>, <em class="sig-param"><span class="pre">varargin</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.AbstractGroup.leftCoset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="finite_groups.html#+replab.FiniteGroup.leftCoset" title="+replab.FiniteGroup.leftCoset"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.FiniteGroup.leftCoset()</span></code></a></p>
 </dd></dl>
 
 <dl class="mat method">
-<dt class="sig sig-object mat" id="+replab.AbstractGroup.leftCosetsOf">
-<span class="sig-name descname"><span class="pre">leftCosetsOf</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">subgroup</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.AbstractGroup.leftCosetsOf" title="Permalink to this definition">¶</a></dt>
-<dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.FiniteGroup.leftCosetsOf" title="+replab.FiniteGroup.leftCosetsOf"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.FiniteGroup.leftCosetsOf()</span></code></a></p>
-</dd></dl>
-
-<dl class="mat method">
-<dt class="sig sig-object mat" id="+replab.AbstractGroup.lettersToWord">
-<span class="sig-name descname"><span class="pre">lettersToWord</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">letters</span></em>, <em class="sig-param"><span class="pre">generatorNames</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.AbstractGroup.lettersToWord" title="Permalink to this definition">¶</a></dt>
-<dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.FiniteGroup.lettersToWord" title="+replab.FiniteGroup.lettersToWord"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.FiniteGroup.lettersToWord()</span></code></a></p>
+<dt class="sig sig-object mat" id="+replab.AbstractGroup.leftCosets">
+<span class="sig-name descname"><span class="pre">leftCosets</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">subgroup</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.AbstractGroup.leftCosets" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="finite_groups.html#+replab.FiniteGroup.leftCosets" title="+replab.FiniteGroup.leftCosets"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.FiniteGroup.leftCosets()</span></code></a></p>
 </dd></dl>
 
 <dl class="mat method">
@@ -996,7 +1044,7 @@ to that permutation group.</p>
 <dl class="mat method">
 <dt class="sig sig-object mat" id="+replab.AbstractGroup.mldivide">
 <span class="sig-name descname"><span class="pre">mldivide</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">supergroup</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.AbstractGroup.mldivide" title="Permalink to this definition">¶</a></dt>
-<dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.FiniteGroup.mldivide" title="+replab.FiniteGroup.mldivide"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.FiniteGroup.mldivide()</span></code></a></p>
+<dd><p>Documentation in <a class="reference internal" href="finite_groups.html#+replab.FiniteGroup.mldivide" title="+replab.FiniteGroup.mldivide"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.FiniteGroup.mldivide()</span></code></a></p>
 </dd></dl>
 
 <dl class="mat method">
@@ -1008,13 +1056,13 @@ to that permutation group.</p>
 <dl class="mat method">
 <dt class="sig sig-object mat" id="+replab.AbstractGroup.morphismByImages">
 <span class="sig-name descname"><span class="pre">morphismByImages</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">target</span></em>, <em class="sig-param"><span class="pre">varargin</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.AbstractGroup.morphismByImages" title="Permalink to this definition">¶</a></dt>
-<dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.FiniteGroup.morphismByImages" title="+replab.FiniteGroup.morphismByImages"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.FiniteGroup.morphismByImages()</span></code></a></p>
+<dd><p>Documentation in <a class="reference internal" href="finite_groups.html#+replab.FiniteGroup.morphismByImages" title="+replab.FiniteGroup.morphismByImages"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.FiniteGroup.morphismByImages()</span></code></a></p>
 </dd></dl>
 
 <dl class="mat method">
 <dt class="sig sig-object mat" id="+replab.AbstractGroup.mrdivide">
 <span class="sig-name descname"><span class="pre">mrdivide</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">subgroup</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.AbstractGroup.mrdivide" title="Permalink to this definition">¶</a></dt>
-<dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.FiniteGroup.mrdivide" title="+replab.FiniteGroup.mrdivide"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.FiniteGroup.mrdivide()</span></code></a></p>
+<dd><p>Documentation in <a class="reference internal" href="finite_groups.html#+replab.FiniteGroup.mrdivide" title="+replab.FiniteGroup.mrdivide"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.FiniteGroup.mrdivide()</span></code></a></p>
 </dd></dl>
 
 <dl class="mat method">
@@ -1038,7 +1086,7 @@ to that permutation group.</p>
 <dl class="mat method">
 <dt class="sig sig-object mat" id="+replab.AbstractGroup.nGenerators">
 <span class="sig-name descname"><span class="pre">nGenerators</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.AbstractGroup.nGenerators" title="Permalink to this definition">¶</a></dt>
-<dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.FiniteGroup.nGenerators" title="+replab.FiniteGroup.nGenerators"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.FiniteGroup.nGenerators()</span></code></a></p>
+<dd><p>Documentation in <a class="reference internal" href="finite_groups.html#+replab.FiniteGroup.nGenerators" title="+replab.FiniteGroup.nGenerators"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.FiniteGroup.nGenerators()</span></code></a></p>
 </dd></dl>
 
 <dl class="mat method">
@@ -1047,82 +1095,94 @@ to that permutation group.</p>
 <dd><p>Documentation in <a class="reference internal" href="base.html#+replab.Obj.ne" title="+replab.Obj.ne"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Obj.ne()</span></code></a></p>
 </dd></dl>
 
-<dl class="mat method">
-<dt class="sig sig-object mat" id="+replab.AbstractGroup.niceGroup">
-<span class="sig-name descname"><span class="pre">niceGroup</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.AbstractGroup.niceGroup" title="Permalink to this definition">¶</a></dt>
-<dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.FiniteGroup.niceGroup" title="+replab.FiniteGroup.niceGroup"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.FiniteGroup.niceGroup()</span></code></a></p>
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="+replab.AbstractGroup.nice">
+<span class="sig-name descname"><span class="pre">nice</span></span><a class="headerlink" href="#+replab.AbstractGroup.nice" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <code class="xref mat mat-attr docutils literal notranslate"><span class="pre">replab.gen.FiniteSet.nice</span></code></p>
 </dd></dl>
 
-<dl class="mat method">
-<dt class="sig sig-object mat" id="+replab.AbstractGroup.niceImage">
-<span class="sig-name descname"><span class="pre">niceImage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">g</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.AbstractGroup.niceImage" title="Permalink to this definition">¶</a></dt>
-<dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.NiceFiniteGroup.niceImage" title="+replab.NiceFiniteGroup.niceImage"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.NiceFiniteGroup.niceImage()</span></code></a></p>
-</dd></dl>
-
-<dl class="mat method">
-<dt class="sig sig-object mat" id="+replab.AbstractGroup.niceMorphism">
-<span class="sig-name descname"><span class="pre">niceMorphism</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.AbstractGroup.niceMorphism" title="Permalink to this definition">¶</a></dt>
-<dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.FiniteGroup.niceMorphism" title="+replab.FiniteGroup.niceMorphism"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.FiniteGroup.niceMorphism()</span></code></a></p>
-</dd></dl>
-
-<dl class="mat method">
-<dt class="sig sig-object mat" id="+replab.AbstractGroup.nicePreimage">
-<span class="sig-name descname"><span class="pre">nicePreimage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">p</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.AbstractGroup.nicePreimage" title="Permalink to this definition">¶</a></dt>
-<dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.NiceFiniteGroup.nicePreimage" title="+replab.NiceFiniteGroup.nicePreimage"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.NiceFiniteGroup.nicePreimage()</span></code></a></p>
-</dd></dl>
-
-<dl class="mat method">
-<dt class="sig sig-object mat" id="+replab.AbstractGroup.niceSubgroup">
-<span class="sig-name descname"><span class="pre">niceSubgroup</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">generators</span></em>, <em class="sig-param"><span class="pre">order</span></em>, <em class="sig-param"><span class="pre">niceGroup</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.AbstractGroup.niceSubgroup" title="Permalink to this definition">¶</a></dt>
-<dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.NiceFiniteGroup.niceSubgroup" title="+replab.NiceFiniteGroup.niceSubgroup"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.NiceFiniteGroup.niceSubgroup()</span></code></a></p>
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="+replab.AbstractGroup.niceIsomorphism">
+<span class="sig-name descname"><span class="pre">niceIsomorphism</span></span><a class="headerlink" href="#+replab.AbstractGroup.niceIsomorphism" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <code class="xref mat mat-attr docutils literal notranslate"><span class="pre">replab.gen.FiniteSet.niceIsomorphism</span></code></p>
 </dd></dl>
 
 <dl class="mat method">
 <dt class="sig sig-object mat" id="+replab.AbstractGroup.normalClosure">
 <span class="sig-name descname"><span class="pre">normalClosure</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">obj</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.AbstractGroup.normalClosure" title="Permalink to this definition">¶</a></dt>
-<dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.FiniteGroup.normalClosure" title="+replab.FiniteGroup.normalClosure"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.FiniteGroup.normalClosure()</span></code></a></p>
+<dd><p>Documentation in <a class="reference internal" href="finite_groups.html#+replab.FiniteGroup.normalClosure" title="+replab.FiniteGroup.normalClosure"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.FiniteGroup.normalClosure()</span></code></a></p>
 </dd></dl>
 
 <dl class="mat method">
 <dt class="sig sig-object mat" id="+replab.AbstractGroup.normalCoset">
-<span class="sig-name descname"><span class="pre">normalCoset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">element</span></em>, <em class="sig-param"><span class="pre">parent</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.AbstractGroup.normalCoset" title="Permalink to this definition">¶</a></dt>
-<dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.FiniteGroup.normalCoset" title="+replab.FiniteGroup.normalCoset"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.FiniteGroup.normalCoset()</span></code></a></p>
+<span class="sig-name descname"><span class="pre">normalCoset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">element</span></em>, <em class="sig-param"><span class="pre">varargin</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.AbstractGroup.normalCoset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="finite_groups.html#+replab.FiniteGroup.normalCoset" title="+replab.FiniteGroup.normalCoset"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.FiniteGroup.normalCoset()</span></code></a></p>
 </dd></dl>
 
 <dl class="mat method">
-<dt class="sig sig-object mat" id="+replab.AbstractGroup.normalCosetsOf">
-<span class="sig-name descname"><span class="pre">normalCosetsOf</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">subgroup</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.AbstractGroup.normalCosetsOf" title="Permalink to this definition">¶</a></dt>
-<dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.FiniteGroup.normalCosetsOf" title="+replab.FiniteGroup.normalCosetsOf"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.FiniteGroup.normalCosetsOf()</span></code></a></p>
+<dt class="sig sig-object mat" id="+replab.AbstractGroup.normalCosets">
+<span class="sig-name descname"><span class="pre">normalCosets</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">subgroup</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.AbstractGroup.normalCosets" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="finite_groups.html#+replab.FiniteGroup.normalCosets" title="+replab.FiniteGroup.normalCosets"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.FiniteGroup.normalCosets()</span></code></a></p>
 </dd></dl>
 
 <dl class="mat method">
 <dt class="sig sig-object mat" id="+replab.AbstractGroup.order">
 <span class="sig-name descname"><span class="pre">order</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.AbstractGroup.order" title="Permalink to this definition">¶</a></dt>
-<dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.FiniteGroup.order" title="+replab.FiniteGroup.order"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.FiniteGroup.order()</span></code></a></p>
+<dd><p>Documentation in <a class="reference internal" href="finite_groups.html#+replab.FiniteGroup.order" title="+replab.FiniteGroup.order"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.FiniteGroup.order()</span></code></a></p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.AbstractGroup.orderPreservingPermutationIsomorphism">
+<span class="sig-name descname"><span class="pre">orderPreservingPermutationIsomorphism</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.AbstractGroup.orderPreservingPermutationIsomorphism" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="finite_groups.html#+replab.FiniteGroup.orderPreservingPermutationIsomorphism" title="+replab.FiniteGroup.orderPreservingPermutationIsomorphism"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.FiniteGroup.orderPreservingPermutationIsomorphism()</span></code></a></p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.AbstractGroup.permutationGroup">
+<span class="sig-name descname"><span class="pre">permutationGroup</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.AbstractGroup.permutationGroup" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="finite_groups.html#+replab.FiniteGroup.permutationGroup" title="+replab.FiniteGroup.permutationGroup"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.FiniteGroup.permutationGroup()</span></code></a></p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.AbstractGroup.permutationIsomorphism">
+<span class="sig-name descname"><span class="pre">permutationIsomorphism</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.AbstractGroup.permutationIsomorphism" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="finite_groups.html#+replab.FiniteGroup.permutationIsomorphism" title="+replab.FiniteGroup.permutationIsomorphism"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.FiniteGroup.permutationIsomorphism()</span></code></a></p>
 </dd></dl>
 
 <dl class="mat method">
 <dt class="sig sig-object mat" id="+replab.AbstractGroup.permutationRep">
 <span class="sig-name descname"><span class="pre">permutationRep</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">dimension</span></em>, <em class="sig-param"><span class="pre">varargin</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.AbstractGroup.permutationRep" title="Permalink to this definition">¶</a></dt>
-<dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.FiniteGroup.permutationRep" title="+replab.FiniteGroup.permutationRep"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.FiniteGroup.permutationRep()</span></code></a></p>
+<dd><p>Documentation in <a class="reference internal" href="finite_groups.html#+replab.FiniteGroup.permutationRep" title="+replab.FiniteGroup.permutationRep"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.FiniteGroup.permutationRep()</span></code></a></p>
 </dd></dl>
 
 <dl class="mat method">
 <dt class="sig sig-object mat" id="+replab.AbstractGroup.presentation">
-<span class="sig-name descname"><span class="pre">presentation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">generatorNames</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.AbstractGroup.presentation" title="Permalink to this definition">¶</a></dt>
-<dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.FiniteGroup.presentation" title="+replab.FiniteGroup.presentation"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.FiniteGroup.presentation()</span></code></a></p>
+<span class="sig-name descname"><span class="pre">presentation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.AbstractGroup.presentation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="finite_groups.html#+replab.FiniteGroup.presentation" title="+replab.FiniteGroup.presentation"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.FiniteGroup.presentation()</span></code></a></p>
 </dd></dl>
 
 <dl class="mat method">
 <dt class="sig sig-object mat" id="+replab.AbstractGroup.randomProperSubgroup">
 <span class="sig-name descname"><span class="pre">randomProperSubgroup</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">nSteps</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.AbstractGroup.randomProperSubgroup" title="Permalink to this definition">¶</a></dt>
-<dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.FiniteGroup.randomProperSubgroup" title="+replab.FiniteGroup.randomProperSubgroup"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.FiniteGroup.randomProperSubgroup()</span></code></a></p>
+<dd><p>Documentation in <a class="reference internal" href="finite_groups.html#+replab.FiniteGroup.randomProperSubgroup" title="+replab.FiniteGroup.randomProperSubgroup"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.FiniteGroup.randomProperSubgroup()</span></code></a></p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.AbstractGroup.randomSubgroup">
+<span class="sig-name descname"><span class="pre">randomSubgroup</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.AbstractGroup.randomSubgroup" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="finite_groups.html#+replab.FiniteGroup.randomSubgroup" title="+replab.FiniteGroup.randomSubgroup"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.FiniteGroup.randomSubgroup()</span></code></a></p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.AbstractGroup.realCharacterTable">
+<span class="sig-name descname"><span class="pre">realCharacterTable</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.AbstractGroup.realCharacterTable" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="finite_groups.html#+replab.FiniteGroup.realCharacterTable" title="+replab.FiniteGroup.realCharacterTable"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.FiniteGroup.realCharacterTable()</span></code></a></p>
 </dd></dl>
 
 <dl class="mat method">
 <dt class="sig sig-object mat" id="+replab.AbstractGroup.recognize">
 <span class="sig-name descname"><span class="pre">recognize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.AbstractGroup.recognize" title="Permalink to this definition">¶</a></dt>
-<dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.FiniteGroup.recognize" title="+replab.FiniteGroup.recognize"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.FiniteGroup.recognize()</span></code></a></p>
+<dd><p>Documentation in <a class="reference internal" href="finite_groups.html#+replab.FiniteGroup.recognize" title="+replab.FiniteGroup.recognize"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.FiniteGroup.recognize()</span></code></a></p>
 </dd></dl>
 
 <dl class="mat method">
@@ -1132,39 +1192,51 @@ to that permutation group.</p>
 </dd></dl>
 
 <dl class="mat method">
-<dt class="sig sig-object mat" id="+replab.AbstractGroup.regularRep">
-<span class="sig-name descname"><span class="pre">regularRep</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.AbstractGroup.regularRep" title="Permalink to this definition">¶</a></dt>
-<dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.FiniteGroup.regularRep" title="+replab.FiniteGroup.regularRep"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.FiniteGroup.regularRep()</span></code></a></p>
+<dt class="sig sig-object mat" id="+replab.AbstractGroup.regularIsomorphism">
+<span class="sig-name descname"><span class="pre">regularIsomorphism</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.AbstractGroup.regularIsomorphism" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="finite_groups.html#+replab.FiniteGroup.regularIsomorphism" title="+replab.FiniteGroup.regularIsomorphism"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.FiniteGroup.regularIsomorphism()</span></code></a></p>
 </dd></dl>
 
 <dl class="mat method">
-<dt class="sig sig-object mat" id="+replab.AbstractGroup.relators">
-<span class="sig-name descname"><span class="pre">relators</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">generatorNames</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.AbstractGroup.relators" title="Permalink to this definition">¶</a></dt>
-<dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.FiniteGroup.relators" title="+replab.FiniteGroup.relators"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.FiniteGroup.relators()</span></code></a></p>
+<dt class="sig sig-object mat" id="+replab.AbstractGroup.regularRep">
+<span class="sig-name descname"><span class="pre">regularRep</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.AbstractGroup.regularRep" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="finite_groups.html#+replab.FiniteGroup.regularRep" title="+replab.FiniteGroup.regularRep"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.FiniteGroup.regularRep()</span></code></a></p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.AbstractGroup.relatorsFlat">
+<span class="sig-name descname"><span class="pre">relatorsFlat</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.AbstractGroup.relatorsFlat" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="finite_groups.html#+replab.FiniteGroup.relatorsFlat" title="+replab.FiniteGroup.relatorsFlat"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.FiniteGroup.relatorsFlat()</span></code></a></p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.AbstractGroup.relatorsWord">
+<span class="sig-name descname"><span class="pre">relatorsWord</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.AbstractGroup.relatorsWord" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="finite_groups.html#+replab.FiniteGroup.relatorsWord" title="+replab.FiniteGroup.relatorsWord"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.FiniteGroup.relatorsWord()</span></code></a></p>
 </dd></dl>
 
 <dl class="mat method">
 <dt class="sig sig-object mat" id="+replab.AbstractGroup.repByImages">
 <span class="sig-name descname"><span class="pre">repByImages</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">field</span></em>, <em class="sig-param"><span class="pre">dimension</span></em>, <em class="sig-param"><span class="pre">varargin</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.AbstractGroup.repByImages" title="Permalink to this definition">¶</a></dt>
-<dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.FiniteGroup.repByImages" title="+replab.FiniteGroup.repByImages"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.FiniteGroup.repByImages()</span></code></a></p>
+<dd><p>Documentation in <a class="reference internal" href="finite_groups.html#+replab.FiniteGroup.repByImages" title="+replab.FiniteGroup.repByImages"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.FiniteGroup.repByImages()</span></code></a></p>
 </dd></dl>
 
-<dl class="mat attribute">
+<dl class="mat method">
 <dt class="sig sig-object mat" id="+replab.AbstractGroup.representative">
-<span class="sig-name descname"><span class="pre">representative</span></span><a class="headerlink" href="#+replab.AbstractGroup.representative" title="Permalink to this definition">¶</a></dt>
-<dd><p>Documentation in <a class="reference internal" href="group_subsets.html#+replab.FiniteSet.representative" title="+replab.FiniteSet.representative"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">replab.FiniteSet.representative</span></code></a></p>
+<span class="sig-name descname"><span class="pre">representative</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.AbstractGroup.representative" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="group_subsets.html#+replab.FiniteSet.representative" title="+replab.FiniteSet.representative"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.FiniteSet.representative()</span></code></a></p>
 </dd></dl>
 
 <dl class="mat method">
 <dt class="sig sig-object mat" id="+replab.AbstractGroup.rightCoset">
-<span class="sig-name descname"><span class="pre">rightCoset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">element</span></em>, <em class="sig-param"><span class="pre">parent</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.AbstractGroup.rightCoset" title="Permalink to this definition">¶</a></dt>
-<dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.FiniteGroup.rightCoset" title="+replab.FiniteGroup.rightCoset"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.FiniteGroup.rightCoset()</span></code></a></p>
+<span class="sig-name descname"><span class="pre">rightCoset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">element</span></em>, <em class="sig-param"><span class="pre">varargin</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.AbstractGroup.rightCoset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="finite_groups.html#+replab.FiniteGroup.rightCoset" title="+replab.FiniteGroup.rightCoset"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.FiniteGroup.rightCoset()</span></code></a></p>
 </dd></dl>
 
 <dl class="mat method">
-<dt class="sig sig-object mat" id="+replab.AbstractGroup.rightCosetsOf">
-<span class="sig-name descname"><span class="pre">rightCosetsOf</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">subgroup</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.AbstractGroup.rightCosetsOf" title="Permalink to this definition">¶</a></dt>
-<dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.FiniteGroup.rightCosetsOf" title="+replab.FiniteGroup.rightCosetsOf"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.FiniteGroup.rightCosetsOf()</span></code></a></p>
+<dt class="sig sig-object mat" id="+replab.AbstractGroup.rightCosets">
+<span class="sig-name descname"><span class="pre">rightCosets</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">subgroup</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.AbstractGroup.rightCosets" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="finite_groups.html#+replab.FiniteGroup.rightCosets" title="+replab.FiniteGroup.rightCosets"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.FiniteGroup.rightCosets()</span></code></a></p>
 </dd></dl>
 
 <dl class="mat method">
@@ -1180,9 +1252,27 @@ to that permutation group.</p>
 </dd></dl>
 
 <dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.AbstractGroup.setComplexCharacterTable">
+<span class="sig-name descname"><span class="pre">setComplexCharacterTable</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">table</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.AbstractGroup.setComplexCharacterTable" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="finite_groups.html#+replab.FiniteGroup.setComplexCharacterTable" title="+replab.FiniteGroup.setComplexCharacterTable"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.FiniteGroup.setComplexCharacterTable()</span></code></a></p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.AbstractGroup.setConjugacyClasses">
+<span class="sig-name descname"><span class="pre">setConjugacyClasses</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">classes</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.AbstractGroup.setConjugacyClasses" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="finite_groups.html#+replab.FiniteGroup.setConjugacyClasses" title="+replab.FiniteGroup.setConjugacyClasses"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.FiniteGroup.setConjugacyClasses()</span></code></a></p>
+</dd></dl>
+
+<dl class="mat method">
 <dt class="sig sig-object mat" id="+replab.AbstractGroup.setProduct">
 <span class="sig-name descname"><span class="pre">setProduct</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.AbstractGroup.setProduct" title="Permalink to this definition">¶</a></dt>
-<dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.FiniteGroup.setProduct" title="+replab.FiniteGroup.setProduct"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.FiniteGroup.setProduct()</span></code></a></p>
+<dd><p>Documentation in <a class="reference internal" href="group_subsets.html#+replab.FiniteSet.setProduct" title="+replab.FiniteSet.setProduct"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.FiniteSet.setProduct()</span></code></a></p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.AbstractGroup.setRealCharacterTable">
+<span class="sig-name descname"><span class="pre">setRealCharacterTable</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">table</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.AbstractGroup.setRealCharacterTable" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="finite_groups.html#+replab.FiniteGroup.setRealCharacterTable" title="+replab.FiniteGroup.setRealCharacterTable"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.FiniteGroup.setRealCharacterTable()</span></code></a></p>
 </dd></dl>
 
 <dl class="mat method">
@@ -1200,25 +1290,25 @@ to that permutation group.</p>
 <dl class="mat method">
 <dt class="sig sig-object mat" id="+replab.AbstractGroup.signedPermutationRep">
 <span class="sig-name descname"><span class="pre">signedPermutationRep</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">dimension</span></em>, <em class="sig-param"><span class="pre">varargin</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.AbstractGroup.signedPermutationRep" title="Permalink to this definition">¶</a></dt>
-<dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.FiniteGroup.signedPermutationRep" title="+replab.FiniteGroup.signedPermutationRep"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.FiniteGroup.signedPermutationRep()</span></code></a></p>
+<dd><p>Documentation in <a class="reference internal" href="finite_groups.html#+replab.FiniteGroup.signedPermutationRep" title="+replab.FiniteGroup.signedPermutationRep"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.FiniteGroup.signedPermutationRep()</span></code></a></p>
 </dd></dl>
 
 <dl class="mat method">
 <dt class="sig sig-object mat" id="+replab.AbstractGroup.smallGeneratingSet">
 <span class="sig-name descname"><span class="pre">smallGeneratingSet</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.AbstractGroup.smallGeneratingSet" title="Permalink to this definition">¶</a></dt>
-<dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.FiniteGroup.smallGeneratingSet" title="+replab.FiniteGroup.smallGeneratingSet"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.FiniteGroup.smallGeneratingSet()</span></code></a></p>
+<dd><p>Documentation in <a class="reference internal" href="finite_groups.html#+replab.FiniteGroup.smallGeneratingSet" title="+replab.FiniteGroup.smallGeneratingSet"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.FiniteGroup.smallGeneratingSet()</span></code></a></p>
 </dd></dl>
 
 <dl class="mat method">
 <dt class="sig sig-object mat" id="+replab.AbstractGroup.subgroup">
-<span class="sig-name descname"><span class="pre">subgroup</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">elements</span></em>, <em class="sig-param"><span class="pre">order</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.AbstractGroup.subgroup" title="Permalink to this definition">¶</a></dt>
-<dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.FiniteGroup.subgroup" title="+replab.FiniteGroup.subgroup"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.FiniteGroup.subgroup()</span></code></a></p>
+<span class="sig-name descname"><span class="pre">subgroup</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">elements</span></em>, <em class="sig-param"><span class="pre">varargin</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.AbstractGroup.subgroup" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="finite_groups.html#+replab.FiniteGroup.subgroup" title="+replab.FiniteGroup.subgroup"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.FiniteGroup.subgroup()</span></code></a></p>
 </dd></dl>
 
 <dl class="mat method">
 <dt class="sig sig-object mat" id="+replab.AbstractGroup.subgroupWithGenerators">
-<span class="sig-name descname"><span class="pre">subgroupWithGenerators</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">generators</span></em>, <em class="sig-param"><span class="pre">order</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.AbstractGroup.subgroupWithGenerators" title="Permalink to this definition">¶</a></dt>
-<dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.FiniteGroup.subgroupWithGenerators" title="+replab.FiniteGroup.subgroupWithGenerators"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.FiniteGroup.subgroupWithGenerators()</span></code></a></p>
+<span class="sig-name descname"><span class="pre">subgroupWithGenerators</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">generators</span></em>, <em class="sig-param"><span class="pre">varargin</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.AbstractGroup.subgroupWithGenerators" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="finite_groups.html#+replab.FiniteGroup.subgroupWithGenerators" title="+replab.FiniteGroup.subgroupWithGenerators"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.FiniteGroup.subgroupWithGenerators()</span></code></a></p>
 </dd></dl>
 
 <dl class="mat method">
@@ -1236,7 +1326,7 @@ to that permutation group.</p>
 <dl class="mat method">
 <dt class="sig sig-object mat" id="+replab.AbstractGroup.trivialSubgroup">
 <span class="sig-name descname"><span class="pre">trivialSubgroup</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.AbstractGroup.trivialSubgroup" title="Permalink to this definition">¶</a></dt>
-<dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.FiniteGroup.trivialSubgroup" title="+replab.FiniteGroup.trivialSubgroup"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.FiniteGroup.trivialSubgroup()</span></code></a></p>
+<dd><p>Documentation in <a class="reference internal" href="finite_groups.html#+replab.FiniteGroup.trivialSubgroup" title="+replab.FiniteGroup.trivialSubgroup"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.FiniteGroup.trivialSubgroup()</span></code></a></p>
 </dd></dl>
 
 <dl class="mat attribute">
@@ -1246,24 +1336,19 @@ to that permutation group.</p>
 </dd></dl>
 
 <dl class="mat method">
-<dt class="sig sig-object mat" id="+replab.AbstractGroup.wordToLetters">
-<span class="sig-name descname"><span class="pre">wordToLetters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">word</span></em>, <em class="sig-param"><span class="pre">generatorNames</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.AbstractGroup.wordToLetters" title="Permalink to this definition">¶</a></dt>
-<dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.FiniteGroup.wordToLetters" title="+replab.FiniteGroup.wordToLetters"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.FiniteGroup.wordToLetters()</span></code></a></p>
+<dt class="sig sig-object mat" id="+replab.AbstractGroup.withGeneratorNames">
+<span class="sig-name descname"><span class="pre">withGeneratorNames</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">newNames</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.AbstractGroup.withGeneratorNames" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="finite_groups.html#+replab.FiniteGroup.withGeneratorNames" title="+replab.FiniteGroup.withGeneratorNames"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.FiniteGroup.withGeneratorNames()</span></code></a></p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.AbstractGroup.wordToFlat">
+<span class="sig-name descname"><span class="pre">wordToFlat</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">word</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.AbstractGroup.wordToFlat" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="finite_groups.html#+replab.FiniteGroup.wordToFlat" title="+replab.FiniteGroup.wordToFlat"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.FiniteGroup.wordToFlat()</span></code></a></p>
 </dd></dl>
 
 </div>
 <h3>Own members</h3><dl class="mat attribute">
-<dt class="sig sig-object mat" id="+replab.AbstractGroup.groupId">
-<span class="sig-name descname"><span class="pre">groupId</span></span><a class="headerlink" href="#+replab.AbstractGroup.groupId" title="Permalink to this definition">¶</a></dt>
-<dd><p>Unique group id</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type</dt>
-<dd class="field-odd"><p>integer</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="mat attribute">
 <dt class="sig sig-object mat" id="+replab.AbstractGroup.inAtlas">
 <span class="sig-name descname"><span class="pre">inAtlas</span></span><a class="headerlink" href="#+replab.AbstractGroup.inAtlas" title="Permalink to this definition">¶</a></dt>
 <dd><p>Whether this group is already part of the atlas</p>
@@ -1315,54 +1400,6 @@ to that permutation group.</p>
 </dl>
 </dd></dl>
 
-<dl class="mat method">
-<dt class="sig sig-object mat" id="+replab.AbstractGroup.computeImage">
-<span class="sig-name descname"><span class="pre">computeImage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">word</span></em>, <em class="sig-param"><span class="pre">target</span></em>, <em class="sig-param"><span class="pre">targetGeneratorImages</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.AbstractGroup.computeImage" title="Permalink to this definition">¶</a></dt>
-<dd><p>Computes the image of this word using the given generator images</p>
-<p>Does not verify the validity of the implied homomorphism.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>word</strong> (<span><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">charstring</span></code></span>) – Word</p></li>
-<li><p><strong>target</strong> (<a class="reference internal" href="groups.html#+replab.Group" title="+replab.Group"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">replab.Group</span></code></a>) – Target group</p></li>
-<li><p><strong>targetGeneratorImages</strong> (cell(1,*) of elements of <code class="docutils literal notranslate"><span class="pre">target</span></code>) – Images of the generators of this group</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Computed image</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>permutation</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="mat method">
-<dt class="sig sig-object mat" id="+replab.AbstractGroup.factorizeLetters">
-<span class="sig-name descname"><span class="pre">factorizeLetters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">word</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.AbstractGroup.factorizeLetters" title="Permalink to this definition">¶</a></dt>
-<dd><p>Parses word letters from word as a string</p>
-<p class="rubric">Example</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">A</span> <span class="o">=</span> <span class="n">replab</span><span class="o">.</span><span class="n">AbstractGroup</span><span class="p">({</span><span class="s1">&#39;x&#39;</span><span class="p">},</span> <span class="p">{</span><span class="s1">&#39;x^3&#39;</span><span class="p">});</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">isequal</span><span class="p">(</span><span class="n">A</span><span class="o">.</span><span class="n">factorizeLetters</span><span class="p">(</span><span class="s1">&#39;x^2&#39;</span><span class="p">),</span> <span class="p">[</span><span class="mi">1</span> <span class="mi">1</span><span class="p">])</span>
-<span class="go">    1</span>
-</pre></div>
-</div>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>word</strong> (<span><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">charstring</span></code></span>) – Word as a string</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Word letters</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>integer(1,*)</p>
-</dd>
-<dt class="field-even">Raises</dt>
-<dd class="field-even"><p><span><code class="xref mat mat-exc docutils literal notranslate"><span class="pre">An</span> <span class="pre">error</span> <span class="pre">if</span> <span class="pre">the</span> <span class="pre">string</span> <span class="pre">is</span> <span class="pre">malformed</span></code></span> – </p>
-</dd>
-</dl>
-</dd></dl>
-
 <dl class="mat staticmethod">
 <dt class="sig sig-object mat" id="+replab.AbstractGroup.fromPresentation">
 <em class="property"><span class="pre">static</span> </em><span class="sig-name descname"><span class="pre">fromPresentation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">str</span></em>, <em class="sig-param"><span class="pre">varargin</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.AbstractGroup.fromPresentation" title="Permalink to this definition">¶</a></dt>
@@ -1388,60 +1425,6 @@ to that permutation group.</p>
 </dd></dl>
 
 <dl class="mat method">
-<dt class="sig sig-object mat" id="+replab.AbstractGroup.imageLetters">
-<span class="sig-name descname"><span class="pre">imageLetters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">letters</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.AbstractGroup.imageLetters" title="Permalink to this definition">¶</a></dt>
-<dd><p>Prints a word formed of letters as a string</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">A</span> <span class="o">=</span> <span class="n">replab</span><span class="o">.</span><span class="n">AbstractGroup</span><span class="p">({</span><span class="s1">&#39;x&#39;</span><span class="p">},</span> <span class="p">{[</span><span class="mi">2</span> <span class="mi">3</span> <span class="mi">1</span><span class="p">]},</span> <span class="p">{</span><span class="s1">&#39;x^3&#39;</span><span class="p">});</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">A</span><span class="o">.</span><span class="n">imageLetters</span><span class="p">([</span><span class="mi">1</span> <span class="mi">1</span><span class="p">])</span>
-<span class="go">    &#39;x^2&#39;</span>
-</pre></div>
-</div>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>letters</strong> (<span><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">integer(1,*)</span></code></span>) – Word letters</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Word as a string</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>charstring</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="mat method">
-<dt class="sig sig-object mat" id="+replab.AbstractGroup.permutationGroup">
-<span class="sig-name descname"><span class="pre">permutationGroup</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.AbstractGroup.permutationGroup" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns a realization of this abstract group using a permutation group</p>
-<p>The generators of the abstract group match the generators of the permutation group.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>Realization of this abstract group</p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p><a class="reference internal" href="permutation_groups.html#+replab.PermutationGroup" title="+replab.PermutationGroup"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">PermutationGroup</span></code></a></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="mat method">
-<dt class="sig sig-object mat" id="+replab.AbstractGroup.renamingMorphism">
-<span class="sig-name descname"><span class="pre">renamingMorphism</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">newNames</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.AbstractGroup.renamingMorphism" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns a morphism from this abstract group with the generators renamed</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>newNames</strong> (<span><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">cell(1,*)</span> <span class="pre">of</span> <span class="pre">charstring</span></code></span>) – New generator names</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Updated copy</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="#+replab.AbstractGroup.AbstractGroup" title="+replab.AbstractGroup.AbstractGroup"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">AbstractGroup</span></code></a></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="mat method">
 <dt class="sig sig-object mat" id="+replab.AbstractGroup.simplify">
 <span class="sig-name descname"><span class="pre">simplify</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">word</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.AbstractGroup.simplify" title="Permalink to this definition">¶</a></dt>
 <dd><p>Attempts to simplify the given word</p>
@@ -1454,25 +1437,6 @@ to that permutation group.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>charstring</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="mat method">
-<dt class="sig sig-object mat" id="+replab.AbstractGroup.withGeneratorNames">
-<span class="sig-name descname"><span class="pre">withGeneratorNames</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">newNames</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.AbstractGroup.withGeneratorNames" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns a modified copy of this abstract group with the generators renamed</p>
-<p>Note: the abstract group returned by this method is not equal to the original abstract group. This differs
-from the behavior of <a class="reference internal" href="#+replab.AbstractGroup.withGeneratorNames" title="+replab.AbstractGroup.withGeneratorNames"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">withGeneratorNames</span></code></a> called on any <a class="reference internal" href="#+replab.AbstractGroup.FiniteGroup" title="+replab.AbstractGroup.FiniteGroup"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">FiniteGroup</span></code></a> which is not an abstract group.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>newNames</strong> (<span><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">cell(1,*)</span> <span class="pre">of</span> <span class="pre">charstring</span></code></span>) – New generator names</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Updated copy</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="#+replab.AbstractGroup.AbstractGroup" title="+replab.AbstractGroup.AbstractGroup"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">AbstractGroup</span></code></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1509,12 +1473,12 @@ from the behavior of <a class="reference internal" href="#+replab.AbstractGroup.
 <em class="property"><span class="pre">static</span> </em><span class="sig-name descname"><span class="pre">computeAndAdd</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">G</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.Atlas.computeAndAdd" title="Permalink to this definition">¶</a></dt>
 <dd><p>Computes the irreps of the given group and write the corresponding JSON file to the atlas</p>
 <p>If the group is already recognized by RepLAB, an error is thrown.</p>
-<p>Note that the <a class="reference internal" href="groups.html#+replab.FiniteGroup.recognize" title="+replab.FiniteGroup.recognize"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">FiniteGroup.recognize</span></code></a> result is cached, so to be recognized,
+<p>Note that the <a class="reference internal" href="finite_groups.html#+replab.FiniteGroup.recognize" title="+replab.FiniteGroup.recognize"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">FiniteGroup.recognize</span></code></a> result is cached, so to be recognized,
 the given group <code class="docutils literal notranslate"><span class="pre">G</span></code> must be constructed again in user code for the new atlas
 entry to be found.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>G</strong> (<a class="reference internal" href="groups.html#+replab.FiniteGroup" title="+replab.FiniteGroup"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">FiniteGroup</span></code></a>) – Finite group not present in the atlas</p>
+<dd class="field-odd"><p><strong>G</strong> (<a class="reference internal" href="finite_groups.html#+replab.FiniteGroup" title="+replab.FiniteGroup"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">FiniteGroup</span></code></a>) – Finite group not present in the atlas</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1574,13 +1538,15 @@ escape sequences.</p>
 <p><strong>Laws</strong></p>
 <ul class="simple">
 <li><p><a class="reference internal" href="#+replab.AtlasEntry.check" title="+replab.AtlasEntry.check"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">check</span></code></a> – Checks the consistency of this object</p></li>
+<li><p><a class="reference internal" href="#+replab.AtlasEntry.checkAndContinue" title="+replab.AtlasEntry.checkAndContinue"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">checkAndContinue</span></code></a> – Checks the consistency of this object</p></li>
 <li><p><a class="reference internal" href="#+replab.AtlasEntry.laws" title="+replab.AtlasEntry.laws"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">laws</span></code></a> – Returns the laws that this object obeys</p></li>
 </ul>
 <p><strong>Unique ID</strong></p>
 <ul class="simple">
-<li><p><a class="reference internal" href="#+replab.AtlasEntry.eq" title="+replab.AtlasEntry.eq"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">eq</span></code></a> – Equality test (deprecated)</p></li>
+<li><p><a class="reference internal" href="#+replab.AtlasEntry.eq" title="+replab.AtlasEntry.eq"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">eq</span></code></a> – Equality test</p></li>
 <li><p><a class="reference internal" href="#+replab.AtlasEntry.id" title="+replab.AtlasEntry.id"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">id</span></code></a> – Returns the unique ID of this object (deprecated)</p></li>
-<li><p><a class="reference internal" href="#+replab.AtlasEntry.ne" title="+replab.AtlasEntry.ne"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">ne</span></code></a> – Non-equality test (deprecated)</p></li>
+<li><p><a class="reference internal" href="#+replab.AtlasEntry.isequal" title="+replab.AtlasEntry.isequal"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">isequal</span></code></a> – Equality test</p></li>
+<li><p><a class="reference internal" href="#+replab.AtlasEntry.ne" title="+replab.AtlasEntry.ne"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">ne</span></code></a> – Non-equality test</p></li>
 </ul>
 <p><strong>General</strong></p>
 <ul class="simple">
@@ -1639,6 +1605,12 @@ escape sequences.</p>
 </dd></dl>
 
 <dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.AtlasEntry.checkAndContinue">
+<span class="sig-name descname"><span class="pre">checkAndContinue</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.AtlasEntry.checkAndContinue" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="base.html#+replab.Obj.checkAndContinue" title="+replab.Obj.checkAndContinue"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Obj.checkAndContinue()</span></code></a></p>
+</dd></dl>
+
+<dl class="mat method">
 <dt class="sig sig-object mat" id="+replab.AtlasEntry.disp">
 <span class="sig-name descname"><span class="pre">disp</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.AtlasEntry.disp" title="Permalink to this definition">¶</a></dt>
 <dd><p>Documentation in <a class="reference internal" href="base.html#+replab.Str.disp" title="+replab.Str.disp"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Str.disp()</span></code></a></p>
@@ -1672,6 +1644,12 @@ escape sequences.</p>
 <dt class="sig sig-object mat" id="+replab.AtlasEntry.inCache">
 <span class="sig-name descname"><span class="pre">inCache</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">name</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.AtlasEntry.inCache" title="Permalink to this definition">¶</a></dt>
 <dd><p>Documentation in <a class="reference internal" href="base.html#+replab.Obj.inCache" title="+replab.Obj.inCache"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Obj.inCache()</span></code></a></p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.AtlasEntry.isequal">
+<span class="sig-name descname"><span class="pre">isequal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">lhs</span></em>, <em class="sig-param"><span class="pre">rhs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.AtlasEntry.isequal" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="base.html#+replab.Obj.isequal" title="+replab.Obj.isequal"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Obj.isequal()</span></code></a></p>
 </dd></dl>
 
 <dl class="mat method">
@@ -1872,7 +1850,7 @@ is constructed lazily when requested.</p>
         <li class="right" >
           <a href="named_discrete_groups.html" title="Named discrete groups"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.9.5-SNAP documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 1.0.0 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="index.html" >Technical Reference</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">Abstract groups and atlas</a></li> 
       </ul>

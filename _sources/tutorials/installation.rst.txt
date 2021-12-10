@@ -21,7 +21,6 @@ Option 1: Download the latest RepLAB release, and use our easy install script.
    which will take care of downloading and installing dependencies, which are:
 
 -  to run tests: `MOxUnit <https://github.com/MOxUnit/MOxUnit>`__
--  to test code coverage: `MOcov <https://github.com/MOcov/MOcov>`__
 -  to define convex optimization (SDP) problems and run corresponding
    tests: `YALMIP <https://github.com/yalmip/YALMIP>`__
 -  to solve SDP problems and run corresponding tests:

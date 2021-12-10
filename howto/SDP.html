@@ -15,7 +15,7 @@
   <link rel="stylesheet" type="text/css" href="../_static/css/bootstrap-theme.min.css" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-    <title>Symmetric SDPs &#8212; RepLAB 0.9.5-SNAP documentation</title>
+    <title>Symmetric SDPs &#8212; RepLAB 1.0.0 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/guzzle.css" />
     <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
@@ -34,7 +34,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="How to load/save information to MAT files" href="loadSave.html" />
-    <link rel="prev" title="Symmetrizing a matrix" href="symmMatrix.html" /> 
+    <link rel="prev" title="Averaging a matrix over a continuous group" href="averageMatrix.html" /> 
   
    
   
@@ -77,9 +77,9 @@
           <a href="loadSave.html" title="How to load/save information to MAT files"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="symmMatrix.html" title="Symmetrizing a matrix"
+          <a href="averageMatrix.html" title="Averaging a matrix over a continuous group"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.9.5-SNAP documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 1.0.0 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">How to</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">Symmetric SDPs</a></li> 
       </ul>
@@ -94,7 +94,7 @@
   <a href="
     ../index.html">RepLAB</a>&nbsp;&nbsp;
   <a href="https://github.com/replab/replab"><i class="fab fa-github"></i></a>&nbsp;
-  <a href="https://github.com/replab/replab/archive/v0.9.5-SNAP.zip"><i class="fa fa-download"></i></a>&nbsp;
+  <a href="https://github.com/replab/replab/archive/v1.0.0.zip"><i class="fa fa-download"></i></a>&nbsp;
   <a href="https://gitter.im/replab/replab"><i class="fab fa-gitter"></i></a>&nbsp;
   <a href="https://travis-ci.com/replab/replab"><i class="fas fa-sync-alt"></i></a>&nbsp;
   <a href="https://codecov.io/gh/replab/replab"><i class="fas fa-umbrella"></i></a>
@@ -108,12 +108,17 @@
 <li class="toctree-l2"><a class="reference internal" href="groupFromGenerators.html">How to define a group from generators</a></li>
 <li class="toctree-l2"><a class="reference internal" href="vectorStabilizerGroup.html">How to define the group which leave a vector invariant</a></li>
 <li class="toctree-l2"><a class="reference internal" href="graphAutomorphisms.html">How to compute the automorphism group of a graph</a></li>
+<li class="toctree-l2"><a class="reference internal" href="groupOrder.html">How to compute the order of a group</a></li>
 <li class="toctree-l2"><a class="reference internal" href="intersection.html">How to compute the intersection of two groups</a></li>
 <li class="toctree-l2"><a class="reference internal" href="naturalRep.html">How to compute the natural representation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="continuousGroup.html">How to define a continuous group</a></li>
+<li class="toctree-l2"><a class="reference internal" href="definingRep.html">How to compute the defining representation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="abstractGroup.html">How to define an abstract group</a></li>
 <li class="toctree-l2"><a class="reference internal" href="decomposeRep.html">How to decompose a representation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="sampleAlgebra.html">How to sample the group algebra</a></li>
 <li class="toctree-l2"><a class="reference internal" href="sampleCommutant.html">How to sample the commutant algebra</a></li>
 <li class="toctree-l2"><a class="reference internal" href="symmMatrix.html">How to symmetrize a matrix</a></li>
+<li class="toctree-l2"><a class="reference internal" href="averageMatrix.html">How to average a matrix over a compact group</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">How to define a semi-definite variable (SDP) that respects some symmetries</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#Preparation">Preparation</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#Invariant-SDP-matrix">Invariant SDP matrix</a></li>
@@ -414,11 +419,11 @@ div.rendered_html tbody tr:hover {
 </style>
 <section id="Symmetric-SDPs">
 <h1>Symmetric SDPs<a class="headerlink" href="#Symmetric-SDPs" title="Permalink to this headline">¶</a></h1>
-<p>This document shows how to define an SDP variable with <em>RepLAB</em> which satisfies some symmetries constraints.</p>
+<p>This document shows how to define an SDP variable with <em>RepLAB</em> which satisfies some symmetry constraints.</p>
 <section id="Preparation">
 <h2>Preparation<a class="headerlink" href="#Preparation" title="Permalink to this headline">¶</a></h2>
 <p>As always, before using <em>RepLAB</em> commands, initialize the library:</p>
-<div class="nbinput nblast docutils container">
+<div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
 </pre></div>
 </div>
@@ -427,6 +432,14 @@ div.rendered_html tbody tr:hover {
 <span class="n">replab_init</span><span class="p">(</span><span class="s">&#39;verbose&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
 </pre></div>
 </div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+replab_init: Initialization done.
+</pre></div></div>
 </div>
 </section>
 <section id="Invariant-SDP-matrix">
@@ -471,7 +484,7 @@ multiplicities: [1, 1]
 
 </pre></div></div>
 </div>
-<p>Here, we additionally require the matrix to be symmetric and real. The SDP matrix <span class="math notranslate nohighlight">\(M\)</span> contains involves only 2 variables, corresponding to the only degrees of freedom left by the constraints. Here is their parametrization:</p>
+<p>Here, we additionally require the matrix to be symmetric and real. The SDP matrix <span class="math notranslate nohighlight">\(M\)</span> involves only 2 variables, corresponding to the only degrees of freedom left by the constraints. Here is their parametrization:</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
 </pre></div>
@@ -519,7 +532,7 @@ Used variables
   <div class="footer-relations">
     
       <div class="pull-left">
-        <a class="btn btn-default" href="symmMatrix.html" title="previous chapter (use the left arrow)">Symmetrizing a matrix</a>
+        <a class="btn btn-default" href="averageMatrix.html" title="previous chapter (use the left arrow)">Averaging a matrix over a continuous group</a>
       </div>
     
       <div class="pull-right">
@@ -544,9 +557,9 @@ Used variables
           <a href="loadSave.html" title="How to load/save information to MAT files"
              >next</a> |</li>
         <li class="right" >
-          <a href="symmMatrix.html" title="Symmetrizing a matrix"
+          <a href="averageMatrix.html" title="Averaging a matrix over a continuous group"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.9.5-SNAP documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 1.0.0 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="index.html" >How to</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">Symmetric SDPs</a></li> 
       </ul>

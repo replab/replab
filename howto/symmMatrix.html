@@ -15,7 +15,7 @@
   <link rel="stylesheet" type="text/css" href="../_static/css/bootstrap-theme.min.css" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-    <title>Symmetrizing a matrix &#8212; RepLAB 0.9.5-SNAP documentation</title>
+    <title>Symmetrizing a matrix &#8212; RepLAB 1.0.0 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/guzzle.css" />
     <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
@@ -33,7 +33,7 @@
     <script src="../_static/js/collapse_helper.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Symmetric SDPs" href="SDP.html" />
+    <link rel="next" title="Averaging a matrix over a continuous group" href="averageMatrix.html" />
     <link rel="prev" title="Sampling the commutant of a representation" href="sampleCommutant.html" /> 
   
    
@@ -74,12 +74,12 @@
           <a href="../mat-modindex.html" title="MATLAB Module Index"
              >matlab index</a> |</li>
         <li class="right" >
-          <a href="SDP.html" title="Symmetric SDPs"
+          <a href="averageMatrix.html" title="Averaging a matrix over a continuous group"
              accesskey="N">next</a> |</li>
         <li class="right" >
           <a href="sampleCommutant.html" title="Sampling the commutant of a representation"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.9.5-SNAP documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 1.0.0 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">How to</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">Symmetrizing a matrix</a></li> 
       </ul>
@@ -94,7 +94,7 @@
   <a href="
     ../index.html">RepLAB</a>&nbsp;&nbsp;
   <a href="https://github.com/replab/replab"><i class="fab fa-github"></i></a>&nbsp;
-  <a href="https://github.com/replab/replab/archive/v0.9.5-SNAP.zip"><i class="fa fa-download"></i></a>&nbsp;
+  <a href="https://github.com/replab/replab/archive/v1.0.0.zip"><i class="fa fa-download"></i></a>&nbsp;
   <a href="https://gitter.im/replab/replab"><i class="fab fa-gitter"></i></a>&nbsp;
   <a href="https://travis-ci.com/replab/replab"><i class="fas fa-sync-alt"></i></a>&nbsp;
   <a href="https://codecov.io/gh/replab/replab"><i class="fas fa-umbrella"></i></a>
@@ -108,18 +108,23 @@
 <li class="toctree-l2"><a class="reference internal" href="groupFromGenerators.html">How to define a group from generators</a></li>
 <li class="toctree-l2"><a class="reference internal" href="vectorStabilizerGroup.html">How to define the group which leave a vector invariant</a></li>
 <li class="toctree-l2"><a class="reference internal" href="graphAutomorphisms.html">How to compute the automorphism group of a graph</a></li>
+<li class="toctree-l2"><a class="reference internal" href="groupOrder.html">How to compute the order of a group</a></li>
 <li class="toctree-l2"><a class="reference internal" href="intersection.html">How to compute the intersection of two groups</a></li>
 <li class="toctree-l2"><a class="reference internal" href="naturalRep.html">How to compute the natural representation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="continuousGroup.html">How to define a continuous group</a></li>
+<li class="toctree-l2"><a class="reference internal" href="definingRep.html">How to compute the defining representation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="abstractGroup.html">How to define an abstract group</a></li>
 <li class="toctree-l2"><a class="reference internal" href="decomposeRep.html">How to decompose a representation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="sampleAlgebra.html">How to sample the group algebra</a></li>
 <li class="toctree-l2"><a class="reference internal" href="sampleCommutant.html">How to sample the commutant algebra</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">How to symmetrize a matrix</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#Preparation">Preparation</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#Definition-of-the-matrix-to-symmetrize">Definition of the matrix to symmetrize</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#Definition-of-the-group">Definition of the group</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#Averaging">Averaging</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Matrix-to-be-symmetrized">Matrix to be symmetrized</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Group-definition">Group definition</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Averaging-over-the-group">Averaging over the group</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="averageMatrix.html">How to average a matrix over a compact group</a></li>
 <li class="toctree-l2"><a class="reference internal" href="SDP.html">How to define a semi-definite variable (SDP) that respects some symmetries</a></li>
 <li class="toctree-l2"><a class="reference internal" href="loadSave.html">How to load/save RepLAB objects</a></li>
 </ul>
@@ -420,7 +425,7 @@ div.rendered_html tbody tr:hover {
 <section id="Preparation">
 <h2>Preparation<a class="headerlink" href="#Preparation" title="Permalink to this headline">¶</a></h2>
 <p>As always, before using <em>RepLAB</em> commands, initialize the library:</p>
-<div class="nbinput nblast docutils container">
+<div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
 </pre></div>
 </div>
@@ -430,9 +435,17 @@ div.rendered_html tbody tr:hover {
 </pre></div>
 </div>
 </div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+replab_init: Initialization done.
+</pre></div></div>
+</div>
 </section>
-<section id="Definition-of-the-matrix-to-symmetrize">
-<h2>Definition of the matrix to symmetrize<a class="headerlink" href="#Definition-of-the-matrix-to-symmetrize" title="Permalink to this headline">¶</a></h2>
+<section id="Matrix-to-be-symmetrized">
+<h2>Matrix to be symmetrized<a class="headerlink" href="#Matrix-to-be-symmetrized" title="Permalink to this headline">¶</a></h2>
 <p>Let us consider a random matrix</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
@@ -450,18 +463,18 @@ div.rendered_html tbody tr:hover {
 <div class="highlight"><pre>
 M =
 
-   7.7761e-03   1.3155e-01   5.4242e-02   6.3027e-01   2.1886e-01
-   2.8375e-01   1.5073e-01   3.6707e-01   4.1526e-01   4.7721e-01
-   2.7423e-02   1.6434e-01   5.2567e-01   2.5023e-01   3.1303e-01
-   6.7631e-01   9.5981e-01   9.2519e-02   3.5908e-01   3.8854e-01
-   4.6597e-01   5.0923e-01   6.1976e-01   5.5468e-01   7.9698e-01
+   0.549014   0.093930   0.554128   0.842158   0.834088
+   0.635085   0.578012   0.957590   0.089541   0.724428
+   0.304612   0.739189   0.059727   0.770263   0.779036
+   0.723175   0.064883   0.853368   0.597285   0.330747
+   0.399237   0.584450   0.948410   0.576564   0.532705
 
 </pre></div></div>
 </div>
 <p>Our aim is to compute the average <span class="math notranslate nohighlight">\(\sum_{g\in G} M(g,g)\)</span> over a group <span class="math notranslate nohighlight">\(G\)</span>, where the group elements <span class="math notranslate nohighlight">\(g\)</span> act on the rows and on the columns of our matrix.</p>
 </section>
-<section id="Definition-of-the-group">
-<h2>Definition of the group<a class="headerlink" href="#Definition-of-the-group" title="Permalink to this headline">¶</a></h2>
+<section id="Group-definition">
+<h2>Group definition<a class="headerlink" href="#Group-definition" title="Permalink to this headline">¶</a></h2>
 <p>Let us consider the permutation group over which we wish to perform the average</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
@@ -488,8 +501,8 @@ generator(1 or &#39;x1&#39;): [2, 1, 4, 5, 3]
 </pre></div></div>
 </div>
 </section>
-<section id="Averaging">
-<h2>Averaging<a class="headerlink" href="#Averaging" title="Permalink to this headline">¶</a></h2>
+<section id="Averaging-over-the-group">
+<h2>Averaging over the group<a class="headerlink" href="#Averaging-over-the-group" title="Permalink to this headline">¶</a></h2>
 <p>The averaging is done by projecting our matrix onto the commutant of the group’s natural representation</p>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
@@ -517,11 +530,11 @@ generator(1 or &#39;x1&#39;): [2, 1, 4, 5, 3]
 <div class="highlight"><pre>
 MP =
 
-   0.079251   0.207649   0.360484   0.360484   0.360484
-   0.207649   0.079251   0.360484   0.360484   0.360484
-   0.467182   0.467182   0.560577   0.419511   0.320075
-   0.467182   0.467182   0.320075   0.560577   0.419511
-   0.467182   0.467182   0.419511   0.320075   0.560577
+   0.5635   0.3645   0.6670   0.6670   0.6670
+   0.3645   0.5635   0.6670   0.6670   0.6670
+   0.4693   0.4693   0.3966   0.6831   0.7363
+   0.4693   0.4693   0.7363   0.3966   0.6831
+   0.4693   0.4693   0.6831   0.7363   0.3966
 
 </pre></div></div>
 </div>
@@ -543,15 +556,15 @@ MP =
 <div class="highlight"><pre>
 el =
 
-   2   1   5   3   4
+   2   1   3   4   5
 
 ans =
 
-   0.079251   0.207649   0.360484   0.360484   0.360484
-   0.207649   0.079251   0.360484   0.360484   0.360484
-   0.467182   0.467182   0.560577   0.419511   0.320075
-   0.467182   0.467182   0.320075   0.560577   0.419511
-   0.467182   0.467182   0.419511   0.320075   0.560577
+   0.5635   0.3645   0.6670   0.6670   0.6670
+   0.3645   0.5635   0.6670   0.6670   0.6670
+   0.4693   0.4693   0.3966   0.6831   0.7363
+   0.4693   0.4693   0.7363   0.3966   0.6831
+   0.4693   0.4693   0.6831   0.7363   0.3966
 
 </pre></div></div>
 </div>
@@ -571,7 +584,7 @@ ans =
       </div>
     
       <div class="pull-right">
-        <a class="btn btn-default" href="SDP.html" title="next chapter (use the right arrow)">Symmetric SDPs</a>
+        <a class="btn btn-default" href="averageMatrix.html" title="next chapter (use the right arrow)">Averaging a matrix over a continuous group</a>
       </div>
     </div>
     <div class="clearer"></div>
@@ -589,12 +602,12 @@ ans =
           <a href="../mat-modindex.html" title="MATLAB Module Index"
              >matlab index</a> |</li>
         <li class="right" >
-          <a href="SDP.html" title="Symmetric SDPs"
+          <a href="averageMatrix.html" title="Averaging a matrix over a continuous group"
              >next</a> |</li>
         <li class="right" >
           <a href="sampleCommutant.html" title="Sampling the commutant of a representation"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.9.5-SNAP documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 1.0.0 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="index.html" >How to</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">Symmetrizing a matrix</a></li> 
       </ul>

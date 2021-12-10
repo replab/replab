@@ -15,7 +15,7 @@
   <link rel="stylesheet" type="text/css" href="../_static/css/bootstrap-theme.min.css" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-    <title>Chemistry &#8212; RepLAB 0.9.5-SNAP documentation</title>
+    <title>Chemistry &#8212; RepLAB 1.0.0 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/guzzle.css" />
     <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
@@ -77,7 +77,7 @@
         <li class="right" >
           <a href="convex_programming.html" title="Convex programming"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.9.5-SNAP documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 1.0.0 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">Technical Reference</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">Chemistry</a></li> 
       </ul>
@@ -92,7 +92,7 @@
   <a href="
     ../index.html">RepLAB</a>&nbsp;&nbsp;
   <a href="https://github.com/replab/replab"><i class="fab fa-github"></i></a>&nbsp;
-  <a href="https://github.com/replab/replab/archive/v0.9.5-SNAP.zip"><i class="fa fa-download"></i></a>&nbsp;
+  <a href="https://github.com/replab/replab/archive/v1.0.0.zip"><i class="fa fa-download"></i></a>&nbsp;
   <a href="https://gitter.im/replab/replab"><i class="fab fa-gitter"></i></a>&nbsp;
   <a href="https://travis-ci.com/replab/replab"><i class="fas fa-sync-alt"></i></a>&nbsp;
   <a href="https://codecov.io/gh/replab/replab"><i class="fas fa-umbrella"></i></a>
@@ -111,6 +111,7 @@
 <li class="toctree-l2"><a class="reference internal" href="numerics.html">Numerics</a></li>
 <li class="toctree-l2"><a class="reference internal" href="groups.html">Base group structures</a></li>
 <li class="toctree-l2"><a class="reference internal" href="continuous_groups.html">Continuous groups</a></li>
+<li class="toctree-l2"><a class="reference internal" href="finite_groups.html">Finite group structures</a></li>
 <li class="toctree-l2"><a class="reference internal" href="permutation_groups.html">Permutation groups</a></li>
 <li class="toctree-l2"><a class="reference internal" href="named_discrete_groups.html">Named discrete groups</a></li>
 <li class="toctree-l2"><a class="reference internal" href="abstract_groups.html">Abstract groups and atlas</a></li>
@@ -617,7 +618,7 @@ Chemistry LibreTexts. <a class="reference external" href="https://chem.libretext
 <dd><p>the character table for the molecule’s point group</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="characters.html#+replab.ComplexCharacterTable" title="+replab.ComplexCharacterTable"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">replab.ComplexCharacterTable</span></code></a></p>
+<dd class="field-odd"><p><a class="reference internal" href="characters.html#+replab.ComplexCharacterTable" title="+replab.ComplexCharacterTable"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">ComplexCharacterTable</span></code></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -871,19 +872,14 @@ axis (double(1, 3)): axis of C2 rotation</p>
 <span class="sig-name descname"><span class="pre">findCnAxes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">n</span></em>, <em class="sig-param"><span class="pre">max_rotations</span></em>, <em class="sig-param"><span class="pre">coords</span></em>, <em class="sig-param"><span class="pre">symbols</span></em>, <em class="sig-param"><span class="pre">SEAs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.IdentifyPointGroup.findCnAxes" title="Permalink to this definition">¶</a></dt>
 <dd><p>Find whether there are multiple higher order rotation axes</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p><p>order of rotation
-max_rotations (integer): check whether there are at least this many</p>
-<blockquote>
-<div><p>rotation axes of order n</p>
-</div></blockquote>
-<p>coords (double(3, natoms)): atomic coordinates
-symbols (cell(1, natoms) of charstring): atomic symbols
-SEAs (cell(1, *) of double(*, 1)): cell array of vectors of the indices of similar atoms</p>
-</p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>n (integer)</p>
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>n</strong> (<span><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">integer</span></code></span>) – order of rotation</p></li>
+<li><p><strong>max_rotations</strong> (<span><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">integer</span></code></span>) – check whether there are at least this many rotation axes of order n</p></li>
+<li><p><strong>coords</strong> (<span><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">double(3,</span> <span class="pre">natoms)</span></code></span>) – atomic coordinates</p></li>
+<li><p><strong>symbols</strong> (<span><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">cell(1,</span> <span class="pre">natoms)</span> <span class="pre">of</span> <span class="pre">charstring</span></code></span>) – atomic symbols</p></li>
+<li><p><strong>SEAs</strong> (<span><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">cell(1,*)</span> <span class="pre">of</span> <span class="pre">double(*,1)</span></code></span>) – cell array of vectors of the indices of similar atoms</p></li>
+</ul>
 </dd>
 </dl>
 <dl class="simple">
@@ -1085,7 +1081,7 @@ i1 (integer(1, natoms)): indices that revert coords to original order</p>
         <li class="right" >
           <a href="convex_programming.html" title="Convex programming"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.9.5-SNAP documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 1.0.0 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="index.html" >Technical Reference</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">Chemistry</a></li> 
       </ul>

@@ -15,7 +15,7 @@
   <link rel="stylesheet" type="text/css" href="../_static/css/bootstrap-theme.min.css" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-    <title>Characters &#8212; RepLAB 0.9.5-SNAP documentation</title>
+    <title>Characters &#8212; RepLAB 1.0.0 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/guzzle.css" />
     <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
@@ -79,7 +79,7 @@
         <li class="right" >
           <a href="equivariant.html" title="Equivariant spaces"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.9.5-SNAP documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 1.0.0 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">Technical Reference</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">Characters</a></li> 
       </ul>
@@ -94,7 +94,7 @@
   <a href="
     ../index.html">RepLAB</a>&nbsp;&nbsp;
   <a href="https://github.com/replab/replab"><i class="fab fa-github"></i></a>&nbsp;
-  <a href="https://github.com/replab/replab/archive/v0.9.5-SNAP.zip"><i class="fa fa-download"></i></a>&nbsp;
+  <a href="https://github.com/replab/replab/archive/v1.0.0.zip"><i class="fa fa-download"></i></a>&nbsp;
   <a href="https://gitter.im/replab/replab"><i class="fab fa-gitter"></i></a>&nbsp;
   <a href="https://travis-ci.com/replab/replab"><i class="fas fa-sync-alt"></i></a>&nbsp;
   <a href="https://codecov.io/gh/replab/replab"><i class="fas fa-umbrella"></i></a>
@@ -113,6 +113,7 @@
 <li class="toctree-l2"><a class="reference internal" href="numerics.html">Numerics</a></li>
 <li class="toctree-l2"><a class="reference internal" href="groups.html">Base group structures</a></li>
 <li class="toctree-l2"><a class="reference internal" href="continuous_groups.html">Continuous groups</a></li>
+<li class="toctree-l2"><a class="reference internal" href="finite_groups.html">Finite group structures</a></li>
 <li class="toctree-l2"><a class="reference internal" href="permutation_groups.html">Permutation groups</a></li>
 <li class="toctree-l2"><a class="reference internal" href="named_discrete_groups.html">Named discrete groups</a></li>
 <li class="toctree-l2"><a class="reference internal" href="abstract_groups.html">Abstract groups and atlas</a></li>
@@ -234,13 +235,15 @@
 <p><strong>Laws</strong></p>
 <ul class="simple">
 <li><p><a class="reference internal" href="#+replab.Character.check" title="+replab.Character.check"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">check</span></code></a> – Checks the consistency of this object</p></li>
+<li><p><a class="reference internal" href="#+replab.Character.checkAndContinue" title="+replab.Character.checkAndContinue"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">checkAndContinue</span></code></a> – Checks the consistency of this object</p></li>
 <li><p><a class="reference internal" href="#+replab.Character.laws" title="+replab.Character.laws"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">laws</span></code></a> – Returns the laws that this object obeys</p></li>
 </ul>
 <p><strong>Unique ID</strong></p>
 <ul class="simple">
-<li><p><a class="reference internal" href="#+replab.Character.eq" title="+replab.Character.eq"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">eq</span></code></a> – Equality test (deprecated)</p></li>
+<li><p><a class="reference internal" href="#+replab.Character.eq" title="+replab.Character.eq"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">eq</span></code></a> – Equality test</p></li>
 <li><p><a class="reference internal" href="#+replab.Character.id" title="+replab.Character.id"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">id</span></code></a> – Returns the unique ID of this object (deprecated)</p></li>
-<li><p><a class="reference internal" href="#+replab.Character.ne" title="+replab.Character.ne"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">ne</span></code></a> – Non-equality test (deprecated)</p></li>
+<li><p><a class="reference internal" href="#+replab.Character.isequal" title="+replab.Character.isequal"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">isequal</span></code></a> – Equality test</p></li>
+<li><p><a class="reference internal" href="#+replab.Character.ne" title="+replab.Character.ne"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">ne</span></code></a> – Non-equality test</p></li>
 </ul>
 <p><strong>General</strong></p>
 <ul class="simple">
@@ -303,6 +306,12 @@
 </dd></dl>
 
 <dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.Character.checkAndContinue">
+<span class="sig-name descname"><span class="pre">checkAndContinue</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.Character.checkAndContinue" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="base.html#+replab.Obj.checkAndContinue" title="+replab.Obj.checkAndContinue"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Obj.checkAndContinue()</span></code></a></p>
+</dd></dl>
+
+<dl class="mat method">
 <dt class="sig sig-object mat" id="+replab.Character.disp">
 <span class="sig-name descname"><span class="pre">disp</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.Character.disp" title="Permalink to this definition">¶</a></dt>
 <dd><p>Documentation in <a class="reference internal" href="base.html#+replab.Str.disp" title="+replab.Str.disp"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Str.disp()</span></code></a></p>
@@ -336,6 +345,12 @@
 <dt class="sig sig-object mat" id="+replab.Character.inCache">
 <span class="sig-name descname"><span class="pre">inCache</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">name</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.Character.inCache" title="Permalink to this definition">¶</a></dt>
 <dd><p>Documentation in <a class="reference internal" href="base.html#+replab.Obj.inCache" title="+replab.Obj.inCache"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Obj.inCache()</span></code></a></p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.Character.isequal">
+<span class="sig-name descname"><span class="pre">isequal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">lhs</span></em>, <em class="sig-param"><span class="pre">rhs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.Character.isequal" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="base.html#+replab.Obj.isequal" title="+replab.Obj.isequal"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Obj.isequal()</span></code></a></p>
 </dd></dl>
 
 <dl class="mat method">
@@ -392,7 +407,7 @@
 <dd><p>Group on which this class function is defined</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="groups.html#+replab.FiniteGroup" title="+replab.FiniteGroup"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">FiniteGroup</span></code></a></p>
+<dd class="field-odd"><p><a class="reference internal" href="finite_groups.html#+replab.FiniteGroup" title="+replab.FiniteGroup"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">FiniteGroup</span></code></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -403,7 +418,7 @@
 <dd><p>Values of the character over the conjugacy classes</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
-<dd class="field-odd"><p><a href="#id1"><span class="problematic" id="id2">`</span></a>.cyclotomic`(1,*)</p>
+<dd class="field-odd"><p><a class="reference internal" href="numerics.html#+replab.cyclotomic" title="+replab.cyclotomic"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">cyclotomic</span></code></a> (1,*)</p>
 </dd>
 </dl>
 </dd></dl>
@@ -523,7 +538,7 @@ exponent.</p>
 <dd class="field-odd"><p>A subgroup of <a class="reference internal" href="#+replab.Character.group" title="+replab.Character.group"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">group</span></code></a></p>
 </dd>
 <dt class="field-even">Return type</dt>
-<dd class="field-even"><p><a class="reference internal" href="groups.html#+replab.FiniteGroup" title="+replab.FiniteGroup"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">FiniteGroup</span></code></a></p>
+<dd class="field-even"><p><a class="reference internal" href="finite_groups.html#+replab.FiniteGroup" title="+replab.FiniteGroup"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">FiniteGroup</span></code></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -596,13 +611,15 @@ requested and the computed value is cached.</p>
 <p><strong>Laws</strong></p>
 <ul class="simple">
 <li><p><a class="reference internal" href="#+replab.CharacterTable.check" title="+replab.CharacterTable.check"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">check</span></code></a> – Checks the consistency of this object</p></li>
+<li><p><a class="reference internal" href="#+replab.CharacterTable.checkAndContinue" title="+replab.CharacterTable.checkAndContinue"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">checkAndContinue</span></code></a> – Checks the consistency of this object</p></li>
 <li><p><a class="reference internal" href="#+replab.CharacterTable.laws" title="+replab.CharacterTable.laws"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">laws</span></code></a> – Returns the laws that this object obeys</p></li>
 </ul>
 <p><strong>Unique ID</strong></p>
 <ul class="simple">
-<li><p><a class="reference internal" href="#+replab.CharacterTable.eq" title="+replab.CharacterTable.eq"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">eq</span></code></a> – Equality test (deprecated)</p></li>
+<li><p><a class="reference internal" href="#+replab.CharacterTable.eq" title="+replab.CharacterTable.eq"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">eq</span></code></a> – Equality test</p></li>
 <li><p><a class="reference internal" href="#+replab.CharacterTable.id" title="+replab.CharacterTable.id"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">id</span></code></a> – Returns the unique ID of this object (deprecated)</p></li>
-<li><p><a class="reference internal" href="#+replab.CharacterTable.ne" title="+replab.CharacterTable.ne"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">ne</span></code></a> – Non-equality test (deprecated)</p></li>
+<li><p><a class="reference internal" href="#+replab.CharacterTable.isequal" title="+replab.CharacterTable.isequal"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">isequal</span></code></a> – Equality test</p></li>
+<li><p><a class="reference internal" href="#+replab.CharacterTable.ne" title="+replab.CharacterTable.ne"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">ne</span></code></a> – Non-equality test</p></li>
 </ul>
 <p><strong>General</strong></p>
 <ul class="simple">
@@ -680,6 +697,12 @@ requested and the computed value is cached.</p>
 </dd></dl>
 
 <dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.CharacterTable.checkAndContinue">
+<span class="sig-name descname"><span class="pre">checkAndContinue</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.CharacterTable.checkAndContinue" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="base.html#+replab.Obj.checkAndContinue" title="+replab.Obj.checkAndContinue"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Obj.checkAndContinue()</span></code></a></p>
+</dd></dl>
+
+<dl class="mat method">
 <dt class="sig sig-object mat" id="+replab.CharacterTable.disp">
 <span class="sig-name descname"><span class="pre">disp</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.CharacterTable.disp" title="Permalink to this definition">¶</a></dt>
 <dd><p>Documentation in <a class="reference internal" href="base.html#+replab.Str.disp" title="+replab.Str.disp"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Str.disp()</span></code></a></p>
@@ -713,6 +736,12 @@ requested and the computed value is cached.</p>
 <dt class="sig sig-object mat" id="+replab.CharacterTable.inCache">
 <span class="sig-name descname"><span class="pre">inCache</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">name</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.CharacterTable.inCache" title="Permalink to this definition">¶</a></dt>
 <dd><p>Documentation in <a class="reference internal" href="base.html#+replab.Obj.inCache" title="+replab.Obj.inCache"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Obj.inCache()</span></code></a></p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.CharacterTable.isequal">
+<span class="sig-name descname"><span class="pre">isequal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">lhs</span></em>, <em class="sig-param"><span class="pre">rhs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.CharacterTable.isequal" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="base.html#+replab.Obj.isequal" title="+replab.Obj.isequal"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Obj.isequal()</span></code></a></p>
 </dd></dl>
 
 <dl class="mat method">
@@ -779,7 +808,7 @@ requested and the computed value is cached.</p>
 <dd><p>Group represented by character table</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="groups.html#+replab.FiniteGroup" title="+replab.FiniteGroup"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">replab.FiniteGroup</span></code></a></p>
+<dd class="field-odd"><p><a class="reference internal" href="finite_groups.html#+replab.FiniteGroup" title="+replab.FiniteGroup"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">replab.FiniteGroup</span></code></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -835,7 +864,7 @@ requested and the computed value is cached.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>group</strong> (<a class="reference internal" href="groups.html#+replab.FiniteGroup" title="+replab.FiniteGroup"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">FiniteGroup</span></code></a>) – Group represented by character table</p></li>
+<li><p><strong>group</strong> (<a class="reference internal" href="finite_groups.html#+replab.FiniteGroup" title="+replab.FiniteGroup"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">FiniteGroup</span></code></a>) – Group represented by character table</p></li>
 <li><p><strong>field</strong> (<span><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">{'R',</span> <span class="pre">'C'}</span></code></span>) – Field over which the characters are defined</p></li>
 <li><p><strong>classes</strong> (<a class="reference internal" href="group_subsets.html#+replab.ConjugacyClasses" title="+replab.ConjugacyClasses"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">ConjugacyClasses</span></code></a>) – Conjugacy classes of <a class="reference internal" href="#+replab.CharacterTable.group" title="+replab.CharacterTable.group"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">group</span></code></a></p></li>
 <li><p><strong>values</strong> (<a class="reference internal" href="numerics.html#+replab.cyclotomic" title="+replab.cyclotomic"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">cyclotomic</span></code></a> (nClasses, nClasses)) – Character values</p></li>
@@ -1197,7 +1226,7 @@ X.3  2   -1    0</p>
 <p>The character values are stored as elements of the cyclotomic field, using the <a class="reference internal" href="numerics.html#+replab.cyclotomic" title="+replab.cyclotomic"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">cyclotomic</span></code></a> class which requires
 external libraries and a Java Virtual Machine available.</p>
 <p>Instances of <a class="reference internal" href="#+replab.ComplexCharacterTable.ComplexCharacterTable" title="+replab.ComplexCharacterTable.ComplexCharacterTable"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">ComplexCharacterTable</span></code></a> are immutable.</p>
-<p>See <a class="reference internal" href="#+replab.ComplexCharacterTable.CharacterTable" title="+replab.ComplexCharacterTable.CharacterTable"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">CharacterTable</span></code></a> for additional details.</p>
+<p>See <a class="reference internal" href="#+replab.CharacterTable" title="+replab.CharacterTable"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">CharacterTable</span></code></a> for additional details.</p>
 <div class="dropdown admonition">
 <p class="admonition-title">Class members list</p>
 <p><strong>Properties</strong></p>
@@ -1229,17 +1258,18 @@ external libraries and a Java Virtual Machine available.</p>
 <p><strong>Laws</strong></p>
 <ul class="simple">
 <li><p><a class="reference internal" href="#+replab.ComplexCharacterTable.check" title="+replab.ComplexCharacterTable.check"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">check</span></code></a> – Checks the consistency of this object</p></li>
+<li><p><a class="reference internal" href="#+replab.ComplexCharacterTable.checkAndContinue" title="+replab.ComplexCharacterTable.checkAndContinue"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">checkAndContinue</span></code></a> – Checks the consistency of this object</p></li>
 <li><p><a class="reference internal" href="#+replab.ComplexCharacterTable.laws" title="+replab.ComplexCharacterTable.laws"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">laws</span></code></a> – Returns the laws that this object obeys</p></li>
 </ul>
 <p><strong>Unique ID</strong></p>
 <ul class="simple">
-<li><p><a class="reference internal" href="#+replab.ComplexCharacterTable.eq" title="+replab.ComplexCharacterTable.eq"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">eq</span></code></a> – Equality test (deprecated)</p></li>
+<li><p><a class="reference internal" href="#+replab.ComplexCharacterTable.eq" title="+replab.ComplexCharacterTable.eq"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">eq</span></code></a> – Equality test</p></li>
 <li><p><a class="reference internal" href="#+replab.ComplexCharacterTable.id" title="+replab.ComplexCharacterTable.id"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">id</span></code></a> – Returns the unique ID of this object (deprecated)</p></li>
-<li><p><a class="reference internal" href="#+replab.ComplexCharacterTable.ne" title="+replab.ComplexCharacterTable.ne"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">ne</span></code></a> – Non-equality test (deprecated)</p></li>
+<li><p><a class="reference internal" href="#+replab.ComplexCharacterTable.isequal" title="+replab.ComplexCharacterTable.isequal"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">isequal</span></code></a> – Equality test</p></li>
+<li><p><a class="reference internal" href="#+replab.ComplexCharacterTable.ne" title="+replab.ComplexCharacterTable.ne"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">ne</span></code></a> – Non-equality test</p></li>
 </ul>
 <p><strong>General</strong></p>
 <ul class="simple">
-<li><p><a class="reference internal" href="#+replab.ComplexCharacterTable.CharacterTable" title="+replab.ComplexCharacterTable.CharacterTable"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">CharacterTable</span></code></a> – Constructs a character table</p></li>
 <li><p><a class="reference internal" href="#+replab.ComplexCharacterTable.ComplexCharacterTable" title="+replab.ComplexCharacterTable.ComplexCharacterTable"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">ComplexCharacterTable</span></code></a> – Constructs a character table</p></li>
 <li><p><a class="reference internal" href="#+replab.ComplexCharacterTable.conjugateCharacterIndices" title="+replab.ComplexCharacterTable.conjugateCharacterIndices"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">conjugateCharacterIndices</span></code></a> – For each character, returns the index of the character conjugate to it</p></li>
 <li><p><a class="reference internal" href="#+replab.ComplexCharacterTable.defaultClassNames" title="+replab.ComplexCharacterTable.defaultClassNames"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">defaultClassNames</span></code></a> – Constructs default names for conjugacy classes</p></li>
@@ -1280,12 +1310,6 @@ external libraries and a Java Virtual Machine available.</p>
 </div>
 <div class="dropdown admonition">
 <p class="admonition-title">Inherited elements</p>
-<dl class="mat method">
-<dt class="sig sig-object mat" id="+replab.ComplexCharacterTable.CharacterTable">
-<span class="sig-name descname"><span class="pre">CharacterTable</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">group</span></em>, <em class="sig-param"><span class="pre">field</span></em>, <em class="sig-param"><span class="pre">classes</span></em>, <em class="sig-param"><span class="pre">values</span></em>, <em class="sig-param"><span class="pre">varargin</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.ComplexCharacterTable.CharacterTable" title="Permalink to this definition">¶</a></dt>
-<dd><p>Documentation in <a class="reference internal" href="#+replab.CharacterTable.CharacterTable" title="+replab.CharacterTable.CharacterTable"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.CharacterTable.CharacterTable()</span></code></a></p>
-</dd></dl>
-
 <dl class="mat method">
 <dt class="sig sig-object mat" id="+replab.ComplexCharacterTable.additionalFields">
 <span class="sig-name descname"><span class="pre">additionalFields</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.ComplexCharacterTable.additionalFields" title="Permalink to this definition">¶</a></dt>
@@ -1332,6 +1356,12 @@ external libraries and a Java Virtual Machine available.</p>
 <dt class="sig sig-object mat" id="+replab.ComplexCharacterTable.check">
 <span class="sig-name descname"><span class="pre">check</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.ComplexCharacterTable.check" title="Permalink to this definition">¶</a></dt>
 <dd><p>Documentation in <a class="reference internal" href="base.html#+replab.Obj.check" title="+replab.Obj.check"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Obj.check()</span></code></a></p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.ComplexCharacterTable.checkAndContinue">
+<span class="sig-name descname"><span class="pre">checkAndContinue</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.ComplexCharacterTable.checkAndContinue" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="base.html#+replab.Obj.checkAndContinue" title="+replab.Obj.checkAndContinue"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Obj.checkAndContinue()</span></code></a></p>
 </dd></dl>
 
 <dl class="mat attribute">
@@ -1449,6 +1479,12 @@ external libraries and a Java Virtual Machine available.</p>
 </dd></dl>
 
 <dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.ComplexCharacterTable.isequal">
+<span class="sig-name descname"><span class="pre">isequal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">lhs</span></em>, <em class="sig-param"><span class="pre">rhs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.ComplexCharacterTable.isequal" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="base.html#+replab.Obj.isequal" title="+replab.Obj.isequal"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Obj.isequal()</span></code></a></p>
+</dd></dl>
+
+<dl class="mat method">
 <dt class="sig sig-object mat" id="+replab.ComplexCharacterTable.kronecker">
 <span class="sig-name descname"><span class="pre">kronecker</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.ComplexCharacterTable.kronecker" title="Permalink to this definition">¶</a></dt>
 <dd><p>Documentation in <a class="reference internal" href="#+replab.CharacterTable.kronecker" title="+replab.CharacterTable.kronecker"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.CharacterTable.kronecker()</span></code></a></p>
@@ -1540,7 +1576,7 @@ external libraries and a Java Virtual Machine available.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>group</strong> (<a class="reference internal" href="groups.html#+replab.FiniteGroup" title="+replab.FiniteGroup"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">FiniteGroup</span></code></a>) – Group represented by character table</p></li>
+<li><p><strong>group</strong> (<a class="reference internal" href="finite_groups.html#+replab.FiniteGroup" title="+replab.FiniteGroup"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">FiniteGroup</span></code></a>) – Group represented by character table</p></li>
 <li><p><strong>classes</strong> (<a class="reference internal" href="group_subsets.html#+replab.ConjugacyClasses" title="+replab.ConjugacyClasses"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">ConjugacyClasses</span></code></a>) – Conjugacy classes of <a class="reference internal" href="#+replab.ComplexCharacterTable.group" title="+replab.ComplexCharacterTable.group"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">group</span></code></a></p></li>
 <li><p><strong>values</strong> (<a class="reference internal" href="numerics.html#+replab.cyclotomic" title="+replab.cyclotomic"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">cyclotomic</span></code></a> (nClasses, nClasses)) – Character values</p></li>
 <li><p><strong>irreps</strong> – Explicit matrix representations (can contain empty values)</p></li>
@@ -1585,7 +1621,7 @@ external libraries and a Java Virtual Machine available.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>group</strong> (<a class="reference internal" href="groups.html#+replab.FiniteGroup" title="+replab.FiniteGroup"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">FiniteGroup</span></code></a>) – Finite group</p></li>
+<li><p><strong>group</strong> (<a class="reference internal" href="finite_groups.html#+replab.FiniteGroup" title="+replab.FiniteGroup"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">FiniteGroup</span></code></a>) – Finite group</p></li>
 <li><p><strong>irreps</strong> (cell(1,*) of <a class="reference internal" href="rep.html#+replab.Rep" title="+replab.Rep"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">Rep</span></code></a>) – Irreducible representations</p></li>
 </ul>
 </dd>
@@ -1656,7 +1692,7 @@ though that fact is not checked by this method.</p>
 <p>The character values are stored as elements of the cyclotomic field, using the <a class="reference internal" href="numerics.html#+replab.cyclotomic" title="+replab.cyclotomic"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">cyclotomic</span></code></a> class which requires
 external libraries and a Java Virtual Machine available.</p>
 <p>Instances of <a class="reference internal" href="#+replab.RealCharacterTable.RealCharacterTable" title="+replab.RealCharacterTable.RealCharacterTable"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">RealCharacterTable</span></code></a> are immutable.</p>
-<p>For additional help, see <a class="reference internal" href="#+replab.RealCharacterTable.CharacterTable" title="+replab.RealCharacterTable.CharacterTable"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">CharacterTable</span></code></a>.</p>
+<p>For additional help, see <a class="reference internal" href="#+replab.CharacterTable" title="+replab.CharacterTable"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">CharacterTable</span></code></a>.</p>
 <div class="dropdown admonition">
 <p class="admonition-title">Class members list</p>
 <p><strong>Properties</strong></p>
@@ -1688,17 +1724,18 @@ external libraries and a Java Virtual Machine available.</p>
 <p><strong>Laws</strong></p>
 <ul class="simple">
 <li><p><a class="reference internal" href="#+replab.RealCharacterTable.check" title="+replab.RealCharacterTable.check"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">check</span></code></a> – Checks the consistency of this object</p></li>
+<li><p><a class="reference internal" href="#+replab.RealCharacterTable.checkAndContinue" title="+replab.RealCharacterTable.checkAndContinue"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">checkAndContinue</span></code></a> – Checks the consistency of this object</p></li>
 <li><p><a class="reference internal" href="#+replab.RealCharacterTable.laws" title="+replab.RealCharacterTable.laws"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">laws</span></code></a> – Returns the laws that this object obeys</p></li>
 </ul>
 <p><strong>Unique ID</strong></p>
 <ul class="simple">
-<li><p><a class="reference internal" href="#+replab.RealCharacterTable.eq" title="+replab.RealCharacterTable.eq"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">eq</span></code></a> – Equality test (deprecated)</p></li>
+<li><p><a class="reference internal" href="#+replab.RealCharacterTable.eq" title="+replab.RealCharacterTable.eq"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">eq</span></code></a> – Equality test</p></li>
 <li><p><a class="reference internal" href="#+replab.RealCharacterTable.id" title="+replab.RealCharacterTable.id"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">id</span></code></a> – Returns the unique ID of this object (deprecated)</p></li>
-<li><p><a class="reference internal" href="#+replab.RealCharacterTable.ne" title="+replab.RealCharacterTable.ne"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">ne</span></code></a> – Non-equality test (deprecated)</p></li>
+<li><p><a class="reference internal" href="#+replab.RealCharacterTable.isequal" title="+replab.RealCharacterTable.isequal"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">isequal</span></code></a> – Equality test</p></li>
+<li><p><a class="reference internal" href="#+replab.RealCharacterTable.ne" title="+replab.RealCharacterTable.ne"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">ne</span></code></a> – Non-equality test</p></li>
 </ul>
 <p><strong>General</strong></p>
 <ul class="simple">
-<li><p><a class="reference internal" href="#+replab.RealCharacterTable.CharacterTable" title="+replab.RealCharacterTable.CharacterTable"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">CharacterTable</span></code></a> – Constructs a character table</p></li>
 <li><p><a class="reference internal" href="#+replab.RealCharacterTable.RealCharacterTable" title="+replab.RealCharacterTable.RealCharacterTable"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">RealCharacterTable</span></code></a> – Constructs a character table</p></li>
 <li><p><a class="reference internal" href="#+replab.RealCharacterTable.defaultClassNames" title="+replab.RealCharacterTable.defaultClassNames"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">defaultClassNames</span></code></a> – Constructs default names for conjugacy classes</p></li>
 <li><p><a class="reference internal" href="#+replab.RealCharacterTable.defaultIrrepNames" title="+replab.RealCharacterTable.defaultIrrepNames"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">defaultIrrepNames</span></code></a> – Constructs default names for irreducible representations</p></li>
@@ -1736,12 +1773,6 @@ external libraries and a Java Virtual Machine available.</p>
 </div>
 <div class="dropdown admonition">
 <p class="admonition-title">Inherited elements</p>
-<dl class="mat method">
-<dt class="sig sig-object mat" id="+replab.RealCharacterTable.CharacterTable">
-<span class="sig-name descname"><span class="pre">CharacterTable</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">group</span></em>, <em class="sig-param"><span class="pre">field</span></em>, <em class="sig-param"><span class="pre">classes</span></em>, <em class="sig-param"><span class="pre">values</span></em>, <em class="sig-param"><span class="pre">varargin</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.RealCharacterTable.CharacterTable" title="Permalink to this definition">¶</a></dt>
-<dd><p>Documentation in <a class="reference internal" href="#+replab.CharacterTable.CharacterTable" title="+replab.CharacterTable.CharacterTable"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.CharacterTable.CharacterTable()</span></code></a></p>
-</dd></dl>
-
 <dl class="mat method">
 <dt class="sig sig-object mat" id="+replab.RealCharacterTable.additionalFields">
 <span class="sig-name descname"><span class="pre">additionalFields</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.RealCharacterTable.additionalFields" title="Permalink to this definition">¶</a></dt>
@@ -1788,6 +1819,12 @@ external libraries and a Java Virtual Machine available.</p>
 <dt class="sig sig-object mat" id="+replab.RealCharacterTable.check">
 <span class="sig-name descname"><span class="pre">check</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.RealCharacterTable.check" title="Permalink to this definition">¶</a></dt>
 <dd><p>Documentation in <a class="reference internal" href="base.html#+replab.Obj.check" title="+replab.Obj.check"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Obj.check()</span></code></a></p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.RealCharacterTable.checkAndContinue">
+<span class="sig-name descname"><span class="pre">checkAndContinue</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.RealCharacterTable.checkAndContinue" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="base.html#+replab.Obj.checkAndContinue" title="+replab.Obj.checkAndContinue"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Obj.checkAndContinue()</span></code></a></p>
 </dd></dl>
 
 <dl class="mat attribute">
@@ -1911,6 +1948,12 @@ external libraries and a Java Virtual Machine available.</p>
 </dd></dl>
 
 <dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.RealCharacterTable.isequal">
+<span class="sig-name descname"><span class="pre">isequal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">lhs</span></em>, <em class="sig-param"><span class="pre">rhs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.RealCharacterTable.isequal" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="base.html#+replab.Obj.isequal" title="+replab.Obj.isequal"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Obj.isequal()</span></code></a></p>
+</dd></dl>
+
+<dl class="mat method">
 <dt class="sig sig-object mat" id="+replab.RealCharacterTable.kronecker">
 <span class="sig-name descname"><span class="pre">kronecker</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.RealCharacterTable.kronecker" title="Permalink to this definition">¶</a></dt>
 <dd><p>Documentation in <a class="reference internal" href="#+replab.CharacterTable.kronecker" title="+replab.CharacterTable.kronecker"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.CharacterTable.kronecker()</span></code></a></p>
@@ -2002,7 +2045,7 @@ external libraries and a Java Virtual Machine available.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>group</strong> (<a class="reference internal" href="groups.html#+replab.FiniteGroup" title="+replab.FiniteGroup"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">FiniteGroup</span></code></a>) – Group represented by character table</p></li>
+<li><p><strong>group</strong> (<a class="reference internal" href="finite_groups.html#+replab.FiniteGroup" title="+replab.FiniteGroup"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">FiniteGroup</span></code></a>) – Group represented by character table</p></li>
 <li><p><strong>classes</strong> (<a class="reference internal" href="group_subsets.html#+replab.ConjugacyClasses" title="+replab.ConjugacyClasses"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">ConjugacyClasses</span></code></a>) – Conjugacy classes of <a class="reference internal" href="#+replab.RealCharacterTable.group" title="+replab.RealCharacterTable.group"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">group</span></code></a></p></li>
 <li><p><strong>values</strong> (<a class="reference internal" href="numerics.html#+replab.cyclotomic" title="+replab.cyclotomic"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">cyclotomic</span></code></a> (nIrreps, nClasses)) – Character values</p></li>
 <li><p><strong>irreps</strong> – Explicit matrix representations (can contain empty values)</p></li>
@@ -2067,7 +2110,7 @@ external libraries and a Java Virtual Machine available.</p>
         <li class="right" >
           <a href="equivariant.html" title="Equivariant spaces"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.9.5-SNAP documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 1.0.0 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="index.html" >Technical Reference</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">Characters</a></li> 
       </ul>

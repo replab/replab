@@ -15,7 +15,7 @@
   <link rel="stylesheet" type="text/css" href="../../_static/css/bootstrap-theme.min.css" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-    <title>Eigenvalue problem of a vibrating square membrane, part 2 &#8212; RepLAB 0.9.5-SNAP documentation</title>
+    <title>Eigenvalue problem of a vibrating square membrane, part 2 &#8212; RepLAB 1.0.0 documentation</title>
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/guzzle.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css" />
@@ -79,7 +79,7 @@
         <li class="right" >
           <a href="membrane1.html" title="Eigenvalue problem of a vibrating square membrane, part 1"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">RepLAB 0.9.5-SNAP documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">RepLAB 1.0.0 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../index.html" >Topic guides</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="index.html" accesskey="U">Membrane vibration modes</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">Eigenvalue problem of a vibrating square membrane, part 2</a></li> 
@@ -95,7 +95,7 @@
   <a href="
     ../../index.html">RepLAB</a>&nbsp;&nbsp;
   <a href="https://github.com/replab/replab"><i class="fab fa-github"></i></a>&nbsp;
-  <a href="https://github.com/replab/replab/archive/v0.9.5-SNAP.zip"><i class="fa fa-download"></i></a>&nbsp;
+  <a href="https://github.com/replab/replab/archive/v1.0.0.zip"><i class="fa fa-download"></i></a>&nbsp;
   <a href="https://gitter.im/replab/replab"><i class="fab fa-gitter"></i></a>&nbsp;
   <a href="https://travis-ci.com/replab/replab"><i class="fas fa-sync-alt"></i></a>&nbsp;
   <a href="https://codecov.io/gh/replab/replab"><i class="fas fa-umbrella"></i></a>
@@ -107,7 +107,6 @@
 <li class="toctree-l1"><a class="reference internal" href="../../tutorials/index.html">Tutorials</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../howto/index.html">How to</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../index.html">Topic guides</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="../nonlocality/index.html">Nonlocality</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="index.html">Membrane vibration modes</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="membrane1.html">Eigenvalue problem of a vibrating square membrane, part 1</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">Eigenvalue problem of a vibrating square membrane, part 2</a></li>
@@ -435,6 +434,7 @@ div.rendered_html tbody tr:hover {
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
+replab_init: Initialization done.
 DH =
 
 Permutation group acting on 9 elements of order 8
@@ -482,25 +482,25 @@ M_block =
 
  Columns 1 through 8:
 
-   4.0000  -1.0000        0        0        0        0        0  -0.0000
-  -4.0000   4.0000  -2.0000  -0.0000   0.0000   0.0000   0.0000   0.0000
-        0  -2.0000   4.0000  -0.0000        0        0   0.0000  -0.0000
+   4.0000  -1.0000        0        0        0        0        0   0.0000
+  -4.0000   4.0000  -2.0000  -0.0000   0.0000  -0.0000   0.0000  -0.0000
+        0  -2.0000   4.0000   0.0000        0   0.0000   0.0000   0.0000
         0        0        0   4.0000        0   0.0000   0.0000   0.0000
-   0.0000  -0.0000   0.0000        0   4.0000  -0.0000   0.0000   0.0000
-        0  -0.0000        0   0.0000  -0.0000   4.0000   0.0000   1.4142
-        0        0   0.0000        0        0  -0.0000   4.0000  -0.0000
-   0.0000  -0.0000        0        0  -0.0000   1.4142  -0.0000   4.0000
-        0        0        0        0        0   0.0000   1.4142   0.0000
+        0        0        0        0   4.0000  -0.0000   0.0000        0
+        0        0  -0.0000  -0.0000        0   4.0000   0.0000  -1.4142
+        0        0        0        0        0   0.0000   4.0000   0.0000
+        0        0        0        0        0  -1.4142   0.0000   4.0000
+        0        0        0        0        0  -0.0000  -1.4142  -0.0000
 
  Column 9:
 
-   0.0000
-   0.0000
-   0.0000
-   0.0000
-        0
-   0.0000
-   1.4142
+  -0.0000
+  -0.0000
+  -0.0000
+  -0.0000
+  -0.0000
+  -0.0000
+  -1.4142
   -0.0000
    4.0000
 
@@ -538,10 +538,10 @@ that we labelled our basis vectors.</p>
 <div class="highlight"><pre>
 ans =
 
-   4.0000e+00   5.3981e-16   1.4142e+00   8.4194e-17
-  -2.9084e-16   4.0000e+00  -3.8750e-17   1.4142e+00
-   1.4142e+00  -1.8326e-17   4.0000e+00  -1.6653e-16
-   6.1531e-17   1.4142e+00   6.1538e-17   4.0000e+00
+   4.0000e+00   1.1717e-16  -1.4142e+00  -5.6560e-17
+   1.0490e-16   4.0000e+00   1.0873e-16  -1.4142e+00
+  -1.4142e+00   5.6451e-18   4.0000e+00  -6.9108e-17
+  -1.2487e-16  -1.4142e+00  -3.8392e-17   4.0000e+00
 
 </pre></div></div>
 </div>
@@ -562,10 +562,10 @@ ans =
 <div class="highlight"><pre>
 M_block_Iso4 =
 
-   4.0000e+00   1.4142e+00   5.3981e-16   8.4194e-17
-   1.4142e+00   4.0000e+00  -1.8326e-17  -1.6653e-16
-  -2.9084e-16  -3.8750e-17   4.0000e+00   1.4142e+00
-   6.1531e-17   6.1538e-17   1.4142e+00   4.0000e+00
+   4.0000e+00  -1.4142e+00   1.1717e-16  -5.6560e-17
+  -1.4142e+00   4.0000e+00   5.6451e-18  -6.9108e-17
+   1.0490e-16   1.0873e-16   4.0000e+00  -1.4142e+00
+  -1.2487e-16  -3.8392e-17  -1.4142e+00   4.0000e+00
 
 </pre></div></div>
 </div>
@@ -597,9 +597,9 @@ M_block_Iso4 =
 <div class="highlight"><pre>
 Block1 =
 
-   4.0000  -1.0000        0
-  -4.0000   4.0000  -2.0000
-        0  -2.0000   4.0000
+   4  -1   0
+  -4   4  -2
+   0  -2   4
 
 </pre></div></div>
 </div>
@@ -621,7 +621,7 @@ Block1 =
 U1 =
 
    2.7735e-01   4.4721e-01   2.7735e-01
-  -7.8446e-01   2.5762e-16   7.8446e-01
+  -7.8446e-01  -2.0610e-16   7.8446e-01
    5.5470e-01  -8.9443e-01   5.5470e-01
 
 E1 =
@@ -693,17 +693,17 @@ E3 = 4
 <div class="highlight"><pre>
 Block4 =
 
-   4.0000e+00   1.4142e+00   5.3981e-16   8.4194e-17
-   1.4142e+00   4.0000e+00  -1.8326e-17  -1.6653e-16
-  -2.9084e-16  -3.8750e-17   4.0000e+00   1.4142e+00
-   6.1531e-17   6.1538e-17   1.4142e+00   4.0000e+00
+   4.0000e+00  -1.4142e+00   1.1717e-16  -5.6560e-17
+  -1.4142e+00   4.0000e+00   5.6451e-18  -6.9108e-17
+   1.0490e-16   1.0873e-16   4.0000e+00  -1.4142e+00
+  -1.2487e-16  -3.8392e-17  -1.4142e+00   4.0000e+00
 
 U4 =
 
-   7.0711e-01   7.0711e-01   8.1041e-02   1.2705e-01
-   7.0711e-01  -7.0711e-01  -8.1041e-02   1.2705e-01
-  -1.4542e-16   1.4542e-16   7.0245e-01  -6.9560e-01
-   3.0766e-17  -3.0766e-17  -7.0245e-01  -6.9560e-01
+   7.0711e-01  -7.0711e-01   1.3130e-02   1.7593e-03
+  -7.0711e-01  -7.0711e-01  -1.3130e-02   1.7593e-03
+   5.2451e-17   5.2451e-17  -7.0698e-01   7.0710e-01
+  -6.2435e-17  -6.2435e-17   7.0698e-01   7.0710e-01
 
 E4 =
 
@@ -711,8 +711,8 @@ Diagonal Matrix
 
    5.4142        0        0        0
         0   2.5858        0        0
-        0        0   2.5858        0
-        0        0        0   5.4142
+        0        0   5.4142        0
+        0        0        0   2.5858
 
 </pre></div></div>
 </div>
@@ -821,7 +821,6 @@ HS_matrix =
 </section>
 <section id="Summary">
 <h3>Summary<a class="headerlink" href="#Summary" title="Permalink to this headline">¶</a></h3>
-<hr class="docutils" />
 <p>In this tutorial, we have illustrated how group theoretical methods can be implemented in an eigenvalue problem when the operator in question is subject to symmetries and we indicated a way that <em>RepLAB</em> can act as a complement to numerically solve a toy model, namely the eigenvalue problem of an oscillating square membrane. In particular, we emphasized that we can arrive at the <strong>block diagonalization</strong> of the matrix <span class="math notranslate nohighlight">\(M\)</span> with ease, provided that we make use of a unique feature of
 <em>RepLAB</em>: the change of basis matrix that it provides, every time we ask <em>RepLAB</em> to decompose a representation into its irreducible components.</p>
 <p>Before we close, even though we discretized the square region using only <span class="math notranslate nohighlight">\(n=9\)</span> lattice points, thus asking for the dihedral group <span class="math notranslate nohighlight">\(D_4\)</span> as a subgroup in the group <span class="math notranslate nohighlight">\(S_9\)</span>, a generalization of the method presented in this document is straighforward in arbitrary number of points. For instance, we could have employed a lattice with even more points and asking for <span class="math notranslate nohighlight">\(D_4\)</span> as a subgroup in the symmetric group <span class="math notranslate nohighlight">\(S_n\)</span>. However, for the purposes of the current tutorial, we
@@ -866,7 +865,7 @@ decided to use only 9 lattice points and focus on making clear how a block-diago
         <li class="right" >
           <a href="membrane1.html" title="Eigenvalue problem of a vibrating square membrane, part 1"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">RepLAB 0.9.5-SNAP documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">RepLAB 1.0.0 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../index.html" >Topic guides</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="index.html" >Membrane vibration modes</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">Eigenvalue problem of a vibrating square membrane, part 2</a></li> 

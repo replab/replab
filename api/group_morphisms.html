@@ -15,7 +15,7 @@
   <link rel="stylesheet" type="text/css" href="../_static/css/bootstrap-theme.min.css" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-    <title>Group morphisms &#8212; RepLAB 0.9.5-SNAP documentation</title>
+    <title>Group morphisms &#8212; RepLAB 1.0.0 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/guzzle.css" />
     <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
@@ -79,7 +79,7 @@
         <li class="right" >
           <a href="group_subsets.html" title="Group subsets"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.9.5-SNAP documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 1.0.0 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">Technical Reference</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">Group morphisms</a></li> 
       </ul>
@@ -94,7 +94,7 @@
   <a href="
     ../index.html">RepLAB</a>&nbsp;&nbsp;
   <a href="https://github.com/replab/replab"><i class="fab fa-github"></i></a>&nbsp;
-  <a href="https://github.com/replab/replab/archive/v0.9.5-SNAP.zip"><i class="fa fa-download"></i></a>&nbsp;
+  <a href="https://github.com/replab/replab/archive/v1.0.0.zip"><i class="fa fa-download"></i></a>&nbsp;
   <a href="https://gitter.im/replab/replab"><i class="fab fa-gitter"></i></a>&nbsp;
   <a href="https://travis-ci.com/replab/replab"><i class="fas fa-sync-alt"></i></a>&nbsp;
   <a href="https://codecov.io/gh/replab/replab"><i class="fas fa-umbrella"></i></a>
@@ -113,6 +113,7 @@
 <li class="toctree-l2"><a class="reference internal" href="numerics.html">Numerics</a></li>
 <li class="toctree-l2"><a class="reference internal" href="groups.html">Base group structures</a></li>
 <li class="toctree-l2"><a class="reference internal" href="continuous_groups.html">Continuous groups</a></li>
+<li class="toctree-l2"><a class="reference internal" href="finite_groups.html">Finite group structures</a></li>
 <li class="toctree-l2"><a class="reference internal" href="permutation_groups.html">Permutation groups</a></li>
 <li class="toctree-l2"><a class="reference internal" href="named_discrete_groups.html">Named discrete groups</a></li>
 <li class="toctree-l2"><a class="reference internal" href="abstract_groups.html">Abstract groups and atlas</a></li>
@@ -179,7 +180,7 @@
 <p>Group morphisms are used in RepLAB to relate groups to one another. For example, there is always a (trivial) injection map that embeds a subgroup into the group that contains it.</p>
 <p>A morphism is simply a function between groups that preserve the multiplicative structure (<span class="math notranslate nohighlight">\(f(x y) = f(x) f(y)\)</span>). An isomorphism is an invertible (or bijective) morphism.</p>
 <p>Isomorphisms are used in RepLAB to compute with finite groups, by translating the operations into an isomorphic permutation group.</p>
-<p>Isomorphisms are also used when the user asks RepLAB to recognize a finite group (<a class="reference internal" href="groups.html#+replab.FiniteGroup.recognize" title="+replab.FiniteGroup.recognize"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">FiniteGroup.recognize</span></code></a>). RepLAB then returns the isomorphism from the abstract group to the user-defined group. Thus, the generators of the “platonic” abstract group can be identified as elements of the user-defined group.</p>
+<p>Isomorphisms are also used when the user asks RepLAB to recognize a finite group (<a class="reference internal" href="finite_groups.html#+replab.FiniteGroup.recognize" title="+replab.FiniteGroup.recognize"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">FiniteGroup.recognize</span></code></a>). RepLAB then returns the isomorphism from the abstract group to the user-defined group. Thus, the generators of the “platonic” abstract group can be identified as elements of the user-defined group.</p>
 <p>Morphisms are used to describe how symmetry groups relate to one another in the convex optimization framework (see <a class="reference internal" href="convex_programming.html#+replab.equiop" title="+replab.equiop"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">equiop</span></code></a>).</p>
 <ul class="simple">
 <li><p><a class="reference internal" href="#+replab.Morphism" title="+replab.Morphism"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">Morphism</span></code></a> is the most general class and a base for all the classes below.</p></li>
@@ -226,13 +227,15 @@ a corresponding element <code class="docutils literal notranslate"><span class="
 <p><strong>Laws</strong></p>
 <ul class="simple">
 <li><p><a class="reference internal" href="#+replab.Morphism.check" title="+replab.Morphism.check"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">check</span></code></a> – Checks the consistency of this object</p></li>
+<li><p><a class="reference internal" href="#+replab.Morphism.checkAndContinue" title="+replab.Morphism.checkAndContinue"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">checkAndContinue</span></code></a> – Checks the consistency of this object</p></li>
 <li><p><a class="reference internal" href="#+replab.Morphism.laws" title="+replab.Morphism.laws"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">laws</span></code></a> – Returns the laws that this object obeys</p></li>
 </ul>
 <p><strong>Unique ID</strong></p>
 <ul class="simple">
-<li><p><a class="reference internal" href="#+replab.Morphism.eq" title="+replab.Morphism.eq"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">eq</span></code></a> – Equality test (deprecated)</p></li>
+<li><p><a class="reference internal" href="#+replab.Morphism.eq" title="+replab.Morphism.eq"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">eq</span></code></a> – Equality test</p></li>
 <li><p><a class="reference internal" href="#+replab.Morphism.id" title="+replab.Morphism.id"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">id</span></code></a> – Returns the unique ID of this object (deprecated)</p></li>
-<li><p><a class="reference internal" href="#+replab.Morphism.ne" title="+replab.Morphism.ne"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">ne</span></code></a> – Non-equality test (deprecated)</p></li>
+<li><p><a class="reference internal" href="#+replab.Morphism.isequal" title="+replab.Morphism.isequal"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">isequal</span></code></a> – Equality test</p></li>
+<li><p><a class="reference internal" href="#+replab.Morphism.ne" title="+replab.Morphism.ne"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">ne</span></code></a> – Non-equality test</p></li>
 </ul>
 <p><strong>Morphism composition</strong></p>
 <ul class="simple">
@@ -289,6 +292,12 @@ a corresponding element <code class="docutils literal notranslate"><span class="
 </dd></dl>
 
 <dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.Morphism.checkAndContinue">
+<span class="sig-name descname"><span class="pre">checkAndContinue</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.Morphism.checkAndContinue" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="base.html#+replab.Obj.checkAndContinue" title="+replab.Obj.checkAndContinue"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Obj.checkAndContinue()</span></code></a></p>
+</dd></dl>
+
+<dl class="mat method">
 <dt class="sig sig-object mat" id="+replab.Morphism.disp">
 <span class="sig-name descname"><span class="pre">disp</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.Morphism.disp" title="Permalink to this definition">¶</a></dt>
 <dd><p>Documentation in <a class="reference internal" href="base.html#+replab.Str.disp" title="+replab.Str.disp"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Str.disp()</span></code></a></p>
@@ -322,6 +331,12 @@ a corresponding element <code class="docutils literal notranslate"><span class="
 <dt class="sig sig-object mat" id="+replab.Morphism.inCache">
 <span class="sig-name descname"><span class="pre">inCache</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">name</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.Morphism.inCache" title="Permalink to this definition">¶</a></dt>
 <dd><p>Documentation in <a class="reference internal" href="base.html#+replab.Obj.inCache" title="+replab.Obj.inCache"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Obj.inCache()</span></code></a></p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.Morphism.isequal">
+<span class="sig-name descname"><span class="pre">isequal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">lhs</span></em>, <em class="sig-param"><span class="pre">rhs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.Morphism.isequal" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="base.html#+replab.Obj.isequal" title="+replab.Obj.isequal"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Obj.isequal()</span></code></a></p>
 </dd></dl>
 
 <dl class="mat method">
@@ -518,13 +533,15 @@ Note: if both morphisms are isomorphisms, the resulting morphism is also an isom
 <p><strong>Laws</strong></p>
 <ul class="simple">
 <li><p><a class="reference internal" href="#+replab.Isomorphism.check" title="+replab.Isomorphism.check"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">check</span></code></a> – Checks the consistency of this object</p></li>
+<li><p><a class="reference internal" href="#+replab.Isomorphism.checkAndContinue" title="+replab.Isomorphism.checkAndContinue"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">checkAndContinue</span></code></a> – Checks the consistency of this object</p></li>
 <li><p><a class="reference internal" href="#+replab.Isomorphism.laws" title="+replab.Isomorphism.laws"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">laws</span></code></a> – Returns the laws that this object obeys</p></li>
 </ul>
 <p><strong>Unique ID</strong></p>
 <ul class="simple">
-<li><p><a class="reference internal" href="#+replab.Isomorphism.eq" title="+replab.Isomorphism.eq"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">eq</span></code></a> – Equality test (deprecated)</p></li>
+<li><p><a class="reference internal" href="#+replab.Isomorphism.eq" title="+replab.Isomorphism.eq"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">eq</span></code></a> – Equality test</p></li>
 <li><p><a class="reference internal" href="#+replab.Isomorphism.id" title="+replab.Isomorphism.id"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">id</span></code></a> – Returns the unique ID of this object (deprecated)</p></li>
-<li><p><a class="reference internal" href="#+replab.Isomorphism.ne" title="+replab.Isomorphism.ne"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">ne</span></code></a> – Non-equality test (deprecated)</p></li>
+<li><p><a class="reference internal" href="#+replab.Isomorphism.isequal" title="+replab.Isomorphism.isequal"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">isequal</span></code></a> – Equality test</p></li>
+<li><p><a class="reference internal" href="#+replab.Isomorphism.ne" title="+replab.Isomorphism.ne"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">ne</span></code></a> – Non-equality test</p></li>
 </ul>
 <p><strong>Morphism composition</strong></p>
 <ul class="simple">
@@ -548,7 +565,7 @@ Note: if both morphisms are isomorphisms, the resulting morphism is also an isom
 </ul>
 <p><strong>Preimages</strong></p>
 <ul class="simple">
-<li><p><a class="reference internal" href="#+replab.Isomorphism.preimageElement" title="+replab.Isomorphism.preimageElement"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">preimageElement</span></code></a> –</p></li>
+<li><p><a class="reference internal" href="#+replab.Isomorphism.preimageElement" title="+replab.Isomorphism.preimageElement"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">preimageElement</span></code></a> – Returns an the preimage of an element of the range</p></li>
 </ul>
 </div>
 <div class="dropdown admonition">
@@ -593,6 +610,12 @@ Note: if both morphisms are isomorphisms, the resulting morphism is also an isom
 <dt class="sig sig-object mat" id="+replab.Isomorphism.check">
 <span class="sig-name descname"><span class="pre">check</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.Isomorphism.check" title="Permalink to this definition">¶</a></dt>
 <dd><p>Documentation in <a class="reference internal" href="base.html#+replab.Obj.check" title="+replab.Obj.check"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Obj.check()</span></code></a></p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.Isomorphism.checkAndContinue">
+<span class="sig-name descname"><span class="pre">checkAndContinue</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.Isomorphism.checkAndContinue" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="base.html#+replab.Obj.checkAndContinue" title="+replab.Obj.checkAndContinue"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Obj.checkAndContinue()</span></code></a></p>
 </dd></dl>
 
 <dl class="mat method">
@@ -656,6 +679,12 @@ Note: if both morphisms are isomorphisms, the resulting morphism is also an isom
 </dd></dl>
 
 <dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.Isomorphism.isequal">
+<span class="sig-name descname"><span class="pre">isequal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">lhs</span></em>, <em class="sig-param"><span class="pre">rhs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.Isomorphism.isequal" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="base.html#+replab.Obj.isequal" title="+replab.Obj.isequal"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Obj.isequal()</span></code></a></p>
+</dd></dl>
+
+<dl class="mat method">
 <dt class="sig sig-object mat" id="+replab.Isomorphism.laws">
 <span class="sig-name descname"><span class="pre">laws</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.Isomorphism.laws" title="Permalink to this definition">¶</a></dt>
 <dd><p>Documentation in <a class="reference internal" href="base.html#+replab.Obj.laws" title="+replab.Obj.laws"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Obj.laws()</span></code></a></p>
@@ -677,12 +706,6 @@ Note: if both morphisms are isomorphisms, the resulting morphism is also an isom
 <dt class="sig sig-object mat" id="+replab.Isomorphism.ne">
 <span class="sig-name descname"><span class="pre">ne</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">rhs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.Isomorphism.ne" title="Permalink to this definition">¶</a></dt>
 <dd><p>Documentation in <a class="reference internal" href="base.html#+replab.Obj.ne" title="+replab.Obj.ne"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Obj.ne()</span></code></a></p>
-</dd></dl>
-
-<dl class="mat method">
-<dt class="sig sig-object mat" id="+replab.Isomorphism.preimageElement">
-<span class="sig-name descname"><span class="pre">preimageElement</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#+replab.Isomorphism.preimageElement" title="Permalink to this definition">¶</a></dt>
-<dd><p>No documentation</p>
 </dd></dl>
 
 <dl class="mat method">
@@ -750,6 +773,25 @@ Note: if both morphisms are isomorphisms, the resulting morphism is also an isom
 </dl>
 </dd></dl>
 
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.Isomorphism.preimageElement">
+<span class="sig-name descname"><span class="pre">preimageElement</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">t</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.Isomorphism.preimageElement" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns an the preimage of an element of the range</p>
+<p>Returns the <code class="docutils literal notranslate"><span class="pre">s</span></code> such that <code class="docutils literal notranslate"><span class="pre">self.imageElement(s)</span> <span class="pre">==</span> <span class="pre">t</span></code> .</p>
+<p>If the argument is not in the range of this isomorphism, the behavior is undefined.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>t</strong> (element of <a class="reference internal" href="#+replab.Isomorphism.target" title="+replab.Isomorphism.target"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">target</span></code></a>) – Element to compute the preimage of</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Preimage</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>element of <a class="reference internal" href="#+replab.Isomorphism.source" title="+replab.Isomorphism.source"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">source</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
 </dd></dl>
 
 </section>
@@ -788,13 +830,15 @@ Note: if both morphisms are isomorphisms, the resulting morphism is also an isom
 <p><strong>Laws</strong></p>
 <ul class="simple">
 <li><p><a class="reference internal" href="#+replab.FiniteMorphism.check" title="+replab.FiniteMorphism.check"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">check</span></code></a> – Checks the consistency of this object</p></li>
+<li><p><a class="reference internal" href="#+replab.FiniteMorphism.checkAndContinue" title="+replab.FiniteMorphism.checkAndContinue"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">checkAndContinue</span></code></a> – Checks the consistency of this object</p></li>
 <li><p><a class="reference internal" href="#+replab.FiniteMorphism.laws" title="+replab.FiniteMorphism.laws"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">laws</span></code></a> – Returns the laws that this object obeys</p></li>
 </ul>
 <p><strong>Unique ID</strong></p>
 <ul class="simple">
-<li><p><a class="reference internal" href="#+replab.FiniteMorphism.eq" title="+replab.FiniteMorphism.eq"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">eq</span></code></a> – Equality test (deprecated)</p></li>
+<li><p><a class="reference internal" href="#+replab.FiniteMorphism.eq" title="+replab.FiniteMorphism.eq"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">eq</span></code></a> – Equality test</p></li>
 <li><p><a class="reference internal" href="#+replab.FiniteMorphism.id" title="+replab.FiniteMorphism.id"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">id</span></code></a> – Returns the unique ID of this object (deprecated)</p></li>
-<li><p><a class="reference internal" href="#+replab.FiniteMorphism.ne" title="+replab.FiniteMorphism.ne"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">ne</span></code></a> – Non-equality test (deprecated)</p></li>
+<li><p><a class="reference internal" href="#+replab.FiniteMorphism.isequal" title="+replab.FiniteMorphism.isequal"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">isequal</span></code></a> – Equality test</p></li>
+<li><p><a class="reference internal" href="#+replab.FiniteMorphism.ne" title="+replab.FiniteMorphism.ne"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">ne</span></code></a> – Non-equality test</p></li>
 </ul>
 <p><strong>Morphism composition</strong></p>
 <ul class="simple">
@@ -871,6 +915,12 @@ Note: if both morphisms are isomorphisms, the resulting morphism is also an isom
 </dd></dl>
 
 <dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.FiniteMorphism.checkAndContinue">
+<span class="sig-name descname"><span class="pre">checkAndContinue</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.FiniteMorphism.checkAndContinue" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="base.html#+replab.Obj.checkAndContinue" title="+replab.Obj.checkAndContinue"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Obj.checkAndContinue()</span></code></a></p>
+</dd></dl>
+
+<dl class="mat method">
 <dt class="sig sig-object mat" id="+replab.FiniteMorphism.compose">
 <span class="sig-name descname"><span class="pre">compose</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">applyFirst</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.FiniteMorphism.compose" title="Permalink to this definition">¶</a></dt>
 <dd><p>Documentation in <a class="reference internal" href="#+replab.Morphism.compose" title="+replab.Morphism.compose"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Morphism.compose()</span></code></a></p>
@@ -922,6 +972,12 @@ Note: if both morphisms are isomorphisms, the resulting morphism is also an isom
 <dt class="sig sig-object mat" id="+replab.FiniteMorphism.inCache">
 <span class="sig-name descname"><span class="pre">inCache</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">name</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.FiniteMorphism.inCache" title="Permalink to this definition">¶</a></dt>
 <dd><p>Documentation in <a class="reference internal" href="base.html#+replab.Obj.inCache" title="+replab.Obj.inCache"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Obj.inCache()</span></code></a></p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.FiniteMorphism.isequal">
+<span class="sig-name descname"><span class="pre">isequal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">lhs</span></em>, <em class="sig-param"><span class="pre">rhs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.FiniteMorphism.isequal" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="base.html#+replab.Obj.isequal" title="+replab.Obj.isequal"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Obj.isequal()</span></code></a></p>
 </dd></dl>
 
 <dl class="mat method">
@@ -988,7 +1044,7 @@ Note: if both morphisms are isomorphisms, the resulting morphism is also an isom
 <dd class="field-odd"><p>Subgroup of <a class="reference internal" href="#+replab.FiniteMorphism.target" title="+replab.FiniteMorphism.target"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">target</span></code></a> generated by the image of <a class="reference internal" href="#+replab.FiniteMorphism.source" title="+replab.FiniteMorphism.source"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">source</span></code></a></p>
 </dd>
 <dt class="field-even">Return type</dt>
-<dd class="field-even"><p><a class="reference internal" href="groups.html#+replab.FiniteGroup" title="+replab.FiniteGroup"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">FiniteGroup</span></code></a></p>
+<dd class="field-even"><p><a class="reference internal" href="finite_groups.html#+replab.FiniteGroup" title="+replab.FiniteGroup"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">FiniteGroup</span></code></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -999,13 +1055,13 @@ Note: if both morphisms are isomorphisms, the resulting morphism is also an isom
 <dd><p>Computes the image of a group</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>S</strong> (<a class="reference internal" href="groups.html#+replab.FiniteGroup" title="+replab.FiniteGroup"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">FiniteGroup</span></code></a>) – Group to compute the image of, subgroup of <a class="reference internal" href="#+replab.FiniteMorphism.source" title="+replab.FiniteMorphism.source"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">source</span></code></a></p>
+<dd class="field-odd"><p><strong>S</strong> (<a class="reference internal" href="finite_groups.html#+replab.FiniteGroup" title="+replab.FiniteGroup"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">FiniteGroup</span></code></a>) – Group to compute the image of, subgroup of <a class="reference internal" href="#+replab.FiniteMorphism.source" title="+replab.FiniteMorphism.source"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">source</span></code></a></p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>Subgroup of <a class="reference internal" href="#+replab.FiniteMorphism.target" title="+replab.FiniteMorphism.target"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">target</span></code></a></p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="groups.html#+replab.FiniteGroup" title="+replab.FiniteGroup"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">FiniteGroup</span></code></a></p>
+<dd class="field-odd"><p><a class="reference internal" href="finite_groups.html#+replab.FiniteGroup" title="+replab.FiniteGroup"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">FiniteGroup</span></code></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1019,7 +1075,7 @@ Note: if both morphisms are isomorphisms, the resulting morphism is also an isom
 <dd class="field-odd"><p>Maximal subgroup of <a class="reference internal" href="#+replab.FiniteMorphism.source" title="+replab.FiniteMorphism.source"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">source</span></code></a> with trivial image</p>
 </dd>
 <dt class="field-even">Return type</dt>
-<dd class="field-even"><p><a class="reference internal" href="groups.html#+replab.FiniteGroup" title="+replab.FiniteGroup"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">replab.FiniteGroup</span></code></a></p>
+<dd class="field-even"><p><a class="reference internal" href="finite_groups.html#+replab.FiniteGroup" title="+replab.FiniteGroup"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">replab.FiniteGroup</span></code></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1030,13 +1086,13 @@ Note: if both morphisms are isomorphisms, the resulting morphism is also an isom
 <dd><p>Returns the group of source elements that map to a given group of target elements</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>T</strong> (<a class="reference internal" href="groups.html#+replab.FiniteGroup" title="+replab.FiniteGroup"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">FiniteGroup</span></code></a>) – Subgroup of <a class="reference internal" href="#+replab.FiniteMorphism.target" title="+replab.FiniteMorphism.target"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">target</span></code></a></p>
+<dd class="field-odd"><p><strong>T</strong> (<a class="reference internal" href="finite_groups.html#+replab.FiniteGroup" title="+replab.FiniteGroup"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">FiniteGroup</span></code></a>) – Subgroup of <a class="reference internal" href="#+replab.FiniteMorphism.target" title="+replab.FiniteMorphism.target"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">target</span></code></a></p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>Subgroup of <a class="reference internal" href="#+replab.FiniteMorphism.source" title="+replab.FiniteMorphism.source"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">source</span></code></a></p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="groups.html#+replab.FiniteGroup" title="+replab.FiniteGroup"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">FiniteGroup</span></code></a></p>
+<dd class="field-odd"><p><a class="reference internal" href="finite_groups.html#+replab.FiniteGroup" title="+replab.FiniteGroup"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">FiniteGroup</span></code></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1046,12 +1102,25 @@ Note: if both morphisms are isomorphisms, the resulting morphism is also an isom
 <span class="sig-name descname"><span class="pre">preimageRepresentative</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">t</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.FiniteMorphism.preimageRepresentative" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns an arbitrary preimage of the given element</p>
 <p>Returns an <code class="docutils literal notranslate"><span class="pre">s</span></code> such that <code class="docutils literal notranslate"><span class="pre">self.imageElement(s)</span> <span class="pre">==</span> <span class="pre">t</span></code> .</p>
+<p>If the argument is not in the range of this morphism, the behavior is undefined.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>t</strong> (element of <a class="reference internal" href="#+replab.FiniteMorphism.target" title="+replab.FiniteMorphism.target"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">target</span></code></a>) – Element to compute the preimage of</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Preimage representative</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>element of <a class="reference internal" href="#+replab.FiniteMorphism.source" title="+replab.FiniteMorphism.source"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">source</span></code></a></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="mat method">
 <dt class="sig sig-object mat" id="+replab.FiniteMorphism.preimagesElement">
 <span class="sig-name descname"><span class="pre">preimagesElement</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em>, <em class="sig-param"><span class="pre">t</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.FiniteMorphism.preimagesElement" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the set of all source elements that map to a given element</p>
+<p>If the argument is not in the range of this morphism, the behavior is undefined.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>t</strong> (element of <a class="reference internal" href="#+replab.FiniteMorphism.target" title="+replab.FiniteMorphism.target"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">target</span></code></a>) – Element to compute the preimages of</p>
@@ -1072,7 +1141,7 @@ Note: if both morphisms are isomorphisms, the resulting morphism is also an isom
 <p>Note that the return type may be more precise.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>newSource</strong> (<a class="reference internal" href="groups.html#+replab.FiniteGroup" title="+replab.FiniteGroup"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">FiniteGroup</span></code></a>) – Subgroup of <a class="reference internal" href="#+replab.FiniteMorphism.source" title="+replab.FiniteMorphism.source"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">source</span></code></a></p>
+<dd class="field-odd"><p><strong>newSource</strong> (<a class="reference internal" href="finite_groups.html#+replab.FiniteGroup" title="+replab.FiniteGroup"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">FiniteGroup</span></code></a>) – Subgroup of <a class="reference internal" href="#+replab.FiniteMorphism.source" title="+replab.FiniteMorphism.source"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">source</span></code></a></p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>The restricted morphism</p>
@@ -1107,7 +1176,6 @@ Note: if both morphisms are isomorphisms, the resulting morphism is also an isom
 <em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">replab.</span></span><span class="sig-name descname"><span class="pre">FiniteIsomorphism</span></span><a class="headerlink" href="#+replab.FiniteIsomorphism" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#+replab.Isomorphism" title="+replab.Isomorphism"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">replab.Isomorphism</span></code></a>, <a class="reference internal" href="#+replab.FiniteMorphism" title="+replab.FiniteMorphism"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">replab.FiniteMorphism</span></code></a></p>
 <p>Describes an isomorphism between finite groups</p>
-<p>Adds the guarantee that <a class="reference internal" href="#+replab.FiniteIsomorphism.target" title="+replab.FiniteIsomorphism.target"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">target</span></code></a>/<a class="reference internal" href="#+replab.FiniteIsomorphism.image" title="+replab.FiniteIsomorphism.image"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">image</span></code></a> has for generators the images of the generators of <a class="reference internal" href="#+replab.FiniteIsomorphism.source" title="+replab.FiniteIsomorphism.source"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">source</span></code></a></p>
 <div class="dropdown admonition">
 <p class="admonition-title">Class members list</p>
 <p><strong>Properties</strong></p>
@@ -1136,13 +1204,15 @@ Note: if both morphisms are isomorphisms, the resulting morphism is also an isom
 <p><strong>Laws</strong></p>
 <ul class="simple">
 <li><p><a class="reference internal" href="#+replab.FiniteIsomorphism.check" title="+replab.FiniteIsomorphism.check"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">check</span></code></a> – Checks the consistency of this object</p></li>
+<li><p><a class="reference internal" href="#+replab.FiniteIsomorphism.checkAndContinue" title="+replab.FiniteIsomorphism.checkAndContinue"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">checkAndContinue</span></code></a> – Checks the consistency of this object</p></li>
 <li><p><a class="reference internal" href="#+replab.FiniteIsomorphism.laws" title="+replab.FiniteIsomorphism.laws"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">laws</span></code></a> – Returns the laws that this object obeys</p></li>
 </ul>
 <p><strong>Unique ID</strong></p>
 <ul class="simple">
-<li><p><a class="reference internal" href="#+replab.FiniteIsomorphism.eq" title="+replab.FiniteIsomorphism.eq"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">eq</span></code></a> – Equality test (deprecated)</p></li>
+<li><p><a class="reference internal" href="#+replab.FiniteIsomorphism.eq" title="+replab.FiniteIsomorphism.eq"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">eq</span></code></a> – Equality test</p></li>
 <li><p><a class="reference internal" href="#+replab.FiniteIsomorphism.id" title="+replab.FiniteIsomorphism.id"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">id</span></code></a> – Returns the unique ID of this object (deprecated)</p></li>
-<li><p><a class="reference internal" href="#+replab.FiniteIsomorphism.ne" title="+replab.FiniteIsomorphism.ne"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">ne</span></code></a> – Non-equality test (deprecated)</p></li>
+<li><p><a class="reference internal" href="#+replab.FiniteIsomorphism.isequal" title="+replab.FiniteIsomorphism.isequal"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">isequal</span></code></a> – Equality test</p></li>
+<li><p><a class="reference internal" href="#+replab.FiniteIsomorphism.ne" title="+replab.FiniteIsomorphism.ne"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">ne</span></code></a> – Non-equality test</p></li>
 </ul>
 <p><strong>Morphism composition</strong></p>
 <ul class="simple">
@@ -1165,11 +1235,12 @@ Note: if both morphisms are isomorphisms, the resulting morphism is also an isom
 <p><strong>General</strong></p>
 <ul class="simple">
 <li><p><a class="reference internal" href="#+replab.FiniteIsomorphism.identity" title="+replab.FiniteIsomorphism.identity"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">identity</span></code></a> – Returns the identity morphism from a finite group to itself</p></li>
+<li><p><a class="reference internal" href="#+replab.FiniteIsomorphism.preservesTypeOrder" title="+replab.FiniteIsomorphism.preservesTypeOrder"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">preservesTypeOrder</span></code></a> – Returns whether, for sure, this isomorphism preserves element ordering</p></li>
 </ul>
 <p><strong>Preimages</strong></p>
 <ul class="simple">
 <li><p><a class="reference internal" href="#+replab.FiniteIsomorphism.kernel" title="+replab.FiniteIsomorphism.kernel"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">kernel</span></code></a> – Returns the kernel of this morphism</p></li>
-<li><p><a class="reference internal" href="#+replab.FiniteIsomorphism.preimageElement" title="+replab.FiniteIsomorphism.preimageElement"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">preimageElement</span></code></a> –</p></li>
+<li><p><a class="reference internal" href="#+replab.FiniteIsomorphism.preimageElement" title="+replab.FiniteIsomorphism.preimageElement"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">preimageElement</span></code></a> – Returns an the preimage of an element of the range</p></li>
 <li><p><a class="reference internal" href="#+replab.FiniteIsomorphism.preimageGroup" title="+replab.FiniteIsomorphism.preimageGroup"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">preimageGroup</span></code></a> – Returns the group of source elements that map to a given group of target elements</p></li>
 <li><p><a class="reference internal" href="#+replab.FiniteIsomorphism.preimageRepresentative" title="+replab.FiniteIsomorphism.preimageRepresentative"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">preimageRepresentative</span></code></a> – Returns an arbitrary preimage of the given element</p></li>
 <li><p><a class="reference internal" href="#+replab.FiniteIsomorphism.preimagesElement" title="+replab.FiniteIsomorphism.preimagesElement"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">preimagesElement</span></code></a> – Returns the set of all source elements that map to a given element</p></li>
@@ -1222,6 +1293,12 @@ Note: if both morphisms are isomorphisms, the resulting morphism is also an isom
 <dt class="sig sig-object mat" id="+replab.FiniteIsomorphism.check">
 <span class="sig-name descname"><span class="pre">check</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.FiniteIsomorphism.check" title="Permalink to this definition">¶</a></dt>
 <dd><p>Documentation in <a class="reference internal" href="base.html#+replab.Obj.check" title="+replab.Obj.check"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Obj.check()</span></code></a></p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.FiniteIsomorphism.checkAndContinue">
+<span class="sig-name descname"><span class="pre">checkAndContinue</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.FiniteIsomorphism.checkAndContinue" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="base.html#+replab.Obj.checkAndContinue" title="+replab.Obj.checkAndContinue"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Obj.checkAndContinue()</span></code></a></p>
 </dd></dl>
 
 <dl class="mat method">
@@ -1297,6 +1374,12 @@ Note: if both morphisms are isomorphisms, the resulting morphism is also an isom
 </dd></dl>
 
 <dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.FiniteIsomorphism.isequal">
+<span class="sig-name descname"><span class="pre">isequal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">lhs</span></em>, <em class="sig-param"><span class="pre">rhs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.FiniteIsomorphism.isequal" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="base.html#+replab.Obj.isequal" title="+replab.Obj.isequal"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Obj.isequal()</span></code></a></p>
+</dd></dl>
+
+<dl class="mat method">
 <dt class="sig sig-object mat" id="+replab.FiniteIsomorphism.kernel">
 <span class="sig-name descname"><span class="pre">kernel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.FiniteIsomorphism.kernel" title="Permalink to this definition">¶</a></dt>
 <dd><p>Documentation in <a class="reference internal" href="#+replab.FiniteMorphism.kernel" title="+replab.FiniteMorphism.kernel"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.FiniteMorphism.kernel()</span></code></a></p>
@@ -1334,8 +1417,8 @@ Note: if both morphisms are isomorphisms, the resulting morphism is also an isom
 
 <dl class="mat method">
 <dt class="sig sig-object mat" id="+replab.FiniteIsomorphism.preimageElement">
-<span class="sig-name descname"><span class="pre">preimageElement</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#+replab.FiniteIsomorphism.preimageElement" title="Permalink to this definition">¶</a></dt>
-<dd><p>No documentation</p>
+<span class="sig-name descname"><span class="pre">preimageElement</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">t</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.FiniteIsomorphism.preimageElement" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="#+replab.Isomorphism.preimageElement" title="+replab.Isomorphism.preimageElement"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Isomorphism.preimageElement()</span></code></a></p>
 </dd></dl>
 
 <dl class="mat method">
@@ -1399,13 +1482,33 @@ Note: if both morphisms are isomorphisms, the resulting morphism is also an isom
 <dd><p>Returns the identity morphism from a finite group to itself</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>group</strong> (<a class="reference internal" href="groups.html#+replab.FiniteGroup" title="+replab.FiniteGroup"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">FiniteGroup</span></code></a>) – Group</p>
+<dd class="field-odd"><p><strong>group</strong> (<a class="reference internal" href="finite_groups.html#+replab.FiniteGroup" title="+replab.FiniteGroup"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">FiniteGroup</span></code></a>) – Group</p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>The identity automorphism on the given group</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="#+replab.FiniteIsomorphism" title="+replab.FiniteIsomorphism"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">FiniteIsomorphism</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="+replab.FiniteIsomorphism.preservesTypeOrder">
+<span class="sig-name descname"><span class="pre">preservesTypeOrder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.FiniteIsomorphism.preservesTypeOrder" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns whether, for sure, this isomorphism preserves element ordering</p>
+<ul class="simple">
+<li><p>When this method returns true, we must have, for <code class="docutils literal notranslate"><span class="pre">x</span></code> and <code class="docutils literal notranslate"><span class="pre">y</span></code> in <a class="reference internal" href="#+replab.FiniteIsomorphism.source" title="+replab.FiniteIsomorphism.source"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">source</span></code></a>,
+<code class="docutils literal notranslate"><span class="pre">self.source.type.compare(x,</span> <span class="pre">y)</span> <span class="pre">==</span> <span class="pre">self.target.type.compare(self.imageElement(x),</span> <span class="pre">self.imageElement(y))</span></code></p></li>
+<li><p>When this method returns false, it does not necessarily means that there exists a pair <code class="docutils literal notranslate"><span class="pre">(x,</span> <span class="pre">y)</span></code>
+that violates the condition above. It simply means the order preservation is not known.</p></li>
+</ul>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Whether, for sure, this isomorphism preserves element ordering</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>logical</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1451,7 +1554,7 @@ Note: if both morphisms are isomorphisms, the resulting morphism is also an isom
         <li class="right" >
           <a href="group_subsets.html" title="Group subsets"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.9.5-SNAP documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 1.0.0 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="index.html" >Technical Reference</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">Group morphisms</a></li> 
       </ul>

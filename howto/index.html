@@ -15,7 +15,7 @@
   <link rel="stylesheet" type="text/css" href="../_static/css/bootstrap-theme.min.css" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-    <title>How to &#8212; RepLAB 0.9.5-SNAP documentation</title>
+    <title>How to &#8212; RepLAB 1.0.0 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/guzzle.css" />
     <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
@@ -31,8 +31,8 @@
     <script src="../_static/js/collapse_helper.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Defining a group from a set of generators" href="groupFromGenerators.html" />
-    <link rel="prev" title="Tutorial for quantum information people" href="../tutorials/singlet.html" /> 
+    <link rel="next" title="Group definition from generators" href="groupFromGenerators.html" />
+    <link rel="prev" title="Tutorial for physicists" href="../tutorials/singlet.html" /> 
   
    
   
@@ -72,12 +72,12 @@
           <a href="../mat-modindex.html" title="MATLAB Module Index"
              >matlab index</a> |</li>
         <li class="right" >
-          <a href="groupFromGenerators.html" title="Defining a group from a set of generators"
+          <a href="groupFromGenerators.html" title="Group definition from generators"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="../tutorials/singlet.html" title="Tutorial for quantum information people"
+          <a href="../tutorials/singlet.html" title="Tutorial for physicists"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.9.5-SNAP documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 1.0.0 documentation</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">How to</a></li> 
       </ul>
     </div>
@@ -91,7 +91,7 @@
   <a href="
     ../index.html">RepLAB</a>&nbsp;&nbsp;
   <a href="https://github.com/replab/replab"><i class="fab fa-github"></i></a>&nbsp;
-  <a href="https://github.com/replab/replab/archive/v0.9.5-SNAP.zip"><i class="fa fa-download"></i></a>&nbsp;
+  <a href="https://github.com/replab/replab/archive/v1.0.0.zip"><i class="fa fa-download"></i></a>&nbsp;
   <a href="https://gitter.im/replab/replab"><i class="fab fa-gitter"></i></a>&nbsp;
   <a href="https://travis-ci.com/replab/replab"><i class="fas fa-sync-alt"></i></a>&nbsp;
   <a href="https://codecov.io/gh/replab/replab"><i class="fas fa-umbrella"></i></a>
@@ -105,12 +105,17 @@
 <li class="toctree-l2"><a class="reference internal" href="groupFromGenerators.html">How to define a group from generators</a></li>
 <li class="toctree-l2"><a class="reference internal" href="vectorStabilizerGroup.html">How to define the group which leave a vector invariant</a></li>
 <li class="toctree-l2"><a class="reference internal" href="graphAutomorphisms.html">How to compute the automorphism group of a graph</a></li>
+<li class="toctree-l2"><a class="reference internal" href="groupOrder.html">How to compute the order of a group</a></li>
 <li class="toctree-l2"><a class="reference internal" href="intersection.html">How to compute the intersection of two groups</a></li>
 <li class="toctree-l2"><a class="reference internal" href="naturalRep.html">How to compute the natural representation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="continuousGroup.html">How to define a continuous group</a></li>
+<li class="toctree-l2"><a class="reference internal" href="definingRep.html">How to compute the defining representation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="abstractGroup.html">How to define an abstract group</a></li>
 <li class="toctree-l2"><a class="reference internal" href="decomposeRep.html">How to decompose a representation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="sampleAlgebra.html">How to sample the group algebra</a></li>
 <li class="toctree-l2"><a class="reference internal" href="sampleCommutant.html">How to sample the commutant algebra</a></li>
 <li class="toctree-l2"><a class="reference internal" href="symmMatrix.html">How to symmetrize a matrix</a></li>
+<li class="toctree-l2"><a class="reference internal" href="averageMatrix.html">How to average a matrix over a compact group</a></li>
 <li class="toctree-l2"><a class="reference internal" href="SDP.html">How to define a semi-definite variable (SDP) that respects some symmetries</a></li>
 <li class="toctree-l2"><a class="reference internal" href="loadSave.html">How to load/save RepLAB objects</a></li>
 </ul>
@@ -164,12 +169,17 @@ They assume some <a class="reference internal" href="../tutorials/index.html"><s
 <li class="toctree-l1"><a class="reference internal" href="groupFromGenerators.html">How to define a group from generators</a></li>
 <li class="toctree-l1"><a class="reference internal" href="vectorStabilizerGroup.html">How to define the group which leave a vector invariant</a></li>
 <li class="toctree-l1"><a class="reference internal" href="graphAutomorphisms.html">How to compute the automorphism group of a graph</a></li>
+<li class="toctree-l1"><a class="reference internal" href="groupOrder.html">How to compute the order of a group</a></li>
 <li class="toctree-l1"><a class="reference internal" href="intersection.html">How to compute the intersection of two groups</a></li>
 <li class="toctree-l1"><a class="reference internal" href="naturalRep.html">How to compute the natural representation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="continuousGroup.html">How to define a continuous group</a></li>
+<li class="toctree-l1"><a class="reference internal" href="definingRep.html">How to compute the defining representation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="abstractGroup.html">How to define an abstract group</a></li>
 <li class="toctree-l1"><a class="reference internal" href="decomposeRep.html">How to decompose a representation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="sampleAlgebra.html">How to sample the group algebra</a></li>
 <li class="toctree-l1"><a class="reference internal" href="sampleCommutant.html">How to sample the commutant algebra</a></li>
 <li class="toctree-l1"><a class="reference internal" href="symmMatrix.html">How to symmetrize a matrix</a></li>
+<li class="toctree-l1"><a class="reference internal" href="averageMatrix.html">How to average a matrix over a compact group</a></li>
 <li class="toctree-l1"><a class="reference internal" href="SDP.html">How to define a semi-definite variable (SDP) that respects some symmetries</a></li>
 <li class="toctree-l1"><a class="reference internal" href="loadSave.html">How to load/save RepLAB objects</a></li>
 </ul>
@@ -185,11 +195,11 @@ They assume some <a class="reference internal" href="../tutorials/index.html"><s
   <div class="footer-relations">
     
       <div class="pull-left">
-        <a class="btn btn-default" href="../tutorials/singlet.html" title="previous chapter (use the left arrow)">Tutorial for quantum information people</a>
+        <a class="btn btn-default" href="../tutorials/singlet.html" title="previous chapter (use the left arrow)">Tutorial for physicists</a>
       </div>
     
       <div class="pull-right">
-        <a class="btn btn-default" href="groupFromGenerators.html" title="next chapter (use the right arrow)">Defining a group from a set of generators</a>
+        <a class="btn btn-default" href="groupFromGenerators.html" title="next chapter (use the right arrow)">Group definition from generators</a>
       </div>
     </div>
     <div class="clearer"></div>
@@ -207,12 +217,12 @@ They assume some <a class="reference internal" href="../tutorials/index.html"><s
           <a href="../mat-modindex.html" title="MATLAB Module Index"
              >matlab index</a> |</li>
         <li class="right" >
-          <a href="groupFromGenerators.html" title="Defining a group from a set of generators"
+          <a href="groupFromGenerators.html" title="Group definition from generators"
              >next</a> |</li>
         <li class="right" >
-          <a href="../tutorials/singlet.html" title="Tutorial for quantum information people"
+          <a href="../tutorials/singlet.html" title="Tutorial for physicists"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.9.5-SNAP documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 1.0.0 documentation</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">How to</a></li> 
       </ul>
     </div>

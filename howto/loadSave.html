@@ -15,7 +15,7 @@
   <link rel="stylesheet" type="text/css" href="../_static/css/bootstrap-theme.min.css" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-    <title>How to load/save information to MAT files &#8212; RepLAB 0.9.5-SNAP documentation</title>
+    <title>How to load/save information to MAT files &#8212; RepLAB 1.0.0 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/guzzle.css" />
     <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
@@ -79,7 +79,7 @@
         <li class="right" >
           <a href="SDP.html" title="Symmetric SDPs"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.9.5-SNAP documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 1.0.0 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">How to</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">How to load/save information to MAT files</a></li> 
       </ul>
@@ -94,7 +94,7 @@
   <a href="
     ../index.html">RepLAB</a>&nbsp;&nbsp;
   <a href="https://github.com/replab/replab"><i class="fab fa-github"></i></a>&nbsp;
-  <a href="https://github.com/replab/replab/archive/v0.9.5-SNAP.zip"><i class="fa fa-download"></i></a>&nbsp;
+  <a href="https://github.com/replab/replab/archive/v1.0.0.zip"><i class="fa fa-download"></i></a>&nbsp;
   <a href="https://gitter.im/replab/replab"><i class="fab fa-gitter"></i></a>&nbsp;
   <a href="https://travis-ci.com/replab/replab"><i class="fas fa-sync-alt"></i></a>&nbsp;
   <a href="https://codecov.io/gh/replab/replab"><i class="fas fa-umbrella"></i></a>
@@ -108,12 +108,17 @@
 <li class="toctree-l2"><a class="reference internal" href="groupFromGenerators.html">How to define a group from generators</a></li>
 <li class="toctree-l2"><a class="reference internal" href="vectorStabilizerGroup.html">How to define the group which leave a vector invariant</a></li>
 <li class="toctree-l2"><a class="reference internal" href="graphAutomorphisms.html">How to compute the automorphism group of a graph</a></li>
+<li class="toctree-l2"><a class="reference internal" href="groupOrder.html">How to compute the order of a group</a></li>
 <li class="toctree-l2"><a class="reference internal" href="intersection.html">How to compute the intersection of two groups</a></li>
 <li class="toctree-l2"><a class="reference internal" href="naturalRep.html">How to compute the natural representation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="continuousGroup.html">How to define a continuous group</a></li>
+<li class="toctree-l2"><a class="reference internal" href="definingRep.html">How to compute the defining representation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="abstractGroup.html">How to define an abstract group</a></li>
 <li class="toctree-l2"><a class="reference internal" href="decomposeRep.html">How to decompose a representation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="sampleAlgebra.html">How to sample the group algebra</a></li>
 <li class="toctree-l2"><a class="reference internal" href="sampleCommutant.html">How to sample the commutant algebra</a></li>
 <li class="toctree-l2"><a class="reference internal" href="symmMatrix.html">How to symmetrize a matrix</a></li>
+<li class="toctree-l2"><a class="reference internal" href="averageMatrix.html">How to average a matrix over a compact group</a></li>
 <li class="toctree-l2"><a class="reference internal" href="SDP.html">How to define a semi-definite variable (SDP) that respects some symmetries</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">How to load/save RepLAB objects</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#Importing/exporting-information-about-decompositions">Importing/exporting information about decompositions</a></li>
@@ -416,7 +421,7 @@ div.rendered_html tbody tr:hover {
 <p>As Octave does not support loading/saving of objects, RepLAB implements some methods to store and retrieve information to/from <code class="docutils literal notranslate"><span class="pre">.mat</span></code> files.</p>
 <p>For now, the following objects implement a pair of <code class="docutils literal notranslate"><span class="pre">import</span></code>/<code class="docutils literal notranslate"><span class="pre">export</span></code> methods:</p>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">+replab.Irreducible</span></code> implements <code class="docutils literal notranslate"><span class="pre">~+replab.Irreducible.import</span></code> and <code class="docutils literal notranslate"><span class="pre">~+replab.Irreducible.export</span></code>. Their usage is documented below.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">+replab.Irreducible</span></code> implements <code class="docutils literal notranslate"><span class="pre">+replab.Irreducible.import</span></code> and <code class="docutils literal notranslate"><span class="pre">+replab.Irreducible.export</span></code>. Their usage is documented below.</p></li>
 </ul>
 <p>Beyond those, some of our users report that loading/saving RepLAB objects to <code class="docutils literal notranslate"><span class="pre">.mat</span></code> files work in recent versions of MATLAB. Please be careful as the use of <code class="docutils literal notranslate"><span class="pre">load</span></code> and <code class="docutils literal notranslate"><span class="pre">save</span></code> is currently unsupported. However, if you wish to export computed information about RepLAB objects and those objects are not in the list above, please file an <a class="reference external" href="https://github.com/replab/replab/issues">issue</a>, and we may consider extending our <code class="docutils literal notranslate"><span class="pre">import</span></code> / <code class="docutils literal notranslate"><span class="pre">export</span></code> mechanism.</p>
 <section id="Importing/exporting-information-about-decompositions">
@@ -447,6 +452,7 @@ div.rendered_html tbody tr:hover {
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
+replab_init: Initialization done.
 decToExport =
 
 Orthogonal reducible representation
@@ -457,7 +463,7 @@ Orthogonal reducible representation
           parent: Orthogonal reducible representation
 basis(1,&#39;exact&#39;): [1/3; 1/3; 1/3]
 basis(2,&#39;exact&#39;): [1/6; 1/6; -1/3]
-basis(3,&#39;exact&#39;): [sqrt(3)/6; -sqrt(3)/6; 0]
+basis(3,&#39;exact&#39;): [-sqrt(3)/6; sqrt(3)/6; 0]
     component(1): Isotypic component R(1) (trivial)
     component(2): Isotypic component R(2) (nontrivial)
 
@@ -471,7 +477,7 @@ basis(3,&#39;exact&#39;): [sqrt(3)/6; -sqrt(3)/6; 0]
 </pre></div>
 </div>
 <div class="input_area highlight-octave notranslate"><div class="highlight"><pre>
-<span></span><span class="n">clear</span> <span class="nb">all</span> <span class="c">% pretend we start all over again</span>
+<span></span><span class="n">clear</span> <span class="n">data</span> <span class="n">G</span> <span class="n">rep</span> <span class="n">dec</span> <span class="n">decToExport</span> <span class="c">% pretend we start all over again</span>
 <span class="n">replab_init</span><span class="p">(</span><span class="s">&#39;verbose&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
 <span class="c">% we construct again the group and its representation</span>
 <span class="n">G</span> <span class="p">=</span> <span class="n">replab</span><span class="p">.</span><span class="n">S</span><span class="p">(</span><span class="mi">3</span><span class="p">);</span>
@@ -496,7 +502,7 @@ Orthogonal reducible representation
           parent: Orthogonal reducible representation
 basis(1,&#39;exact&#39;): [1/3; 1/3; 1/3]
 basis(2,&#39;exact&#39;): [1/6; 1/6; -1/3]
-basis(3,&#39;exact&#39;): [sqrt(3)/6; -sqrt(3)/6; 0]
+basis(3,&#39;exact&#39;): [-sqrt(3)/6; sqrt(3)/6; 0]
     component(1): Isotypic component R(1) (trivial)
     component(2): Isotypic component R(2) (nontrivial)
 
@@ -542,7 +548,7 @@ basis(3,&#39;exact&#39;): [sqrt(3)/6; -sqrt(3)/6; 0]
         <li class="right" >
           <a href="SDP.html" title="Symmetric SDPs"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.9.5-SNAP documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 1.0.0 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="index.html" >How to</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">How to load/save information to MAT files</a></li> 
       </ul>

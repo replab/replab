@@ -15,7 +15,7 @@
   <link rel="stylesheet" type="text/css" href="../_static/css/bootstrap-theme.min.css" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-    <title>Commands &#8212; RepLAB 0.9.5-SNAP documentation</title>
+    <title>Commands &#8212; RepLAB 1.0.0 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/guzzle.css" />
     <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
@@ -77,7 +77,7 @@
         <li class="right" >
           <a href="index.html" title="Technical Reference"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.9.5-SNAP documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 1.0.0 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">Technical Reference</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">Commands</a></li> 
       </ul>
@@ -92,7 +92,7 @@
   <a href="
     ../index.html">RepLAB</a>&nbsp;&nbsp;
   <a href="https://github.com/replab/replab"><i class="fab fa-github"></i></a>&nbsp;
-  <a href="https://github.com/replab/replab/archive/v0.9.5-SNAP.zip"><i class="fa fa-download"></i></a>&nbsp;
+  <a href="https://github.com/replab/replab/archive/v1.0.0.zip"><i class="fa fa-download"></i></a>&nbsp;
   <a href="https://gitter.im/replab/replab"><i class="fab fa-gitter"></i></a>&nbsp;
   <a href="https://travis-ci.com/replab/replab"><i class="fas fa-sync-alt"></i></a>&nbsp;
   <a href="https://codecov.io/gh/replab/replab"><i class="fas fa-umbrella"></i></a>
@@ -118,6 +118,7 @@
 <li class="toctree-l2"><a class="reference internal" href="numerics.html">Numerics</a></li>
 <li class="toctree-l2"><a class="reference internal" href="groups.html">Base group structures</a></li>
 <li class="toctree-l2"><a class="reference internal" href="continuous_groups.html">Continuous groups</a></li>
+<li class="toctree-l2"><a class="reference internal" href="finite_groups.html">Finite group structures</a></li>
 <li class="toctree-l2"><a class="reference internal" href="permutation_groups.html">Permutation groups</a></li>
 <li class="toctree-l2"><a class="reference internal" href="named_discrete_groups.html">Named discrete groups</a></li>
 <li class="toctree-l2"><a class="reference internal" href="abstract_groups.html">Abstract groups and atlas</a></li>
@@ -472,16 +473,30 @@ release tag.</p></li>
 <h2>replab_runtests<a class="headerlink" href="#replab-runtests" title="Permalink to this headline">¶</a></h2>
 <dl class="mat function">
 <dt class="sig sig-object mat" id="root.replab_runtests">
-<span class="sig-prename descclassname"><span class="pre">root.</span></span><span class="sig-name descname"><span class="pre">replab_runtests</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">withCoverage</span></em>, <em class="sig-param"><span class="pre">onlyFastTests</span></em><span class="sig-paren">)</span><a class="headerlink" href="#root.replab_runtests" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">root.</span></span><span class="sig-name descname"><span class="pre">replab_runtests</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">varargin</span></em><span class="sig-paren">)</span><a class="headerlink" href="#root.replab_runtests" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests the library functionalities.</p>
-<p>This function calls the <a class="reference internal" href="#root.replab_generate" title="root.replab_generate"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">root.replab_generate</span></code></a> function with the <code class="docutils literal notranslate"><span class="pre">doctests</span></code> argument.</p>
 <p>See the <code class="docutils literal notranslate"><span class="pre">patternsToExclude</span></code> variable below to exclude files from code coverage.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>withCoverage</strong> (<span><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">logical</span></code></span>) – Enable code coverage (optional, default value is false)</p></li>
-<li><p><strong>onlyFastTests</strong> (<span><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">logical</span></code></span>) – Run only a selection of fast tests (optional, default value is false)</p></li>
+<li><p><strong>slowtests</strong> – Whether to include tests that can possibly
+take a long time to run</p></li>
+<li><p><strong>doctests</strong> – Whether to include doctests</p></li>
+<li><p><strong>notebooks</strong> – Whether to run the notebook code</p></li>
+<li><p><strong>withCoverage</strong> – Whether to activate code coverage</p></li>
 </ul>
+</dd>
+<dt class="field-even">Kwtype slowtests</dt>
+<dd class="field-even"><p>optional, true</p>
+</dd>
+<dt class="field-odd">Kwtype doctests</dt>
+<dd class="field-odd"><p>optional, true</p>
+</dd>
+<dt class="field-even">Kwtype notebooks</dt>
+<dd class="field-even"><p>optional, true</p>
+</dd>
+<dt class="field-odd">Kwtype withCoverage</dt>
+<dd class="field-odd"><p>optional, false</p>
 </dd>
 </dl>
 <dl class="simple">
@@ -529,7 +544,7 @@ release tag.</p></li>
         <li class="right" >
           <a href="index.html" title="Technical Reference"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.9.5-SNAP documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 1.0.0 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="index.html" >Technical Reference</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">Commands</a></li> 
       </ul>

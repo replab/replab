@@ -15,7 +15,7 @@
   <link rel="stylesheet" type="text/css" href="../_static/css/bootstrap-theme.min.css" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-    <title>A fun application of RepLAB : solving combination puzzles &#8212; RepLAB 0.9.5-SNAP documentation</title>
+    <title>A fun application of RepLAB : solving combination puzzles &#8212; RepLAB 1.0.0 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/guzzle.css" />
     <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
@@ -69,7 +69,7 @@
         <li class="right" >
           <a href="../mat-modindex.html" title="MATLAB Module Index"
              >matlab index</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.9.5-SNAP documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 1.0.0 documentation</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">A fun application of RepLAB : solving combination puzzles</a></li> 
       </ul>
     </div>
@@ -83,7 +83,7 @@
   <a href="
     ../index.html">RepLAB</a>&nbsp;&nbsp;
   <a href="https://github.com/replab/replab"><i class="fab fa-github"></i></a>&nbsp;
-  <a href="https://github.com/replab/replab/archive/v0.9.5-SNAP.zip"><i class="fa fa-download"></i></a>&nbsp;
+  <a href="https://github.com/replab/replab/archive/v1.0.0.zip"><i class="fa fa-download"></i></a>&nbsp;
   <a href="https://gitter.im/replab/replab"><i class="fab fa-gitter"></i></a>&nbsp;
   <a href="https://travis-ci.com/replab/replab"><i class="fas fa-sync-alt"></i></a>&nbsp;
   <a href="https://codecov.io/gh/replab/replab"><i class="fas fa-umbrella"></i></a>
@@ -146,7 +146,7 @@
 <p>These fun facts can all be checked explicitely by defining the corresponding permutation group with RepLAB and computing some of its properties. However, what is interesting here is that cubes of arbitrary dimension d (i.e. possibly different from 3) can also be studied for essentially the same price (except for the additional computational resource). Hence, one can easily check that the Rubik’s cube of dimension 4 admits 16972688908618238933770849245964147960401887232000000000 permutations. This time, however, 95551488 of these permutations have no effect on the coloring of the cube (i.e. they are degeneracies)! Factoring the additional order 24 of the global cube’s rotations, this leaves us with a total of 7401196841564901869874093974498574336000000000 possible cube configurations.</p>
 <p>Of course, other properties of the Rubik’s cube can be studied with RepLAB. For instance, it is possible to compute explicitely, at least for d=2, the equivalence classes of the group. It turns out that there are 270 in this case. Interestingly, recognizing some of these classes and the best way to solve them is one of the central idea leveraged by practical technique aiming at solving Rubik’s cubes, which brings us to the main point of interest of the Rubik’s cube… how to solve a Rubik’s cube?</p>
 <p>Efficient techniques have been developped to solve the standard Rubik’s cube quickly. These techniques have also been generalized to arbitrary dimensions, but they become less efficient for larger cubes. In RepLAB, we can solve a Rubik’s cube independently of some a priori insight about the underlying group.</p>
-<p>Indeed, RepLAB implements BSGS chains, which provide an efficient way to find the permutation that relates two valid cube’s configurations within the possibilities offered by a group. A home-improved algorithm inspired T. Minkwitz (1998) can then be used to express this permutation as a ‘word’, i.e. in terms of a set of successive rotations, while taking into account cosets. We then have the guarantee that applying the corresponding physical moves will implement the desired permutation, i.e. it will solve the cube. By construction, this approach applies to arbitrary cube size and takes advantage of degeneracies to reduce the number of moves.</p>
+<p>Indeed, RepLAB implements BSGS chains, which provide an efficient way to find the permutation that relates two valid cube’s configurations within the possibilities offered by a group. A home-improved algorithm inspired by T. Minkwitz (1998) can then be used to express this permutation as a ‘word’, i.e. in terms of a set of successive rotations, while taking into account cosets. We then have the guarantee that applying the corresponding physical moves will implement the desired permutation, i.e. it will solve the cube. By construction, this approach applies to arbitrary cube size and takes advantage of degeneracies to reduce the number of moves.</p>
 <p>But enough words, let see how it looks in practice. A Rubik’s cube solver following this principle is included in the new package <a class="reference external" href="https://www.github.com/replab/repfun/">RepFuN</a>. Here is a demonstration of its operation:</p>
 <figure class="align-center responsive" id="id2">
 <img alt="../_images/interactiveSolve.gif" src="../_images/interactiveSolve.gif" />
@@ -190,7 +190,7 @@
         <li class="right" >
           <a href="../mat-modindex.html" title="MATLAB Module Index"
              >matlab index</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.9.5-SNAP documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 1.0.0 documentation</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">A fun application of RepLAB : solving combination puzzles</a></li> 
       </ul>
     </div>
