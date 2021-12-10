@@ -9,7 +9,7 @@ function Y = recoverRational(X, tol, maximumDenominator)
 %   maximumDenominator (integer): Maximum denominator
 %
 % Returns:
-%   `+replab.cyclotomic`(\*,\*) or ``[]``: Rational approximation if one is found
+%   `+replab.cyclotomic` (\*,\*) or ``[]``: Rational approximation if one is found
     assert(maximumDenominator < 2^53, 'Maximal denominator needs to be exactly representable in double floating-point arithmetic');
     v = X(:); % vectorize the input
     d = length(v);

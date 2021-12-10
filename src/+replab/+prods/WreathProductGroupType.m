@@ -2,7 +2,7 @@ classdef WreathProductGroupType < replab.gen.FiniteGroupType
 % Describes the type of a wreath product of a permutation group acting on a finite group
 
     properties (SetAccess = protected)
-        H % (`+replab.PermutationGroupType`): Permutation group type
+        H % (`+replab.perm.PermutationGroupType`): Permutation group type
         A % (`+replab.FiniteGroupType`): Factor group type
         n % (integer): Number of copies of the factor group
     end
@@ -10,7 +10,7 @@ classdef WreathProductGroupType < replab.gen.FiniteGroupType
     methods
 
         function self = WreathProductGroupType(H, A)
-            assert(isa(H, 'replab.PermutationGroupType'));
+            assert(isa(H, 'replab.perm.PermutationGroupType'));
             assert(isa(A, 'replab.FiniteGroupType'));
             self.H = H;
             self.A = A;

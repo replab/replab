@@ -48,7 +48,7 @@ classdef FiniteGroupType < replab.gen.StaticFiniteGroupType
             end
             orderFun = @() replab.util.factorial(domainSize)*replab.util.multiplyIntegers(ones(1, domainSize)*2);
             sourceArgs = {'order', orderFun};
-            targetType = replab.PermutationGroupType.make(2*domainSize);
+            targetType = replab.perm.PermutationGroupType.make(2*domainSize);
             self.finishConstruction(sourceGenerators, sourceArgs, targetType);
         end
 

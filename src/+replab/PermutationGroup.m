@@ -19,7 +19,7 @@ classdef PermutationGroup < replab.FiniteGroup
         %   generatorNames (cell(1,\*) of charstring): Names of the generators
         %   order (vpi, optional): Order of the group
         %   relators (cell(1,\*) of charstring): Relators given either in word or letter format
-            type = replab.PermutationGroupType.make(domainSize);
+            type = replab.perm.PermutationGroupType.make(domainSize);
             identity = 1:domainSize;
             for i = 1:length(generators)
                 assert(~all(generators{i} == identity), 'Generators cannot contain the identity');

@@ -90,7 +90,7 @@ classdef SymmetricYoungIrrep < replab.Obj
         %   k (integer): We calculate the image of the transposition generators (k-1 k)
         %
         % Returns:
-        %   `+replab.cyclotomic`(\*,\*): Image of g
+        %   `+replab.cyclotomic` (\*,\*): Image of g
                 n = self.group.domainSize;
                 d = self.dimension;
                 rowFunEq = self.rowFunction(:,k) == self.rowFunction(:,k+1); % Where are the row functions equal?

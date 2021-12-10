@@ -14,7 +14,7 @@ classdef IdentifyPointGroup < replab.Str
         principalAxis % (double(3, 1)): principal axis of rotation of the molecule
         ord % (integer): highest order rotation of the molecule that preserves symmetry
         pointGroup % (charstring): characters representing the point group
-        table % (`+replab.ComplexCharacterTable`): the character table for the molecule's point group
+        table % (`.ComplexCharacterTable`): the character table for the molecule's point group
         ndec % (integer): number of decimal places to check for equality
     end
 
@@ -492,13 +492,12 @@ classdef IdentifyPointGroup < replab.Str
         function ok = findCnAxes(self, n, max_rotations, coords, symbols, SEAs)
         % Find whether there are multiple higher order rotation axes
         %
-        % Returns:
+        % Args:
         %   n (integer): order of rotation
-        %   max_rotations (integer): check whether there are at least this many
-        %                            rotation axes of order n
+        %   max_rotations (integer): check whether there are at least this many rotation axes of order n
         %   coords (double(3, natoms)): atomic coordinates
         %   symbols (cell(1, natoms) of charstring): atomic symbols
-        %   SEAs (cell(1, \*) of double(\*, 1)): cell array of vectors of the indices of similar atoms
+        %   SEAs (cell(1,\*) of double(\*,1)): cell array of vectors of the indices of similar atoms
         %
         % Returns
         %   ok (logical): whether there are at least max_rotations rotation axes of order n
