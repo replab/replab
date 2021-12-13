@@ -55,12 +55,12 @@ ipykernel==6.0.3
     # via
     #   metakernel
     #   octave-kernel
+ipython==7.25.0
+    # via ipykernel
 ipython-genutils==0.2.0
     # via
     #   nbformat
     #   traitlets
-ipython==7.25.0
-    # via ipykernel
 jedi==0.18.0
     # via ipython
 jinja2==3.0.1
@@ -85,7 +85,7 @@ jupyterlab-pygments==0.1.2
     # via nbconvert
 jupytext==1.11.4
     # via -r requirements.in
-lxml==4.6.3
+lxml==4.6.5
     # via feedgen
 markdown-it-py==1.1.0
     # via
@@ -169,8 +169,6 @@ six==1.16.0
     #   texext
 snowballstemmer==2.1.0
     # via sphinx
-sphinx-togglebutton==0.2.3
-    # via -r requirements.in
 sphinx==4.1.1
     # via
     #   -r requirements.in
@@ -180,6 +178,8 @@ sphinx==4.1.1
     #   sphinx-togglebutton
     #   sphinxcontrib-matlabdomain
     #   texext
+sphinx-togglebutton==0.2.3
+    # via -r requirements.in
 sphinxcontrib-applehelp==1.0.2
     # via sphinx
 sphinxcontrib-devhelp==1.0.2
