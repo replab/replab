@@ -63,7 +63,8 @@ classdef Laws < replab.Str
             end
             e1 = norm(eps(X1), 'fro');
             e2 = norm(eps(X2), 'fro');
-            if delta <= tol + e1 + e2
+            errMax = tol + 10*(e1 + e2);
+            if delta <= errMax
                 return
             end
             names = evalin('caller', 'who');
@@ -73,7 +74,7 @@ classdef Laws < replab.Str
                 values{i} = evalin('caller', names{i});
             end
             errorId = 'assertTrue:falseCondition';
-            message = replab.laws.message('%s = norm(X1 - X2) > tol = %s', context, {delta, tol + e1 + e2}, names, values);
+            message = replab.laws.message('%s = norm(X1 - X2) > tol = %s', context, {delta, errMax}, names, values);
             if replab.compat.isOctave
                 error(errorId, '%s', message);
             else
