@@ -14,6 +14,8 @@ at the heart of **RepLAB** and how the library works.
 
 .. rubric:: Scientific articles
 
+To go further, here are some books and articles presenting in more depth additional topics.
+
 - `"RepLAB: a computational/numerical approach to representation theory" <https://arxiv.org/abs/1911.09154>`_
   presents a concise overview of the approach used by **RepLAB**
 - `"Certifying Numerical Decompositions of Compact Group Representations" <https://arxiv.org/abs/2101.12244>`_ presents how **RepLAB**'s numerical decompositions can be certified

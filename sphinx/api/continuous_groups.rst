@@ -3,7 +3,7 @@ Continuous groups
 
 .. module:: +replab
 
-RepLAB provides constructions of standard continuous groups.
+**RepLAB** provides constructions of standard continuous groups.
 
 First, we consider torus-like groups.
 

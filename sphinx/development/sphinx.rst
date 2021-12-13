@@ -6,7 +6,7 @@ We write here miscellaneous tips and tricks.
 Sphinx and Jupyter required packages
 ------------------------------------
 
-I tried with Python 3 in a dedicated virtualenv in Ubuntu 18.04 as follows:
+Python 3 can be used in a dedicated virtualenv in Ubuntu 18.04 as follows:
 
 Run somewhere
 
@@ -26,7 +26,7 @@ Install the following python packages:
 - sphinxcontrib-matlabdomain
 - texext
 - guzzle_sphinx_theme
-- sphinx-collapse-admonitions
+- sphinx-togglebutton
 - sphinxcontrib-fulltoc
 - ablog
 
@@ -34,9 +34,9 @@ This can be done with the command
 
 ::
 
-   pip install sphinx sphinxcontrib-matlabdomain texext guzzle_sphinx_theme sphinx-collapse-admonitions sphinxcontrib-fulltoc ablog
+   pip install sphinx sphinxcontrib-matlabdomain texext guzzle_sphinx_theme sphinx-togglebutton sphinxcontrib-fulltoc ablog
 
-(add the option "--user" if not installing inside a virtual environment)
+(add the option ``--user`` if not installing inside a virtual environment)
 
 For the Jupyter notebooks:
 
@@ -48,6 +48,7 @@ In particular, install the Python package nbsphinx, and the Ubuntu package pando
 Then install also the project requirements by running the following command within the 'sphinx' folder:
 
 ::
+
    pip install -r requirements.txt
 
 

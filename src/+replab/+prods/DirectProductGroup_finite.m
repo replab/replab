@@ -38,6 +38,40 @@ classdef DirectProductGroup_finite < replab.DirectProductGroup & replab.gen.Fini
             values = replab.str.horzcatForce(values1, values2);
         end
 
+        % Group
+
+        function m = innerAutomorphism(self, by)
+            m = innerAutomorphism@replab.FiniteGroup(self, by);
+        end
+
+        function m = isomorphismByFunctions(self, target, preimageElementFun, imageElementFun)
+            m = isomorphismByFunctions@replab.FiniteGroup(self, target, preimageElementFun, imageElementFun);
+        end
+
+        function m = morphismByFunction(self, target, imageElementFun, torusMap)
+            m = morphismByFunction@replab.FiniteGroup(self, target, imageElementFun, torusMap);
+        end
+
+        % CompactGroup
+
+        function b = hasReconstruction(self)
+            b = hasReconstruction@replab.FiniteGroup(self);
+        end
+
+        function d = maximalTorusDimension(self)
+            d = maximalTorusDimension@replab.FiniteGroup(self);
+        end
+
+        function [mu, R] = reconstruction(self)
+            [mu, R] = reconstruction@replab.FiniteGroup(self);
+        end
+
+        % Obj
+
+        function l = laws(self)
+            l = laws@replab.FiniteGroup(self);
+        end
+
         % Domain
 
         function b = eqv(self, x, y)
@@ -145,5 +179,29 @@ classdef DirectProductGroup_finite < replab.DirectProductGroup & replab.gen.Fini
 % $$$
 % $$$
 % $$$     end
+
+
+    methods % Bugfix for Octave method selection
+
+        function b = isequal(lhs, rhs)
+            b = isequal@replab.FiniteGroup(lhs, rhs);
+        end
+
+    end
+
+    methods
+
+        % Workaround for Octave bug
+
+        function res = eq(self, rhs)
+            res = eq@replab.gen.FiniteGroup(self, rhs);
+        end
+
+        function res = ne(self, rhs)
+            res = ne@replab.gen.FiniteGroup(self, rhs);
+        end
+
+    end
+
 
 end

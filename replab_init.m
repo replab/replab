@@ -1,7 +1,10 @@
 function replab_init(varargin)
-% function replab_init
-%
 % Sets up the search path in order to enable all functionalities of the RepLAB library.
+%
+% You can call "replab_init" repeatedly without any problem. The first call initializes the library, and
+% the second and subsequent calls detect that the library is initialized and bail out early.
+%
+% However, you need to call "replab_init" again after doing a "clear all".
 %
 % Also verifies that a SDP solver is available, installs and registers the bundled SDPT3 solver if needed,
 % and initializes important variables.
@@ -31,6 +34,19 @@ function replab_init(varargin)
 %         Adding embedded YALMIP to the path
 
     persistent allGood % set to true if everything is already set up previously, including running ``replab_config``
+
+    % Verify that the user did not add all RepLAB subfolders to the path.
+    if exist('replab_canary')
+        disp('Please do not use the "Add with Subfolders" option, or addpath(genpath(..)) when adding RepLAB to the path.');
+        disp(' ');
+        disp('To ensure that RepLAB is in the path, you can do either of the following.');
+        disp(' ');
+        disp('1. Add the replab root folder to the path, i.e. the folder that contains "replab_init.m".');
+        disp('   Then call replab_init any time before you use RepLAB.');
+        disp(' ');
+        disp('2. Add "run /path/to/replab/replab_init.m" to your MATLAB/Octave startup script');
+        error('Subfolders of RepLAB are present in the path.');
+    end
 
     verbose = 1;
     autoinstall = false;
@@ -84,6 +100,7 @@ function replab_init(varargin)
     end
 
     %% Adding the RepLAB source folder to the path
+
     [basePath, name, extension] = fileparts(mfilename('fullpath'));
     basePath = strrep(basePath, '\', '/'); % we normalize to Unix style filesep, as it is compatible with all
 

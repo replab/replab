@@ -121,7 +121,7 @@ Temporary Items
 docs/_site/
 
 ##---------------------------------------------------
-# MOcov .gitignore
+# Code coverage .gitignore
 ##---------------------------------------------------
 coverage.*
 coverage_html
@@ -139,3 +139,8 @@ tests/notebooks
 
 ## Jupyter checkpoints
 .ipynb_checkpoints
+
+##---------------------------------------------------
+# nbsphinx workaround
+##---------------------------------------------------
+_sphinx

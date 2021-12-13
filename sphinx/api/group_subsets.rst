@@ -3,11 +3,11 @@ Group subsets
 
 .. module:: +replab
 
-RepLAB has `.FiniteSet` as a base for all sets of elements coming originally from a finite group. Note that a `.FiniteGroup` itself is also a `.FiniteSet`.
+**RepLAB** has `.FiniteSet` as a base for all sets of elements coming originally from a finite group. Note that a `.FiniteGroup` itself is also a `.FiniteSet`.
 
 * `.FiniteSet`: Base class for all subsets of a finite group.
 
-Such subsets have a decomposition which speeds up many algorithms in RepLAB.
+Such subsets have a decomposition which speeds up many algorithms in **RepLAB**.
 
 * `.SetProduct`: Decomposition of a `.FiniteSet` as a cartesian product of sets.
 

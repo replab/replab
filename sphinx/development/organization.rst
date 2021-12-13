@@ -5,7 +5,9 @@ Directories
 -----------
 
 -  ``docs``: compiled documentation ready to be served by GitHub Pages,
-   and is a Git worktree with the branch ``gh-pages`` checked out.
+   is a Git worktree with the branch ``gh-pages`` checked out.
+
+-  ``atlas``: Atlas entries with character tables
 
 -  ``external``: external libraries, either included as a Git submodule
    (if available on a public repository such as Github), or vendored

@@ -50,8 +50,10 @@ function result = replab_generate(what)
     rp = replab.globals.replabPath;
     srcRoot = fullfile(rp, 'src');
 
-    disp('Crawling code base');
-    cb = replab.infra.crawl(srcRoot);
+    if isequal(what, 'sphinxsrc') || isequal(what, 'sphinx') || isequal(what, 'doctests') || isequal(what, 'all')
+        disp('Crawling code base');
+        cb = replab.infra.crawl(srcRoot);
+    end
 
     if isequal(what, 'sphinxsrc') || isequal(what, 'sphinx') || isequal(what, 'all') || isequal(what, 'clear')
         % Generate Sphinx preprocessed source files
@@ -87,15 +89,90 @@ function result = replab_generate(what)
     end
 
     if isequal(what, 'sphinxbuild') || isequal(what, 'sphinx') || isequal(what, 'all')
+        if ~exist(fullfile(rp, '_sphinx'))
+            mkdir(rp, '_sphinx');
+        end
+        replab.infra.cleanDir(fullfile(rp, '_sphinx'), {'.git'});
         if ~exist(fullfile(rp, 'docs'))
             mkdir(rp, 'docs');
         end
         replab.infra.cleanDir(fullfile(rp, 'docs'), {'.git'});
         if ~isequal(what, 'clear')
+            % Create a modifiable copy of the sphinx folder
+            copyfile(fullfile(rp, 'sphinx/*'), fullfile(rp, '_sphinx'))
+
+            % Load the conversion table to create API links in matlab files
+            baseWeb = 'https://replab.github.io/replab';
+            if exist([rp, '/objects.inv'], 'file')
+                if unix(['python -m sphinx.ext.intersphinx ', rp, '/docs.objects.inv > ', rp, '/_sphinx/API_links.txt'])
+                    warning('API conversion table not found, cross-links will not work in .m files');
+                end
+            else
+                warning('No local objects.inv file found (to be copied manually into the sphinx folder), API links will be based on current online doc');
+                if unix(['python -m sphinx.ext.intersphinx ', baseWeb, '/objects.inv > ', rp, '/_sphinx/API_links.txt'])
+                    warning('API conversion table not found, cross-links will not work in .m files');
+                end
+            end
+
+            % Select matlab files in the doc (excluding API) and compute
+            % their links
+            [status, fileList] = unix(['find ', rp, '/_sphinx -type f | grep -v ^"', rp, '/_sphinx/_src" | grep [.]m$']);
+            fileList = regexp(fileList, '\n', 'split');
+            fileList = fileList(1:end-1);
+            if status == 0
+                pb = replab.infra.repl.ProgressBar(length(fileList));
+                for i = 1:length(fileList)
+                    pb.step(i, fileList{i});
+                    content = replab.infra.CodeTokens.fromFile(fileList{i});
+                    lines = content.lines;
+                    for j = find(content.tags == '%')
+                        line = lines{j};
+                        extents = regexp(line, '(`~?\+replab\.[\w,\.]+`|`~?root\.[\w,\.]+`)', 'tokenExtents');
+                        extents{end+1} = length(line)+1;
+                        if ~isempty(extents)
+                            newLine = line(1:extents{1}(1)-1);
+                            for k = 1:length(extents)-1
+                                token = line(extents{k}(1)+1:extents{k}(2)-1);
+                                silent = (token(1) == '~');
+                                if silent
+                                    tokenName = regexp(token, '\.*(\w+)$', 'tokens');
+                                    tokenName = tokenName{1}{1};
+                                    token = token(2:end);
+                                else
+                                    tokenName = token;
+                                end
+                                tokenName = tokenName(tokenName ~= '+');
+                                [status, match] = unix(['cat ', rp, '/_sphinx/API_links.txt | grep "^[[:space:]]*', token, '\ "']);
+                                if status == 0
+                                    if length(regexp(match(1:end-1), '\n', 'split')) > 1
+                                        warning(['Multiple references were found for ', token, ' in the API: ', match]);
+                                    end
+                                    link = regexp(match(1:end-1), '\ ([^\ ]+)$', 'tokens');
+                                    link = [baseWeb, '/', link{1}{1}];
+                                    newLine = [newLine, '[', tokenName, '](', link,')'];
+                                else
+                                    warning(['Reference ', token, ' in ', fileList{i}, ' was not found in the API.']);
+                                    newLine = [newLine, token];
+                                end
+                                newLine = [newLine, line(extents{k}(2)+1:extents{k+1}(1)-1)];
+                            end
+                            lines{j} = newLine;
+                        end
+                    end
+                    fid = fopen(fileList{i},'w');
+                    for j = 1:length(lines)
+                        fprintf(fid, '%s\n', lines{j});
+                    end
+                    fclose(fid);
+                end
+                pb.finish;
+            end
+
+            % Now launch sphinx in modified folder
             disp('Running Sphinx');
             lastPath = pwd;
             cd(rp);
-            cmd = 'sphinx-build -b html sphinx docs';
+            cmd = 'sphinx-build -b html _sphinx docs';
             disp(['Running ' cmd]);
             status = system(cmd);
             if status ~= 0

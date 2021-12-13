@@ -25,6 +25,22 @@ classdef NormalCosets < replab.perm.LeftCosets & replab.NormalCosets & replab.pe
             T = transversal@replab.perm.RightCosets(self);
         end
 
+        function mu = leftAction(self)
+            mu = leftAction@replab.perm.LeftCosets(self);
+        end
+
+        % Obj
+
+        function l = laws(self)
+            l = laws@replab.NormalCosets(self);
+        end
+
+        % Cosets
+
+        function C = elements(self)
+            C = elements@replab.NormalCosets(self);
+        end
+        
     end
 
 end

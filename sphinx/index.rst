@@ -67,7 +67,6 @@ Work in progress
 
 **RepLAB** is a work-in-progress. In particular:
 
-- RepLAB works in double floating-point precision.
 - We are still working on the estimation/control of numerical errors (a few criteria are currently hard-coded).
   That said, **RepLAB** works fine for representations of medium size ($d$ equal to a few thousands).
 - While RepLAB implements several computational group theory algorithms, their performance is not competitive with dedicated computational group theory software such as GAP or Magma.
@@ -90,8 +89,9 @@ That said, other libraries working on the same problem space include:
 
 Additional features unique to **RepLAB**:
 
--  **RepLAB** follows a category-based approach. This allows preserving the structure of objects under composition
--  **RepLAB** integrates with a convex optimization framework, hence
+-  **RepLAB** follows a category-based approach. This enables preserving the structure of objects under operations, naturally allowing composition of finite and continuous groups/representations together for instance.
+-  **RepLAB** integrates with the convex optimization framework `YALMIP <https://github.com/yalmip/YALMIP>`_. This allows to formulate optimizations subject to symmetries easily.
+
 
 Contributors
 ------------

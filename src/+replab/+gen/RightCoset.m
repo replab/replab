@@ -18,6 +18,30 @@ classdef RightCoset < replab.RightCoset & replab.gen.FiniteSet
 
     methods % Implementations
 
+        % Str
+
+        function names = hiddenFields(self)
+            names = hiddenFields@replab.gen.FiniteSet(self);
+        end
+
+        % Obj
+
+        function l = laws(self)
+            l = laws@replab.RightCoset(self);
+        end
+
+        % Domain
+
+        function s = sample(self)
+            s = sample@replab.RightCoset(self);
+        end
+
+        % FiniteSet
+
+        function C = imap(self, f)
+            C = imap@replab.RightCoset(self, f);
+        end
+
         % gen.FiniteSet
 
         function l = compatibleWithNiceIsomorphism(self, iso)

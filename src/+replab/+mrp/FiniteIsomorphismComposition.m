@@ -21,6 +21,40 @@ classdef FiniteIsomorphismComposition < replab.FiniteIsomorphism & replab.mrp.Fi
 
     end
 
+    methods % Implementations
+
+        function t = imageElement(self, s)
+            t = imageElement@replab.mrp.FiniteComposition(self, s);
+        end
+
+        % Str
+
+        function [names, values] = additionalFields(self)
+            [names, values] = additionalFields@replab.FiniteIsomorphism(self);
+        end
+
+        % FiniteMorphism
+
+        function T = imageGroup(self, S)
+            T = imageGroup@replab.FiniteIsomorphism(self, S);
+        end
+
+        function S = preimageGroup(self, T)
+            S = preimageGroup@replab.FiniteIsomorphism(self, T);
+        end
+
+        function m = restrictedSource(self, newSource)
+            m = restrictedSource@replab.FiniteIsomorphism(self, newSource);
+        end
+
+        % Obj
+
+        function l = laws(self)
+            l = laws@replab.FiniteIsomorphism(self);
+        end
+        
+    end
+
     methods (Access = protected)
 
         function I = computeInverse(self)

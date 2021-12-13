@@ -15,4 +15,30 @@ classdef WreathProductGroup_compact < replab.WreathProductGroup & replab.prods.S
 
     end
 
+    methods % Implementations
+
+        % Domain
+
+        function b = eqv(self, x, y)
+            b = eqv@replab.SemidirectProductGroup(self, x, y);
+        end
+
+        function g = sample(self)
+            g = sample@replab.SemidirectProductGroup(self);
+        end
+
+        % Monoid
+
+        function z = compose(self, x, y)
+            z = compose@replab.SemidirectProductGroup(self, x, y);
+        end
+
+        % Group
+
+        function z = inverse(self, x)
+            z = inverse@replab.SemidirectProductGroup(self, x);
+        end
+
+    end
+
 end

@@ -3,7 +3,7 @@ Characters
 
 .. module:: +replab
 
-Character table based methods are used in RepLAB to provide exact results when requested, at the price of a major slowdown.
+Character table based methods are used in **RepLAB** to provide exact results when requested, at the price of a major slowdown.
 
 - `.Character` represents a character of a finite group (not necessarily irreducible).
 

@@ -19,6 +19,18 @@ classdef FiniteComposition < replab.FiniteMorphism & replab.mrp.Composition
             t = self.second.imageElement(self.first.imageElement(s));
         end
 
+        % Str
+
+        function [names, values] = additionalFields(self)
+            [names, values] = additionalFields@replab.FiniteMorphism(self);
+        end
+        
+        % Obj
+
+        function l = laws(self)
+            l = laws@replab.FiniteMorphism(self);
+        end
+        
     end
 
     methods (Access = protected)
