@@ -104,12 +104,12 @@ function result = replab_generate(what)
             % Load the conversion table to create API links in matlab files
             baseWeb = 'https://replab.github.io/replab';
             if exist([rp, '/objects.inv'], 'file')
-                if unix(['python -m sphinx.ext.intersphinx ', rp, '/docs.objects.inv > ', rp, '/_sphinx/API_links.txt'])
+                if unix(['python3 -m sphinx.ext.intersphinx ', rp, '/docs.objects.inv > ', rp, '/_sphinx/API_links.txt'])
                     warning('API conversion table not found, cross-links will not work in .m files');
                 end
             else
                 warning('No local objects.inv file found (to be copied manually into the sphinx folder), API links will be based on current online doc');
-                if unix(['python -m sphinx.ext.intersphinx ', baseWeb, '/objects.inv > ', rp, '/_sphinx/API_links.txt'])
+                if unix(['python3 -m sphinx.ext.intersphinx ', baseWeb, '/objects.inv > ', rp, '/_sphinx/API_links.txt'])
                     warning('API conversion table not found, cross-links will not work in .m files');
                 end
             end
