@@ -124,6 +124,7 @@ function result = replab_generate(what)
                 for i = 1:length(fileList)
                     pb.step(i, fileList{i});
                     content = replab.infra.CodeTokens.fromFile(fileList{i});
+                    content = content(find(cellfun(@(x) length(x), content.lines) ~= 0, 1, 'last'));
                     lines = content.lines;
                     for j = find(content.tags == '%')
                         line = lines{j};
