@@ -125,7 +125,7 @@ function result = replab_generate(what)
                     pb.step(i, fileList{i});
                     content = replab.infra.CodeTokens.fromFile(fileList{i});
                     lines = content.lines;
-                    lines = lines(find(cellfun(@(x) length(x), lines) ~= 0, 1, 'last'));
+                    lines = lines(1:find(cellfun(@(x) length(x), lines) ~= 0, 1, 'last'));
                     for j = find(content.tags == '%')
                         line = lines{j};
                         extents = regexp(line, '(`~?\+replab\.[\w,\.]+`|`~?root\.[\w,\.]+`)', 'tokenExtents');
