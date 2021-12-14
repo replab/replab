@@ -322,7 +322,7 @@ classdef Equivariant < replab.Domain
             if isempty(special)
                 special = '';
             end
-            valid = {'', 'antilinear', 'commutant', 'hermitian', 'sesquilinear', 'symmetric', 'trivialRows', 'trivialCols'};
+            valid = {'', 'antilinear', 'bilinear', 'commutant', 'hermitian', 'sesquilinear', 'symmetric', 'trivialRows', 'trivialCols'};
             assert(ismember(special, valid));
             if isempty(special)
                 assert(~isempty(repR) && ~isempty(repC), 'The row or column representation can be omitted only for structured (special) spaces.');
