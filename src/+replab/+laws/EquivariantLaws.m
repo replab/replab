@@ -3,13 +3,13 @@ classdef EquivariantLaws < replab.laws.DomainLaws
 
     methods
 
-        function self = EquivariantLaws(T)
-            self@replab.laws.DomainLaws(T);
+        function self = EquivariantLaws(S)
+            self@replab.laws.DomainLaws(S);
         end
 
-        function law_project_twice_T(self, X)
+        function law_project_twice_S(self, X)
         % Checks that an element is equivalent to itself
-            [X1, err] = self.T.project(X);
+            [X1, err] = self.S.project(X);
             self.assertApproxEqual(X, X1, err);
         end
 
