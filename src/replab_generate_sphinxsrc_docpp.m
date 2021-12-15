@@ -1,4 +1,4 @@
-function replab_generate_sphinxsrc_docpp(sphinxFolder, targetFolder, webBaseAddress)
+function replab_generate_sphinxsrc_docpp(sphinxFolder, targetFolder, webBaseAddress, preferredInvFile)
 % Preprocesses the Sphinx documentation folder
 %
 % Makes a copy of the Sphinx source folder into the target folder and
@@ -13,6 +13,8 @@ function replab_generate_sphinxsrc_docpp(sphinxFolder, targetFolder, webBaseAddr
 %   targetFolder (charstring): Where to store the modified Sphinx folder
 %   webBaseAddress (charstring): base address of the API website, should
 %     contain the file ``objects.inv``
+%   preferredInvFile (optional, charstring): location of the inventory file
+%     to be used instead of the online one (if applicable)
 
     logFun = @(str) disp(str);
 
@@ -24,12 +26,16 @@ function replab_generate_sphinxsrc_docpp(sphinxFolder, targetFolder, webBaseAddr
     copyfile(fullfile(sphinxFolder, '*'), targetFolder);
 
     % Load the conversion table to create API links in matlab files
-    if exist(fullfile(targetFolder, 'objects.inv'), 'file')
-        if unix(['python3 -m sphinx.ext.intersphinx ', targetFolder, '/objects.inv > ', targetFolder, '/API_links.txt'])
-            warning('API conversion table not found, cross-links will not work in .m files');
+    if (nargin >= 4) && exist(preferredInvFile, 'file')
+        if unix(['python3 -m sphinx.ext.intersphinx ', preferredInvFile, ' > ', targetFolder, '/API_links.txt'])
+            warning('API conversion table found but cound not be extracted, cross-links will not work in .m files');
+        else
+            LogFun(['Using API referrences from ', preferredInvFile]);
         end
     else
-        warning(['No local objects.inv file found (to be copied manually into the sphinx folder), API links will be based on current online inventory at ', webBaseAddress]);
+        if (nargin >= 4)
+            warning(['File ', preferredInvFile, ' not found (to be copied manually), API links will be based on current online inventory at ', webBaseAddress]);
+        end
         if unix(['python3 -m sphinx.ext.intersphinx ', webBaseAddress, '/objects.inv > ', targetFolder, '/API_links.txt'])
             warning('API conversion table not found, cross-links will not work in .m files');
         end

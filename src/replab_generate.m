@@ -1,5 +1,5 @@
 function result = replab_generate(what)
-% Code generation function
+% Code and website generation function
 %
 % Depending on the value of the argument ``what``:
 %
@@ -43,17 +43,17 @@ function result = replab_generate(what)
     end
 
     sphinxRoot = fullfile(rp, 'sphinx');
-    sphinxPreprocess = fullfile(rp, '_sphinx');
+    sphinxPreprocessed = fullfile(rp, '_sphinx');
     if isequal(what, 'sphinxsrc') || isequal(what, 'sphinx') || isequal(what, 'all') || isequal(what, 'clear')
         if isequal(what, 'clear')
             replab.infra.mkCleanDir(rp, '_sphinx', logFun);
         else
             % Create a copy of the Sphinx source folder and update the
             % matlab doc links
-            replab_generate_sphinxsrc_docpp(sphinxRoot, sphinxPreprocess, 'https://replab.github.io/replab');
+            replab_generate_sphinxsrc_docpp(sphinxRoot, sphinxPreprocessed, 'https://replab.github.io/replab', fullfile(sphinxRoot, 'objects.inv'));
             
             % Generate Sphinx preprocessed source files
-            sphinxPreprocessSrc = fullfile(sphinxPreprocess, '_src');
+            sphinxPreprocessSrc = fullfile(sphinxPreprocessed, '_src');
             replab_generate_sphinxsrc_codepp(cb, sphinxPreprocessSrc);
             
             % Also copy root files from the root source folders into a
@@ -84,7 +84,7 @@ function result = replab_generate(what)
         if ~isequal(what, 'clear')
             % Launch sphinx
             logFun('Running Sphinx');
-            cmd = ['sphinx-build -b html ', sphinxPreprocess, ' ', sphinxTarget];
+            cmd = ['sphinx-build -b html ', sphinxPreprocessed, ' ', sphinxTarget];
             logFun(['Running ' cmd]);
             status = system(cmd);
             if status ~= 0
