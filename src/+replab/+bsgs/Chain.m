@@ -1154,7 +1154,7 @@ classdef Chain < replab.Str
         end
 
         function C = make(n, generators, base, order)
-        % Computes a BSGS chain using the randomized Schreier-Sims algorithm
+        % Computes a BSGS chain using the Schreier-Sims algorithm
         %
         % Args:
         %   n (integer): Domain size
