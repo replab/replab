@@ -24,7 +24,7 @@ function mkCleanDir(baseDir, folderName, logFunction)
       case 0
         logFunction(sprintf('Folder ''%s'' does not exist in ''%s'', will be created', folderName, baseDir));
       case 7
-        logFunction(sprintf('Folder ''%s'' exists in ''%s'', will be deleted', folderName, baseDir));
+        logFunction(sprintf('Folder ''%s'' exists in ''%s'', will be cleaned', folderName, baseDir));
         replab.compat.rmdirRec(path);
       otherwise
         error('Element ''%s'' exists in ''%s'', but is not a folder', folderName, baseDir);
