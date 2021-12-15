@@ -36,10 +36,10 @@ function result = replab_generate(what)
 
     rp = replab.globals.replabPath;
 
-    srcRoot = fullfile(rp, 'src');
+    src = fullfile(rp, 'src');
     if isequal(what, 'sphinxsrc') || isequal(what, 'sphinx') || isequal(what, 'doctests') || isequal(what, 'all')
         logFun('Crawling code base');
-        cb = replab.infra.crawl(srcRoot);
+        cb = replab.infra.crawl(src);
     end
 
     sphinxRoot = fullfile(rp, 'sphinx');
@@ -51,7 +51,7 @@ function result = replab_generate(what)
             % Create a copy of the Sphinx source folder and update the
             % matlab doc links
             replab_generate_sphinxsrc_docpp(sphinxRoot, sphinxPreprocessed, 'https://replab.github.io/replab', fullfile(sphinxRoot, 'objects.inv'));
-            
+
             % Generate Sphinx preprocessed source files
             sphinxPreprocessSrc = fullfile(sphinxPreprocessed, '_src');
             replab_generate_sphinxsrc_codepp(cb, sphinxPreprocessSrc);
@@ -60,13 +60,13 @@ function result = replab_generate(what)
             % ``root`` subdirectory so they can appear in the Sphinx Matlab
             % domain under a "module" name.
             mkdir(sphinxPreprocessSrc, 'root');
-            files = dir([sphinxPreprocessSrc filesep '*.m']);
+            files = dir(fullfile(sphinxPreprocessSrc, '*.m'));
             for i = 1:length(files)
                 assert(~files(i).isdir, 'Files ending in .m cannot be directories');
                 name = files(i).name;
                 copyfile(fullfile(sphinxPreprocessSrc, name), fullfile(sphinxPreprocessSrc, 'root', name));
             end
-            files = dir([rp filesep '*.m']);
+            files = dir(fullfile(rp, '*.m'));
             for i = 1:length(files)
                 assert(~files(i).isdir, 'Files ending in .m cannot be directories');
                 name = files(i).name;
@@ -126,5 +126,4 @@ function result = replab_generate(what)
             pb.finish;
         end
     end
-
 end
