@@ -7,11 +7,8 @@ function list = listNotebooks
 % Results:
 %   cell array of charstring: list of notebook
 
-    % Make sure that we are called from the right folder
-    assert(isequal(pwd, replab.globals.replabPath));
-    
     % find all matlab files
-    scan = dir('sphinx/**/*.m');
+    scan = dir([replab.globals.replabPath, '/sphinx/**/*.m']);
     
     % keep only notebooks
     toKeep = cellfun(@(x) isempty(strfind(x, '/_src')), {scan.folder});
@@ -19,7 +16,7 @@ function list = listNotebooks
 
     list = cell(length(scan), 3);
     for i = 1:length(scan)
-        list{i,1} = [pwd, '/sphinx'];
+        list{i,1} = [replab.globals.replabPath, '/sphinx'];
         tmp = scan(i).folder;
         list{i,2} = tmp(length(list{i,1})+2:end);
         list{i,3} = scan(i).name;

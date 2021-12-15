@@ -16,11 +16,11 @@
 %
 % # How to load/save information to MAT files
 %
-% As Octave does not support loading/saving of objects, RepLAB implements some methods to store and retrieve information to/from ``.mat`` files.
+% As Octave does not support loading/saving of objects, RepLAB implements some methods to store and retrieve information to/from `.mat` files.
 %
-% For now, the following objects implement a pair of ``import``/``export`` methods:
+% For now, the following objects implement a pair of `import`/`export` methods:
 %
-% - `+replab.Irreducible` implements `+replab.Irreducible.import` and `+replab.Irreducible.export`. Their usage is documented below.
+% - `+replab.Irreducible` implements `~+replab.Irreducible.import` and `~+replab.Irreducible.export`. Their usage is documented below.
 %
 % Beyond those, some of our users report that loading/saving RepLAB objects to ``.mat`` files work in recent versions of MATLAB. Please be careful as the use of ``load`` and ``save`` is currently unsupported. However, if you wish to export computed information about RepLAB objects and those objects are not in the list above, please file an [issue](https://github.com/replab/replab/issues), and we may consider extending our ``import`` / ``export`` mechanism.
 %
