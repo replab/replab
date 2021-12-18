@@ -90,17 +90,15 @@ function result = replab_runtests(varargin)
     % calls the relevant test suite
     if args.withCoverage
         try
-            addpath('tests');
             % Set parameters
             matlabTestSuite.slowtests(args.slowtests);
             matlabTestSuite.doctests(args.doctests);
-            matlabTestSuite.notebooktests(args.notebooks);
+            matlabTestSuite.notebooktests(args.notebooktests);
             % Launch tests
             result = matlabLaunchTestCovering;
         catch
             result = false;
         end
-        rmpath('tests');
     else
         result = moxunit_runtests(toTest{:}, '-verbose', '-recursive');
     end
