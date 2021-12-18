@@ -13,5 +13,5 @@ function test_suite = FiniteMorphismTest()
 
     SS2 = replab.SignedPermutationGroup.signedSymmetric(1);
     signMorphism2 = S3.morphismByImages(SS2, 'images', {1 -1});
-    test_Suite = signMorphism2.laws.addTestCases(test_suite);
+    test_suite = signMorphism2.laws.addTestCases(test_suite);
 end
