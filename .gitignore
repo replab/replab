@@ -129,7 +129,10 @@ coverage_html
 ##---------------------------------------------------
 # auto-generated files
 ##---------------------------------------------------
-generated/*
+generated/doctests
+generated/notebooktests
+generated/sphinx
+generated/src
 
 ##---------------------------------------------------
 # notebooks .gitignore
