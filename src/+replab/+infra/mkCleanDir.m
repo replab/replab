@@ -1,5 +1,5 @@
 function mkCleanDir(baseDir, folderName, logFunction)
-% Creates an empty directory, removing any previous directory
+% Creates an empty directory, emtying any previous directory
 %
 % Args:
 %   baseDir (charstring): Base directory, which must exist
