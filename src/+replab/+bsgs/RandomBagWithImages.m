@@ -83,7 +83,7 @@ classdef RandomBagWithImages < replab.Str
         %   m (integer, optional): Number of shuffles done during initialization
         %                          Default value is 50
         %   J (replab.Group, optional): Group structure for images
-        %   images (row cell array of elements of ``J``): Images of ``generators``
+        %   images (cell{1,\*} of elements of ``J``): Images of ``generators``
             self.n = n;
             if nargin < 4 || isempty(m)
                 m = 50;

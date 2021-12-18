@@ -47,9 +47,9 @@ classdef Str < handle
         %
         % Returns
         % -------
-        %   names: row cell vector of charstring
+        %   names: cell{1,\*} of charstring
         %     Additional names to display
-        %   values: row cell vector of charstring
+        %   values: cell{1,\*} of charstring
         %     Additional values to display
             names = {};
             values = {};
@@ -61,7 +61,7 @@ classdef Str < handle
         % Classes that override this method should call the superclass method.
         %
         % Returns:
-        %   row cell vector of charstring: Field names to hide
+        %   cell{1,\*} of charstring: Field names to hide
             names = {};
         end
 
