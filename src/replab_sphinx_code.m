@@ -1,4 +1,4 @@
-function replab_generate_sphinxsrc_codepp(codeBase, targetFolder)
+function replab_sphinx_code(codeBase, targetFolder)
 % Preprocesses source code to complement the Sphinx Matlab domain
 %
 % Preprocesses the source code to complement the

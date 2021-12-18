@@ -14,7 +14,7 @@ git rev-parse HEAD
 export ADDPATH_COMMAND="replab_init('verbose', 2);"
 export COVERING=false
 
-TEST_COMMAND="exit(~replab_runtests('slowtests', false, 'notebooks', false, 'withCoverage', $COVERING));";
+TEST_COMMAND="exit(~replab_runtests('slowtests', false, 'notebooktests', false, 'withCoverage', $COVERING));";
 echo "TEST_COMMAND=$TEST_COMMAND";
 
 # Check what octave packages we have installed
