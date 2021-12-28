@@ -72,11 +72,11 @@ function result = replab_sphinx(what, varargin)
             
             % Update the matlab notebooks' links
             if isequal(what, 'doublePass')
-                replab_sphinx_doc(args.sphinxRoot, sphinxPreprocessed, 'https://replab.github.io/replab');
+                replab.scripts.sphinx_doc(args.sphinxRoot, sphinxPreprocessed, 'https://replab.github.io/replab');
             elseif ((length(args.inventoryAddress) > 4) && isequal(args.inventoryAddress(1:4), 'http'))
-                replab_sphinx_doc(args.sphinxRoot, sphinxPreprocessed, args.inventoryAddress);
+                replab.scripts.sphinx_doc(args.sphinxRoot, sphinxPreprocessed, args.inventoryAddress);
             else
-                replab_sphinx_doc(args.sphinxRoot, sphinxPreprocessed, 'https://replab.github.io/replab', args.inventoryAddress);
+                replab.scripts.sphinx_doc(args.sphinxRoot, sphinxPreprocessed, 'https://replab.github.io/replab', args.inventoryAddress);
             end
         end
     end
@@ -90,7 +90,7 @@ function result = replab_sphinx(what, varargin)
                 % Generate Sphinx preprocessed source files
                 logFun('Crawling code base');
                 cb = replab.infra.crawl(args.srcFolder);
-                replab_sphinx_code(cb, sphinxPreprocessSrc);
+                replab.scripts.sphinx_code(cb, sphinxPreprocessSrc);
             end
 
             if ~isempty(args.additionalSrc)
@@ -140,10 +140,10 @@ function result = replab_sphinx(what, varargin)
         % Relaunch the process with the newly generated inventory file
         tmpInvFile = fullfile(args.preprocessedFolder, 'objects.inv');
         copyfile('docs/objects.inv', args.preprocessedFolder);
-        replab_sphinx('ppdoc', 'sphinxRoot', args.sphinxRoot, ...
+        replab.scripts.sphinx('ppdoc', 'sphinxRoot', args.sphinxRoot, ...
             'preprocessedFolder', args.preprocessedFolder, 'sphinxTarget', args.sphinxTarget, ...
             'inventoryAddress', tmpInvFile, 'srcFolder', args.srcFolder, 'additionalSrc', args.additionalSrc);
-        result = replab_sphinx('build', 'sphinxRoot', args.sphinxRoot, ...
+        result = replab.scripts.sphinx('build', 'sphinxRoot', args.sphinxRoot, ...
             'preprocessedFolder', args.preprocessedFolder, 'sphinxTarget', args.sphinxTarget, ...
             'inventoryAddress', tmpInvFile, 'srcFolder', args.srcFolder, 'additionalSrc', args.additionalSrc);
         delete(tmpInvFile);

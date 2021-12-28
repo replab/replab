@@ -1,10 +1,12 @@
-function replab_sphinx_doc(sphinxFolder, targetFolder, webBaseAddress, preferredInvFile)
+function sphinx_doc(sphinxFolder, targetFolder, webBaseAddress, preferredInvFile)
 % Preprocesses the Sphinx documentation folder
 %
 % Makes a clean copy of the Sphinx doc folder into the target folder and
 % updates all links in the matlab jupyter files according to the API
-% described in the file ``objects.inv``. In case no such file is present,
-% the inventory is downloaded from the web API.
+% described in the file ``objects.inv``. References are recognized
+% according to the usual (single) backtick syntax. In case no preferred
+% ``objects.inv`` file is provided, or if it is not found, the inventory is
+% downloaded from the web API.
 %
 % This function erases any file in ``targetFolder``.
 %

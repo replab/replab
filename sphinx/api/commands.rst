@@ -35,16 +35,6 @@ replab_sphinx
 
 .. autofunction:: replab_sphinx
 
-replab_sphinx_code
-++++++++++++++++++
-
-.. autofunction:: replab_sphinx_code
-
-replab_sphinx_doc
-+++++++++++++++++
-
-.. autofunction:: replab_sphinx_doc
-
 replab_release
 ++++++++++++++
 
