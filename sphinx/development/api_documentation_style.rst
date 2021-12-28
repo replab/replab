@@ -301,13 +301,13 @@ The group name ``Implementation`` or ``Implementations`` will be ignored: it con
 Documenting types
 -----------------
 
-- row cell vectors of a particular type: ``cell{1,:} of TYPE`` or ``cell{1,n} of TYPE``
+- row cell vectors of a particular type: ``cell{1,*} of TYPE`` (typed as ``'cell{1,\*}'``) or ``cell{1,n} of TYPE``
 
-- row double vectors ``double(1,n)`` or ``double(1,:)``
+- row double vectors ``double(1,n)`` or ``double(1,*)``
 
 - square matrices ``double(n,n)``
 
-- matrices ``double(m,n)`` if `m`, `n` are used elsewhere, or `double(:,:)` if the sizes are not referenced elsewhere
+- matrices ``double(m,n)`` if `m`, `n` are used elsewhere, or ``double(*,*)`` if the sizes are not referenced elsewhere
 
 - ``charstring`` for row char vectors used as strings (as opposed to the new ``string`` Matlab type unsupported by Octave)
 

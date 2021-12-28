@@ -1,10 +1,12 @@
-function replab_generate_sphinxsrc_docpp(sphinxFolder, targetFolder, webBaseAddress, preferredInvFile)
+function sphinx_doc(sphinxFolder, targetFolder, webBaseAddress, preferredInvFile)
 % Preprocesses the Sphinx documentation folder
 %
-% Makes a copy of the Sphinx source folder into the target folder and
+% Makes a clean copy of the Sphinx doc folder into the target folder and
 % updates all links in the matlab jupyter files according to the API
-% described in the file ``objects.inv``. In case no such file is present,
-% the inventory is downloaded from the web API.
+% described in the file ``objects.inv``. References are recognized
+% according to the usual (single) backtick syntax. In case no preferred
+% ``objects.inv`` file is provided, or if it is not found, the inventory is
+% downloaded from the web API.
 %
 % This function erases any file in ``targetFolder``.
 %
@@ -19,10 +21,10 @@ function replab_generate_sphinxsrc_docpp(sphinxFolder, targetFolder, webBaseAddr
     logFun = @(str) disp(str);
 
     % Clean the target folder
-    [base, name] = fileparts(targetFolder);
-    replab.infra.mkCleanDir(base, name, logFun);
+    [path, directory] = fileparts(targetFolder);
+    replab.infra.mkCleanDir(path, directory, logFun);
 
-    % Create a modifiable copy of the sphinx folder
+    % Create a copy of the Sphinx source folder
     copyfile(fullfile(sphinxFolder, '*'), targetFolder);
 
     % Load the conversion table to create API links in matlab files
@@ -30,7 +32,7 @@ function replab_generate_sphinxsrc_docpp(sphinxFolder, targetFolder, webBaseAddr
         if unix(['python3 -m sphinx.ext.intersphinx ', preferredInvFile, ' > ', targetFolder, '/API_links.txt'])
             warning('API conversion table found but cound not be extracted, cross-links will not work in .m files');
         else
-            LogFun(['Using API referrences from ', preferredInvFile]);
+            logFun(['Using API referrences from ', preferredInvFile]);
         end
     else
         if (nargin >= 4)

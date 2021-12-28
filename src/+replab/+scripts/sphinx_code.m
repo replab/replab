@@ -1,11 +1,14 @@
-function replab_generate_sphinxsrc_codepp(codeBase, targetFolder)
+function sphinx_code(codeBase, targetFolder)
 % Preprocesses source code to complement the Sphinx Matlab domain
 %
-% Preprocesses the source code to complement the
-% `Sphinx Matlab domain <https://github.com/sphinx-contrib/matlabdomain>`_ job.
-% It generates a table of contents for all source code files, generates method and
-% property occurences for inherited members, shifts the documentation of properties to
-% be explicit (to support multiline documentation and types).
+% Preprocesses the source code of the given code base to complement the
+% `Sphinx Matlab domain <https://github.com/sphinx-contrib/matlabdomain>`_
+% job. Processed source files are written into the desired target folder.
+% For all processed files, this function generates method and property
+% occurences for inherited members and shifts the documentation of
+% properties to be explicit (to support multiline documentation and types).
+% This function also generates a table of contents for all source code
+% files.
 %
 % This function erases any file in ``targetFolder``.
 %

@@ -7,14 +7,14 @@ function result = replab_runtests(varargin)
 %   slowtests (optional, true): Whether to include tests that can possibly
 %                               take a long time to run
 %   doctests (optional, true): Whether to include doctests
-%   notebooks (optional, true): Whether to run the notebook code
+%   notebooktests (optional, true): Whether to run the notebook tests
 %   withCoverage (optional, false): Whether to activate code coverage
 %
 % Results:
 %     logical: True if all tests passed.
 
     % Parse the arguments
-    args = struct('slowtests', true, 'doctests', true, 'notebooks', true, 'withCoverage', false);
+    args = struct('slowtests', true, 'doctests', true, 'notebooktests', true, 'withCoverage', false);
     [args, restArgs] = replab.util.populateStruct(args, varargin);    
     
     % Make sure we are in the current path
@@ -65,41 +65,42 @@ function result = replab_runtests(varargin)
         warning('No working SDP solver found, some tests will fail.');
     end
 
+    toTest = {'tests'};
     if args.doctests
         replab_generate('doctests');
+        toTest{end+1} = 'generated/doctests';
     else
         % We clear the doctest folder
         rp = replab.globals.replabPath;
-        testRoot = fullfile(rp, 'tests');
+        testRoot = fullfile(rp, 'generated');
         replab.infra.mkCleanDir(testRoot, 'doctests');
     end
 
     % Create tests for notebooks
-    if args.notebooks
-        replab_generate('notebooks');
+    if args.notebooktests
+        replab_generate('notebooktests');
+        toTest{end+1} = 'generated/notebooktests';
     else
         % We clear the notebook folder
         rp = replab.globals.replabPath;
-        testRoot = fullfile(rp, 'tests');
-        replab.infra.mkCleanDir(testRoot, 'notebooks');
+        testRoot = fullfile(rp, 'generated');
+        replab.infra.mkCleanDir(testRoot, 'notebooktests');
     end
 
     % calls the relevant test suite
     if args.withCoverage
         try
-            addpath('tests');
             % Set parameters
             matlabTestSuite.slowtests(args.slowtests);
             matlabTestSuite.doctests(args.doctests);
-            matlabTestSuite.notebooks(args.notebooks);
+            matlabTestSuite.notebooktests(args.notebooktests);
             % Launch tests
             result = matlabLaunchTestCovering;
         catch
             result = false;
         end
-        rmpath('tests');
     else
-        result = moxunit_runtests('tests', '-verbose', '-recursive');
+        result = moxunit_runtests(toTest{:}, '-verbose', '-recursive');
     end
 
     % Remove the tests folder to the path

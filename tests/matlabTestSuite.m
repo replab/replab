@@ -12,14 +12,14 @@ classdef matlabTestSuite < matlab.unittest.TestCase
             value = includeDoctests;
         end
 
-        function value = notebooks(newValue)
-            persistent includeNotebooks;
+        function value = notebooktests(newValue)
+            persistent includeNotebooktests;
             if nargin == 1
-                includeNotebooks = newValue;
-            elseif isempty(includeNotebooks)
-                includeNotebooks = true;
+                includeNotebooktests = newValue;
+            elseif isempty(includeNotebooktests)
+                includeNotebooktests = true;
             end
-            value = includeNotebooks;
+            value = includeNotebooktests;
         end
 
         function value = slowtests(newValue)
@@ -35,7 +35,7 @@ classdef matlabTestSuite < matlab.unittest.TestCase
     
     methods (Test)
         function testAll(testCase)
-            allTestPass = replab_runtests('withCoverage', false, 'doctests', matlabTestSuite.doctests(), 'notebooks', matlabTestSuite.notebooks(), 'slowtests', matlabTestSuite.slowtests());
+            allTestPass = replab_runtests('withCoverage', false, 'doctests', matlabTestSuite.doctests(), 'notebooktests', matlabTestSuite.notebooktests(), 'slowtests', matlabTestSuite.slowtests());
             testCase.verifyEqual(allTestPass, true)
         end
     end
