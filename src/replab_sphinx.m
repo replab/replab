@@ -67,10 +67,7 @@ function result = replab_sphinx(what, varargin)
         if isequal(what, 'clear')
             replab.infra.mkCleanDir(args.preprocessedFolder, 'sphinx', logFun);
         else
-            % Create a copy of the Sphinx source folder
-            copyfile(fullfile(args.sphinxRoot, '*'), sphinxPreprocessed);
-            
-            % Update the matlab notebooks' links
+            % Create a copy of the Sphinx source folder and update the matlab notebooks' links
             if isequal(what, 'doublePass')
                 replab.scripts.sphinx_doc(args.sphinxRoot, sphinxPreprocessed, 'https://replab.github.io/replab');
             elseif ((length(args.inventoryAddress) > 4) && isequal(args.inventoryAddress(1:4), 'http'))
