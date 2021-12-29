@@ -1288,6 +1288,41 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
             end
         end
 
+        function l = isIsomorphicTo(self, target)
+        % Returns whether this group is isomorphic to another group
+        %
+        % Example:
+        %   >>> h1 = [2 1 3 4];
+        %   >>> h2 = [3 4 1 2];
+        %   >>> H = replab.PermutationGroup.of(h1, h2)
+        %   >>> D = replab.D(4);
+        %   >>> H.isIsomorphicTo(D)
+        %       1
+        %
+        % Args:
+        %   target (`+replab.FiniteGroup`): Finite group to test for isomorphism
+        %
+        % Returns:
+        %   logical: Whether this group is isomorphic to the given group
+            assert(isa(target, 'replab.FiniteGroup'));
+            l = false;
+            % compare orders
+            if self.order ~= target.order
+                return
+            end
+            % compare the abelian invariants of both derived series
+            x = cellfun(@(d) d.abelianInvariants, self.derivedSeries, 'uniform', 0);
+            y = cellfun(@(d) d.abelianInvariants, target.derivedSeries, 'uniform', 0);
+            if length(x) ~= length(y)
+                return
+            end
+            if ~all(arrayfun(@(i) length(x{i}) == length(y{i}) && all(x{i} == y{i}), 1:length(x)))
+                return
+            end
+            % call findIsomorphism
+            l = ~isempty(self.findIsomorphism(target));
+        end
+
         function l = isMorphismByImages(self, target, varargin)
         % Checks whether the given images describe a group morphism
         %
