@@ -25,7 +25,7 @@ author = 'Denis Rosset, Jean-Daniel Bancal and collaborators'
 
 from pathlib import Path
 
-version = Path('../replab_version.txt').read_text().strip()
+version = Path('../../replab_version.txt').read_text().strip() # This file will be moved and run from the folder replabPath/generated/sphinx
 release = version
 
 rst_epilog = '.. _latest release ZIP: https://github.com/replab/replab/archive/v' + version + '.zip'
@@ -68,7 +68,7 @@ autosummary_generate = True
 
 matlab_keep_package_prefix = False
 
-matlab_src_dir = os.path.dirname(os.path.abspath(__file__ + "/"))+"/_src"
+matlab_src_dir = os.path.dirname(os.path.abspath(__file__ + "/"))+"/../src" # ... from the point of view of the generated/sphinx folder
 primary_domain = 'mat'
 default_role = 'obj'
 

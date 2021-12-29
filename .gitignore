@@ -121,21 +121,21 @@ Temporary Items
 docs/_site/
 
 ##---------------------------------------------------
-# MOcov .gitignore
+# Code coverage .gitignore
 ##---------------------------------------------------
 coverage.*
 coverage_html
 
 ##---------------------------------------------------
-# doctests and notebooks generated files .gitignore
+# auto-generated files
 ##---------------------------------------------------
-tests/doctests
-tests/notebooks
+generated/doctests
+generated/notebooktests
+generated/sphinx
+generated/src
 
 ##---------------------------------------------------
-# notebook tests .gitignore
+# notebooks .gitignore
 ##---------------------------------------------------
-tests/notebooks
-
 ## Jupyter checkpoints
 .ipynb_checkpoints

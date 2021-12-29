@@ -32,7 +32,7 @@ jobs:
         run: echo "::set-output name=sha::$(git rev-parse HEAD)"
       - name: Calling docker launch action
         id: dock
-        uses: replab/replab/.github/actions/sphinx@master
+        uses: replab/replab/.github/actions/sphinx@develop
         with:
           commit: ${{ steps.vars.outputs.sha }}
       - name: Commit files

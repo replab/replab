@@ -6,7 +6,7 @@ names, except for the cases below.
 
 Abbreviations used in the field:
 
--  ``rep`` for ``representation``, as it customary in the field
+-  ``rep`` for ``representation``, as is customary in the field
 -  ``irrep`` for ``irreducible representation``, same
 
 Abbreviations from Matlab (or toolboxes) conventions:

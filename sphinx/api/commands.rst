@@ -20,10 +20,20 @@ replab_checkhelp
 
 .. autofunction:: replab_checkhelp
 
+replab_checkoop
++++++++++++++++
+
+.. autofunction:: replab_checkoop
+
 replab_generate
 +++++++++++++++
 
 .. autofunction:: replab_generate
+
+replab_sphinx
++++++++++++++
+
+.. autofunction:: replab_sphinx
 
 replab_release
 ++++++++++++++

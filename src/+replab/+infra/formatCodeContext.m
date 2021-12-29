@@ -2,7 +2,7 @@ function res = formatCodeContext(source, pos, nRows)
 % Formats a code fragment
 %
 % Args:
-%   source (row cell vector of charstring, `.CodeTokens` or `.SourceElement`): Source code
+%   source (cell{1,\*} of charstring, `.CodeTokens` or `.SourceElement`): Source code
 %   pos (integer): Line to highlight
 %   nRows (integer): How many lines to display in total
 %
