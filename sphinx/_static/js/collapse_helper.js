@@ -19,7 +19,7 @@ var processAnchors = () => {
     }
 };
 
-val watchAnchorClicks = () => {
+var watchAnchorClicks = () => {
     $(document).ready(function() {
 	$('a').click(function(){
 	    target = $( this ).attr('href');
