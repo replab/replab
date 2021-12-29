@@ -4,7 +4,7 @@
 
 Jump to the [installation instructions](https://replab.github.io/replab/tutorials/installation.html).
 
-See the [website](https://replab.github.io/replab/) for details.
+See the [website](https://replab.github.io) for details.
 
 Library under the [Mozilla Public License 2.0](https://github.com/replab/replab/blob/master/LICENSE).
 
