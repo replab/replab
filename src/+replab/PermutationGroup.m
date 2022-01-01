@@ -528,14 +528,19 @@ classdef PermutationGroup < replab.FiniteGroup
             if isa(rhs, 'replab.FiniteGroup')
                 toCheck = rhs.generators;
                 chain = rhs.chain;
+                generators = rhs.generators;
             else
                 toCheck = {rhs};
+                if ~self.type.isIdentity(rhs)
+                    generators = {rhs};
+                else
+                    generators = cell(1, 0);
+                end
                 chain = replab.bsgs.Chain.make(length(rhs), {rhs});
             end
             chain = chain.mutableCopy;
             % Algorithm, see NORMALCLOSURE, p. 75 of Derek Holt Handbook of CGT, but we do not
             % use random elements
-            generators = {};
             while ~isempty(toCheck)
                 rhsg = toCheck{end};
                 toCheck = toCheck(1:end-1);
