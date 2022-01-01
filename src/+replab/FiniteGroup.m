@@ -1294,7 +1294,7 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
         % Example:
         %   >>> h1 = [2 1 3 4];
         %   >>> h2 = [3 4 1 2];
-        %   >>> H = replab.PermutationGroup.of(h1, h2)
+        %   >>> H = replab.PermutationGroup.of(h1, h2);
         %   >>> D = replab.D(4);
         %   >>> H.isIsomorphicTo(D)
         %       1
