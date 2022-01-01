@@ -11,6 +11,8 @@ function json = JSONforPermutationGroupUsingGAP(G, irreps)
     fid = fopen(tfile, 'wt');
     fprintf(fid, replab.atl.getGAPScript(G, irreps));
     fclose(fid);
-    [status, json] = system([replab.globals.gapBinaryPath ' -q <' tfile]);
+    [status, json] = system([replab.globals.gapBinaryPath ' -n -q <' tfile]);
+    ind = find(json == '{', 1);
+    json = json(ind:end);
     delete(tfile);
 end

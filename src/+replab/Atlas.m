@@ -16,7 +16,7 @@ classdef Atlas
         %   G (`.FiniteGroup`): Finite group not present in the atlas
             assert(~isempty(replab.globals.gapBinaryPath), 'The GAP binary path must be set in replab_config.m');
             assert(isempty(G.recognize), 'The group is already in the atlas');
-            filename = replab.atl.writeAtlasForPermutationGroupUsingGAP(G.niceGroup, true);
+            filename = replab.atl.writeAtlasForPermutationGroupUsingGAP(G.permutationGroup, true);
             entry = replab.AtlasEntry.fromFile(filename);
             entries = replab.globals.atlasEntries;
             entries{1,end+1} = entry;
