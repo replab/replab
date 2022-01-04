@@ -16,6 +16,7 @@ function test_quaternion_representations
         % Octave on the docker image fails to call some submethods properly the first time...
         % so we do it once just for blank.
         % TODO: Remove this ugly fix once Octave's docker image is more stable!!!
+        X = randn(rep1.dimension, rep1.dimension);
         tmp = rep2.commutant.project(X);
         rep2 = rep1.decomposition;
     end
