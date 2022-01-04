@@ -8,18 +8,27 @@ function test_suite = CommutantProjectTest()
 end
 
 function test_quaternion_representations
-    S3 = replab.S(3);
-    W = S3.wreathProduct(replab.QuaternionGroup);
-    rep1 = W.primitiveRepFun(@(x) x.naturalRep);
-    rep2 = rep1.decomposition;
     if replab.compat.isOctave
         % Octave on the docker image fails to call some submethods properly the first time...
         % so we do it once just for blank.
         % TODO: Remove this ugly fix once Octave's docker image is more stable!!!
-        X = randn(rep1.dimension, rep1.dimension);
-        tmp = rep2.commutant.project(X);
+        S3 = replab.S(3);
+        W = S3.wreathProduct(replab.QuaternionGroup);
+        rep1 = W.primitiveRepFun(@(x) x.naturalRep);
         rep2 = rep1.decomposition;
+        rep3 = rep2.toSubRep;
+        X = randn(rep1.dimension, rep1.dimension);
+        X1 = rep2.projection*rep1.commutant.project(rep2.injection*X*rep2.projection)*rep2.injection;
+        X2 = rep2.commutant.project(X);
+        X3 = rep3.commutant.project(X);
+        norm(X1 - X2)
+        norm(X1 - X3)
+        norm(X2 - X3)
     end
+    S3 = replab.S(3);
+    W = S3.wreathProduct(replab.QuaternionGroup);
+    rep1 = W.primitiveRepFun(@(x) x.naturalRep);
+    rep2 = rep1.decomposition;
     rep3 = rep2.toSubRep;
     X = randn(rep1.dimension, rep1.dimension);
     X1 = rep2.projection*rep1.commutant.project(rep2.injection*X*rep2.projection)*rep2.injection;
