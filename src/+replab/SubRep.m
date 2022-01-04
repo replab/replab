@@ -545,11 +545,11 @@ classdef SubRep < replab.Rep
                 e = term1 + term2;
             else
                 disp('In replab.SubRep.computeErrorBound');
-                eU = self.parent.conditionNumberEstimate * self.projectorErrorBound
-                dU = pi*sqrt(self.dimension/2)*eU/(1-eU)
-                e1 = self.injectionConditionNumberEstimate * self.parent.errorBound % parent error
-                e2 = self.injectionConditionNumberEstimate * self.parent.conditionNumberEstimate * (2*dU + dU^2)
-                e = e1 + e2
+                eU = self.parent.conditionNumberEstimate * self.projectorErrorBound;
+                dU = pi*sqrt(self.dimension/2)*eU/(1-eU);
+                e1 = self.injectionConditionNumberEstimate * self.parent.errorBound; % parent error
+                e2 = self.injectionConditionNumberEstimate * self.parent.conditionNumberEstimate * (2*dU + dU^2);
+                e = e1 + e2;
             end
         end
 

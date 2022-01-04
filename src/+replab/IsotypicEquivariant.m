@@ -406,24 +406,18 @@ classdef IsotypicEquivariant < replab.SubEquivariant
         function E = make_double(parent, repR, repC, special, parentSample)
             disp('In replab.IsotypicEquivariant.make_double');
             if isempty(parentSample)
-                sub = replab.SubEquivariant(parent, repR, repC, special)
-                [X, err] = sub.sample % TODO: proper error estimation here
+                sub = replab.SubEquivariant(parent, repR, repC, special);
+                [X, err] = sub.sample; % TODO: proper error estimation here
             else
-                X = repR.projection('double/sparse') * parentSample * repC.injection('double/sparse')
-                assert(replab.globals.yolo)
-                eR = repR.errorBound
-                eC = repC.errorBound
-                cR = repR.conditionNumberEstimate % condition number of repR
-                cC = repC.conditionNumberEstimate % condition number of repC
-                sX = replab.numerical.norm2UpperBound(X)
-                err = sX*(eR*cC + cR*eC)
+                X = repR.projection('double/sparse') * parentSample * repC.injection('double/sparse');
+                assert(replab.globals.yolo);
+                eR = repR.errorBound;
+                eC = repC.errorBound;
+                cR = repR.conditionNumberEstimate; % condition number of repR
+                cC = repC.conditionNumberEstimate; % condition number of repC
+                sX = replab.numerical.norm2UpperBound(X);
+                err = sX*(eR*cC + cR*eC);
             end
-            err
-            repR.dimension
-            repC.dimension
-            sqrt(repR.dimension*repC.dimension)
-            eps            
-            10*sqrt(repR.dimension*repC.dimension)*eps
             err = max(err, 10*sqrt(repR.dimension*repC.dimension)*eps);
             assert(err < 1e-8, 'Error to big');
             if norm(X, 'fro') < err
