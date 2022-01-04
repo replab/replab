@@ -15,6 +15,7 @@ function test_quaternion_representations
     rep3 = rep2.toSubRep;
     X = randn(rep1.dimension, rep1.dimension);
     X1 = rep2.projection*rep1.commutant.project(rep2.injection*X*rep2.projection)*rep2.injection;
+    X
     X2 = rep2.commutant.project(X);
     X3 = rep3.commutant.project(X);
     assert(norm(X1 - X2) < replab.globals.doubleEigTol);
