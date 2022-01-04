@@ -77,7 +77,7 @@ function testHasCorrectForm
              0 0 0 0 -1 0 0 0 1 0 0 0 1 0 0 0 0 0 1 -1 0 0 1 0 1 0 0 0 0 0 0 0
              0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 3 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0];
     sub = rep.subRep(basis, 'isIrreducible', true, 'frobeniusSchurIndicator', -2);
-    irreps = sub.split;
+    irreps = sub.split
     assert(length(irreps) == 1);
     res = irreps{1};
     X = res.sample;

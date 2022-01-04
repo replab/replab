@@ -23,7 +23,7 @@ octave -q --eval "ver"
 # Check that octave can access java
 octave --eval "b = javaMethod('valueOf', 'java.math.BigInteger', 2)"
 
-octave -q --eval "$ADDPATH_COMMAND cd tests/replab; CommutantProjectTest"
+octave -q --eval "$ADDPATH_COMMAND cd tests/replab/irreducible; enforceQuaternionEncodingTest"
 exit 1
 
 # Remove any cached results files from previous build, if present

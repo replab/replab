@@ -19,7 +19,7 @@ function test_quaternion_representations
         rep3 = rep2.toSubRep;
         X = randn(rep1.dimension, rep1.dimension);
         X1 = rep2.projection*rep1.commutant.project(rep2.injection*X*rep2.projection)*rep2.injection;
-        X2 = rep2.commutant.project(X);
+        X2 = rep2.commutant.project(X); % Here is the problematic line for the octave docker image
         X3 = rep3.commutant.project(X);
         norm(X1 - X2)
         norm(X1 - X3)
