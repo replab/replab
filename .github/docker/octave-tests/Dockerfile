@@ -1,5 +1,5 @@
 # Use Octave docker image
-FROM       gnuoctave/octave:5.2.0
+FROM       gnuoctave/octave:6.4.0
 
 # Usage:
 # docker run -it -v <your directory>:/documents/
