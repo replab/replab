@@ -404,6 +404,7 @@ classdef IsotypicEquivariant < replab.SubEquivariant
         end
 
         function E = make_double(parent, repR, repC, special, parentSample)
+            disp('In replab.IsotypicEquivariant.make_double');
             if isempty(parentSample)
                 sub = replab.SubEquivariant(parent, repR, repC, special)
                 [X, err] = sub.sample % TODO: proper error estimation here
