@@ -12,6 +12,7 @@ function test_quaternion_representations
         % Octave on the docker image fails to call some submethods properly the first time...
         % so we do it once just for blank.
         % TODO: Remove this ugly fix once Octave's docker image is more stable!!!
+        try
         S3 = replab.S(3);
         W = S3.wreathProduct(replab.QuaternionGroup);
         rep1 = W.primitiveRepFun(@(x) x.naturalRep);
@@ -24,6 +25,9 @@ function test_quaternion_representations
         norm(X1 - X2)
         norm(X1 - X3)
         norm(X2 - X3)
+        catch me
+            % We ignore errors on a first run...
+        end
     end
     S3 = replab.S(3);
     W = S3.wreathProduct(replab.QuaternionGroup);
