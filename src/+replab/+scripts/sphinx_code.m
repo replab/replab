@@ -13,7 +13,7 @@ function sphinx_code(codeBase, targetFolder)
 % This function erases any file in ``targetFolder``.
 %
 % Args:
-%   codeBase (`+replab.infra.codeBase`): Source code to be processed
+%   codeBase (`+replab.infra.CodeBase`): Source code to be processed
 %   targetFolder (charstring): Location for the processed code
 
     logFun = @(str) disp(str);
