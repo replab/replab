@@ -225,7 +225,7 @@ wcwidth==0.2.5
     # via prompt-toolkit
 webencodings==0.5.1
     # via bleach
-wheel==0.36.2
+wheel==0.38.1
     # via sphinx-togglebutton
 
 # The following packages are considered to be unsafe in a requirements file:
