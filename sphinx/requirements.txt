@@ -76,7 +76,7 @@ jupyter-client==6.1.12
     #   ipykernel
     #   nbclient
     #   octave-kernel
-jupyter-core==4.7.1
+jupyter-core==4.11.2
     # via
     #   jupyter-client
     #   nbconvert
