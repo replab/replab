@@ -9,8 +9,9 @@ classdef EquivariantLaws < replab.laws.DomainLaws
 
         function law_project_twice_S(self, X)
         % Checks that an element is equivalent to itself
-            [X1, err] = self.S.project(X);
-            self.assertApproxEqual(X, X1, err);
+            [X1, err1] = self.S.project(X);
+            [X2, err2] = self.S.project(X1);
+            self.assertApproxEqual(X1, X2, err1+err2);
         end
 
     end
