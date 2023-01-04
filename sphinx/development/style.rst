@@ -35,24 +35,24 @@ Domain defining typeclasses
 
 Domains define the following methods:
 
-- `replab.Domain.eqv` tests for equality,
-- `replab.Domain.sample` provides a random element of the domain.
+- `+replab.+Domain.eqv` tests for equality,
+- `+replab.+Domain.sample` provides a random element of the domain.
 
 Example: ``replab.Permutations(10)`` is the domain of permutations acting on 10 elements.
 
 Other typeclasses
 .................
 
-Other typeclasses define relations between domains, such as `replab.Action`.
+Other typeclasses define relations between domains, such as `+replab.Action`.
 
 Typeclasses that depend on other types contain the typeclasses of those types as properties.
-For example, a `replab.Action` typeclass contain a property ``G`` describing the group structure, and a property ``P`` describing the domain of elements being acted upon.
+For example, a `+replab.Action` typeclass contain a property ``G`` describing the group structure, and a property ``P`` describing the domain of elements being acted upon.
 There, ``G`` and ``P`` are domains, while `~replab.Action` itself is not.
 
 Laws
 ....
 
-Typeclasses can define laws, which are defined as methods in a companion class deriving from `replab.Laws`. These methods are of the form ``law_name_of_the_law_TYPES``, where ``TYPES`` describes the parameters of the law (see `replab.Laws`).
+Typeclasses can define laws, which are defined as methods in a companion class deriving from `+replab.Laws`. These methods are of the form ``law_name_of_the_law_TYPES``, where ``TYPES`` describes the parameters of the law (see `+replab.Laws`).
 
 Class structure
 ---------------
@@ -64,7 +64,7 @@ For each algebraic structure (monoid, group, ...), we define:
 
 - A law checking class (ex: `.MonoidLaws`)
 
-- (optional) A generic implementation using function handles (ex: `replab.lambda.Monoid`)
+- (optional) A generic implementation using function handles (ex: `+replab.+lambda.Monoid`)
 
 Capitalization
 --------------
