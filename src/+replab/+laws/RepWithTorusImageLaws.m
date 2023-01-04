@@ -27,7 +27,12 @@ classdef RepWithTorusImageLaws < replab.Laws
             else
                 c = cond(full(torusInjection));
             end
-            tol = 1e-14*c*sqrt(self.rep.dimension); % assumption: error on each phase is max 1e-15
+            if replab.compat.isOctave
+                % Octave seems to be less precise than matlab here, we need a larger margin
+                tol = 1e-12*c*sqrt(self.rep.dimension);
+            else
+                tol = 1e-14*c*sqrt(self.rep.dimension); % assumption: error on each phase is max 1e-15
+            end
             self.assertApproxEqual(img1, img2, tol);
         end
 
