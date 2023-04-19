@@ -44,12 +44,14 @@ extensions = ['sphinx.ext.autodoc',   # for enumeration of objects stuff
               'sphinx.ext.githubpages',
               'nbsphinx',
               'sphinx_togglebutton',
+              'sphinxcontrib.bibtex',
 #              'sphinxcontrib.fulltoc', # for sidebar TOC
               'sphinxcontrib.matlab', # support for Matlab
               'sphinx.ext.napoleon',  # support for shorthand syntax
               'sphinx.ext.mathjax',   # LaTeX support
               'texext.math_dollar',   # lightweight LaTeX filter
               'ablog']
+bibtex_bibfiles = ['refs.bib']
 
 import jupytext
 
