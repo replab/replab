@@ -1,6 +1,6 @@
 # RepLAB - a MATLAB/Octave toolbox for representation theory
 
-[![Travis CI](https://travis-ci.com/replab/replab.svg?branch=master)](https://travis-ci.com/replab/replab) [![codecov](https://codecov.io/gh/replab/replab/branch/master/graph/badge.svg)](https://codecov.io/gh/replab/replab)
+[![matlab workflow](https://github.com/replab/replab/actions/workflows/matlab-tests.yml/badge.svg)](https://github.com/replab/replab/actions/workflows/matlab-tests.yml?query=branch%3Amaster) [![octave workflow](https://github.com/replab/replab/actions/workflows/octave-tests.yml/badge.svg)](https://github.com/replab/replab/actions/workflows/octave-tests.yml?query=branch%3Amaster) [![codecov](https://codecov.io/gh/replab/replab/branch/master/graph/badge.svg)](https://codecov.io/gh/replab/replab)
 
 Jump to the [installation instructions](https://replab.github.io/web/tutorials/installation.html).
 
