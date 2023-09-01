@@ -773,7 +773,7 @@ classdef CommutantVar < replab.Str
             end
             sdpMatrix = reshape(tmp2*vars, d, d);
 
-            R = replab.CommutantVar(generators, sdpMatrix, 1, matrixType, field);
+            R = replab.CommutantVar(generators, sdpMatrix, 2, matrixType, field);
         end
 
         function R = fromSdpMatrix(sdpMatrix, generators)
@@ -824,7 +824,7 @@ classdef CommutantVar < replab.Str
             R = replab.CommutantVar(generators, sdpMatrix, 0, matrixType, field);
         end
 
-        function R = fromSymSdpMatrix(sdpMatrix, generators)
+        function R = fromSymSdpMatrix(sdpMatrix, generators, checkSymmetry)
         % An invariant sdpvar matrix with symmetry constraints
         %
         % Block-diagonalizes an existing SDP matrix which is already
@@ -836,6 +836,8 @@ classdef CommutantVar < replab.Str
         %     sdpMatrix (sdpvar): the SDP matrix to block diagonlize
         %     generators (permutation): a list of generators under which
         %         the matrix remains unchanged
+        %     checkSymmetry (bool): whether to actively check the
+        %         invariance of provided sdpMatrix, default: false
         %
         % Returns:
         %     `CommutantVar`: result
@@ -851,6 +853,10 @@ classdef CommutantVar < replab.Str
         %     `+replab.CommutantVar.fromIndexMatrix`
         %     `+replab.CommutantVar.fromSdpMatrix`
 
+            if nargin < 3
+                checkSymmetry = 0;
+            end
+            
             if issymmetric(sdpMatrix)
                 matrixType = 'symmetric';
             elseif ishermitian(sdpMatrix)
@@ -865,7 +871,11 @@ classdef CommutantVar < replab.Str
                 field = 'complex';
             end
 
-            R = replab.CommutantVar(generators, sdpMatrix, 1, matrixType, field);
+            if checkSymmetry == 0
+                R = replab.CommutantVar(generators, sdpMatrix, 2, matrixType, field);
+            else
+                R = replab.CommutantVar(generators, sdpMatrix, 1, matrixType, field);
+            end
         end
 
     end
