@@ -846,7 +846,7 @@ classdef CommutantVar < replab.Str
         %     >>> x = sdpvar;
         %     >>> y = sdpvar;
         %     >>> sdpMatrix = [x y y; y x y; y y x];
-        %     >>> matrix = replab.CommutantVar.fromSymSdpMatrix(sdpMatrix, {[3 1 2]});
+        %     >>> matrix = replab.CommutantVar.fromSymSdpMatrix(sdpMatrix, {[3 1 2]}, true);
         %
         % See also:
         %     `+replab.CommutantVar.fromPermutations`
@@ -1204,7 +1204,7 @@ classdef CommutantVar < replab.Str
         %     >>> matrix2.nbVars;
         %     >>> x = sdpvar;
         %     >>> sdpMatrix = [1 x x; x 1 x; x x 1];
-        %     >>> matrix3 = replab.CommutantVar.fromSymSdpMatrix(sdpMatrix, {[2 3 1]});
+        %     >>> matrix3 = replab.CommutantVar.fromSymSdpMatrix(sdpMatrix, {[2 3 1]}, true);
         %     >>> matrix3.nbVars;
         %
         % See also:
